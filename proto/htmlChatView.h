@@ -3,6 +3,8 @@
 
 #include <QWebView>
 #include <QWebFrame>
+#include <QFile>
+#include <QtDebug>
 
 #include "chatView.h"
 #include "htmlChatTheme.h"
@@ -14,14 +16,15 @@ class HTMLChatView : public ChatView
 {
 	Q_OBJECT
 
-
-
   public:
 	HTMLChatView(QWidget * parent) : ChatView(parent) {
 		webView.setParent(parent);
+
+		importJSChatFunctions();
 	}
 
 	~HTMLChatView() {}
+	QWebView webView; 
 
   public slots:
 	void evaluateJS(QString scriptSource) {
@@ -29,18 +32,29 @@ class HTMLChatView : public ChatView
 		qDebug ("HTMLChatView::evaluateJS()");
 	}
 
+  	/** Reads JavaScript code (function definitions) from file and evaluates it in webkit */
 	void importJSChatFunctions() {
-	
+		// reading from file only while developing	
+		QFile file("htmlChatView.js");
+		if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+	         return;
+
+		QString jsCode = file.readAll();
+
+		evaluateJS(jsCode);
+
 	}
+
 	void evaluateJS() {			
-		evaluateJS("function x() {document.getElementById('senu').innerHTML='yyy';} x();");
+		evaluateJS("x()");
 	}
+
+	void clear();
 
 
   private:
 	HTMLChatTheme theme; // maybe HTMLChatTheme* to global theme - don't know
 
-	QWebView webView; 
 
 
 	void appendEvent(const ChatEvent& event) {

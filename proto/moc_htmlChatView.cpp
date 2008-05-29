@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'htmlChatView.h'
 **
-** Created: Fri May 30 00:22:13 2008
+** Created: Fri May 30 01:57:59 2008
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.1-snapshot-20080423)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_HTMLChatView[] = {
        1,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   10, // methods
+       4,   10, // methods
        0,    0, // properties
        0,    0, // enums/sets
 
@@ -31,6 +31,7 @@ static const uint qt_meta_data_HTMLChatView[] = {
       27,   14,   13,   13, 0x0a,
       47,   13,   13,   13, 0x0a,
       71,   13,   13,   13, 0x0a,
+      84,   13,   13,   13, 0x0a,
 
        0        // eod
 };
@@ -38,7 +39,7 @@ static const uint qt_meta_data_HTMLChatView[] = {
 static const char qt_meta_stringdata_HTMLChatView[] = {
     "HTMLChatView\0\0scriptSource\0"
     "evaluateJS(QString)\0importJSChatFunctions()\0"
-    "evaluateJS()\0"
+    "evaluateJS()\0clear()\0"
 };
 
 const QMetaObject HTMLChatView::staticMetaObject = {
@@ -69,8 +70,9 @@ int HTMLChatView::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 0: evaluateJS((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 1: importJSChatFunctions(); break;
         case 2: evaluateJS(); break;
+        case 3: clear(); break;
         }
-        _id -= 3;
+        _id -= 4;
     }
     return _id;
 }

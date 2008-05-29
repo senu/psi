@@ -11,7 +11,7 @@ class ChatView : public QWidget
 Q_OBJECT
 
   public:	
-	ChatView(QWidget* Parent); 
+	ChatView(QWidget* Parent) : QWidget(Parent) {} 
 
 	virtual void appendEvent(const ChatEvent& event) = 0;
 

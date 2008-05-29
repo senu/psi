@@ -18,50 +18,11 @@ public:
 	//precomputed templates/html parts reading. 
 	void readTheme(QString themeName, QString variationName);
 	
-	QString createIncomingMessagePart(const MessageChatEvent *) 
-	{
-		return "";
-		//returns eg. "<div class="sth"><b>senu@jabster.pl</b> : <span class="messageBody">body</span></div>"
-	}
+	QString createIncomingMessagePart(const MessageChatEvent *);
 	
-	QString createOutgoingMessagePart(const MessageChatEvent *) { 								/// ----------------------- 5
-
-	}
-
-	QString createFileTransferEventPart(const FileTransferChatEvent * event) 					/// ----------------------- 6
-
-	{		
-		FileTransferChatEvent::FileTransferEventType type = event->type;
-
-		QString eventText; 
-
-		/*
-
-		switch (type) {
-			case Finished:
-				eventText = "Finished downloading "	+ event->fileName + ".";
-			  	break;
-			case FileTransferEventType::Initiated:
-				eventText = "Incoming file transfer" + event->fileName + ".";
-			  	break;
-			case FileTransferEventType::Aborted:
-				eventText = "Aborted downloading "	+ event->fileName + ".";
-			  	break;							
-		}
-		 
-
-		HTMLChatTemplate * template = getPrecompiledFTTemplate();
-		template->replaceAndEscape('eventSubtype', toString(type)); //replaces %eventSubtype% with type name 
-		template->replaceAndEscape('text', eventText);
-
-		QString chatPart = template->toString();
-
-		delete template;
-		return chatPart;
-
-
-		*/
-	} 
+	QString createOutgoingMessagePart(const MessageChatEvent *);
+	
+	QString createFileTransferEventPart(const FileTransferChatEvent * event);
 
 };
 
