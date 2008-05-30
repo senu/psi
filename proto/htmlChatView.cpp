@@ -19,3 +19,8 @@ void HTMLChatView::appendConsecutiveMessage() {
 	evaluateJS("psi_appendConsecutiveMessage()");
 }
 
+HTMLChatView::~HTMLChatView() {
+	QString str = webView.page()->mainFrame()->toHtml();
+	printf("%s", str.toLatin1().data());
+}
+

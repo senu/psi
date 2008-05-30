@@ -21,16 +21,18 @@ function psi_appendNextMessage() {
 function psi_appendConsecutiveMessage() {
 	try {	
 		insertDiv = document.getElementById('insert');
-		parentNode = insertDiv.parentNode;
-
-		newNode = document.createElement('div');
-		newNode.innerHTML='<div class="nextmessageline"></div>'+
-			'<p><span class="messagetime consecutive">%time%</span>senu tu byl</p>'+
-			'<div id="insert"></div>';
-		parentNode.replaceChild(newNode.children[0], insertDiv);
 	}
 	catch(e) {
-		alert(e);
+		alert('1 ' + e);
+	}
+	try {
+		parentNode = insertDiv.parentNode;
+		newNode = document.createElement('span');
+		newNode.innerHTML='<div class="nextmessageline"></div><p><span class="messagetime consecutive">%time%</span>senu tu byl</p><div id="insert"></div>';
+		parentNode.replaceChild(newNode, insertDiv);
+	}
+	catch(e) {
+		alert('2 ' + e);
 	}
 }
 

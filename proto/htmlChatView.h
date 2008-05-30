@@ -23,7 +23,7 @@ class HTMLChatView : public ChatView
 		importJSChatFunctions();
 	}
 
-	~HTMLChatView() {}
+	~HTMLChatView();
 	QWebView webView; 
 
   public slots:
