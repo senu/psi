@@ -51,18 +51,16 @@ class HTMLChatView : public ChatView
 
 	void clear();
 
+	//for testing purposes only
+	void appendNextMessage();
+	void appendConsecutiveMessage();
+
 
   private:
 	HTMLChatTheme theme; // maybe HTMLChatTheme* to global theme - don't know
 
+	void appendEvent(const ChatEvent& event);
 
-
-	void appendEvent(const ChatEvent& event) {
-		QString part = event.getRightTemplateAndFillItWithData(theme);
-
-		//findPlaceForNewEventAndInsert(part); 			
-		//scrolling, misc. 
-	}
 
 
 };

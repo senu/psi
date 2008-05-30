@@ -12,20 +12,26 @@ int main(int argc, char *argv[]) {
 
 	QWidget * frame = new QWidget();
 
-	QPushButton hello("go", frame);
+	QPushButton nextMessageBtn("appendNextMessage", frame);
+	QPushButton consMessageBtn("appendConsecutiveMessage", frame);
 
     HTMLChatView * view = new HTMLChatView(frame);
 
-    view->webView.load(QUrl("file:///home/senu/cur/tmp.html"));
+    view->webView.load(QUrl("/home/senu/dev/psi/gsoc/repo/psi-fork/proto/themes/Satin.AdiumMessageStyle/Contents/Resources/tmp.html"));
 	view->setGeometry(0,0,300,200);
     view->show();
 
-	hello.setGeometry(0,800,50,20);
-    hello.show();
+	nextMessageBtn.setGeometry(0,800,50,20);
+    nextMessageBtn.show();
+
+	consMessageBtn.setGeometry(70,800,50,20);
+    consMessageBtn.show();
+	
 	frame->setGeometry(0,0,800,900);
 	frame->show();
 
-    QObject::connect(&hello, SIGNAL(clicked()), view, SLOT(evaluateJS()));
+    QObject::connect(&nextMessageBtn, SIGNAL(clicked()), view, SLOT(appendNextMessage()));
+    QObject::connect(&consMessageBtn, SIGNAL(clicked()), view, SLOT(appendConsecutiveMessage()));
 
 	return app.exec();
 }
