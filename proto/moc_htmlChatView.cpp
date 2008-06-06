@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'htmlChatView.h'
 **
-** Created: Fri May 30 13:04:06 2008
+** Created: Fri Jun 6 03:19:16 2008
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.1-snapshot-20080423)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -33,7 +33,7 @@ static const uint qt_meta_data_HTMLChatView[] = {
       71,   13,   13,   13, 0x0a,
       84,   13,   13,   13, 0x0a,
       92,   13,   13,   13, 0x0a,
-     112,   13,   13,   13, 0x0a,
+     116,  112,   13,   13, 0x0a,
 
        0        // eod
 };
@@ -42,7 +42,7 @@ static const char qt_meta_stringdata_HTMLChatView[] = {
     "HTMLChatView\0\0scriptSource\0"
     "evaluateJS(QString)\0importJSChatFunctions()\0"
     "evaluateJS()\0clear()\0appendNextMessage()\0"
-    "appendConsecutiveMessage()\0"
+    "msg\0appendConsecutiveMessage__(const MessageChatEvent*)\0"
 };
 
 const QMetaObject HTMLChatView::staticMetaObject = {
@@ -75,7 +75,7 @@ int HTMLChatView::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 2: evaluateJS(); break;
         case 3: clear(); break;
         case 4: appendNextMessage(); break;
-        case 5: appendConsecutiveMessage(); break;
+        case 5: appendConsecutiveMessage__((*reinterpret_cast< const MessageChatEvent*(*)>(_a[1]))); break;
         }
         _id -= 6;
     }

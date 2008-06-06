@@ -13,7 +13,7 @@ public:
 	QString nick();
 	
 	QString subject();
-	QString body();
+	QString body() {return "TEST";};
 
 	QDateTime timestamp();
 	bool wasEncrypted();
@@ -32,11 +32,13 @@ public:
 	QDateTime setTimestamp();
 	bool setWasEncrypted();
 
-	bool setLocal(); //our messgage? (outgoing)
-	bool setSpooled(); // offline storage
+	bool setLocal();		 //our messgage? (outgoing)
+	bool setSpooled(); 		// offline storage
+
+	bool isConsecutive();
 
 	//implemented
-	virtual QString getRightTemplateAndFillItWithData(ChatTheme& theme) {			/// ----------------------- 3
+	virtual QString getRightTemplateAndFillItWithData(ChatTheme& theme) {
 		return theme.createOutgoingMessagePart(this);
 	}
 }; 

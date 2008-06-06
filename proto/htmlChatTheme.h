@@ -4,6 +4,7 @@
 #include <Qt>
 
 #include "chatTheme.h"
+#include "htmlChatTemplate.h"
 #include "fileTransferChatEvent.h"
 
 class ChatTheme;
@@ -15,7 +16,10 @@ class HTMLChatTheme : public ChatTheme
 {	
 //...	
 public:
-	//precomputed templates/html parts reading. 
+
+	HTMLChatTheme();
+
+	/** Reads templates from filesystem */
 	void readTheme(QString themeName, QString variationName);
 	
 	QString createIncomingMessagePart(const MessageChatEvent *);
@@ -23,6 +27,15 @@ public:
 	QString createOutgoingMessagePart(const MessageChatEvent *);
 	
 	QString createFileTransferEventPart(const FileTransferChatEvent * event);
+
+private:
+	HTMLChatTemplate incomingConsecutiveMessageTemplate;
+	HTMLChatTemplate incomingNextMessageTemplate;
+
+	HTMLChatTemplate outgoingConsecutiveMessageTemplate;
+	HTMLChatTemplate outgoingNextMessageTemplate;
+
+	HTMLChatTemplate fileTransferMessageTemplate;
 
 };
 

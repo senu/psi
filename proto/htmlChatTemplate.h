@@ -1,7 +1,15 @@
 #include <Qt>
+#include <QString>
+
+//TODO change name
+/** Message/Event template */
 class HTMLChatTemplate {
 
 public:
+
+	/** Creates HTMLChatTemplate with content as content*/
+	HTMLChatTemplate(QString content);
+	HTMLChatTemplate() {};
 
 	/** Replaces occurence of %keyword% with escaped value */
 	void replaceAndEscapeKeyword(QString keyword, QString value); 
@@ -16,7 +24,7 @@ public:
 	QString toString();
 
 private:
-	/** template body */
-	QString contents;
+	/** Template body */
+	QString content;
 
 };

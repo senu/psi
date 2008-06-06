@@ -53,7 +53,8 @@ class HTMLChatView : public ChatView
 
 	//for testing purposes only
 	void appendNextMessage();
-	void appendConsecutiveMessage();
+//	void appendConsecutiveMessage();
+	void appendConsecutiveMessage__(const MessageChatEvent * msg);
 
 
   private:

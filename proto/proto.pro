@@ -15,5 +15,5 @@ HEADERS += chatMessageEvent.h \
            htmlChatTemplate.h \
            htmlChatTheme.h \
            htmlChatView.h
-SOURCES += chatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main.cpp htmlChatView.cpp htmlChatTheme.cpp
+SOURCES += chatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp
 QT += webkit

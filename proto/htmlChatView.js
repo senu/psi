@@ -18,7 +18,7 @@ function psi_appendNextMessage() {
 	}
 }
 
-function psi_appendConsecutiveMessage() {
+function psi_appendConsecutiveMessage(messagePart) {
 	try {	
 		insertDiv = document.getElementById('insert');
 	}
@@ -28,7 +28,7 @@ function psi_appendConsecutiveMessage() {
 	try {
 		parentNode = insertDiv.parentNode;
 		newNode = document.createElement('span');
-		newNode.innerHTML='<div class="nextmessageline"></div><p><span class="messagetime consecutive">%time%</span>senu tu byl</p><div id="insert"></div>';
+		newNode.innerHTML=messagePart;
 		parentNode.replaceChild(newNode, insertDiv);
 	}
 	catch(e) {

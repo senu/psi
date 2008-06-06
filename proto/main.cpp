@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 	frame->show();
 
     QObject::connect(&nextMessageBtn, SIGNAL(clicked()), view, SLOT(appendNextMessage()));
-    QObject::connect(&consMessageBtn, SIGNAL(clicked()), view, SLOT(appendConsecutiveMessage()));
+//    QObject::connect(&consMessageBtn, SIGNAL(clicked()), view, SLOT(appendConsecutiveMessage()));
 
 	int ret = app.exec();
 	delete view;

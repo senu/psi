@@ -1,5 +1,7 @@
 #include "htmlChatView.h"
 
+class MessageChatEvent;
+
 void HTMLChatView::clear() {
 
 }
@@ -15,8 +17,8 @@ void HTMLChatView::appendNextMessage() {
 	evaluateJS("psi_appendNextMessage()");
 }
 
-void HTMLChatView::appendConsecutiveMessage() {
-	evaluateJS("psi_appendConsecutiveMessage()");
+void HTMLChatView::appendConsecutiveMessage__(const MessageChatEvent *msg) {
+	evaluateJS("psi_appendConsecutiveMessage(" + theme.createIncomingMessagePart(msg) + ")");
 }
 
 HTMLChatView::~HTMLChatView() {
