@@ -1,4 +1,11 @@
+#ifndef HAVE_MESSAGE_CHAT_EVENT
+#define HAVE_MESSAGE_CHAT_EVENT
+
 #include <Qt>
+#include <QString>
+#include <QDateTime>
+
+#include "chatEvent.h"
 
 class MessageChatEvent : public ChatEvent
 {
@@ -9,36 +16,50 @@ public:
 
 	//getters
 
-	QString jid();
-	QString nick();
+	QString jid() const ;
+	QString nick() const;
 	
-	QString subject();
-	QString body() {return "TEST";};
+	QString subject() const;
+	QString body() const;
 
-	QDateTime timestamp();
+	QDateTime timestamp() const;
 	bool wasEncrypted();
 
-	bool local(); //our messgage? (outgoing)
-	bool spooled(); // offline storage
+	bool isLocal() const; //our messgage? (outgoing)
+	bool isSpooled() const; // offline storage
+
+	bool isConsecutive() const;
 
 	//setters
 	
-	QString setJid();
-	QString setNick();
+	void setJid(QString);
+	void setNick(QString);
 	
-	QString setSubject();
-	QString setBody();
+	void setSubject(QString);
+	void setBody(QString);
 
-	QDateTime setTimestamp();
+	void setTimestamp(QDateTime);
 	bool setWasEncrypted();
 
-	bool setLocal();		 //our messgage? (outgoing)
-	bool setSpooled(); 		// offline storage
+	void setLocal(bool);		 //our message? (outgoing)
+	void setSpooled(bool); 		// offline storage
+	void setConsecutive(bool);
+	
 
-	bool isConsecutive();
+    //reimplemented 
+    QString getRightTemplateAndFillItWithData(const ChatTheme&) const;
 
-	//implemented
-	virtual QString getRightTemplateAndFillItWithData(ChatTheme& theme) {
-		return theme.createOutgoingMessagePart(this);
-	}
+  private:
+	QString _body;
+	QString _nick;
+	QString _jid;
+	QDateTime _timestamp;
+
+	bool _isConsecutive;
+	bool _isSpooled;
+	bool _isLocal;
+
+    
 }; 
+
+#endif

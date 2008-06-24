@@ -2,15 +2,14 @@ function x() {
 	document.getElementById('senu').innerHTML='yyy ddd';
 } 
 
-function psi_appendNextMessage() {
+function psi_appendNextMessage(messagePart) {
 	try {
 		chatElement = document.getElementById('Chat');
 		insertDiv = document.getElementById('insert');
 		insertDiv.parentNode.removeChild(insertDiv);
 		
 		newNode = document.createElement('div');
-		newNode.innerHTML='<div class="out content"><div class="nameheader"><div class="name"><nobr>%sender%</nobr></div><div class="protocol"><nobr>%service%</nobr></div></div>        <div class="spacer"></div>       <div class="buddyicon"><img src="%userIconPath%" /></div>        <div class="messagecontainer">                <div class="messagetop">                        <div class="messagetopleft"></div><div class="messagetopright"></div>                </div>                <div class="messagetextcontainer">                        <div class="message">                                <p><span class="messagetime">%time%</span>SENU TU BYL TEZ</p>                                <div id="insert"></div>                        </div>                </div>        </div>        <div class="spacer"></div></div>';
-
+		newNode.innerHTML=messagePart;
 		chatElement.appendChild(newNode.children[0]);
 	}
 	catch(e) {

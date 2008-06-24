@@ -1,10 +1,12 @@
 #include "htmlChatTemplate.h"
 
+#include <QtDebug>
 
-HTMLChatTemplate::HTMLChatTemplate(QString _content) 
+HTMLChatTemplate::HTMLChatTemplate(const QString _content) 
 	: content(_content) {}
 
 
-QString HTMLChatTemplate::toString() {
-	return content;
+HTMLChatPart HTMLChatTemplate::createFreshHTMLPart() {
+	return HTMLChatPart(content);
 }
+

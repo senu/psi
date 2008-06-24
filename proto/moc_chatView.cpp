@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'chatView.h'
 **
-** Created: Fri May 30 01:42:18 2008
+** Created: Tue Jun 24 18:01:59 2008
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.1-snapshot-20080423)
 **
 ** WARNING! All changes made in this file will be lost!

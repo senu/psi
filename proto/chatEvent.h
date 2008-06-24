@@ -2,6 +2,7 @@
 #define HAVE_CHAT_EVENT
 
 #include <Qt>
+#include <QString>
 
 #include "chatTheme.h"
 

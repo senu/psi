@@ -6,6 +6,7 @@
 #include "chatTheme.h"
 #include "htmlChatTemplate.h"
 #include "fileTransferChatEvent.h"
+#include "chatMessageEvent.h"
 
 class ChatTheme;
 class FileTransferChatEvent;
@@ -29,6 +30,10 @@ public:
 	QString createFileTransferEventPart(const FileTransferChatEvent * event);
 
 private:
+    
+    /** Fills part with keywords from event (common for in/out next/cons messages) */
+    void fillPartWithKeywords(HTMLChatPart& part, const MessageChatEvent* event);
+
 	HTMLChatTemplate incomingConsecutiveMessageTemplate;
 	HTMLChatTemplate incomingNextMessageTemplate;
 

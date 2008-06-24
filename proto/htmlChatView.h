@@ -27,34 +27,14 @@ class HTMLChatView : public ChatView
 	QWebView webView; 
 
   public slots:
-	void evaluateJS(QString scriptSource) {
-		webView.page()->mainFrame()->evaluateJavaScript(scriptSource);
-		qDebug ("HTMLChatView::evaluateJS()");
-	}
+	void evaluateJS(QString scriptSource);
 
   	/** Reads JavaScript code (function definitions) from file and evaluates it in webkit */
-	void importJSChatFunctions() {
-		// reading from file only while developing	
-		QFile file("htmlChatView.js");
-		if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-	         return;
-
-		QString jsCode = file.readAll();
-
-		evaluateJS(jsCode);
-
-	}
-
-	void evaluateJS() {			
-		evaluateJS("x()");
-	}
+	void importJSChatFunctions();
 
 	void clear();
 
-	//for testing purposes only
-	void appendNextMessage();
-//	void appendConsecutiveMessage();
-	void appendConsecutiveMessage__(const MessageChatEvent * msg);
+	void appendMessage(const MessageChatEvent *msg);
 
 
   private:

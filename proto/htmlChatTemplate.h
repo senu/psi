@@ -1,27 +1,23 @@
 #include <Qt>
-#include <QString>
+
+#include "htmlChatPart.h"
 
 //TODO change name
-/** Message/Event template */
+/** Message/Event template 
+ * 
+ *  It's QString + loading methods.
+ */
 class HTMLChatTemplate {
 
 public:
 
 	/** Creates HTMLChatTemplate with content as content*/
-	HTMLChatTemplate(QString content);
+	HTMLChatTemplate(const QString content);
+	
 	HTMLChatTemplate() {};
 
-	/** Replaces occurence of %keyword% with escaped value */
-	void replaceAndEscapeKeyword(QString keyword, QString value); 
-
-	/** Replaces %keyword% with value */
-	void replaceKeyword(QString keyword, QString value); 
-
-	/** Escapes string */
-	void escapeString(QString string); 
-
-	/** Converts template to string */
-	QString toString();
+	/** Creates new HTMLChatPart */
+	HTMLChatPart createFreshHTMLPart();
 
 private:
 	/** Template body */
