@@ -13,6 +13,7 @@ class FileTransferChatEvent;
 class MessageChatEvent;
 class ChatEvent;
 
+/** ChatTheme used by HTMLChatView */
 class HTMLChatTheme : public ChatTheme 
 {	
 //...	
@@ -27,7 +28,7 @@ public:
 	
 	QString createOutgoingMessagePart(const MessageChatEvent *);
 	
-	QString createFileTransferEventPart(const FileTransferChatEvent * event);
+	QString createFileTransferEventPart(const FileTransferChatEvent * event) const;
 
 private:
     
@@ -40,7 +41,7 @@ private:
 	HTMLChatTemplate outgoingConsecutiveMessageTemplate;
 	HTMLChatTemplate outgoingNextMessageTemplate;
 
-	HTMLChatTemplate fileTransferMessageTemplate;
+	HTMLChatTemplate fileTransferEventTemplate;
 
 };
 

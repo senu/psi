@@ -11,12 +11,14 @@ INCLUDEPATH += .
 HEADERS += chatMessageEvent.h \
            chatTheme.h \
            chatView.h \
-           fileTransferChatEvent.h \
+		   abstractChatEvent.h \
+		   chatEvent.h\
+		   fileTransferChatEvent.h \
            htmlChatTemplate.h \
            htmlChatTheme.h \
            htmlChatView.h \
            testForm.h \
            htmlChatPart.h          
 
-SOURCES += chatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp testForm.cpp chatMessageEvent.cpp htmlChatPart.cpp
+SOURCES += abstractChatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp testForm.cpp chatMessageEvent.cpp htmlChatPart.cpp
 QT += webkit

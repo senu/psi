@@ -12,6 +12,7 @@
 class ChatView;
 class HTMLChatTheme;
 
+/** Themable Webkit-based HTML Chat View */
 class HTMLChatView : public ChatView 
 {
 	Q_OBJECT
@@ -35,12 +36,12 @@ class HTMLChatView : public ChatView
 	void clear();
 
 	void appendMessage(const MessageChatEvent *msg);
+	void appendEvent(const ChatEvent* event);
 
 
   private:
 	HTMLChatTheme theme; // maybe HTMLChatTheme* to global theme - don't know
 
-	void appendEvent(const ChatEvent& event);
 
 
 

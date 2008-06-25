@@ -17,7 +17,7 @@ public:
 	HTMLChatTemplate() {};
 
 	/** Creates new HTMLChatPart */
-	HTMLChatPart createFreshHTMLPart();
+	HTMLChatPart createFreshHTMLPart() const;
 
 private:
 	/** Template body */

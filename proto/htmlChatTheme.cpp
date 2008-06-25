@@ -9,7 +9,14 @@ HTMLChatTheme::HTMLChatTheme()
 			"<div class=\'out content\'>"
 			"<div class=\'nameheader\'><div class=\'name\'><nobr>%sender%</nobr></div><div class=\'protocol\'><nobr>%service%</nobr></div></div>"
 			"<div class=\'spacer\'></div>  <div class=\'buddyicon\'><img src=\'%userIconPath%\' /></div>   <div class=\'messagecontainer\'>"
-            "<div class=\'messagetop\'>   <div class=\'messagetopleft\'></div><div class=\'messagetopright\'></div>    </div>    <div class=\'messagetextcontainer\'>                        <div class=\'message\'>    <p><span class=\'messagetime\'>%time%</span>%message%</p>   <div id=\'insert\'></div>                        </div>   </div></div>  <div class=\'spacer\'></div></div>")
+            "<div class=\'messagetop\'>   <div class=\'messagetopleft\'></div><div class=\'messagetopright\'></div>    </div>    <div class=\'messagetextcontainer\'>                        <div class=\'message\'>    <p><span class=\'messagetime\'>%time%</span>%message%</p>   <div id=\'insert\'></div>                        </div>   </div></div>  <div class=\'spacer\'></div></div>"), 
+	 fileTransferEventTemplate(
+		"<div class=\'status content\'>"
+        "<div class=\'statusmessage\'><nobr>%message%</nobr></div>"
+        "<div class=\'statustime\'>%time%</div>"
+		"</div>"
+		"<div class=\'spacer\'></div>"		 			 
+	)
 
 {
 
@@ -20,7 +27,7 @@ QString HTMLChatTheme::createOutgoingMessagePart(const MessageChatEvent *) {
 	return "UNIMPLEMENTED";
 }		
 
-QString HTMLChatTheme::createFileTransferEventPart(const FileTransferChatEvent * event) {		
+QString HTMLChatTheme::createFileTransferEventPart(const FileTransferChatEvent * event) const {		
 
 	FileTransferChatEvent::FileTransferEventType type = event->type;
 
@@ -52,8 +59,12 @@ QString HTMLChatTheme::createFileTransferEventPart(const FileTransferChatEvent *
 
 
 	*/
-	return "UNIMPLEMENTED";
+	HTMLChatPart part = fileTransferEventTemplate.createFreshHTMLPart();
 
+    part.replaceAndEscapeKeyword("%message%", "eating breakfast");
+    part.replaceAndEscapeKeyword("%time%", QDateTime::currentDateTime().toString());
+
+	return part.toString();
 } 
 
 void HTMLChatTheme::fillPartWithKeywords(HTMLChatPart& part, const MessageChatEvent* event) {

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'testForm.h'
 **
-** Created: Tue Jun 24 23:01:20 2008
+** Created: Thu Jun 26 01:25:14 2008
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.1-snapshot-20080423)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,24 +23,27 @@ static const uint qt_meta_data_TestForm[] = {
        1,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   10, // methods
+       5,   10, // methods
        0,    0, // properties
        0,    0, // enums/sets
 
  // signals: signature, parameters, type, tag, flags
       10,    9,    9,    9, 0x05,
+      50,    9,    9,    9, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      50,    9,    9,    9, 0x08,
-      79,    9,    9,    9, 0x08,
+      81,    9,    9,    9, 0x08,
+     110,    9,    9,    9, 0x08,
+     132,    9,    9,    9, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_TestForm[] = {
     "TestForm\0\0messageCreated(const MessageChatEvent*)\0"
+    "eventCreated(const ChatEvent*)\0"
     "onConsecutiveButtonClicked()\0"
-    "onNextButtonClicked()\0"
+    "onNextButtonClicked()\0onEventButtonClicked()\0"
 };
 
 const QMetaObject TestForm::staticMetaObject = {
@@ -69,10 +72,12 @@ int TestForm::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: messageCreated((*reinterpret_cast< const MessageChatEvent*(*)>(_a[1]))); break;
-        case 1: onConsecutiveButtonClicked(); break;
-        case 2: onNextButtonClicked(); break;
+        case 1: eventCreated((*reinterpret_cast< const ChatEvent*(*)>(_a[1]))); break;
+        case 2: onConsecutiveButtonClicked(); break;
+        case 3: onNextButtonClicked(); break;
+        case 4: onEventButtonClicked(); break;
         }
-        _id -= 3;
+        _id -= 5;
     }
     return _id;
 }
@@ -82,5 +87,12 @@ void TestForm::messageCreated(const MessageChatEvent * _t1)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
+}
+
+// SIGNAL 1
+void TestForm::eventCreated(const ChatEvent * _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 QT_END_MOC_NAMESPACE

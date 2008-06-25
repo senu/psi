@@ -5,9 +5,12 @@
 #include <QString>
 #include <QDateTime>
 
-#include "chatEvent.h"
+#include "abstractChatEvent.h"
 
-class MessageChatEvent : public ChatEvent
+class AbstractChatEvent;
+
+/** Message ChatEvent - incoming/outgoing consecutive/next */
+class MessageChatEvent : public AbstractChatEvent
 {
 public:	
 

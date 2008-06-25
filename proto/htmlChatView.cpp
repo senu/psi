@@ -6,13 +6,6 @@ void HTMLChatView::clear() {
 
 }
 
-void HTMLChatView::appendEvent(const ChatEvent& event) {
-	QString part = event.getRightTemplateAndFillItWithData(theme);
-
-	//findPlaceForNewEventAndInsert(part); 			
-	//scrolling, misc. 
-}
-
 void HTMLChatView::appendMessage(const MessageChatEvent* msg) {
     if (msg->isConsecutive())
 	    evaluateJS("psi_appendConsecutiveMessage(\"" + theme.createIncomingMessagePart(msg) + "\")");
@@ -22,13 +15,19 @@ void HTMLChatView::appendMessage(const MessageChatEvent* msg) {
     //TODO
     // Webkit (javascript) must notify us when appending message is completed (we need to scroll after appending not before)      
     webView.page()->mainFrame()->setScrollBarValue(Qt::Vertical, 10000); //TODO 1
-
 }
+
+void HTMLChatView::appendEvent(const ChatEvent* msg) {
+    evaluateJS("psi_appendEvent(\"" + msg->getRightTemplateAndFillItWithData(theme) + "\")");
+}
+
 
 void HTMLChatView::evaluateJS(QString scriptSource) {
     webView.page()->mainFrame()->evaluateJavaScript(scriptSource);
-   // qDebug() << "HTMLChatView::evaluateJS(" << scriptSource <<  ")\n";
+   qDebug() << "HTMLChatView::evaluateJS(" << scriptSource <<  ")\n";
 }
+
+
 void HTMLChatView::importJSChatFunctions() {
     // reading from file only while developing	
     QFile file("htmlChatView.js");

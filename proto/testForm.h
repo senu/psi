@@ -24,10 +24,12 @@ Q_OBJECT
     /** creates message */
     void onConsecutiveButtonClicked();
     void onNextButtonClicked();
+    void onEventButtonClicked();
 
   signals:      
     /** on message created */
     void messageCreated(const MessageChatEvent*);        
+    void eventCreated(const ChatEvent*);        
 };
 
 #endif

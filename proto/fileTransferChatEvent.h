@@ -8,11 +8,12 @@
 #include "chatTheme.h"
 
 class ChatTheme;
-class ChatEvent;
+class AstractChatEvent;
 
+/** FileTransfer (init/abort/finished) ChatEvent */
 class FileTransferChatEvent : public ChatEvent 
 {
-public:	
+  public:	
 	enum FileTransferEventType {
 		Initiated,
 		Aborted,
@@ -22,8 +23,7 @@ public:
 	FileTransferEventType type;
 	QString fileName; //need accessors
 
-	virtual QString getRightTemplateAndFillItWithData(ChatTheme& theme) {
-
+	QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const {
 		return theme.createFileTransferEventPart(this);
 	}
 };

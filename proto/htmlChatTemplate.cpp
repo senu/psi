@@ -6,7 +6,7 @@ HTMLChatTemplate::HTMLChatTemplate(const QString _content)
 	: content(_content) {}
 
 
-HTMLChatPart HTMLChatTemplate::createFreshHTMLPart() {
+HTMLChatPart HTMLChatTemplate::createFreshHTMLPart() const {
 	return HTMLChatPart(content);
 }
 

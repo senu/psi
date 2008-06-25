@@ -1,12 +1,10 @@
-function x() {
-	document.getElementById('senu').innerHTML='yyy ddd';
-} 
-
 function psi_appendNextMessage(messagePart) {
 	try {
 		chatElement = document.getElementById('Chat');
 		insertDiv = document.getElementById('insert');
-		insertDiv.parentNode.removeChild(insertDiv);
+
+		if(insertDiv != null) //could be removed by appendEvent
+			insertDiv.parentNode.removeChild(insertDiv);
 		
 		newNode = document.createElement('div');
 		newNode.innerHTML=messagePart;
@@ -35,4 +33,7 @@ function psi_appendConsecutiveMessage(messagePart) {
 	}
 }
 
+function psi_appendEvent(eventPart) {
+	psi_appendNextMessage(eventPart);
+}
 
