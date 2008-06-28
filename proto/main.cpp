@@ -4,7 +4,6 @@
 #include <QApplication>
 #include <QtDebug>
 
-#include "testForm.h"
 #include <QDomDocument>
 #include <QDomElement>
 #include <QDomNodeList>
@@ -12,6 +11,10 @@
 #include <QStringList>
 #include <QHash>
 #include <QPair>
+
+#include "testForm.h"
+#include "htmlChatThemeList.h"
+
 
 //TODO stack instead of recursion?
 //TODO i assume (I didn't check) there's no copy passing non-reference QDomElement
@@ -109,19 +112,31 @@ int main(int argc, char *argv[]) {
 
     dfs(doc.documentElement(), 0);
 
+	HTMLChatThemeList themeList;
+
+	themeList.readThemes();
+
+	QString themePath;
+	QStringList themeNames = themeList.themeNames();
+
+	foreach(themePath, themeNames) {
+		qDebug() << themePath << themeList.themePath(themePath);
+	}
 
 
-/*
+
+
+
     int ret = 0;
-    */
+
 	
-    TestForm * form = new TestForm(0);
-    form->show();
+ //   TestForm * form = new TestForm(0);
+   // form->show();
 
 
 
-    int ret = app.exec();
-    delete form;
+//    int ret = app.exec();
+//    delete form;
 	 
      
     return ret;

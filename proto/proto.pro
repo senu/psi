@@ -20,8 +20,11 @@ HEADERS += chatMessageEvent.h \
            htmlChatView.h \
            testForm.h \
            htmlChatPart.h\
-  		   messageValidator.h
+  		   messageValidator.h\
+		   chatThemeList.h\
+		   htmlChatThemeList.h
 
 
-SOURCES += abstractChatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp testForm.cpp chatMessageEvent.cpp htmlChatPart.cpp statusChatEvent.cpp
+SOURCES += abstractChatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp testForm.cpp chatMessageEvent.cpp htmlChatPart.cpp statusChatEvent.cpp chatThemeList.cpp htmlChatThemeList.cpp
+
 QT += webkit xml
