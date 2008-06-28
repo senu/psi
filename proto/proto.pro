@@ -14,11 +14,14 @@ HEADERS += chatMessageEvent.h \
 		   abstractChatEvent.h \
 		   chatEvent.h\
 		   fileTransferChatEvent.h \
+		   statusChatEvent.h\
            htmlChatTemplate.h \
            htmlChatTheme.h \
            htmlChatView.h \
            testForm.h \
-           htmlChatPart.h          
+           htmlChatPart.h\
+  		   messageValidator.h
 
-SOURCES += abstractChatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp testForm.cpp chatMessageEvent.cpp htmlChatPart.cpp
-QT += webkit
+
+SOURCES += abstractChatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp testForm.cpp chatMessageEvent.cpp htmlChatPart.cpp statusChatEvent.cpp
+QT += webkit xml

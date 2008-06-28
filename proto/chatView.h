@@ -21,6 +21,9 @@ Q_OBJECT
 
 	/** clears all messges */
 	virtual void clear() = 0;
+
+	/** Initialize ChatView */
+	virtual void init() = 0;
 	
 	virtual ~ChatView() {}	
 };

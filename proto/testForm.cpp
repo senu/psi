@@ -4,6 +4,10 @@
 #include "testForm.h"
 #include "htmlChatView.h"
 
+TestForm::~TestForm() {
+	delete view;
+}
+
 /** Widget used for testing ChatView */
 TestForm::TestForm(QWidget *parent) 
    : QFrame(parent)
@@ -13,10 +17,11 @@ TestForm::TestForm(QWidget *parent)
 	QPushButton * consMessageBtn = new QPushButton("appendConsecutiveMessage", this);
 	QPushButton * eventMessageBtn = new QPushButton("appendEvent", this);
 
-    HTMLChatView * view = new HTMLChatView(this);
+    view = new HTMLChatView(this);
 
 #warning change next line
-    view->webView.load(QUrl("/home/senu/dev/psi/gsoc/repo/psi-fork/proto/themes/Satin.AdiumMessageStyle/Contents/Resources/tmp.html"));
+//    view->webView.load(QUrl("/home/senu/dev/psi/gsoc/repo/psi-fork/proto/themes/Satin.AdiumMessageStyle/Contents/Resources/tmp.html"));
+	view->init();
 	view->setGeometry(0,0,300,200);
     view->show();
 
@@ -51,7 +56,9 @@ void TestForm::onConsecutiveButtonClicked() {
     ce->setBody(messageEdit->text());
     ce->setTimestamp(QDateTime::currentDateTime());
     ce->setNick("senu");
+    ce->setService("Jabber");
     ce->setConsecutive(true);
+	ce->setLocal(true);
          
     emit messageCreated(ce);
 }
@@ -60,8 +67,13 @@ void TestForm::onNextButtonClicked() { // copy-paste :D
     MessageChatEvent * ce = new MessageChatEvent();
     ce->setBody(messageEdit->text());
     ce->setTimestamp(QDateTime::currentDateTime());
-    ce->setNick("Pawel Wiejacha");
     ce->setConsecutive(false);
+    ce->setService("Jabber");
+	ce->setLocal(qrand()%2);
+	if(ce->isLocal())
+	    ce->setNick("Pawel Wiejacha");
+	else
+	    ce->setNick("Kot behemot");
 
     emit messageCreated(ce);
 }
@@ -72,4 +84,10 @@ void TestForm::onEventButtonClicked() {
 	FileTransferChatEvent *ev = new FileTransferChatEvent();
 
 	emit eventCreated(ev);
+
+	StatusChatEvent *ev2 = new StatusChatEvent();
+
+	ev2->setStatusMessage("status message zzz");
+
+	emit eventCreated(ev2);
 }

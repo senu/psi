@@ -21,11 +21,17 @@ class FileTransferChatEvent : public ChatEvent
 	};
 
 	FileTransferEventType type;
-	QString fileName; //need accessors
+
+	QString fileName() const;
+	void setFileName(QString);
+	
 
 	QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const {
 		return theme.createFileTransferEventPart(this);
 	}
+
+private:	
+	QString _fileName; //need accessors
 };
 
 #endif

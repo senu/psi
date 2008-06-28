@@ -12,9 +12,9 @@ void MessageChatEvent::setBody(QString body) {
 QString MessageChatEvent::body() const {
     return _body;
 }
-	
+
 void MessageChatEvent::setTimestamp(QDateTime timestamp) {
-    _timestamp = timestamp; 
+    _timestamp = timestamp;
 }
 
 QDateTime MessageChatEvent::timestamp() const {
@@ -37,6 +37,13 @@ QString MessageChatEvent::jid() const {
     return _jid;
 }
 
+QString MessageChatEvent::service() const {
+    return _service;
+}
+
+void MessageChatEvent::setService(QString service) {
+    _service = service;
+}
 
 void MessageChatEvent::setConsecutive(bool is) {
     _isConsecutive = is;
@@ -44,4 +51,12 @@ void MessageChatEvent::setConsecutive(bool is) {
 
 bool MessageChatEvent::isConsecutive() const {
     return _isConsecutive;
+}
+
+void MessageChatEvent::setLocal(bool is) {
+    _isLocal = is;
+}
+
+bool MessageChatEvent::isLocal() const {
+	return _isLocal;
 }

@@ -16,11 +16,14 @@ public:
 	
 	HTMLChatTemplate() {};
 
+	QString content() const;
+	void setContent(QString);
+
 	/** Creates new HTMLChatPart */
 	HTMLChatPart createFreshHTMLPart() const;
 
 private:
 	/** Template body */
-	QString content;
+	QString _content;
 
 };

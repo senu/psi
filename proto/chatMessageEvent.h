@@ -26,6 +26,7 @@ public:
 	QString body() const;
 
 	QDateTime timestamp() const;
+	QString service() const;
 	bool wasEncrypted();
 
 	bool isLocal() const; //our messgage? (outgoing)
@@ -41,9 +42,12 @@ public:
 	void setSubject(QString);
 	void setBody(QString);
 
+	void setService(QString);
+
 	void setTimestamp(QDateTime);
 	bool setWasEncrypted();
 
+	/** Is it our message? */
 	void setLocal(bool);		 //our message? (outgoing)
 	void setSpooled(bool); 		// offline storage
 	void setConsecutive(bool);
@@ -56,6 +60,7 @@ public:
 	QString _body;
 	QString _nick;
 	QString _jid;
+	QString _service;
 	QDateTime _timestamp;
 
 	bool _isConsecutive;

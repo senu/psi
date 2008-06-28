@@ -7,6 +7,7 @@
 #include <QLineEdit>
 
 #include "chatMessageEvent.h"
+#include "htmlChatView.h"
 
 
 /** Form that holds ChatView widget */
@@ -15,10 +16,11 @@ Q_OBJECT
 
   public:
     TestForm(QWidget * parent);
-    ~TestForm() {}; //TODO
+    ~TestForm(); //TODO
 
   private:
     QLineEdit * messageEdit;
+	HTMLChatView * view;
 
   private slots:
     /** creates message */
