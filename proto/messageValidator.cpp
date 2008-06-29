@@ -1,3 +1,9 @@
+
+#include <qt4/Qt/qdom.h>
+
+
+#include <qt4/Qt/qdom.h>
+
 #include "messageValidator.h"
 #include "chatMessageEvent.h"
 
@@ -62,7 +68,6 @@ const QString styleProperties[] = {
 
 
 enum ValidationResult {
-
     OK,
     Modified,
     Removed
@@ -71,26 +76,65 @@ enum ValidationResult {
 
 typedef QPair<ValidationResult, QDomNode> ValidatedNode;
 
+//TODO:
+// 1.  currently <div><script><strong>visible</strong></script></div>  ~~> </div></div>
+//
+//   but:
+//   W3C TEXT: If a user agent encounters an element it does not recognize, it must continue to process the children of that element. If the content is text, the text must be presented to the user.
+// 2. We need CSS validation
 
 void MessageValidator::dfs(QDomElement cur, int tabs) {
     tabs += 3;
 
     qDebug() << QString(tabs, ' ') << cur.tagName() << " ---> " << (bool)allowed.contains(cur.tagName());
 
+	QString parentName = cur.tagName();
+
+	NodeInfo curNI = allowed[parentName]; 
+
+	//delete disallowed attributes
+	for(int i=0; i < cur.attributes().count(); i++) {
+		QString attrName = cur.attributes().item(i).toAttr().name();
+		
+		if(!curNI.allowedAttributes.contains(attrName)) {
+			qDebug() << "VALIDATIN ERR" << "TA" << attrName  << " in " << parentName;
+			qDebug() << "note allowed attributes are:" << curNI.allowedAttributes;
+
+			cur.attributes().removeNamedItem(attrName);
+			i--;
+		}
+	}
+				
+
+	
+
     QDomNodeList children = cur.childNodes();
+	
     for (int i = 0; i < children.size(); i++) {
         QDomNode node = children.at(i);
-        qDebug() << i << "/" << children.size();
+        //      qDebug() << i << "/" << children.size();
         if (node.isElement()) {
-            if (node.toElement().tagName() == "p") {
-                cur.removeChild(node);
+			//is subElement valid here?
+
+			QString childName = node.toElement().tagName();
+			
+			if(!curNI.allowedTags.contains(childName)) {
+				
+				qDebug() << "VALIDATIN ERR" << "TS" << childName << " in " << parentName;
+				qDebug() << "note allowed subElements are:" << curNI.allowedTags;
+                
+				cur.removeChild(node);
                 i--;
             }
-            else
+			else {
                 dfs(node.toElement(), tabs);
+			}
         }
         else if (node.isText()) {
             qDebug() << QString(tabs + 3, ' ') << node.toText().data();
+        }
+		else if (node.isComment()) {
+            qDebug() << QString(tabs + 3, ' ') << "comment" << node.toComment().data();
         }
         else {
             throw 3.3;
@@ -103,34 +147,8 @@ void MessageValidator::dfs(QDomElement cur, int tabs) {
 
 MessageValidator::MessageValidator() {
 
-	generateAllowedDict();
-	
-    QDomDocument doc("document");
+    generateAllowedDict();
 
-    QString message =
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-            "<div>senu tu byl"
-            "<b>i jest fajny</b>"
-            "joined text?"
-            "<p>"
-            "<i>kursywa</i>"
-            "<table>NOWAY</table>"
-            "<br/>"
-            "a teraz cos zupelnie z innej beczki"
-            "</p>"
-            "a teraz cos zupelnie z innej beczki 444"
-            "<b>xx</b>"
-            "</div>";
-
-    QString errorMessage;
-    int line, column;
-
-    if (!doc.setContent(message, false, &errorMessage, &line, &column)) {
-        qDebug() << errorMessage << " " << line << " " << column;
-        exit(2);
-    }
-
-    dfs(doc.documentElement(), 0);
 }
 
 
@@ -144,12 +162,35 @@ void MessageValidator::generateAllowedDict() {
 
     NodeInfo textNI,
             hypertextNI,
-			imgNI, 
-			structNI, 
-			listNI;
+            imgNI,
+            structNI,
+            listNI;
 
 
-	appendArrayToList(textElements, sizeof(textElements), structNI.allowedTags);
+    appendArrayToList(textElements, sizeof (textElements), structNI.allowedTags);
+    appendArrayToList(listElements, sizeof (listElements), structNI.allowedTags);
+    appendArrayToList(hypertextElements, sizeof (hypertextElements), structNI.allowedTags);
+    appendArrayToList(imgElements, sizeof (imgElements), structNI.allowedTags);
+	
+    appendArrayToList(textElements, sizeof (textElements), textNI.allowedTags);
+    appendArrayToList(listElements, sizeof (listElements), textNI.allowedTags);
+    appendArrayToList(hypertextElements, sizeof (hypertextElements), textNI.allowedTags);
+    appendArrayToList(imgElements, sizeof (imgElements), textNI.allowedTags);
+
+	//attrs
+    appendArrayToList(defaultAttributes, sizeof (defaultAttributes), textNI.allowedAttributes);
+
+	textNI.canHaveText = true;
+	textNI.canBeEmpty = true;
+
+
+	for(int i=1; i< sizeof(textElements)/sizeof(QString); i++) {
+		allowed[textElements[i]]=textNI;
+	}
+
+
+
+    qDebug() << structNI.allowedTags;
 }
 
 
@@ -160,4 +201,18 @@ void MessageValidator::appendArrayToList(const QString *array, int arraySize, QS
 }
 
 
+QString MessageValidator::validateMessage(QString message, bool* modified) {
+    QDomDocument doc("document");
 
+    QString errorMessage;
+    int line, column;
+
+    if (!doc.setContent(message, false, &errorMessage, &line, &column)) {
+        qDebug() << errorMessage << " " << line << " " << column;
+        exit(2);
+    }
+
+    dfs(doc.documentElement(), 0);
+    qDebug() << doc.toString();
+	return doc.toString();
+}

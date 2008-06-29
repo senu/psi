@@ -5,7 +5,8 @@
 TEMPLATE = app
 TARGET = 
 DEPENDPATH += . .
-INCLUDEPATH += .
+INCLUDEPATH += . ../third-party/cppunit/cppunit/include/
+LIBS += /usr/lib/libcppunit-1.12.so.1
 
 # Input
 HEADERS += chatMessageEvent.h \
@@ -22,9 +23,12 @@ HEADERS += chatMessageEvent.h \
            htmlChatPart.h\
   		   messageValidator.h\
 		   chatThemeList.h\
-		   htmlChatThemeList.h
+		   htmlChatThemeList.h\
+		   tests/testMessageValidator.h
 
 
-SOURCES += abstractChatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp testForm.cpp chatMessageEvent.cpp htmlChatPart.cpp statusChatEvent.cpp chatThemeList.cpp htmlChatThemeList.cpp messageValidator.cpp
+
+
+SOURCES += abstractChatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp testForm.cpp chatMessageEvent.cpp htmlChatPart.cpp statusChatEvent.cpp chatThemeList.cpp htmlChatThemeList.cpp messageValidator.cpp tests/testMessageValidator.cpp
 
 QT += webkit xml
