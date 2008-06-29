@@ -6,9 +6,9 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "../MessageValidator.h"
+#include "../messageValidator.h"
 
-
+/** CppUnit unit test for MessageValidator */
 class TestMessageValidator : public CPPUNIT_NS::TestFixture {
 
     CPPUNIT_TEST_SUITE(TestMessageValidator);

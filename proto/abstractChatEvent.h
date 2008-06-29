@@ -8,7 +8,7 @@
 
 class ChatTheme;
 
-/** Abstract. Messages and FileTransfer/Mood/etc. Events */
+/** Abstract Chat Event: Messages and FileTransfer/Mood/etc events */
 class AbstractChatEvent //TODO name 											
 {
   public:	
