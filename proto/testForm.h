@@ -3,10 +3,12 @@
 
 #include <Qt> 
 #include <QWidget> 
+#include <QComboBox> 
 #include <QFrame> 
 #include <QLineEdit>
 
 #include "chatMessageEvent.h"
+#include "htmlChatThemeList.h"
 #include "htmlChatView.h"
 
 
@@ -20,7 +22,10 @@ Q_OBJECT
 
   private:
     QLineEdit * messageEdit;
+	QComboBox *comboBox;
+
 	HTMLChatView * view;
+	HTMLChatThemeList themeList;
 
   private slots:
     /** creates message */

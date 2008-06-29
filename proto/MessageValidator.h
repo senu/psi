@@ -1,6 +1,8 @@
 #ifndef _MESSAGEVALIDATOR_H
 #define	_MESSAGEVALIDATOR_H
 
+#include <QString>
+
 /** Performs XHTML-IM message validation (and cuts off bad elements/attributes) */
 class MessageValidator {
 	

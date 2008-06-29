@@ -17,6 +17,8 @@ TestForm::TestForm(QWidget *parent)
 	QPushButton * consMessageBtn = new QPushButton("appendConsecutiveMessage", this);
 	QPushButton * eventMessageBtn = new QPushButton("appendEvent", this);
 
+	comboBox = new QComboBox(this);
+
     view = new HTMLChatView(this);
 
 #warning change next line
@@ -36,6 +38,23 @@ TestForm::TestForm(QWidget *parent)
 
     messageEdit = new QLineEdit("message body", this);
     messageEdit->setGeometry(0,870,180,30);
+
+
+	themeList.readThemes();
+
+	QString themePath;
+	QStringList themeNames = themeList.themeNames();
+
+	foreach(themePath, themeNames) {
+		qDebug() << themePath << themeList.themePath(themePath);
+	}
+
+	
+	comboBox->addItems(themeNames);
+    comboBox->setGeometry(0,700,180,40);
+	comboBox->show();
+
+
 	
 	this->setGeometry(0,0,800,950);
 
