@@ -46,8 +46,11 @@ protected:
 
     void dfs(QDomElement cur, int tabs);
 
+    /** Fills allowed dictionary */
+    void generateAllowedDict();
+
     /** Converts const QString array to QStringList, arraySize is sizeof(QString)*n_elements we want to add */
-    QStringList arrayToList(const QString *array, int arraySize);
+	void appendArrayToList(const QString *array, int arraySize, QStringList& list);
 
     /** Tag name -> NodeInfo dict */
     QHash<QString, NodeInfo> allowed;

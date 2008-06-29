@@ -61,13 +61,11 @@ const QString styleProperties[] = {
 //TODO ? validate style values (eg. text-decoderation: underline)?
 
 
-
-
-
 enum ValidationResult {
-	OK,
-	Modified,
-	Removed
+
+    OK,
+    Modified,
+    Removed
 };
 
 
@@ -77,49 +75,51 @@ typedef QPair<ValidationResult, QDomNode> ValidatedNode;
 void MessageValidator::dfs(QDomElement cur, int tabs) {
     tabs += 3;
 
-	qDebug() << QString(tabs, ' ') << cur.tagName() << " ---> " << (bool)allowed.contains(cur.tagName());
-		
-	QDomNodeList children = cur.childNodes();
-	for (int i = 0; i < children.size(); i++) {
-		QDomNode node = children.at(i);
-		qDebug() << i << "/" << children.size();
-		if (node.isElement()){ 
-			if (node.toElement().tagName() == "p") {
-				cur.removeChild(node);
-				i--;
-			}
-			else
-				dfs(node.toElement(), tabs);
-		}
-		else if (node.isText()) {
-			qDebug() << QString(tabs+3, ' ') << node.toText().data();
-		}
-		else {
-			throw 3.3;
-		}
-	}
+    qDebug() << QString(tabs, ' ') << cur.tagName() << " ---> " << (bool)allowed.contains(cur.tagName());
+
+    QDomNodeList children = cur.childNodes();
+    for (int i = 0; i < children.size(); i++) {
+        QDomNode node = children.at(i);
+        qDebug() << i << "/" << children.size();
+        if (node.isElement()) {
+            if (node.toElement().tagName() == "p") {
+                cur.removeChild(node);
+                i--;
+            }
+            else
+                dfs(node.toElement(), tabs);
+        }
+        else if (node.isText()) {
+            qDebug() << QString(tabs + 3, ' ') << node.toText().data();
+        }
+        else {
+            throw 3.3;
+        }
+    }
 
 
 }
 
-MessageValidator::MessageValidator() {
-	arrayToList(textElements, sizeof(textElements));
 
+MessageValidator::MessageValidator() {
+
+	generateAllowedDict();
+	
     QDomDocument doc("document");
 
     QString message =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             "<div>senu tu byl"
             "<b>i jest fajny</b>"
-			"joined text?"
+            "joined text?"
             "<p>"
             "<i>kursywa</i>"
             "<table>NOWAY</table>"
-			"<br/>"
-			"a teraz cos zupelnie z innej beczki"
+            "<br/>"
+            "a teraz cos zupelnie z innej beczki"
             "</p>"
-			"a teraz cos zupelnie z innej beczki 444"
-			"<b>xx</b>"
+            "a teraz cos zupelnie z innej beczki 444"
+            "<b>xx</b>"
             "</div>";
 
     QString errorMessage;
@@ -133,22 +133,30 @@ MessageValidator::MessageValidator() {
     dfs(doc.documentElement(), 0);
 }
 
+
 MessageValidator::~MessageValidator() {
 
 }
 
-void MessageValidator::generateAllowedDict() {
 
+void MessageValidator::generateAllowedDict() {
+    //TODO check XHTML rfc 
+
+    NodeInfo textNI,
+            hypertextNI,
+			imgNI, 
+			structNI, 
+			listNI;
+
+
+	appendArrayToList(textElements, sizeof(textElements), structNI.allowedTags);
 }
 
-QStringList MessageValidator::arrayToList(const QString *array, int arraySize) {
-	QStringList list;
-	
-	for(int i=0; i < arraySize/sizeof(QString); i++) {
-		list.append(array[i]);
-	}
-	
-	return list;
+
+void MessageValidator::appendArrayToList(const QString *array, int arraySize, QStringList& list) {
+    for (int i = 0; i < arraySize / sizeof (QString); i++) {
+        list.append(array[i]);
+    }
 }
 
 
