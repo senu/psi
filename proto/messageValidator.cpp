@@ -1,8 +1,5 @@
 
-#include <qt4/Qt/qdom.h>
-
-
-#include <qt4/Qt/qdom.h>
+#include <QtXml>
 
 #include "messageValidator.h"
 #include "chatMessageEvent.h"

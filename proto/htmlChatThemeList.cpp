@@ -2,7 +2,7 @@
 #include <QDir>
 #include <QtDebug>
 #include <QStringList>
-#include <qt4/QtCore/qstring.h>
+#include <QString>
 
 void HTMLChatThemeList::readThemes() {
 #warning change next line	
