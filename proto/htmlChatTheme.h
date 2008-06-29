@@ -38,6 +38,8 @@ public:
     QString createFileTransferEventPart(const FileTransferChatEvent * event) const;
     QString createStatusEventPart(const StatusChatEvent * event) const;
 
+    /** Fills part (footer/header) with keywords (chatName, timeOpened) */
+	void fillPartWithThemeKeywords(HTMLChatPart& part, QString chatName, QDateTime timeOpened) const;
 	
 	HTMLChatTemplate headerTemplate; //TODO accessors
     HTMLChatTemplate footerTemplate;
@@ -45,7 +47,8 @@ public:
 private:
 
     /** Fills part with keywords from event (common for in/out next/cons messages) */
-    void fillPartWithKeywords(HTMLChatPart& part, const MessageChatEvent* event) const;
+    void fillPartWithMessageKeywords(HTMLChatPart& part, const MessageChatEvent* event) const;
+	
 
     /** returns dir/relativePath (to Contents dir) */
     QString readFileContents(QDir dir, QString relativePath);

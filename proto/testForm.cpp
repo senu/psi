@@ -89,7 +89,7 @@ void TestForm::onNextButtonClicked() { // copy-paste :D
 	if(ce->isLocal())
 	    ce->setNick("Pawel Wiejacha");
 	else
-	    ce->setNick("Kot behemot");
+	    ce->setNick("Kot Behemot");
 
     emit messageCreated(ce);
 }

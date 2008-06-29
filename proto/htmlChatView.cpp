@@ -30,14 +30,20 @@ void HTMLChatView::onEmptyDocumentLoaded(bool ok) {
 		exit(1);
 	}
 
-	QString header = theme.headerTemplate.createFreshHTMLPart().toString();
-	QString footer = theme.footerTemplate.createFreshHTMLPart().toString();
+	HTMLChatPart header = theme.headerTemplate.createFreshHTMLPart();
+	HTMLChatPart footer = theme.footerTemplate.createFreshHTMLPart();
 
-	escapeString(header);
-	escapeString(footer);
+	theme.fillPartWithThemeKeywords(header, "Kot Behemot", QDateTime::currentDateTime());
+	theme.fillPartWithThemeKeywords(footer, "Kot Behemot", QDateTime::currentDateTime());
+
+	QString headerStr = header.toString();
+	QString footerStr = footer.toString();
+			
+	escapeString(headerStr);
+	escapeString(footerStr);
 
 	importJSChatFunctions();
-	evaluateJS("psi_initDocument(\""+ header + "\", \"" + footer + "\")");
+	evaluateJS("psi_initDocument(\""+ headerStr + "\", \"" + footerStr + "\")");
 	
 }
 
