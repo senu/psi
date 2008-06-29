@@ -22,11 +22,13 @@ HTMLChatTheme::HTMLChatTheme()
 
 }
 
-//TODO Kev exceptions?
 QString HTMLChatTheme::readFileContents(QDir dir, QString relativePath) {
 	QFile file(dir.absoluteFilePath(relativePath));
+	qDebug() << "loading theme" << dir.absoluteFilePath(relativePath);
 	if(!file.open(QIODevice::ReadOnly)) {
-		throw 'c';			
+//		throw 'c';			
+		qDebug() << "WARNING\n\n" << "file not found"; //TODO 
+		return "";
 	}
 
 	return file.readAll();
@@ -46,6 +48,9 @@ HTMLChatTheme::HTMLChatTheme(QString path) {
 	
 	outgoingConsecutiveMessageTemplate.setContent(readFileContents(dir, "Resources/Outgoing/NextContent.html"));
 	outgoingNextMessageTemplate.setContent(readFileContents(dir, "Resources/Outgoing/Content.html"));
+
+	//TODO ISSUES i found theme that doesn't have outgoing folder - kopete spec. says it is required template
+	//some themes don't have footer
 
 	fileTransferEventTemplate.setContent(readFileContents(dir, "Resources/Status.html"));
 	

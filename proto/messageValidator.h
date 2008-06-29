@@ -44,7 +44,11 @@ protected:
         bool canBeEmpty; //TODO i need to check xhtml rfc. Do we need that?
     };
 
-    void dfs(QDomElement cur, int tabs);
+	/** Traverse through Tree(cur) and cut off bad elements/attributes/styles.
+		tabs are for debug;
+		modified will be set to true if tree was modified
+	 */
+    void dfs(QDomElement cur, int tabs, bool* modified);
 
     /** Fills allowed dictionary */
     void generateAllowedDict();

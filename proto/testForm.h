@@ -10,6 +10,7 @@
 #include "chatMessageEvent.h"
 #include "htmlChatThemeList.h"
 #include "htmlChatView.h"
+#include "messageValidator.h"
 
 
 /** Form that holds ChatView widget */
@@ -26,12 +27,14 @@ Q_OBJECT
 
 	HTMLChatView * view;
 	HTMLChatThemeList themeList;
+	MessageValidator msgVal; 
 
   private slots:
     /** creates message */
     void onConsecutiveButtonClicked();
     void onNextButtonClicked();
     void onEventButtonClicked();
+	void onLoadTheme();
 
   signals:      
     /** on message created */

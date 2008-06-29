@@ -17,7 +17,7 @@ class HTMLChatView : public ChatView {
     Q_OBJECT
 
 public:
-    HTMLChatView(QWidget * parent);
+	HTMLChatView(QWidget * parent, HTMLChatTheme theme);
 
     ~HTMLChatView();
     QWebView webView;
@@ -35,6 +35,9 @@ public slots:
 
     /** Creates HTML document (header,chat,footer) */
     void init();
+
+	//reimplemented
+	void setVisible(bool visible);
 
 private slots:
 	/** Load JS code, append header, chat div, and footer 

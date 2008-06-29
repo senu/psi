@@ -1,11 +1,13 @@
 #include "htmlChatView.h"
 #include <iostream> //TODO 
+
+#include "config.h"
+
 class MessageChatEvent;
 
-HTMLChatView::HTMLChatView(QWidget * parent)
-: ChatView(parent), theme("/home/senu/dev/psi/gsoc/repo/psi-fork/proto/themes/Pro.AdiumMessageStyle/") {
+HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme)
+: ChatView(parent), theme(_theme) {
     webView.setParent(parent);
-
 }
 
 
@@ -16,9 +18,8 @@ void HTMLChatView::clear() {
 void HTMLChatView::init() {
 
     QObject::connect(&webView, SIGNAL(loadFinished(bool)), this, SLOT(onEmptyDocumentLoaded(bool)));
-#warning change next line!	
 	createEmptyDocument(theme.baseHref());
-	webView.load(QUrl("/home/senu/dev/psi/gsoc/repo/psi-fork/proto/emptyDocument.html"));\
+	webView.load(QUrl(_THEMEPATH"emptyDocument.html"));\
 	//now we are waiting for loadFinished signal
 }
 
@@ -41,9 +42,8 @@ void HTMLChatView::onEmptyDocumentLoaded(bool ok) {
 }
 
 void HTMLChatView::createEmptyDocument(QString baseHref) {
-#warning change next line	
-	QFile docFile("/home/senu/dev/psi/gsoc/repo/psi-fork/proto/emptyDocument.html");
-	
+	QFile docFile(_THEMEPATH"emptyDocument.html");
+
 	QString content = //I know, I know...
 			QString(
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
@@ -92,7 +92,6 @@ void HTMLChatView::appendMessage(const MessageChatEvent* msg) {
 		part = theme.createIncomingMessagePart(msg);
 
     escapeString(part);
-	std::cout << "sscc " << part.toLatin1().data() << '\n' << std::endl;
 
 //	if(part != QString("<div class=\\\"in content\\\">IIIIIIIIIIIIIII SSS</div>"))
 //		throw 43;
@@ -126,8 +125,7 @@ void HTMLChatView::evaluateJS(QString scriptSource) {
 
 void HTMLChatView::importJSChatFunctions() {
     // reading from file only while developing	
-#warning change next line!	
-    QFile file("/home/senu/dev/psi/gsoc/repo/psi-fork/proto/htmlChatView.js");
+    QFile file(_THEMEPATH"htmlChatView.js");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
 
@@ -146,4 +144,9 @@ HTMLChatView::~HTMLChatView() {
 void HTMLChatView::escapeString(QString& str) {
     str.replace("\"", "\\\"");
     str.replace("\n", "\\\n");
+}
+
+void HTMLChatView::setVisible(bool visible) {
+	QWidget::setVisible(visible);
+	webView.setVisible(visible);
 }

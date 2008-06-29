@@ -22,13 +22,14 @@ HEADERS += chatMessageEvent.h \
            htmlChatPart.h\
   		   messageValidator.h\
 		   chatThemeList.h\
-		   htmlChatThemeList.h
+		   htmlChatThemeList.h\
+		   config.h
 
 tests {
   HEADERS += tests/testMessageValidator.h
   SOURCES += tests/testMessageValidator.cpp
   INCLUDEPATH += . ../third-party/cppunit/cppunit/include/
-  LIBS += /usr/lib/libcppunit-1.12.so.1
+  LIBS += /usr/lib/libcppunit.so
   DEFINES += TESTS
   
 }

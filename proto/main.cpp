@@ -6,7 +6,7 @@
 #include "testForm.h"
 #include "messageValidator.h"
 #ifdef TESTS
-#include <cppunit/CompilerOutputter.h>
+#include <cppunit/TextOutputter.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/TestResultCollector.h>
@@ -43,15 +43,16 @@ int main(int argc, char *argv[]) {
     testrunner.run (testresult);
 
     // output results in compiler-format
-    CPPUNIT_NS :: CompilerOutputter compileroutputter (&collectedresults, std::cerr);
+    CPPUNIT_NS :: TextOutputter compileroutputter (&collectedresults, std::cerr);
     compileroutputter.write ();
 #endif
-	
+
     TestForm * form = new TestForm(0);
     form->show();
     ret = app.exec();
     delete form;
-
+	/*
+*/
 
     return ret;
 

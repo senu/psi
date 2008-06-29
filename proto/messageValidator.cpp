@@ -7,7 +7,9 @@
 
 //Elements
 const QString structureElements[] = {
-    "body", "html", "title"
+    "body", "html", "title" 
+	//TODO - workaround
+	,"msg"
 };
 
 const QString textElements[] = {
@@ -74,16 +76,12 @@ enum ValidationResult {
 typedef QPair<ValidationResult, QDomNode> ValidatedNode;
 
 //TODO:
-// 1.  currently <div><script><strong>visible</strong></script></div>  ~~> </div></div>
-//
-//   but:
-//   W3C TEXT: If a user agent encounters an element it does not recognize, it must continue to process the children of that element. If the content is text, the text must be presented to the user.
 // 2. We need CSS validation
 
-void MessageValidator::dfs(QDomElement cur, int tabs) {
+void MessageValidator::dfs(QDomElement cur, int tabs, bool* modified) {
     tabs += 3;
 
-    qDebug() << QString(tabs, ' ') << cur.tagName() << " ---> " << (bool)allowed.contains(cur.tagName());
+    qDebug() << QString(tabs, ' ') << cur.tagName();
 
 	QString parentName = cur.tagName();
 
@@ -98,12 +96,10 @@ void MessageValidator::dfs(QDomElement cur, int tabs) {
 			qDebug() << "note allowed attributes are:" << curNI.allowedAttributes;
 
 			cur.attributes().removeNamedItem(attrName);
+			*modified = true;
 			i--;
 		}
 	}
-				
-
-	
 
     QDomNodeList children = cur.childNodes();
 	
@@ -111,20 +107,26 @@ void MessageValidator::dfs(QDomElement cur, int tabs) {
         QDomNode node = children.at(i);
         //      qDebug() << i << "/" << children.size();
         if (node.isElement()) {
-			//is subElement valid here?
-
 			QString childName = node.toElement().tagName();
 			
+			//is subElement valid here?
 			if(!curNI.allowedTags.contains(childName)) {
 				
 				qDebug() << "VALIDATIN ERR" << "TS" << childName << " in " << parentName;
 				qDebug() << "note allowed subElements are:" << curNI.allowedTags;
                 
+				//append bad node's children (they will be walidated in next loop iteration)
+				while(node.hasChildNodes()) {
+					cur.insertBefore(node.firstChild(), node);
+				}
+				
+				//delete bad node
 				cur.removeChild(node);
+				*modified = true;
                 i--;
             }
 			else {
-                dfs(node.toElement(), tabs);
+                dfs(node.toElement(), tabs, modified);
 			}
         }
         else if (node.isText()) {
@@ -132,6 +134,9 @@ void MessageValidator::dfs(QDomElement cur, int tabs) {
         }
 		else if (node.isComment()) {
             qDebug() << QString(tabs + 3, ' ') << "comment" << node.toComment().data();
+        }
+		else if (node.isEntityReference()) { //TODO what is the Entity if Entity is EntityReference?
+            qDebug() << QString(tabs + 3, ' ') << "entityReference";
         }
         else {
             throw 3.3;
@@ -176,18 +181,22 @@ void MessageValidator::generateAllowedDict() {
 
 	//attrs
     appendArrayToList(defaultAttributes, sizeof (defaultAttributes), textNI.allowedAttributes);
+    appendArrayToList(imgAttributes, sizeof (imgAttributes), imgNI.allowedAttributes);
 
 	textNI.canHaveText = true;
 	textNI.canBeEmpty = true;
 
 
-	for(int i=1; i< sizeof(textElements)/sizeof(QString); i++) {
+	for(int i=0; i< sizeof(textElements)/sizeof(QString); i++) { //TODO 1do it in smarter way
 		allowed[textElements[i]]=textNI;
 	}
+	
+	for(int i=0; i< sizeof(structureElements)/sizeof(QString); i++) {
+		allowed[structureElements[i]]=structNI;
+	}
 
-
-
-    qDebug() << structNI.allowedTags;
+	allowed["img"]=imgNI;
+	
 }
 
 
@@ -203,13 +212,15 @@ QString MessageValidator::validateMessage(QString message, bool* modified) {
 
     QString errorMessage;
     int line, column;
+	*modified = false;
 
     if (!doc.setContent(message, false, &errorMessage, &line, &column)) {
         qDebug() << errorMessage << " " << line << " " << column;
-        exit(2);
+		*modified = true;
+		return "illformed message!!!";
+//        exit(2);
     }
 
-    dfs(doc.documentElement(), 0);
-    qDebug() << doc.toString();
+    dfs(doc.documentElement(), 0, modified);
 	return doc.toString();
 }

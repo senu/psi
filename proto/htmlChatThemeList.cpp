@@ -4,9 +4,10 @@
 #include <QStringList>
 #include <QString>
 
+#include "config.h"
+
 void HTMLChatThemeList::readThemes() {
-#warning change next line	
-	QString path="/home/senu/dev/psi/gsoc/repo/psi-fork/proto/themes";
+	QString path=_THEMEPATH"themes";
 	
 	QDir dir(path);
 
@@ -20,7 +21,7 @@ void HTMLChatThemeList::readThemes() {
 		qDebug() << subdir;
 		if (validateTheme(dir.absoluteFilePath(subdir))) {
 			qDebug() << subdir;
-			themeDict[generateThemeName(subdir)]=dir.absoluteFilePath(subdir);
+			themeDict[generateThemeName(subdir)]=dir.absoluteFilePath(subdir+"/");
 		}
 	}
 }

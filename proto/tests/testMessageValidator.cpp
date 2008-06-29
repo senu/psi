@@ -9,7 +9,7 @@ void TestMessageValidator::goodMessage() {
             "<strong>i jest fajny</strong>"
             "joined text?"
             "a teraz cos zupelnie z innej beczki 444"
-            "<strong>xx</strong>"
+            "<strong>x&nbsp;x</strong>"
             "</div>";
 
     QString validMessage =
@@ -18,7 +18,7 @@ void TestMessageValidator::goodMessage() {
             "<strong>i jest fajny</strong>"
             "joined text?"
             "a teraz cos zupelnie z innej beczki 444"
-            "<strong>xx</strong>"
+            "<strong>x&nbsp;x</strong>"
             "</div>";
 
     genericTest(inMessage, validMessage);
@@ -33,11 +33,12 @@ void TestMessageValidator::badTagWithChildrenMessage() {
             "<strong>i jest fajny</strong>"
             "joined text?"
             "<script>"
-            "<i>kursywa</i>"
+            "<em>kursywa</em>"
             "<p>NOWAY</p>"
             "<br/>"
             "a teraz cos zupelnie z innej beczki"
             "</script>"
+			
             "a teraz cos zupelnie z innej beczki 444"
             "<strong>x<!-- comment -->x</strong>"
             "</div>";
@@ -47,6 +48,10 @@ void TestMessageValidator::badTagWithChildrenMessage() {
             "<div>senu tu byl"
             "<strong>i jest fajny</strong>"
             "joined text?"
+            "<em>kursywa</em>"
+            " <p>NOWAY</p> "              //TODO dont know why webkit prints here spaces
+            "<br/>"
+            "a teraz cos zupelnie z innej beczki"
             "a teraz cos zupelnie z innej beczki 444"
             "<strong>x<!-- comment -->x</strong>"
             "</div>";
