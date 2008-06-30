@@ -18,9 +18,7 @@ void HTMLChatView::clear() {
 void HTMLChatView::init() {
 
     QObject::connect(&webView, SIGNAL(loadFinished(bool)), this, SLOT(onEmptyDocumentLoaded(bool)));
-	createEmptyDocument(theme.baseHref());
-	webView.load(QUrl(_THEMEPATH"emptyDocument.html"));\
-	//now we are waiting for loadFinished signal
+	webView.setHtml(createEmptyDocument(theme.baseHref(), theme.currentVariant()), theme.baseHref());
 }
 
 
@@ -47,11 +45,10 @@ void HTMLChatView::onEmptyDocumentLoaded(bool ok) {
 	
 }
 
-void HTMLChatView::createEmptyDocument(QString baseHref) {
+QString HTMLChatView::createEmptyDocument(QString baseHref, QString themeVariant) {
 	QFile docFile(_THEMEPATH"emptyDocument.html");
 
-	QString content = //I know, I know...
-			QString(
+	return QString(
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">"
 "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
@@ -66,26 +63,13 @@ void HTMLChatView::createEmptyDocument(QString baseHref) {
 "                </style>"
 "                <style id=\"baseStyle\" type=\"text/css\" media=\"screen,print\">"
 "                        @import url(\"main.css\");"
+"                        @import url(\"%2\");"  
 "                        *{ word-wrap:break-word; }"
 "                </style>"
-"                <!--"
-"                <style id=\"mainStyle\" type=\"text/css\" media=\"screen,print\">"
-"                        @import url(\"%4\"); todo"
-""
-"                </style>"
-"                -->"
 "        </head>"
 "        <body>"
 "        </body>"
-"</html>").arg(baseHref);
-
-	if(!docFile.open(QIODevice::WriteOnly)) {
-		throw false; //don't ask
-	}
-	
-	docFile.write(content.toUtf8());
-	docFile.close();
-
+"</html>").arg(baseHref).arg("Variants/"+QString(themeVariant)+".css");
 	
 }
 
@@ -125,7 +109,7 @@ void HTMLChatView::appendEvent(const ChatEvent* msg) {
 void HTMLChatView::evaluateJS(QString scriptSource) {
     webView.page()->mainFrame()->evaluateJavaScript(scriptSource);
  //   qDebug() << "HTMLChatView::evaluateJS(" << scriptSource << ")\n";
-	std::cout << "cc " << scriptSource.toLatin1().data() << '\n' << std::endl;
+//	std::cout << "cc " << scriptSource.toLatin1().data() << '\n' << std::endl;
 }
 
 

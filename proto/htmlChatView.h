@@ -45,8 +45,8 @@ private slots:
 	 */
 	void onEmptyDocumentLoaded(bool ok);
 	
-	/** Creates html document with base href tag somewhere*/ //TODO avoid creating document
-	void createEmptyDocument(QString baseHref);
+	/** Creates html document with base href tag somewhere; themeVariant is without css suffix */ //TODO avoid creating document
+	QString createEmptyDocument(QString baseHref, QString themeVariant);
 
 
 

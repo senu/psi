@@ -17,8 +17,10 @@ TestForm::TestForm(QWidget *parent)
 	QPushButton * consMessageBtn = new QPushButton("appendConsecutiveMessage", this);
 	QPushButton * eventMessageBtn = new QPushButton("appendEvent", this);
 	QPushButton * loadThemeBtn = new QPushButton("load theme", this);
+	QPushButton * variantThemeBtn = new QPushButton("load variant", this);
 
-	comboBox = new QComboBox(this);
+	themeComboBox = new QComboBox(this);
+	variantComboBox = new QComboBox(this);
 
 	nextMessageBtn->setGeometry(0,800,100,30);
     nextMessageBtn->show();
@@ -31,6 +33,8 @@ TestForm::TestForm(QWidget *parent)
 	
 	loadThemeBtn->setGeometry(330,800,140,30);
     loadThemeBtn->show();
+	
+	variantThemeBtn->setGeometry(480,800,140,30);
 
     messageEdit = new QLineEdit("message body", this);
     messageEdit->setGeometry(0,870,180,30);
@@ -46,9 +50,12 @@ TestForm::TestForm(QWidget *parent)
 	}
 
 	
-	comboBox->addItems(themeNames);
-    comboBox->setGeometry(0,700,180,40);
-	comboBox->show();
+	themeComboBox->addItems(themeNames);
+    themeComboBox->setGeometry(0,700,180,40);
+	themeComboBox->show();
+	
+    variantComboBox->setGeometry(200,700,180,40);
+	variantComboBox->show();
 
 	this->setGeometry(0,0,800,950);
 
@@ -58,6 +65,7 @@ TestForm::TestForm(QWidget *parent)
     QObject::connect(consMessageBtn, SIGNAL(clicked()), this, SLOT(onConsecutiveButtonClicked()));
     QObject::connect(eventMessageBtn, SIGNAL(clicked()), this, SLOT(onEventButtonClicked()));
     QObject::connect(loadThemeBtn, SIGNAL(clicked()), this, SLOT(onLoadTheme()));
+    QObject::connect(variantThemeBtn, SIGNAL(clicked()), this, SLOT(onLoadVariant()));
 }
 
 
@@ -110,10 +118,18 @@ void TestForm::onEventButtonClicked() {
 
 void TestForm::onLoadTheme() {
 	
-	QString themeName = comboBox->currentText();
-	HTMLChatTheme theme = themeList.themePath(themeName);
+	QString themeName = themeComboBox->currentText();
+	theme = new HTMLChatTheme(themeList.themePath(themeName));
+
+	variantComboBox->clear();
+	variantComboBox->addItems(theme->variants());
+}
+
+void TestForm::onLoadVariant() {
+
+	theme->setCurrentVariant(variantComboBox->currentText());
 	
-    view = new HTMLChatView(this, theme);
+	view = new HTMLChatView(this, *theme);
 	view->init();
 	view->setGeometry(0,0,300,200);
     view->show();

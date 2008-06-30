@@ -26,11 +26,20 @@ public:
     HTMLChatTheme(QString path);
 
     /** Reads templates from filesystem */
-    void readTheme(QString themeName, QString variationName);
-
+    //void readTheme(QString themeName, QString variationName);
+	
 	/** Returns theme path (-/Contents) */
 	QString baseHref() const;
 	void setBaseHref(QString);
+
+	/** Returns list of theme variants (without .css suffix!)*/
+	QStringList variants() const;
+
+	/** Returns current theme variant (withou .css suffix). Can be "" */
+	QString currentVariant() const;
+	
+	/** Sets current theme variant (withou .css suffix) */
+	void setCurrentVariant(QString variant);
 
     QString createIncomingMessagePart(const MessageChatEvent *) const;
     QString createOutgoingMessagePart(const MessageChatEvent *) const;
@@ -48,7 +57,6 @@ private:
 
     /** Fills part with keywords from event (common for in/out next/cons messages) */
     void fillPartWithMessageKeywords(HTMLChatPart& part, const MessageChatEvent* event) const;
-	
 
     /** returns dir/relativePath (to Contents dir) */
     QString readFileContents(QDir dir, QString relativePath);
@@ -62,9 +70,8 @@ private:
     HTMLChatTemplate fileTransferEventTemplate;
 
 	QString _baseHref;
-	
-
-
+	QStringList _variants;
+	QString _currentVariant;
 
 };
 

@@ -17,8 +17,7 @@ fileTransferEventTemplate(
                           "<div class=\'statustime\'>%time%</div>"
                           "</div>"
                           "<div class=\'spacer\'></div>"
-                          )
- {
+                          ) {
 
 }
 
@@ -43,7 +42,6 @@ HTMLChatTheme::HTMLChatTheme(QString path) {
 
     setBaseHref(path + "/Contents/Resources/");
 
-
     incomingConsecutiveMessageTemplate.setContent(readFileContents(dir, "Resources/Incoming/NextContent.html"));
     incomingNextMessageTemplate.setContent(readFileContents(dir, "Resources/Incoming/Content.html"));
 
@@ -58,8 +56,25 @@ HTMLChatTheme::HTMLChatTheme(QString path) {
     headerTemplate.setContent(readFileContents(dir, "Resources/Header.html"));
     footerTemplate.setContent(readFileContents(dir, "Resources/Footer.html"));
 
+    //read Variants
+
+    if (!dir.cd("Resources/Variants/")) {
+        qDebug() << "no Variants dir";
+        return; //no variants
+    }
+
+    QStringList filters;
+    filters << "*.css";
+
+    QStringList variantFiles = dir.entryList(filters);
+    QString variant;
 
 
+    foreach(variant, variantFiles) {
+        _variants.append(variant.left(variant.size() - 4));
+    }
+
+    qDebug() << variants();
 }
 
 
@@ -202,3 +217,17 @@ void HTMLChatTheme::setBaseHref(QString baseHref) {
     _baseHref = baseHref;
 }
 
+
+QStringList HTMLChatTheme::variants() const {
+    return _variants;
+}
+
+
+QString HTMLChatTheme::currentVariant() const {
+	return _currentVariant;
+}
+
+
+void HTMLChatTheme::setCurrentVariant(QString variant) {
+	_currentVariant = variant;
+}

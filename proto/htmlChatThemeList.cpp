@@ -31,7 +31,7 @@ bool HTMLChatThemeList::validateTheme(QString themePath) {
 		return false;
 	
 	QDir dir(themePath);
-	
+
 	if(!dir.exists())
 		throw (long double)1;
 	

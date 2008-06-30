@@ -23,9 +23,11 @@ Q_OBJECT
 
   private:
     QLineEdit * messageEdit;
-	QComboBox *comboBox;
+	QComboBox *themeComboBox;
+	QComboBox *variantComboBox;
 
 	HTMLChatView * view;
+	HTMLChatTheme * theme;
 	HTMLChatThemeList themeList;
 	MessageValidator msgVal; 
 
@@ -35,6 +37,7 @@ Q_OBJECT
     void onNextButtonClicked();
     void onEventButtonClicked();
 	void onLoadTheme();
+	void onLoadVariant();
 
   signals:      
     /** on message created */
