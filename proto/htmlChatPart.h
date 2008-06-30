@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QtDebug>
+#include <QDateTime> 
 
 /** Part (string) of HTMLChat document (eg. newly created message/event)
  *
@@ -21,6 +22,9 @@ class HTMLChatPart {
 
 	/** Replaces %keyword% with value */
 	void replaceKeyword(QString keyword, QString value); 
+	
+	/** Replaces time keyword %keyword{format}% with formatted time */
+	void replaceTimeKeyword(QString keyword, QDateTime time); 
 
 	/** Escapes string */
 	QString escapeString(QString string); 
@@ -29,8 +33,11 @@ class HTMLChatPart {
 	QString toString();
 
   private:
-	/* Part body */
+	/** Part body */
 	QString content;
+	
+	/** Returns formated time, eg for %timeOpened{X}% */
+	QString formatTime(QString format, QDateTime time);
 };
 
 #endif

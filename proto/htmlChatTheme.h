@@ -61,8 +61,12 @@ private:
     /** Fills part with keywords from event (common for in/out next/cons messages) */
     void fillPartWithMessageKeywords(HTMLChatPart& part, const MessageChatEvent* event) const;
 
-    /** returns dir/relativePath (to Contents dir) */
+    /** Returns dir/relativePath (to Contents dir) */
     QString readFileContents(QDir dir, QString relativePath);
+
+	
+
+	
 
     HTMLChatTemplate incomingConsecutiveMessageTemplate;
     HTMLChatTemplate incomingNextMessageTemplate;

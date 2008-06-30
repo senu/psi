@@ -1,4 +1,7 @@
+#include <ctime>
+
 #include "htmlChatTheme.h"
+#include "htmlChatView.h"
 
 
 HTMLChatTheme::HTMLChatTheme()
@@ -170,6 +173,7 @@ QString HTMLChatTheme::createStatusEventPart(const StatusChatEvent * event) cons
 
     part.replaceAndEscapeKeyword("%message%", eventText);
     part.replaceAndEscapeKeyword("%time%", QDateTime::currentDateTime().toString());
+    part.replaceTimeKeyword("time", QDateTime::currentDateTime()); 
 
     return part.toString();
 }
@@ -179,6 +183,7 @@ void HTMLChatTheme::fillPartWithMessageKeywords(HTMLChatPart& part, const Messag
 
     part.replaceAndEscapeKeyword("%message%", event->body());
     part.replaceAndEscapeKeyword("%time%", event->timestamp().toString());
+    part.replaceTimeKeyword("time", QDateTime::currentDateTime()); 
     part.replaceAndEscapeKeyword("%sender%", event->nick());
     part.replaceAndEscapeKeyword("%service%", event->service());
     part.replaceAndEscapeKeyword("%userIconPath%", event->userIconPath());
@@ -189,11 +194,13 @@ void HTMLChatTheme::fillPartWithMessageKeywords(HTMLChatPart& part, const Messag
 void HTMLChatTheme::fillPartWithThemeKeywords(HTMLChatPart& part, ChatTheme::ChatInfo sessionInfo) const {
 
     part.replaceAndEscapeKeyword("%timeOpened%", sessionInfo.timeOpened.toString());
-    part.replaceAndEscapeKeyword("%chatName%", sessionInfo.chatName);
-	
+    part.replaceTimeKeyword("timeOpened", sessionInfo.timeOpened);
+    
+	part.replaceAndEscapeKeyword("%chatName%", sessionInfo.chatName);
+
     part.replaceAndEscapeKeyword("%sourceName%", sessionInfo.sourceName);
     part.replaceAndEscapeKeyword("%destinationName%", sessionInfo.destinationName);
-	
+
     part.replaceAndEscapeKeyword("%incomingIconPath%", sessionInfo.incomingIconPath);
     part.replaceAndEscapeKeyword("%outgoingIconPath%", sessionInfo.outgoingIconPath);
 }
@@ -203,8 +210,9 @@ QString HTMLChatTheme::createIncomingMessagePart(const MessageChatEvent * event)
 
     HTMLChatPart part;
 
-    if (event->isConsecutive())
+    if (event->isConsecutive()) {
         part = incomingConsecutiveMessageTemplate.createFreshHTMLPart();
+    }
     else {
         part = incomingNextMessageTemplate.createFreshHTMLPart();
     }
@@ -231,10 +239,11 @@ QStringList HTMLChatTheme::variants() const {
 
 
 QString HTMLChatTheme::currentVariant() const {
-	return _currentVariant;
+    return _currentVariant;
 }
 
 
 void HTMLChatTheme::setCurrentVariant(QString variant) {
-	_currentVariant = variant;
+    _currentVariant = variant;
 }
+
