@@ -30,15 +30,21 @@ public slots:
 
     void clear();
 
+	/** Appends message */
     void appendMessage(const MessageChatEvent *msg);
+	
+	/** Appends event (filetransfer, mood, etc) */
     void appendEvent(const ChatEvent* event);
 
     /** Creates HTML document (header,chat,footer) */
     void init();
 
+	void setChatInfo(ChatTheme::ChatInfo chatInfo);
+	ChatTheme::ChatInfo chatInfo() const;
+	
 	//reimplemented
 	void setVisible(bool visible);
-
+	
 private slots:
 	/** Load JS code, append header, chat div, and footer 
 	    ok <=> document loaded successfully
@@ -54,6 +60,9 @@ private:
     /** Escapes " and \n  (for JS evaluation) */
     void escapeString(QString& str);
     HTMLChatTheme theme; // maybe HTMLChatTheme* to global theme - don't know
+
+	/** Session info */	
+	ChatTheme::ChatInfo _chatInfo; 
 
 
 

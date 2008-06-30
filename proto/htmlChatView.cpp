@@ -8,6 +8,14 @@ class MessageChatEvent;
 HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme)
 : ChatView(parent), theme(_theme) {
     webView.setParent(parent);
+
+	_chatInfo.chatName = "Kot Behemot";
+	_chatInfo.destinationName = "Kot Behemot";
+	_chatInfo.sourceName = "Pawel Wiejacha";
+	_chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg";
+	_chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";
+	_chatInfo.timeOpened = QDateTime::currentDateTime();
+	
 }
 
 
@@ -31,8 +39,9 @@ void HTMLChatView::onEmptyDocumentLoaded(bool ok) {
 	HTMLChatPart header = theme.headerTemplate.createFreshHTMLPart();
 	HTMLChatPart footer = theme.footerTemplate.createFreshHTMLPart();
 
-	theme.fillPartWithThemeKeywords(header, "Kot Behemot", QDateTime::currentDateTime());
-	theme.fillPartWithThemeKeywords(footer, "Kot Behemot", QDateTime::currentDateTime());
+	
+	theme.fillPartWithThemeKeywords(header, chatInfo());
+	theme.fillPartWithThemeKeywords(footer, chatInfo());
 
 	QString headerStr = header.toString();
 	QString footerStr = footer.toString();
@@ -139,4 +148,12 @@ void HTMLChatView::escapeString(QString& str) {
 void HTMLChatView::setVisible(bool visible) {
 	QWidget::setVisible(visible);
 	webView.setVisible(visible);
+}
+
+void HTMLChatView::setChatInfo(ChatTheme::ChatInfo chatInfo) {
+	_chatInfo = chatInfo;
+}
+
+ChatTheme::ChatInfo HTMLChatView::chatInfo() const {
+	return _chatInfo;
 }

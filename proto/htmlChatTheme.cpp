@@ -181,14 +181,21 @@ void HTMLChatTheme::fillPartWithMessageKeywords(HTMLChatPart& part, const Messag
     part.replaceAndEscapeKeyword("%time%", event->timestamp().toString());
     part.replaceAndEscapeKeyword("%sender%", event->nick());
     part.replaceAndEscapeKeyword("%service%", event->service());
+    part.replaceAndEscapeKeyword("%userIconPath%", event->userIconPath());
 
 }
 
 
-void HTMLChatTheme::fillPartWithThemeKeywords(HTMLChatPart& part, QString chatName, QDateTime timeOpened) const {
+void HTMLChatTheme::fillPartWithThemeKeywords(HTMLChatPart& part, ChatTheme::ChatInfo sessionInfo) const {
 
-    part.replaceAndEscapeKeyword("%timeOpened%", timeOpened.toString());
-    part.replaceAndEscapeKeyword("%chatName%", chatName);
+    part.replaceAndEscapeKeyword("%timeOpened%", sessionInfo.timeOpened.toString());
+    part.replaceAndEscapeKeyword("%chatName%", sessionInfo.chatName);
+	
+    part.replaceAndEscapeKeyword("%sourceName%", sessionInfo.sourceName);
+    part.replaceAndEscapeKeyword("%destinationName%", sessionInfo.destinationName);
+	
+    part.replaceAndEscapeKeyword("%incomingIconPath%", sessionInfo.incomingIconPath);
+    part.replaceAndEscapeKeyword("%outgoingIconPath%", sessionInfo.outgoingIconPath);
 }
 
 

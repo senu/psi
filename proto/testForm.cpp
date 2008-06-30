@@ -80,6 +80,8 @@ void TestForm::onConsecutiveButtonClicked() {
     ce->setService("Jabber");
     ce->setConsecutive(true);
 	ce->setLocal(true);
+
+	ce->setUserIconPath("http://a.wordpress.com/avatar/liberumveto-48.jpg");
          
     emit messageCreated(ce);
 }
@@ -94,10 +96,15 @@ void TestForm::onNextButtonClicked() { // copy-paste :D
     ce->setConsecutive(false);
     ce->setService("Jabber");
 	ce->setLocal(qrand()%2);
-	if(ce->isLocal())
+	if(ce->isLocal()) {
 	    ce->setNick("Pawel Wiejacha");
-	else
+		ce->setUserIconPath("http://userserve-ak.last.fm/serve/50/4272669.jpg");
+	}
+	else {
 	    ce->setNick("Kot Behemot");
+		ce->setUserIconPath("http://a.wordpress.com/avatar/liberumveto-48.jpg");
+	}
+
 
     emit messageCreated(ce);
 }

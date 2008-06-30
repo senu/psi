@@ -27,6 +27,10 @@ public:
 
 	QDateTime timestamp() const;
 	QString service() const;
+	
+	QString userIconPath() const;
+
+	
 	bool wasEncrypted();
 
 	bool isLocal() const; //our messgage? (outgoing)
@@ -43,6 +47,7 @@ public:
 	void setBody(QString);
 
 	void setService(QString);
+	void setUserIconPath(QString);
 
 	void setTimestamp(QDateTime);
 	bool setWasEncrypted();
@@ -61,6 +66,7 @@ public:
 	QString _nick;
 	QString _jid;
 	QString _service;
+	QString _userIconPath;
 	QDateTime _timestamp;
 
 	bool _isConsecutive;

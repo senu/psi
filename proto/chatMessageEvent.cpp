@@ -45,6 +45,14 @@ void MessageChatEvent::setService(QString service) {
     _service = service;
 }
 
+void MessageChatEvent::setUserIconPath(QString userIconPath) {
+    _userIconPath = userIconPath;
+}
+
+QString MessageChatEvent::userIconPath()const {
+    return _userIconPath;
+}
+
 void MessageChatEvent::setConsecutive(bool is) {
     _isConsecutive = is;
 }

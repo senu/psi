@@ -2,6 +2,7 @@
 #define HAVE_CHAT_THEME
 
 #include <Qt>
+#include <QDateTime>
 
 
 class ChatEvent;
@@ -22,6 +23,20 @@ class ChatTheme
 	virtual QString createStatusEventPart(const StatusChatEvent* ) const = 0; 
 
 	virtual ~ChatTheme() {};
+
+
+	/** Contains Info related to ChatView session */
+    struct ChatInfo {
+
+        QDateTime timeOpened;
+        QString chatName,
+
+                sourceName,
+                destinationName,
+
+                incomingIconPath,
+                outgoingIconPath;
+    };
 };
 
 #endif
