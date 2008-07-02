@@ -38,6 +38,7 @@ Q_OBJECT
     void onEventButtonClicked();
 	void onLoadTheme();
 	void onLoadVariant();
+	void onClear();
 
   signals:      
     /** on message created */

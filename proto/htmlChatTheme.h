@@ -30,9 +30,6 @@ public:
     /** Reads theme from filesystem */
     HTMLChatTheme(QString path);
 
-    /** Reads templates from filesystem */
-    //void readTheme(QString themeName, QString variationName);
-
     /** Returns theme path (-/Contents) */
     QString baseHref() const;
     void setBaseHref(QString);
@@ -45,6 +42,9 @@ public:
 
     /** Sets current theme variant (withou .css suffix) */
     void setCurrentVariant(QString variant);
+
+	/** Reads theme from filesystem */
+	void readTheme(QString path);
 
     QString createIncomingMessagePart(const MessageChatEvent *) const;
     QString createOutgoingMessagePart(const MessageChatEvent *) const;

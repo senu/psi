@@ -1,127 +1,179 @@
+
+#include <ios>
+
 #include "htmlChatView.h"
-#include <iostream> //TODO 
+#include <iostream>
+#include <qt4/QtCore/qlist.h> //TODO 
 
 #include "config.h"
 
 class MessageChatEvent;
 
+
 HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme)
 : ChatView(parent), theme(_theme) {
     webView.setParent(parent);
 
-	_chatInfo.chatName = "Kot Behemot";
-	_chatInfo.destinationName = "Kot Behemot";
-	_chatInfo.sourceName = "Pawel Wiejacha";
-	_chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg";
-	_chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";
-	_chatInfo.timeOpened = QDateTime::currentDateTime();
-	
+    _chatInfo.chatName = "Kot Behemot";
+    _chatInfo.destinationName = "Kot Behemot";
+    _chatInfo.sourceName = "Pawel Wiejacha";
+    _chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg";
+    _chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";
+    _chatInfo.timeOpened = QDateTime::currentDateTime();
+
 }
 
 
 void HTMLChatView::clear() {
-
+    //clears Chat div
+    appendedEvents.clear();
+    evaluateJS("psi_clearMessages()"); //TODO ask Kev - I can reload theme here
 }
+
 
 void HTMLChatView::init() {
 
     QObject::connect(&webView, SIGNAL(loadFinished(bool)), this, SLOT(onEmptyDocumentLoaded(bool)));
-	webView.setHtml(createEmptyDocument(theme.baseHref(), theme.currentVariant()), theme.baseHref());
+    QObject::connect(&jsNotifier, SIGNAL(onInitFinished()), this, SLOT(onInitDocumentFinished()));
+    QObject::connect(&jsNotifier, SIGNAL(onAppendFinished()), this, SLOT(onAppendFinished()));
+    webView.setHtml(createEmptyDocument(theme.baseHref(), theme.currentVariant()), theme.baseHref());
 }
 
 
 void HTMLChatView::onEmptyDocumentLoaded(bool ok) {
-	if(!ok) {
-		qDebug() << "ERROR 3";
-		exit(1);
-	}
+    if (!ok) {
+        qDebug() << "ERROR 3";
+        exit(1);
+    }
 
-	HTMLChatPart header = theme.headerTemplate.createFreshHTMLPart();
-	HTMLChatPart footer = theme.footerTemplate.createFreshHTMLPart();
+    HTMLChatPart header = theme.headerTemplate.createFreshHTMLPart();
+    HTMLChatPart footer = theme.footerTemplate.createFreshHTMLPart();
 
-	
-	theme.fillPartWithThemeKeywords(header, chatInfo());
-	theme.fillPartWithThemeKeywords(footer, chatInfo());
 
-	QString headerStr = header.toString();
-	QString footerStr = footer.toString();
-			
-	escapeString(headerStr);
-	escapeString(footerStr);
+    theme.fillPartWithThemeKeywords(header, chatInfo());
+    theme.fillPartWithThemeKeywords(footer, chatInfo());
 
-	importJSChatFunctions();
-	evaluateJS("psi_initDocument(\""+ headerStr + "\", \"" + footerStr + "\")");
-	
+    QString headerStr = header.toString();
+    QString footerStr = footer.toString();
+
+    escapeString(headerStr);
+    escapeString(footerStr);
+
+    importJSChatFunctions();
+
+    webView.page()->mainFrame()->addToJavaScriptWindowObject("jsNotifier", &jsNotifier);
+
+    evaluateJS("psi_initDocument(\"" + headerStr + "\", \"" + footerStr + "\")");
+
+    //rest in onInitDocumentFinished
 }
+
+
+void HTMLChatView::onInitDocumentFinished() {
+
+    const AbstractChatEvent* event;
+
+    foreach(event, appendedEvents) {
+        qDebug() << event;
+        if (event->isMessageChatEvent()) {
+            appendMessage(dynamic_cast<const MessageChatEvent*> (event), true);
+        }
+        else {
+            appendEvent(dynamic_cast<const ChatEvent*> (event), true);
+        }
+    }
+}
+
+
+void HTMLChatView::onAppendFinished() {
+	qDebug() << "append finished";
+    webView.page()->mainFrame()->setScrollBarValue(Qt::Vertical, 10000); //TODO 
+}
+
 
 QString HTMLChatView::createEmptyDocument(QString baseHref, QString themeVariant) {
-	QFile docFile(_THEMEPATH"emptyDocument.html");
+    QFile docFile(_THEMEPATH"emptyDocument.html");
 
-	return QString(
-"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
-"<html xmlns=\"http://www.w3.org/1999/xhtml\">"
-"        <head>"
-"                <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />"
-"                <base href=\"%1\"/>"
-"                <!--"
-"                <base/>"
-""
-"                TODO3 -->"
-"                <style id=\"KopeteStyle\" type=\"text/css\" media=\"screen,print\">"
-"                </style>"
-"                <style id=\"baseStyle\" type=\"text/css\" media=\"screen,print\">"
-"                        @import url(\"main.css\");"
-"                        @import url(\"%2\");"  
-"                        *{ word-wrap:break-word; }"
-"                </style>"
-"        </head>"
-"        <body>"
-"        </body>"
-"</html>").arg(baseHref).arg("Variants/"+QString(themeVariant)+".css");
-	
+    return QString(
+                   "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                   "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
+                   "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
+                   "        <head>"
+                   "                <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />"
+                   "                <base href=\"%1\"/>"
+                   "                <!--"
+                   "                <base/>"
+                   ""
+                   "                TODO3 -->"
+                   "                <style id=\"KopeteStyle\" type=\"text/css\" media=\"screen,print\">"
+                   "                </style>"
+                   "                <style id=\"baseStyle\" type=\"text/css\" media=\"screen,print\">"
+                   "                        @import url(\"main.css\");"
+                   "                        @import url(\"%2\");"
+                   "                        *{ word-wrap:break-word; }"
+                   "                </style>"
+                   "        </head>"
+                   "        <body>"
+                   "        </body>"
+                   "</html>").arg(baseHref).arg("Variants/" + QString(themeVariant) + ".css");
+
 }
 
-void HTMLChatView::appendMessage(const MessageChatEvent* msg) {
+
+void HTMLChatView::appendMessage(const MessageChatEvent *msg, bool alreadyAppended) {
     QString part;
-	
-	if (msg->isLocal())
-		part = theme.createOutgoingMessagePart(msg);
-	else
-		part = theme.createIncomingMessagePart(msg);
+
+    if (msg->isLocal())
+        part = theme.createOutgoingMessagePart(msg);
+    else
+        part = theme.createIncomingMessagePart(msg);
 
     escapeString(part);
 
-//	if(part != QString("<div class=\\\"in content\\\">IIIIIIIIIIIIIII SSS</div>"))
-//		throw 43;
-//	qDebug() << 'a' << part << '\n' << 'b' << QString("<div class=\\\"in content\\\">IIIIIIIIIIIIIII SSS</div>");
-
-	if (msg->isConsecutive()) {
+    if (msg->isConsecutive()) {
+        if (!alreadyAppended) {
+            appendedEvents.append(msg);
+        }
         evaluateJS("psi_appendConsecutiveMessage(\"" + part + "\", \"" +
-				escapeStringCopy(msg->body()) +"\"" + ")");
-	}
-	else {
-        evaluateJS("psi_appendNextMessage(\"" + part + "\", \"" + 
-				escapeStringCopy(msg->body()) +"\"" + ")");
-	}
-
-    //TODO
-    // Webkit (javascript) must notify us when appending message is completed (we need to scroll after appending not before)      
-    webView.page()->mainFrame()->setScrollBarValue(Qt::Vertical, 10000); //TODO 1
+                   escapeStringCopy(msg->body()) + "\"" + ")");
+    }
+    else {
+        if (!alreadyAppended) {
+            appendedEvents.append(msg);
+        }
+        evaluateJS("psi_appendNextMessage(\"" + part + "\", \"" +
+                   escapeStringCopy(msg->body()) + "\"" + ")");
+    }
 }
 
 
-void HTMLChatView::appendEvent(const ChatEvent* msg) {
-    QString part = msg->getRightTemplateAndFillItWithData(theme);
+void HTMLChatView::appendEvent(const ChatEvent* event, bool alreadyAppended = false) {
+    QString part = event->getRightTemplateAndFillItWithData(theme);
     escapeString(part);
+
+    if (!alreadyAppended) {
+        appendedEvents.append(event);
+    }
+
+    qDebug() << appendedEvents;
 
     evaluateJS("psi_appendEvent(\"" + part + "\")");
 }
 
 
+void HTMLChatView::appendMessage(const MessageChatEvent* msg) {
+    appendMessage(msg, false);
+}
+
+
+void HTMLChatView::appendEvent(const ChatEvent* event) {
+    appendEvent(event, false);
+}
+
+
 void HTMLChatView::evaluateJS(QString scriptSource) {
     webView.page()->mainFrame()->evaluateJavaScript(scriptSource);
-//    qDebug() << "HTMLChatView::evaluateJS(" << scriptSource << ")\n";
+    //    qDebug() << "HTMLChatView::evaluateJS(" << scriptSource << ")\n";
 }
 
 
@@ -148,21 +200,36 @@ void HTMLChatView::escapeString(QString& str) {
     str.replace("\n", "\\\n");
 }
 
+
 QString HTMLChatView::escapeStringCopy(QString str) {
     str.replace("\"", "\\\"");
     str.replace("\n", "\\\n");
-	return str;
+    return str;
 }
+
 
 void HTMLChatView::setVisible(bool visible) {
-	QWidget::setVisible(visible);
-	webView.setVisible(visible);
+    QWidget::setVisible(visible);
+    webView.setVisible(visible);
 }
+
 
 void HTMLChatView::setChatInfo(ChatTheme::ChatInfo chatInfo) {
-	_chatInfo = chatInfo;
+    _chatInfo = chatInfo;
 }
 
+
 ChatTheme::ChatInfo HTMLChatView::chatInfo() const {
-	return _chatInfo;
+    return _chatInfo;
 }
+
+
+void HTMLChatView::setTheme(HTMLChatTheme _theme) {
+    theme = _theme;
+    webView.setHtml(createEmptyDocument(theme.baseHref(), theme.currentVariant()), theme.baseHref());
+    //rest in onEmptyDocumentLoaded
+}
+
+
+
+

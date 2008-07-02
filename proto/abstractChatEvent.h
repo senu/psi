@@ -21,6 +21,9 @@ class AbstractChatEvent //TODO name
 	 *
 	 **/
 	virtual QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const = 0;
+
+	/** Returns true if it's Message ChatEvent */
+	virtual bool isMessageChatEvent() const { return false; }
 }; 
 
 #endif

@@ -32,6 +32,7 @@ function psi_appendNextMessage(messagePart, messageBody) {
     catch(e) {
         alert(e);
     }
+    jsNotifier.appendFinished();
 }
 
 /** Part is almost filled template with %message% keyword,
@@ -52,6 +53,7 @@ function psi_appendConsecutiveMessage(messagePart, messageBody) {
     catch(e) {
         alert('2 ' + e);
     }
+    jsNotifier.appendFinished();
 }
 
 function psi_appendEvent(eventPart) {
@@ -137,7 +139,7 @@ function runTests() {
 
     results.appendChild(output);
 	
-//    alert(pe1Str.replace(' ', '')+'\n'+ve1Str.replace(' ', ''));
+    //    alert(pe1Str.replace(' ', '')+'\n'+ve1Str.replace(' ', ''));
 	
 		
 }
@@ -159,9 +161,16 @@ function psi_initDocument(header, footer) {
         document.body.appendChild(chatElement);
         psi_appendChilds(document.body, footerElement);
         
- //       runTests();
+        //       runTests();
+        jsNotifier.initFinished();
     }
     catch(e) {
         alert(e);
     }
+}
+
+//removes messages from ChatView
+function psi_clearMessages() {
+    chatElement = document.getElementById('Chat');
+    chatElement.innerHTML = "";
 }

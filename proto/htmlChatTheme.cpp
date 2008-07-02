@@ -45,7 +45,7 @@ QString HTMLChatTheme::readFileContents(QDir dir, QString relativePath) {
 }
 
 
-HTMLChatTheme::HTMLChatTheme(QString path) {
+void HTMLChatTheme::readTheme(QString path) {
     qDebug() << "opening" << path;
     QDir dir(path + "Contents/");
     qDebug() << dir.entryList();
@@ -70,12 +70,12 @@ HTMLChatTheme::HTMLChatTheme(QString path) {
         outgoingNextMessageTemplate.setContent(incomingNextMessageTemplate.content());
     }
 
-    //TODO ISSUES i found theme that doesn't have outgoing folder - kopete spec. says it is required template
-    //some themes don't have footer
 
+	// status/event template
     fileTransferEventTemplate.setContent(readFileContents(dir, "Resources/Status.html"));
 
-    // action
+
+	// action
     if (dir.exists("Resources/Incoming/Action.html")) {
         incomingEmoteEventTemplate.setContent(readFileContents(dir, "Resources/Incoming/Action.html"));
         incomingEmoteEventTemplate.setEmoteTemplate(true);
@@ -109,12 +109,18 @@ HTMLChatTheme::HTMLChatTheme(QString path) {
     QStringList variantFiles = dir.entryList(filters);
     QString variant;
 
-
+	_variants.clear(); 
+	
     foreach(variant, variantFiles) {
         _variants.append(variant.left(variant.size() - 4));
     }
 
     qDebug() << variants();
+}
+
+
+HTMLChatTheme::HTMLChatTheme(QString path) {
+    readTheme(path);
 }
 
 
@@ -198,17 +204,17 @@ QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const 
 
     if (event->isLocal()) {
         part = outgoingEmoteEventTemplate.createFreshHTMLPart();
-	
-		if(!outgoingEmoteEventTemplate.isEmoteTemplate()) {
-			eventText = event->nick() + " " + eventText;
-		}
+
+        if (!outgoingEmoteEventTemplate.isEmoteTemplate()) {
+            eventText = event->nick() + " " + eventText;
+        }
     }
     else {
         part = incomingEmoteEventTemplate.createFreshHTMLPart();
-		
-		if(!incomingEmoteEventTemplate.isEmoteTemplate()) {
-			eventText = event->nick() + " " + eventText;
-		}
+
+        if (!incomingEmoteEventTemplate.isEmoteTemplate()) {
+            eventText = event->nick() + " " + eventText;
+        }
     }
 
     part.replaceAndEscapeKeyword("%message%", eventText);

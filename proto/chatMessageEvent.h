@@ -60,6 +60,7 @@ public:
 
     //reimplemented 
     QString getRightTemplateAndFillItWithData(const ChatTheme&) const;
+	bool isMessageChatEvent() const;
 
   private:
 	QString _body;
