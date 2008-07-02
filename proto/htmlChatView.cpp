@@ -59,7 +59,7 @@ QString HTMLChatView::createEmptyDocument(QString baseHref, QString themeVariant
 
 	return QString(
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">"
+"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
 "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
 "        <head>"
 "                <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />"
@@ -96,10 +96,14 @@ void HTMLChatView::appendMessage(const MessageChatEvent* msg) {
 //		throw 43;
 //	qDebug() << 'a' << part << '\n' << 'b' << QString("<div class=\\\"in content\\\">IIIIIIIIIIIIIII SSS</div>");
 
-    if (msg->isConsecutive())
-        evaluateJS("psi_appendConsecutiveMessage(\"" + part + "\")");
-    else
-        evaluateJS("psi_appendNextMessage(\"" + part + "\")");
+	if (msg->isConsecutive()) {
+        evaluateJS("psi_appendConsecutiveMessage(\"" + part + "\", \"" +
+				escapeStringCopy(msg->body()) +"\"" + ")");
+	}
+	else {
+        evaluateJS("psi_appendNextMessage(\"" + part + "\", \"" + 
+				escapeStringCopy(msg->body()) +"\"" + ")");
+	}
 
     //TODO
     // Webkit (javascript) must notify us when appending message is completed (we need to scroll after appending not before)      
@@ -117,8 +121,7 @@ void HTMLChatView::appendEvent(const ChatEvent* msg) {
 
 void HTMLChatView::evaluateJS(QString scriptSource) {
     webView.page()->mainFrame()->evaluateJavaScript(scriptSource);
- //   qDebug() << "HTMLChatView::evaluateJS(" << scriptSource << ")\n";
-//	std::cout << "cc " << scriptSource.toLatin1().data() << '\n' << std::endl;
+//    qDebug() << "HTMLChatView::evaluateJS(" << scriptSource << ")\n";
 }
 
 
@@ -143,6 +146,12 @@ HTMLChatView::~HTMLChatView() {
 void HTMLChatView::escapeString(QString& str) {
     str.replace("\"", "\\\"");
     str.replace("\n", "\\\n");
+}
+
+QString HTMLChatView::escapeStringCopy(QString str) {
+    str.replace("\"", "\\\"");
+    str.replace("\n", "\\\n");
+	return str;
 }
 
 void HTMLChatView::setVisible(bool visible) {

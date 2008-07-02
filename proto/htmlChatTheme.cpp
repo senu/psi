@@ -1,4 +1,8 @@
+
+#include "htmlChatPart.h"
+
 #include <ctime>
+#include <qt4/QtCore/qdir.h>
 
 #include "htmlChatTheme.h"
 #include "htmlChatView.h"
@@ -48,8 +52,19 @@ HTMLChatTheme::HTMLChatTheme(QString path) {
     incomingConsecutiveMessageTemplate.setContent(readFileContents(dir, "Resources/Incoming/NextContent.html"));
     incomingNextMessageTemplate.setContent(readFileContents(dir, "Resources/Incoming/Content.html"));
 
-    outgoingConsecutiveMessageTemplate.setContent(readFileContents(dir, "Resources/Outgoing/NextContent.html"));
-    outgoingNextMessageTemplate.setContent(readFileContents(dir, "Resources/Outgoing/Content.html"));
+	if(dir.exists("Resources/Outgoing/NextContent.html")) {
+	    outgoingConsecutiveMessageTemplate.setContent(readFileContents(dir, "Resources/Outgoing/NextContent.html"));
+	}
+	else {
+	    outgoingConsecutiveMessageTemplate.setContent(incomingConsecutiveMessageTemplate.content());
+	}
+		
+	if(dir.exists("Resources/Outgoing/Content.html")) {
+	    outgoingNextMessageTemplate.setContent(readFileContents(dir, "Resources/Outgoing/Content.html"));
+	}
+	else {
+	    outgoingNextMessageTemplate.setContent(incomingNextMessageTemplate.content());
+	}
 
     //TODO ISSUES i found theme that doesn't have outgoing folder - kopete spec. says it is required template
     //some themes don't have footer
@@ -181,7 +196,7 @@ QString HTMLChatTheme::createStatusEventPart(const StatusChatEvent * event) cons
 
 void HTMLChatTheme::fillPartWithMessageKeywords(HTMLChatPart& part, const MessageChatEvent* event) const {
 
-    part.replaceAndEscapeKeyword("%message%", event->body());
+    part.replaceMessageBody(event->body());
     part.replaceAndEscapeKeyword("%time%", event->timestamp().toString());
     part.replaceTimeKeyword("time", QDateTime::currentDateTime()); 
     part.replaceAndEscapeKeyword("%sender%", event->nick());

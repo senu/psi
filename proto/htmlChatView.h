@@ -59,6 +59,10 @@ private slots:
 private:
     /** Escapes " and \n  (for JS evaluation) */
     void escapeString(QString& str);
+	
+    /** Escapes " and \n  (for JS evaluation) */
+	QString escapeStringCopy(QString str);
+		
     HTMLChatTheme theme; // maybe HTMLChatTheme* to global theme - don't know
 
 	/** Session info */	

@@ -64,6 +64,10 @@ const QString styleProperties[] = {
 };
 
 //TODO ? validate style values (eg. text-decoderation: underline)?
+//
+// http://www.w3.org/TR/CSS21/syndata.html#syntax
+// http://www.w3.org/TR/CSS21/grammar.html
+// CSS is validated in JavaScript code with Webkit 
 
 
 enum ValidationResult {
