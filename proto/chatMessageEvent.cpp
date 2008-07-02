@@ -2,7 +2,7 @@
 #include <QtDebug>
 
 QString MessageChatEvent::getRightTemplateAndFillItWithData(const ChatTheme& theme) const {
-    return "NOT IMPLEMENTED !!!!cos(0)";
+    return "NOT IMPLEMENTED !!!!cos(0)"; //TODO move 
 }
 
 void MessageChatEvent::setBody(QString body) {

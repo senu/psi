@@ -1,8 +1,11 @@
 
+#include "htmlChatTheme.h"
+
+
 #include "htmlChatPart.h"
 
 #include <ctime>
-#include <qt4/QtCore/qdir.h>
+#include <QDir>
 
 #include "htmlChatTheme.h"
 #include "htmlChatView.h"
@@ -52,24 +55,43 @@ HTMLChatTheme::HTMLChatTheme(QString path) {
     incomingConsecutiveMessageTemplate.setContent(readFileContents(dir, "Resources/Incoming/NextContent.html"));
     incomingNextMessageTemplate.setContent(readFileContents(dir, "Resources/Incoming/Content.html"));
 
-	if(dir.exists("Resources/Outgoing/NextContent.html")) {
-	    outgoingConsecutiveMessageTemplate.setContent(readFileContents(dir, "Resources/Outgoing/NextContent.html"));
-	}
-	else {
-	    outgoingConsecutiveMessageTemplate.setContent(incomingConsecutiveMessageTemplate.content());
-	}
-		
-	if(dir.exists("Resources/Outgoing/Content.html")) {
-	    outgoingNextMessageTemplate.setContent(readFileContents(dir, "Resources/Outgoing/Content.html"));
-	}
-	else {
-	    outgoingNextMessageTemplate.setContent(incomingNextMessageTemplate.content());
-	}
+    // outgoing messages
+    if (dir.exists("Resources/Outgoing/NextContent.html")) {
+        outgoingConsecutiveMessageTemplate.setContent(readFileContents(dir, "Resources/Outgoing/NextContent.html"));
+    }
+    else {
+        outgoingConsecutiveMessageTemplate.setContent(incomingConsecutiveMessageTemplate.content());
+    }
+
+    if (dir.exists("Resources/Outgoing/Content.html")) {
+        outgoingNextMessageTemplate.setContent(readFileContents(dir, "Resources/Outgoing/Content.html"));
+    }
+    else {
+        outgoingNextMessageTemplate.setContent(incomingNextMessageTemplate.content());
+    }
 
     //TODO ISSUES i found theme that doesn't have outgoing folder - kopete spec. says it is required template
     //some themes don't have footer
 
     fileTransferEventTemplate.setContent(readFileContents(dir, "Resources/Status.html"));
+
+    // action
+    if (dir.exists("Resources/Incoming/Action.html")) {
+        incomingEmoteEventTemplate.setContent(readFileContents(dir, "Resources/Incoming/Action.html"));
+        incomingEmoteEventTemplate.setEmoteTemplate(true);
+    }
+    else {
+        incomingEmoteEventTemplate.setContent(fileTransferEventTemplate.content());
+    }
+
+    if (dir.exists("Resources/Outgoing/Action.html")) {
+        outgoingEmoteEventTemplate.setContent(readFileContents(dir, "Resources/Outgoing/Action.html"));
+        incomingEmoteEventTemplate.setEmoteTemplate(true);
+    }
+    else {
+        outgoingEmoteEventTemplate.setContent(fileTransferEventTemplate.content());
+    }
+
 
     headerTemplate.setContent(readFileContents(dir, "Resources/Header.html"));
     footerTemplate.setContent(readFileContents(dir, "Resources/Footer.html"));
@@ -158,39 +180,44 @@ QString HTMLChatTheme::createStatusEventPart(const StatusChatEvent * event) cons
 
     QString eventText = event->statusMessage();
 
-    /*
-
-    switch (type) {
-        case Finished:
-            eventText = "Finished downloading "	+ event->fileName + ".";
-            break;
-        case FileTransferEventType::Initiated:
-            eventText = "Incoming file transfer" + event->fileName + ".";
-            break;
-        case FileTransferEventType::Aborted:
-            eventText = "Aborted downloading "	+ event->fileName + ".";
-            break;							
-    }
-	 
-
-    HTMLChatTemplate * template = getPrecompiledFTTemplate();
-    template->replaceAndEscape('eventSubtype', toString(type)); //replaces %eventSubtype% with type name 
-    template->replaceAndEscape('text', eventText);
-
-    QString chatPart = template->toString();
-
-    delete template;
-    return chatPart;
-
-
-     */
     HTMLChatPart part = fileTransferEventTemplate.createFreshHTMLPart();
 
     part.replaceAndEscapeKeyword("%message%", eventText);
     part.replaceAndEscapeKeyword("%time%", QDateTime::currentDateTime().toString());
-    part.replaceTimeKeyword("time", QDateTime::currentDateTime()); 
+    part.replaceTimeKeyword("time", QDateTime::currentDateTime());
 
     return part.toString();
+}
+
+
+QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const {
+
+    //QString eventText = QString("%1 %2").arg(event->nick()).arg(event->message());
+    QString eventText = event->message(); //TODO no kopete check!
+    HTMLChatPart part;
+
+    if (event->isLocal()) {
+        part = outgoingEmoteEventTemplate.createFreshHTMLPart();
+	
+		if(!outgoingEmoteEventTemplate.isEmoteTemplate()) {
+			eventText = event->nick() + " " + eventText;
+		}
+    }
+    else {
+        part = incomingEmoteEventTemplate.createFreshHTMLPart();
+		
+		if(!incomingEmoteEventTemplate.isEmoteTemplate()) {
+			eventText = event->nick() + " " + eventText;
+		}
+    }
+
+    part.replaceAndEscapeKeyword("%message%", eventText);
+    part.replaceAndEscapeKeyword("%sender%", event->nick());
+    part.replaceAndEscapeKeyword("%time%", QDateTime::currentDateTime().toString());
+    part.replaceTimeKeyword("time", QDateTime::currentDateTime());
+
+    return part.toString();
+
 }
 
 
@@ -198,7 +225,7 @@ void HTMLChatTheme::fillPartWithMessageKeywords(HTMLChatPart& part, const Messag
 
     part.replaceMessageBody(event->body());
     part.replaceAndEscapeKeyword("%time%", event->timestamp().toString());
-    part.replaceTimeKeyword("time", QDateTime::currentDateTime()); 
+    part.replaceTimeKeyword("time", QDateTime::currentDateTime());
     part.replaceAndEscapeKeyword("%sender%", event->nick());
     part.replaceAndEscapeKeyword("%service%", event->service());
     part.replaceAndEscapeKeyword("%userIconPath%", event->userIconPath());
@@ -210,8 +237,8 @@ void HTMLChatTheme::fillPartWithThemeKeywords(HTMLChatPart& part, ChatTheme::Cha
 
     part.replaceAndEscapeKeyword("%timeOpened%", sessionInfo.timeOpened.toString());
     part.replaceTimeKeyword("timeOpened", sessionInfo.timeOpened);
-    
-	part.replaceAndEscapeKeyword("%chatName%", sessionInfo.chatName);
+
+    part.replaceAndEscapeKeyword("%chatName%", sessionInfo.chatName);
 
     part.replaceAndEscapeKeyword("%sourceName%", sessionInfo.sourceName);
     part.replaceAndEscapeKeyword("%destinationName%", sessionInfo.destinationName);

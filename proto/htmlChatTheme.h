@@ -6,9 +6,12 @@
 
 #include "chatTheme.h"
 #include "htmlChatTemplate.h"
+#include "htmlchatemotetemplate.h"
+
 #include "fileTransferChatEvent.h"
 #include "statusChatEvent.h"
 #include "chatMessageEvent.h"
+#include "emotechatevent.h"
 
 class ChatTheme;
 class FileTransferChatEvent;
@@ -49,6 +52,8 @@ public:
     QString createFileTransferEventPart(const FileTransferChatEvent * event) const;
     QString createStatusEventPart(const StatusChatEvent * event) const;
 
+    QString createEmoteEventPart(const EmoteChatEvent * event) const;
+
     /** Fills part (footer/header) with keywords (chatName, timeOpened) */
     void fillPartWithThemeKeywords(HTMLChatPart& part, ChatTheme::ChatInfo sessionInfo) const;
 
@@ -75,6 +80,9 @@ private:
     HTMLChatTemplate outgoingNextMessageTemplate;
 
     HTMLChatTemplate fileTransferEventTemplate;
+
+    HTMLChatEmoteTemplate incomingEmoteEventTemplate;
+    HTMLChatEmoteTemplate outgoingEmoteEventTemplate;
 
     QString _baseHref;
     QStringList _variants;

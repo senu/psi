@@ -119,8 +119,16 @@ void TestForm::onEventButtonClicked() {
 	StatusChatEvent *ev2 = new StatusChatEvent();
 
 	ev2->setStatusMessage("status message zzz");
-
+	
 	emit eventCreated(ev2);
+
+	EmoteChatEvent * ev3 = new EmoteChatEvent();
+	ev3->setLocal(false);
+	ev3->setMessage("is working hard");
+	ev3->setNick("Pawel Wiejacha");
+	
+	emit eventCreated(ev3);
+	
 }
 
 void TestForm::onLoadTheme() {

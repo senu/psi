@@ -15,7 +15,9 @@ HEADERS += chatMessageEvent.h \
 		   chatEvent.h\
 		   fileTransferChatEvent.h \
 		   statusChatEvent.h\
+		   emoteChatEvent.h\
            htmlChatTemplate.h \
+		   htmlchatemotetemplate.cpp\
            htmlChatTheme.h \
            htmlChatView.h \
            testForm.h \
@@ -23,7 +25,7 @@ HEADERS += chatMessageEvent.h \
   		   messageValidator.h\
 		   chatThemeList.h\
 		   htmlChatThemeList.h\
-		   config.h
+		   config.h\ 
 
 tests {
   HEADERS += tests/testMessageValidator.h
@@ -35,6 +37,6 @@ tests {
 }
 
 
-SOURCES += abstractChatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp testForm.cpp chatMessageEvent.cpp htmlChatPart.cpp statusChatEvent.cpp chatThemeList.cpp htmlChatThemeList.cpp messageValidator.cpp 
+SOURCES += abstractChatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp testForm.cpp chatMessageEvent.cpp htmlChatPart.cpp statusChatEvent.cpp chatThemeList.cpp htmlChatThemeList.cpp messageValidator.cpp emoteChatEvent.cpp htmlchatemotetemplate.cpp
 
 QT += webkit xml

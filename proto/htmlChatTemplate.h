@@ -1,3 +1,6 @@
+#ifndef _HTMLCHATTEMPLATE_H
+#define	_HTMLCHATTEMPLATE_H
+
 #include <Qt>
 
 #include "htmlChatPart.h"
@@ -27,3 +30,5 @@ private:
 	QString _content;
 
 };
+
+#endif
