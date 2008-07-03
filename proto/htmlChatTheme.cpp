@@ -195,9 +195,10 @@ void HTMLChatTheme::fillPartWithMessageKeywords(HTMLChatPart& part, const Messag
 
     part.replaceMessageBody(event->body());
     part.replaceAndEscapeKeyword("%time%", event->timeStamp().toString());
-    part.replaceTimeKeyword("time", QDateTime::currentDateTime());
+    part.replaceTimeKeyword("time", event->timeStamp());
     part.replaceAndEscapeKeyword("%sender%", event->nick());
     part.replaceAndEscapeKeyword("%service%", event->service());
+    part.replaceAndEscapeKeyword("%senderScreenName%", event->jid());
     part.replaceAndEscapeKeyword("%userIconPath%", event->userIconPath());
 
 }

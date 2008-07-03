@@ -39,11 +39,12 @@ void HTMLChatView::init() {
     QObject::connect(&jsNotifier, SIGNAL(onAppendFinished()), this, SLOT(onAppendFinished()));
 
     webView.setHtml(createEmptyDocument(theme.baseHref(), theme.currentVariant()), theme.baseHref());
+    //rest in onEmptyDocumentLoaded
 }
 
 
 void HTMLChatView::onEmptyDocumentLoaded(bool ok) {
-    if (!ok) {
+    if (!ok) { //TODO CTRM eg. when we delete this object
         qDebug() << "ERROR 3";
         exit(1); //TODO
     }

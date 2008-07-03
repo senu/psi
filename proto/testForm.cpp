@@ -114,10 +114,12 @@ void TestForm::onNextButtonClicked() { // copy-paste :D
     ce->setLocal(qrand() % 2);
     if (ce->isLocal()) {
         ce->setNick("Pawel Wiejacha");
+		ce->setJid("senu@jabber.pl");
         ce->setUserIconPath("http://userserve-ak.last.fm/serve/50/4272669.jpg");
     }
     else {
         ce->setNick("Kot Behemot");
+		ce->setJid("behemot@jabber.ru");
         ce->setUserIconPath("http://a.wordpress.com/avatar/liberumveto-48.jpg");
     }
 
