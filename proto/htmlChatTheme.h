@@ -43,8 +43,8 @@ public:
     /** Sets current theme variant (withou .css suffix) */
     void setCurrentVariant(QString variant);
 
-	/** Reads theme from filesystem */
-	void readTheme(QString path);
+    /** Reads theme from filesystem */
+    void readTheme(QString path);
 
     QString createIncomingMessagePart(const MessageChatEvent *) const;
     QString createOutgoingMessagePart(const MessageChatEvent *) const;
@@ -63,15 +63,14 @@ public:
 
 private:
 
-    /** Fills part with keywords from event (common for in/out next/cons messages) */
+    /** Fills part with keywords from message event (common for in/out next/cons messages) */
     void fillPartWithMessageKeywords(HTMLChatPart& part, const MessageChatEvent* event) const;
 
+    /** Fills part with keywords from event; %message% = eventText (common for eg filetransfer, mood) */
+    void fillPartWithEventKeywords(HTMLChatPart& part, const ChatEvent* event, QString eventText) const;
     /** Returns dir/relativePath (to Contents dir) */
     QString readFileContents(QDir dir, QString relativePath);
 
-	
-
-	
 
     HTMLChatTemplate incomingConsecutiveMessageTemplate;
     HTMLChatTemplate incomingNextMessageTemplate;

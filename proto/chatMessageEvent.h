@@ -21,15 +21,12 @@ public:
 
 	QString jid() const ;
 	QString nick() const;
+	QString userIconPath() const;
 	
 	QString subject() const;
 	QString body() const;
-
-	QDateTime timestamp() const;
-	QString service() const;
 	
-	QString userIconPath() const;
-
+	QString service() const;
 	
 	bool wasEncrypted();
 
@@ -49,7 +46,6 @@ public:
 	void setService(QString);
 	void setUserIconPath(QString);
 
-	void setTimestamp(QDateTime);
 	bool setWasEncrypted();
 
 	/** Is it our message? */

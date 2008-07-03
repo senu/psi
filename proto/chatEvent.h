@@ -6,14 +6,15 @@
 
 #include "abstractChatEvent.h"
 
+
 /** ChatEvent is an AbstractChatEvent that's not MessageChatEvent :D.
  *
  *  eg. FileTransfer, Status, Mood events
  */
 class ChatEvent : public AbstractChatEvent {
-  public:	
-	QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const = 0;
 
+public:
+    QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const = 0;
 };
 
 #endif

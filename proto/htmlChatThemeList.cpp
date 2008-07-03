@@ -18,9 +18,9 @@ void HTMLChatThemeList::readThemes() {
 	QString subdir;
 	
 	foreach(subdir, subdirs) {
-		qDebug() << subdir;
+//		qDebug() << subdir;
 		if (validateTheme(dir.absoluteFilePath(subdir))) {
-			qDebug() << subdir;
+//			qDebug() << subdir;
 			themeDict[generateThemeName(subdir)]=dir.absoluteFilePath(subdir+"/");
 		}
 	}

@@ -19,8 +19,7 @@ Q_OBJECT
 
   public:
     TestForm(QWidget * parent);
-    ~TestForm(); //TODO
-
+	~TestForm();			
   private:
     QLineEdit * messageEdit;
 	QComboBox *themeComboBox;

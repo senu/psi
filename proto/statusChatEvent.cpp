@@ -1,14 +1,16 @@
 #include "statusChatEvent.h"
 
+
 QString StatusChatEvent::getRightTemplateAndFillItWithData(const ChatTheme& theme) const {
-	return theme.createStatusEventPart(this);
+    return theme.createStatusEventPart(this);
 }
 
+
 QString StatusChatEvent::statusMessage() const {
-	return _statusMessage;
+    return _statusMessage;
 }
 
 
 void StatusChatEvent::setStatusMessage(QString statusMessage) {
-	_statusMessage = statusMessage;	
+    _statusMessage = statusMessage;
 }

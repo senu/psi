@@ -7,6 +7,7 @@
 #include <QtDebug>
 #include <QPair>
 #include <QList>
+#include <QRect>
 
 #include "chatView.h"
 #include "htmlChatTheme.h"
@@ -31,7 +32,7 @@ public:
     void setTheme(HTMLChatTheme theme);
 
 
-    public 
+    public
 slots:
     void evaluateJS(QString scriptSource);
 
@@ -49,12 +50,15 @@ slots:
     /** Creates HTML document (header,chat,footer) */
     void init();
 
+    /** Returns HTML contained in webView */
+    QString dumpContent();
+
     //reimplemented
     void setVisible(bool visible);
     void setChatInfo(ChatTheme::ChatInfo chatInfo); //TODO update chatview
     ChatTheme::ChatInfo chatInfo() const;
 
-    private 
+    private
 slots:
     /** Load JS code, append header, chat div, and footer 
         ok <=> document loaded successfully
@@ -63,9 +67,11 @@ slots:
 
     /** JS::psi_initDocument finished */
     void onInitDocumentFinished();
-	
+
     /** JS::psi_append* finished */
     void onAppendFinished();
+
+    void onDupa(QRect geom);
 
     /** Creates html document with base href tag somewhere; themeVariant is without css suffix */ //TODO avoid creating document
     QString createEmptyDocument(QString baseHref, QString themeVariant);

@@ -85,7 +85,7 @@ typedef QPair<ValidationResult, QDomNode> ValidatedNode;
 void MessageValidator::dfs(QDomElement cur, int tabs, bool* modified) {
     tabs += 3;
 
-    qDebug() << QString(tabs, ' ') << cur.tagName();
+//    qDebug() << QString(tabs, ' ') << cur.tagName();
 
 	QString parentName = cur.tagName();
 
@@ -96,8 +96,8 @@ void MessageValidator::dfs(QDomElement cur, int tabs, bool* modified) {
 		QString attrName = cur.attributes().item(i).toAttr().name();
 		
 		if(!curNI.allowedAttributes.contains(attrName)) {
-			qDebug() << "VALIDATIN ERR" << "TA" << attrName  << " in " << parentName;
-			qDebug() << "note allowed attributes are:" << curNI.allowedAttributes;
+//			qDebug() << "VALIDATIN ERR" << "TA" << attrName  << " in " << parentName;
+//			qDebug() << "note allowed attributes are:" << curNI.allowedAttributes;
 
 			cur.attributes().removeNamedItem(attrName);
 			*modified = true;
@@ -116,8 +116,8 @@ void MessageValidator::dfs(QDomElement cur, int tabs, bool* modified) {
 			//is subElement valid here?
 			if(!curNI.allowedTags.contains(childName)) {
 				
-				qDebug() << "VALIDATIN ERR" << "TS" << childName << " in " << parentName;
-				qDebug() << "note allowed subElements are:" << curNI.allowedTags;
+//				qDebug() << "VALIDATIN ERR" << "TS" << childName << " in " << parentName;
+//				qDebug() << "note allowed subElements are:" << curNI.allowedTags;
                 
 				//append bad node's children (they will be walidated in next loop iteration)
 				while(node.hasChildNodes()) {
@@ -134,13 +134,13 @@ void MessageValidator::dfs(QDomElement cur, int tabs, bool* modified) {
 			}
         }
         else if (node.isText()) {
-            qDebug() << QString(tabs + 3, ' ') << node.toText().data();
+//            qDebug() << QString(tabs + 3, ' ') << node.toText().data();
         }
 		else if (node.isComment()) {
-            qDebug() << QString(tabs + 3, ' ') << "comment" << node.toComment().data();
+//            qDebug() << QString(tabs + 3, ' ') << "comment" << node.toComment().data();
         }
 		else if (node.isEntityReference()) { //TODO what is the Entity if Entity is EntityReference?
-            qDebug() << QString(tabs + 3, ' ') << "entityReference";
+//            qDebug() << QString(tabs + 3, ' ') << "entityReference";
         }
         else {
             throw 3.3;

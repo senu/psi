@@ -1,20 +1,21 @@
-
 #include <QtXml>
-
 #include <QApplication>
 
 #include "testForm.h"
 #include "messageValidator.h"
+
 #ifdef TESTS
-#include <cppunit/TextOutputter.h>
+#include <cppunit/CompilerOutputter.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/TestResultCollector.h>
 #include <cppunit/TestRunner.h>
 #include <cppunit/BriefTestProgressListener.h>
 
+#include "tests/testhtmlchatview.h"
 #include "tests/testMessageValidator.h"
 #endif
+
 int main(int argc, char *argv[]) {
 
     QApplication app(argc, argv);
@@ -25,6 +26,7 @@ int main(int argc, char *argv[]) {
 	MessageValidator vaildator;
 	
 	CPPUNIT_TEST_SUITE_REGISTRATION (TestMessageValidator);
+	CPPUNIT_TEST_SUITE_REGISTRATION (TestHTMLChatView);
 
 // informs test-listener about testresults
     CPPUNIT_NS :: TestResult testresult;
@@ -43,7 +45,7 @@ int main(int argc, char *argv[]) {
     testrunner.run (testresult);
 
     // output results in compiler-format
-    CPPUNIT_NS :: TextOutputter compileroutputter (&collectedresults, std::cerr);
+    CPPUNIT_NS :: CompilerOutputter compileroutputter (&collectedresults, std::cerr);
     compileroutputter.write ();
 #endif
 

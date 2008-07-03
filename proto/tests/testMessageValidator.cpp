@@ -75,7 +75,7 @@ void TestMessageValidator::badAttributeMessage() {
 
 }
 
-
+/*
 void TestMessageValidator::badCSSMessage() {
     QString inMessage =
             "<?xml version='1.0' encoding='UTF-8'?>"
@@ -102,17 +102,7 @@ void TestMessageValidator::badCSSMessage() {
 
     genericTest(inMessage, validMessage);
 }
-
-
-void TestMessageValidator::badCSS2Message() {
-
-}
-
-
-void TestMessageValidator::badCSSURLMessage() {
-
-}
-
+*/
 
 void TestMessageValidator::genericTest(QString inMessage, QString validMessage) {
     bool modified;

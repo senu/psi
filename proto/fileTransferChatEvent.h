@@ -10,28 +10,37 @@
 class ChatTheme;
 class AstractChatEvent;
 
+
 /** FileTransfer (init/abort/finished) ChatEvent */
-class FileTransferChatEvent : public ChatEvent 
-{
-  public:	
-	enum FileTransferEventType {
-		Initiated,
-		Aborted,
-		Finished,
-	};
+class FileTransferChatEvent : public ChatEvent {
 
-	FileTransferEventType type;
+public:
 
-	QString fileName() const;
-	void setFileName(QString);
-	
 
-	QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const {
-		return theme.createFileTransferEventPart(this);
-	}
+    enum FileTransferEventType {
 
-private:	
-	QString _fileName; //need accessors
+        Initiated,
+        Aborted,
+        Finished,
+    };
+
+    FileTransferEventType type;
+
+    /** Returns fileName */
+    QString fileName() const;
+
+    /** Sets fileName */
+    void setFileName(QString fileName);
+
+
+
+
+    QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const {
+        return theme.createFileTransferEventPart(this);
+    }
+
+private:
+    QString _fileName; //need accessors
 };
 
 #endif

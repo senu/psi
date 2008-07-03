@@ -5,7 +5,7 @@
 TEMPLATE = app
 TARGET = 
 DEPENDPATH += . .
-CONFIG += tests
+CONFIG += tests qtestlib
 
 # Input
 HEADERS += chatMessageEvent.h \
@@ -29,8 +29,8 @@ HEADERS += chatMessageEvent.h \
 		   jsNotifier.h
 
 tests {
-  HEADERS += tests/testMessageValidator.h
-  SOURCES += tests/testMessageValidator.cpp
+  HEADERS += tests/testMessageValidator.h tests/testhtmlchatview.h
+  SOURCES += tests/testMessageValidator.cpp tests/testhtmlchatview.cpp
   INCLUDEPATH += . ../third-party/cppunit/cppunit/include/
   LIBS += /usr/lib/libcppunit.so
   DEFINES += TESTS
@@ -40,4 +40,4 @@ tests {
 
 SOURCES += abstractChatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp testForm.cpp chatMessageEvent.cpp htmlChatPart.cpp statusChatEvent.cpp chatThemeList.cpp htmlChatThemeList.cpp messageValidator.cpp emoteChatEvent.cpp htmlchatemotetemplate.cpp jsNotifier.cpp
 
-QT += webkit xml
+QT += webkit xml 

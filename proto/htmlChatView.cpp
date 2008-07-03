@@ -34,8 +34,10 @@ void HTMLChatView::clear() {
 void HTMLChatView::init() {
 
     QObject::connect(&webView, SIGNAL(loadFinished(bool)), this, SLOT(onEmptyDocumentLoaded(bool)));
+    QObject::connect(webView.page(), SIGNAL(geometryChangeRequested(QRect)), this, SLOT(onDupa(QRect)));
     QObject::connect(&jsNotifier, SIGNAL(onInitFinished()), this, SLOT(onInitDocumentFinished()));
     QObject::connect(&jsNotifier, SIGNAL(onAppendFinished()), this, SLOT(onAppendFinished()));
+
     webView.setHtml(createEmptyDocument(theme.baseHref(), theme.currentVariant()), theme.baseHref());
 }
 
@@ -43,7 +45,7 @@ void HTMLChatView::init() {
 void HTMLChatView::onEmptyDocumentLoaded(bool ok) {
     if (!ok) {
         qDebug() << "ERROR 3";
-        exit(1);
+        exit(1); //TODO
     }
 
     HTMLChatPart header = theme.headerTemplate.createFreshHTMLPart();
@@ -64,7 +66,6 @@ void HTMLChatView::onEmptyDocumentLoaded(bool ok) {
     webView.page()->mainFrame()->addToJavaScriptWindowObject("jsNotifier", &jsNotifier);
 
     evaluateJS("psi_initDocument(\"" + headerStr + "\", \"" + footerStr + "\")");
-
     //rest in onInitDocumentFinished
 }
 
@@ -72,6 +73,7 @@ void HTMLChatView::onEmptyDocumentLoaded(bool ok) {
 void HTMLChatView::onInitDocumentFinished() {
 
     const AbstractChatEvent* event;
+
 
     foreach(event, appendedEvents) {
         qDebug() << event;
@@ -86,8 +88,14 @@ void HTMLChatView::onInitDocumentFinished() {
 
 
 void HTMLChatView::onAppendFinished() {
-	qDebug() << "append finished";
+    qDebug() << "append finished"; //TODO we get this after DOM changed, but before view changed :/
     webView.page()->mainFrame()->setScrollBarValue(Qt::Vertical, 10000); //TODO 
+}
+
+
+void HTMLChatView::onDupa(QRect geom) {
+    qDebug() << "dupa" << geom;
+    throw 1;
 }
 
 
@@ -113,8 +121,7 @@ QString HTMLChatView::createEmptyDocument(QString baseHref, QString themeVariant
                    "                        *{ word-wrap:break-word; }"
                    "                </style>"
                    "        </head>"
-                   "        <body>"
-                   "        </body>"
+                   "        <body></body>"
                    "</html>").arg(baseHref).arg("Variants/" + QString(themeVariant) + ".css");
 
 }
@@ -155,8 +162,6 @@ void HTMLChatView::appendEvent(const ChatEvent* event, bool alreadyAppended = fa
         appendedEvents.append(event);
     }
 
-    qDebug() << appendedEvents;
-
     evaluateJS("psi_appendEvent(\"" + part + "\")");
 }
 
@@ -190,8 +195,12 @@ void HTMLChatView::importJSChatFunctions() {
 
 
 HTMLChatView::~HTMLChatView() {
-    QString str = webView.page()->mainFrame()->toHtml();
-    printf("%s", str.toLatin1().data());
+    qDebug() << dumpContent();
+}
+
+
+QString HTMLChatView::dumpContent() {
+    return webView.page()->mainFrame()->toHtml();
 }
 
 

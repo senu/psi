@@ -14,7 +14,6 @@ QString HTMLChatPart::toString() {
 
 void HTMLChatPart::replaceAndEscapeKeyword(QString keyword, QString value) {
     content.replace(keyword, escapeString(value));
-    qDebug() << content;
 }
 
 void HTMLChatPart::replaceMessageBody(QString value) {

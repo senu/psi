@@ -1,4 +1,7 @@
 
+#include "fileTransferChatEvent.h"
+
+
 #include "htmlChatView.h"
 
 #include <QPushButton>
@@ -10,6 +13,7 @@
 
 TestForm::~TestForm() {
     delete view;
+	delete theme;
 }
 
 
@@ -18,6 +22,7 @@ TestForm::TestForm(QWidget *parent)
 : QFrame(parent) {
 
     view = 0;
+	theme = 0;
 
     QPushButton * nextMessageBtn = new QPushButton("appendNextMessage", this);
     QPushButton * consMessageBtn = new QPushButton("appendConsecutiveMessage", this);
@@ -85,7 +90,7 @@ void TestForm::onConsecutiveButtonClicked() {
     bool modified;
     ce->setBody(msgVal.validateMessage("<msg>" + messageEdit->text() + "</msg>", &modified));
 
-    ce->setTimestamp(QDateTime::currentDateTime());
+    ce->setTimeStamp(QDateTime::currentDateTime());
     ce->setNick("senu");
     ce->setService("Jabber");
     ce->setConsecutive(true);
@@ -103,7 +108,7 @@ void TestForm::onNextButtonClicked() { // copy-paste :D
     bool modified;
     ce->setBody(msgVal.validateMessage("<body>" + messageEdit->text() + "</body>", &modified));
 
-    ce->setTimestamp(QDateTime::currentDateTime());
+    ce->setTimeStamp(QDateTime::currentDateTime());
     ce->setConsecutive(false);
     ce->setService("Jabber");
     ce->setLocal(qrand() % 2);
@@ -124,11 +129,15 @@ void TestForm::onNextButtonClicked() { // copy-paste :D
 void TestForm::onEventButtonClicked() {
 
     FileTransferChatEvent *ev = new FileTransferChatEvent();
+	ev->setTimeStamp(QDateTime::currentDateTime());
+	ev->type = FileTransferChatEvent::Aborted;
+	ev->setFileName("screen.jpg");
 
     emit eventCreated(ev);
 
     StatusChatEvent *ev2 = new StatusChatEvent();
 
+	ev2->setTimeStamp(QDateTime::currentDateTime());
     ev2->setStatusMessage("status message zzz");
 
     emit eventCreated(ev2);
@@ -137,6 +146,7 @@ void TestForm::onEventButtonClicked() {
     ev3->setLocal(false);
     ev3->setMessage("is working hard");
     ev3->setNick("Pawel Wiejacha");
+	ev3->setTimeStamp(QDateTime::currentDateTime());
 
     emit eventCreated(ev3);
 
@@ -146,6 +156,8 @@ void TestForm::onEventButtonClicked() {
 void TestForm::onLoadTheme() {
 
     QString themeName = themeComboBox->currentText();
+	
+	delete theme;
     theme = new HTMLChatTheme(themeList.themePath(themeName));
 
     variantComboBox->clear();

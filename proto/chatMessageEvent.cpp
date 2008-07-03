@@ -16,17 +16,6 @@ QString MessageChatEvent::body() const {
     return _body;
 }
 
-
-void MessageChatEvent::setTimestamp(QDateTime timestamp) {
-    _timestamp = timestamp;
-}
-
-
-QDateTime MessageChatEvent::timestamp() const {
-    return _timestamp;
-}
-
-
 void MessageChatEvent::setNick(QString nick) {
     _nick = nick;
 }
