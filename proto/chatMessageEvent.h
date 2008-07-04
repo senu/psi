@@ -6,11 +6,12 @@
 #include <QDateTime>
 
 #include "abstractChatEvent.h"
+#include "userchatevent.h"
 
 class AbstractChatEvent;
 
 /** Message ChatEvent - incoming/outgoing consecutive/next */
-class MessageChatEvent : public AbstractChatEvent
+class MessageChatEvent : public AbstractChatEvent, public UserChatEvent
 {
 public:	
 
@@ -18,16 +19,9 @@ public:
 					  // We will have sth like ChatMessage toChatMessage(const XMPP::Message& )
 
 	//getters
-
-	QString jid() const ;
-	QString nick() const;
-	QString userIconPath() const;
-	
 	QString subject() const;
 	QString body() const;
-	
-	QString service() const;
-	
+
 	bool wasEncrypted();
 
 	bool isLocal() const; //our messgage? (outgoing)
@@ -36,15 +30,8 @@ public:
 	bool isConsecutive() const;
 
 	//setters
-	
-	void setJid(QString);
-	void setNick(QString);
-	
 	void setSubject(QString);
 	void setBody(QString);
-
-	void setService(QString);
-	void setUserIconPath(QString);
 
 	bool setWasEncrypted();
 
@@ -60,11 +47,6 @@ public:
 
   private:
 	QString _body;
-	QString _nick;
-	QString _jid;
-	QString _service;
-	QString _userIconPath;
-	QDateTime _timestamp;
 
 	bool _isConsecutive;
 	bool _isSpooled;

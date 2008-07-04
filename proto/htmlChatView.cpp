@@ -16,6 +16,7 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme)
 
     _chatInfo.chatName = "Kot Behemot";
     _chatInfo.destinationName = "Kot Behemot";
+    _chatInfo.destinationDisplayName = "behemot@jabber.ru";
     _chatInfo.sourceName = "Pawel Wiejacha";
     _chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg";
     _chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";

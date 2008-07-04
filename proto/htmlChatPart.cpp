@@ -16,9 +16,10 @@ void HTMLChatPart::replaceAndEscapeKeyword(QString keyword, QString value) {
     content.replace(keyword, escapeString(value));
 }
 
+
 void HTMLChatPart::replaceMessageBody(QString value) {
-	_messageBody = escapeString(value);
-} 
+    _messageBody = escapeString(value);
+}
 
 
 QString HTMLChatPart::escapeString(QString string) {
@@ -36,6 +37,33 @@ void HTMLChatPart::replaceTimeKeyword(QString keyword, QDateTime time) {
 }
 
 
+
+// These colors are used for coloring nicknames. I tried to use
+// colors both visible on light and dark background.
+// [it's Kopete color list]
+
+
+void HTMLChatPart::replaceSenderColorKeyword(int userHash) {
+    static const char* const colorList[] = {
+        "red", "blue", "gray", "magenta", "violet", "#808000", "yellowgreen",
+        "darkred", "darkgreen", "darksalmon", "darkcyan", "#B07D2B", "mediumpurple",
+        "peru", "olivedrab", "#B01712", "darkorange", "slateblue", "slategray",
+        "goldenrod", "orangered", "tomato", "#1E90FF", "steelblue", "deeppink",
+        "saddlebrown", "coral", "royalblue"
+    };
+	
+    static const int colorListLen = sizeof (colorList) / sizeof (colorList[0]);
+
+	QString colorString = colorList[userHash % colorListLen];
+
+	QRegExp colorPattern("%senderColor(?:\\{([^}]*)\\})?%");
+
+    for (int pos = 0; (pos = colorPattern.indexIn(content, pos)) != -1;) {
+        content.replace(pos, colorPattern.cap(0).length(), colorString);
+    }
+}
+
+
 QString HTMLChatPart::formatTime(QString format, QDateTime time) {
     char buff[256];
 
@@ -45,6 +73,7 @@ QString HTMLChatPart::formatTime(QString format, QDateTime time) {
     return QString(buff);
 }
 
+
 QString HTMLChatPart::messageBody() const {
-	return _messageBody;
+    return _messageBody;
 }

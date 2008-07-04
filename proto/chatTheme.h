@@ -34,6 +34,7 @@ class ChatTheme
 
                 sourceName,
                 destinationName,
+				destinationDisplayName,
 
                 incomingIconPath,
                 outgoingIconPath;

@@ -91,7 +91,8 @@ void TestForm::onConsecutiveButtonClicked() {
     ce->setBody(msgVal.validateMessage("<msg>" + messageEdit->text() + "</msg>", &modified));
 
     ce->setTimeStamp(QDateTime::currentDateTime());
-    ce->setNick("senu");
+    ce->setNick("Pawel Wiejacha");
+	ce->setJid("senu@jabber.pl");
     ce->setService("Jabber");
     ce->setConsecutive(true);
     ce->setLocal(true);

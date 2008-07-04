@@ -199,8 +199,15 @@ void HTMLChatTheme::fillPartWithMessageKeywords(HTMLChatPart& part, const Messag
     part.replaceAndEscapeKeyword("%sender%", event->nick());
     part.replaceAndEscapeKeyword("%service%", event->service());
     part.replaceAndEscapeKeyword("%senderScreenName%", event->jid());
+    part.replaceAndEscapeKeyword("%senderDisplayName%", event->jid());
     part.replaceAndEscapeKeyword("%userIconPath%", event->userIconPath());
+    part.replaceAndEscapeKeyword("%senderStatusIcon%", event->userStatusIcon());
+	
+    part.replaceAndEscapeKeyword("%messageDirection%", "ltr"); //TODO
+    part.replaceSenderColorKeyword(event->userHash()); //TODO
 
+	//TODO %textbackgroundcolor{X}%
+	//TODO %senderColor{N}%
 }
 
 
@@ -220,6 +227,8 @@ void HTMLChatTheme::fillPartWithThemeKeywords(HTMLChatPart& part, ChatTheme::Cha
 
     part.replaceAndEscapeKeyword("%sourceName%", sessionInfo.sourceName);
     part.replaceAndEscapeKeyword("%destinationName%", sessionInfo.destinationName);
+    
+	part.replaceAndEscapeKeyword("%destinationDisplayName%", sessionInfo.destinationName);
 
     part.replaceAndEscapeKeyword("%incomingIconPath%", sessionInfo.incomingIconPath);
     part.replaceAndEscapeKeyword("%outgoingIconPath%", sessionInfo.outgoingIconPath);

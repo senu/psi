@@ -31,6 +31,9 @@ class HTMLChatPart {
 	
 	/** Replaces time keyword %keyword{format}% with formatted time */
 	void replaceTimeKeyword(QString keyword, QDateTime time); 
+	
+	/** Replaces time keyword %senderColor% with color computed using userHash */
+	void replaceSenderColorKeyword(int userHash); 
 
 	/** Escapes string */
 	static QString escapeString(QString string); //TODO unused

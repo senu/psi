@@ -16,45 +16,6 @@ QString MessageChatEvent::body() const {
     return _body;
 }
 
-void MessageChatEvent::setNick(QString nick) {
-    _nick = nick;
-}
-
-
-QString MessageChatEvent::nick() const {
-    return _nick;
-}
-
-
-void MessageChatEvent::setJid(QString jid) {
-    _jid = jid;
-}
-
-
-QString MessageChatEvent::jid() const {
-    return _jid;
-}
-
-
-QString MessageChatEvent::service() const {
-    return _service;
-}
-
-
-void MessageChatEvent::setService(QString service) {
-    _service = service;
-}
-
-
-void MessageChatEvent::setUserIconPath(QString userIconPath) {
-    _userIconPath = userIconPath;
-}
-
-
-QString MessageChatEvent::userIconPath()const {
-    return _userIconPath;
-}
-
 
 void MessageChatEvent::setConsecutive(bool is) {
     _isConsecutive = is;
