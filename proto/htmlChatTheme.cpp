@@ -120,6 +120,7 @@ QString HTMLChatTheme::createIncomingMessagePart(const MessageChatEvent * event)
 
     fillPartWithUserKeywords(part, event);
     part.replaceAndEscapeKeyword("%body%", event->body());
+    part.replaceAndEscapeKeyword("%messageClasses%", "message incoming");
 
     return part.toString();
 }
@@ -128,14 +129,16 @@ QString HTMLChatTheme::createIncomingMessagePart(const MessageChatEvent * event)
 QString HTMLChatTheme::createOutgoingMessagePart(const MessageChatEvent * event) const {
     HTMLChatPart part;
 
-    if (event->isConsecutive())
+    if (event->isConsecutive()) {
         part = outgoingConsecutiveMessageTemplate.createFreshHTMLPart();
+    }
     else {
         part = outgoingNextMessageTemplate.createFreshHTMLPart();
     }
 
     fillPartWithUserKeywords(part, event);
     part.replaceAndEscapeKeyword("%body%", event->body());
+    part.replaceAndEscapeKeyword("%messageClasses%", "message outgoing");
 
     return part.toString();
 }
@@ -168,6 +171,7 @@ QString HTMLChatTheme::createFileTransferEventPart(const FileTransferChatEvent *
     HTMLChatPart part = fileTransferEventTemplate.createFreshHTMLPart();
     fillPartWithEventKeywords(part, event, eventText);
     part.replaceAndEscapeKeyword("%status%", statusStr);
+    part.replaceAndEscapeKeyword("%messageClasses%", "event fileTransfer");
 
     return part.toString();
 }
@@ -208,6 +212,7 @@ QString HTMLChatTheme::createStatusEventPart(const StatusChatEvent * event) cons
 
     fillPartWithEventKeywords(part, event, eventText);
     part.replaceAndEscapeKeyword("%status%", statusStr);
+    part.replaceAndEscapeKeyword("%messageClasses%", "status");
 
     return part.toString();
 }
@@ -235,6 +240,7 @@ QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const 
 
     fillPartWithUserKeywords(part, event);
     part.replaceAndEscapeKeyword("%message%", eventText); //TODO validate or escape
+    part.replaceAndEscapeKeyword("%messageClasses%", "event emote");
 
     return part.toString();
 
@@ -258,8 +264,6 @@ void HTMLChatTheme::fillPartWithUserKeywords(HTMLChatPart& part, const UserChatE
     part.replaceAndEscapeKeyword("%messageDirection%", "ltr"); //TODO
 
     //TODO %textbackgroundcolor{X}%
-    //TODO %messageClasses%
-    //TODO %shortTime%
 }
 
 

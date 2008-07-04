@@ -5,7 +5,6 @@
 
 #include "htmlChatPart.h"
 
-//TODO change name
 /** Message/Event template 
  * 
  *  It's QString + loading methods.
