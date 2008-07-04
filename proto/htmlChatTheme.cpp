@@ -18,7 +18,7 @@ HTMLChatTheme::HTMLChatTheme() {
 QString HTMLChatTheme::readFileContents(QDir dir, QString relativePath) {
     QFile file(dir.absoluteFilePath(relativePath));
     qDebug() << "loading theme" << dir.absoluteFilePath(relativePath);
-	
+
     if (!file.open(QIODevice::ReadOnly)) {
         qDebug() << "WARNING\n\n" << "file not found"; //TODO 
         return "";
@@ -119,7 +119,7 @@ QString HTMLChatTheme::createIncomingMessagePart(const MessageChatEvent * event)
     }
 
     fillPartWithUserKeywords(part, event);
-	part.replaceAndEscapeKeyword("%body%", event->body());
+    part.replaceAndEscapeKeyword("%body%", event->body());
 
     return part.toString();
 }
@@ -135,7 +135,7 @@ QString HTMLChatTheme::createOutgoingMessagePart(const MessageChatEvent * event)
     }
 
     fillPartWithUserKeywords(part, event);
-	part.replaceAndEscapeKeyword("%body%", event->body());
+    part.replaceAndEscapeKeyword("%body%", event->body());
 
     return part.toString();
 }
@@ -145,22 +145,29 @@ QString HTMLChatTheme::createFileTransferEventPart(const FileTransferChatEvent *
 
     FileTransferChatEvent::FileTransferEventType type = event->type;
 
-    QString eventText; //TODO translate
+    QString eventText, //TODO translate
+            statusStr; //%status%
+
 
     switch (type) {
-        case FileTransferChatEvent::Finished :
-                    eventText = "Finished downloading " + event->fileName() + ".";
-            break;
-        case FileTransferChatEvent::Initiated :
-                    eventText = "Incoming file transfer" + event->fileName() + ".";
-            break;
-        case FileTransferChatEvent::Aborted :
-                    eventText = "Aborted downloading " + event->fileName() + ".";
-            break;
+    case FileTransferChatEvent::Finished :
+
+                eventText = "Finished downloading " + event->fileName() + ".";
+        statusStr = "fileTransferComplete";
+        break;
+    case FileTransferChatEvent::Initiated :
+                eventText = "Incoming file transfer" + event->fileName() + ".";
+        statusStr = "fileTransferBegan";
+        break;
+    case FileTransferChatEvent::Aborted :
+                eventText = "Aborted downloading " + event->fileName() + ".";
+        statusStr = "fileTransferAborted"; //TODO not in adium!
+        break;
     }
 
     HTMLChatPart part = fileTransferEventTemplate.createFreshHTMLPart();
     fillPartWithEventKeywords(part, event, eventText);
+    part.replaceAndEscapeKeyword("%status%", statusStr);
 
     return part.toString();
 }
@@ -168,12 +175,39 @@ QString HTMLChatTheme::createFileTransferEventPart(const FileTransferChatEvent *
 
 QString HTMLChatTheme::createStatusEventPart(const StatusChatEvent * event) const {
 
-    StatusChatEvent::StatusEventType type; // = event->type; //TODO
+    StatusChatEvent::StatusEventType type = event->type;
+    QString statusStr; //adium %status%
+
+    switch (type) {
+    case StatusChatEvent::Online :
+                statusStr = "online";
+        break;
+    case StatusChatEvent::Offline :
+                statusStr = "offline";
+        break;
+    case StatusChatEvent::Away :
+                statusStr = "idle"; //TODO ask Kev (adium compatibility)
+        break;
+    case StatusChatEvent::Xa :
+                statusStr = "away";
+        break;
+    case StatusChatEvent::Dnd :
+                statusStr = "away";
+        break;
+    case StatusChatEvent::Chat :
+                statusStr = "online";
+        break;
+    case StatusChatEvent::Invisible : //TODO - ?!?
+                statusStr = "offline";
+        break;
+    }
 
     QString eventText = event->statusMessage();
 
     HTMLChatPart part = fileTransferEventTemplate.createFreshHTMLPart();
+
     fillPartWithEventKeywords(part, event, eventText);
+    part.replaceAndEscapeKeyword("%status%", statusStr);
 
     return part.toString();
 }
@@ -181,7 +215,7 @@ QString HTMLChatTheme::createStatusEventPart(const StatusChatEvent * event) cons
 
 QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const {
 
-    QString eventText = event->message(); 
+    QString eventText = event->message();
     HTMLChatPart part;
 
     if (event->isLocal()) {
@@ -199,8 +233,8 @@ QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const 
         }
     }
 
-	fillPartWithUserKeywords(part, event);
-	part.replaceAndEscapeKeyword("%message%", eventText); //TODO validate or escape
+    fillPartWithUserKeywords(part, event);
+    part.replaceAndEscapeKeyword("%message%", eventText); //TODO validate or escape
 
     return part.toString();
 
@@ -224,8 +258,8 @@ void HTMLChatTheme::fillPartWithUserKeywords(HTMLChatPart& part, const UserChatE
     part.replaceAndEscapeKeyword("%messageDirection%", "ltr"); //TODO
 
     //TODO %textbackgroundcolor{X}%
-	//TODO %messageClasses%
-	//TODO %shortTime%
+    //TODO %messageClasses%
+    //TODO %shortTime%
 }
 
 

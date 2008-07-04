@@ -141,6 +141,7 @@ void TestForm::onEventButtonClicked() {
     StatusChatEvent *ev2 = new StatusChatEvent();
 
 	ev2->setTimeStamp(QDateTime::currentDateTime());
+	ev2->type = StatusChatEvent::Xa;
     ev2->setStatusMessage("status message zzz");
 
     emit eventCreated(ev2);

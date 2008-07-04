@@ -15,6 +15,7 @@ class StatusChatEvent : public ChatEvent
 {
   public:	
 	enum StatusEventType {
+		Online,
 	    Offline,    
         Away,       
         Xa,         
