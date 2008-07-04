@@ -5,9 +5,6 @@ function psi_appendChilds(where, what) {
         while(what.hasChildNodes()) {
             'app'+where.appendChild(what.firstChild);
         }
-		
-        // where.innerHTML += what.innerHTML; //WTF?
-        //TODO ctso: appending link-rel doesnt work? [pro style]
     }
     catch(e) {
         alert('ac'+e);
@@ -150,7 +147,7 @@ function psi_initDocument(header, footer) {
         chatElement = document.createElement("div");
         chatElement.setAttribute("id", "Chat");
 
-        footerElement = document.createElement("span"); //TODO documentFragment?
+        footerElement = document.createElement("span");
         headerElement = document.createElement("span"); 
 	
         footerElement.innerHTML = footer;

@@ -24,8 +24,6 @@ public:
 
 protected:
     //TODO stack instead of recursion?
-    //TODO i assume (I didn't check) there's no copy passing non-reference QDomElement
-
     //OK -> textNode, node we want to delete, textNode2 --delete--> != textNode + textNode2 
 
 

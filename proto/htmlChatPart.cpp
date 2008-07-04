@@ -1,5 +1,6 @@
 #include <QRegExp>
 #include <QColor>
+#include <qt4/QtCore/qdatetime.h>
 #include "htmlChatPart.h"
 
 
@@ -52,35 +53,40 @@ void HTMLChatPart::replaceSenderColorKeyword(uint userHash) {
         "goldenrod", "orangered", "tomato", "#1E90FF", "steelblue", "deeppink",
         "saddlebrown", "coral", "royalblue"
     };
-	
+
     static const int colorListLen = sizeof (colorList) / sizeof (colorList[0]);
 
-	QString colorString = colorList[userHash % colorListLen];
+    QString colorString = colorList[userHash % colorListLen];
 
-	QRegExp colorPattern("%senderColor(?:\\{([^}]*)\\})?%");
+    QRegExp colorPattern("%senderColor(?:\\{([^}]*)\\})?%");
 
     for (int pos = 0; (pos = colorPattern.indexIn(content, pos)) != -1;) {
-		bool doLight = colorPattern.numCaptures() > 0;
-		if (doLight) {
-			int factor = colorPattern.cap(1).toUInt(&doLight);
-			
-			if (doLight) {
-				colorString = QColor(colorString).lighter(factor).name();
-			}
-		}
-		
+        bool doLight = colorPattern.numCaptures() > 0;
+        if (doLight) {
+            int factor = colorPattern.cap(1).toUInt(&doLight);
+
+            if (doLight) {
+                colorString = QColor(colorString).lighter(factor).name();
+            }
+        }
+
         content.replace(pos, colorPattern.cap(0).length(), colorString);
     }
 }
 
 
-QString HTMLChatPart::formatTime(QString format, QDateTime time) {
+QString HTMLChatPart::formatTime(QString format, const QDateTime& time) {
     char buff[256];
 
     time_t timet = time.toTime_t();
     strftime(buff, 256, format.toAscii().data(), localtime(&timet));
 
     return QString(buff);
+}
+
+
+QString HTMLChatPart::createShortTime(const QDateTime& time) {
+	return time.toString("hh:mm");
 }
 
 

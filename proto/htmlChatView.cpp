@@ -1,10 +1,6 @@
-
-#include <ios>
+#include <QList>
 
 #include "htmlChatView.h"
-#include <iostream>
-#include <qt4/QtCore/qlist.h> //TODO 
-
 #include "config.h"
 
 class MessageChatEvent;
@@ -28,7 +24,7 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme)
 void HTMLChatView::clear() {
     //clears Chat div
     appendedEvents.clear();
-    evaluateJS("psi_clearMessages()"); //TODO ask Kev - I can reload theme here
+    evaluateJS("psi_clearMessages()"); 
 }
 
 
@@ -111,12 +107,6 @@ QString HTMLChatView::createEmptyDocument(QString baseHref, QString themeVariant
                    "        <head>"
                    "                <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />"
                    "                <base href=\"%1\"/>"
-                   "                <!--"
-                   "                <base/>"
-                   ""
-                   "                TODO3 -->"
-                   "                <style id=\"KopeteStyle\" type=\"text/css\" media=\"screen,print\">"
-                   "                </style>"
                    "                <style id=\"baseStyle\" type=\"text/css\" media=\"screen,print\">"
                    "                        @import url(\"main.css\");"
                    "                        @import url(\"%2\");"

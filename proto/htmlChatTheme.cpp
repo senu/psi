@@ -18,8 +18,8 @@ HTMLChatTheme::HTMLChatTheme() {
 QString HTMLChatTheme::readFileContents(QDir dir, QString relativePath) {
     QFile file(dir.absoluteFilePath(relativePath));
     qDebug() << "loading theme" << dir.absoluteFilePath(relativePath);
+	
     if (!file.open(QIODevice::ReadOnly)) {
-        //		throw 'c';			
         qDebug() << "WARNING\n\n" << "file not found"; //TODO 
         return "";
     }
@@ -181,8 +181,7 @@ QString HTMLChatTheme::createStatusEventPart(const StatusChatEvent * event) cons
 
 QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const {
 
-    //QString eventText = QString("%1 %2").arg(event->nick()).arg(event->message());
-    QString eventText = event->message(); //TODO no kopete check!
+    QString eventText = event->message(); 
     HTMLChatPart part;
 
     if (event->isLocal()) {
@@ -212,6 +211,8 @@ void HTMLChatTheme::fillPartWithUserKeywords(HTMLChatPart& part, const UserChatE
 
     part.replaceAndEscapeKeyword("%time%", event->timeStamp().toString());
     part.replaceTimeKeyword("time", event->timeStamp());
+    part.replaceAndEscapeKeyword("%shortTime%", HTMLChatPart::createShortTime(event->timeStamp()));
+
     part.replaceAndEscapeKeyword("%sender%", event->nick());
     part.replaceAndEscapeKeyword("%service%", event->service());
     part.replaceAndEscapeKeyword("%senderScreenName%", event->jid());
@@ -232,6 +233,7 @@ void HTMLChatTheme::fillPartWithEventKeywords(HTMLChatPart& part, const ChatEven
     part.replaceAndEscapeKeyword("%message%", eventText); //TODO validate or escape
     part.replaceAndEscapeKeyword("%time%", event->timeStamp().toString());
     part.replaceTimeKeyword("time", event->timeStamp());
+    part.replaceAndEscapeKeyword("%shortTime%", HTMLChatPart::createShortTime(event->timeStamp()));
 }
 
 
