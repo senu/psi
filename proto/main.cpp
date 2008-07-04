@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 	MessageValidator vaildator;
 	
 	CPPUNIT_TEST_SUITE_REGISTRATION (TestMessageValidator);
-	CPPUNIT_TEST_SUITE_REGISTRATION (TestHTMLChatView);
+//	CPPUNIT_TEST_SUITE_REGISTRATION (TestHTMLChatView);
 
 // informs test-listener about testresults
     CPPUNIT_NS :: TestResult testresult;

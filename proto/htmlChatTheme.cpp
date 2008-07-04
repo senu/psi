@@ -107,6 +107,24 @@ HTMLChatTheme::HTMLChatTheme(QString path) {
 }
 
 
+QString HTMLChatTheme::createIncomingMessagePart(const MessageChatEvent * event) const {
+
+    HTMLChatPart part;
+
+    if (event->isConsecutive()) {
+        part = incomingConsecutiveMessageTemplate.createFreshHTMLPart();
+    }
+    else {
+        part = incomingNextMessageTemplate.createFreshHTMLPart();
+    }
+
+    fillPartWithUserKeywords(part, event);
+	part.replaceAndEscapeKeyword("%body%", event->body());
+
+    return part.toString();
+}
+
+
 QString HTMLChatTheme::createOutgoingMessagePart(const MessageChatEvent * event) const {
     HTMLChatPart part;
 
@@ -116,7 +134,8 @@ QString HTMLChatTheme::createOutgoingMessagePart(const MessageChatEvent * event)
         part = outgoingNextMessageTemplate.createFreshHTMLPart();
     }
 
-    fillPartWithMessageKeywords(part, event);
+    fillPartWithUserKeywords(part, event);
+	part.replaceAndEscapeKeyword("%body%", event->body());
 
     return part.toString();
 }
@@ -141,7 +160,7 @@ QString HTMLChatTheme::createFileTransferEventPart(const FileTransferChatEvent *
     }
 
     HTMLChatPart part = fileTransferEventTemplate.createFreshHTMLPart();
-	fillPartWithEventKeywords(part, event, eventText);
+    fillPartWithEventKeywords(part, event, eventText);
 
     return part.toString();
 }
@@ -152,10 +171,10 @@ QString HTMLChatTheme::createStatusEventPart(const StatusChatEvent * event) cons
     StatusChatEvent::StatusEventType type; // = event->type; //TODO
 
     QString eventText = event->statusMessage();
-	
+
     HTMLChatPart part = fileTransferEventTemplate.createFreshHTMLPart();
-	fillPartWithEventKeywords(part, event, eventText);
-	
+    fillPartWithEventKeywords(part, event, eventText);
+
     return part.toString();
 }
 
@@ -181,19 +200,16 @@ QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const 
         }
     }
 
-    part.replaceAndEscapeKeyword("%message%", eventText);
-    part.replaceAndEscapeKeyword("%sender%", event->nick());
-    part.replaceAndEscapeKeyword("%time%", event->timeStamp().toString());
-    part.replaceTimeKeyword("time", event->timeStamp());
+	fillPartWithUserKeywords(part, event);
+	part.replaceAndEscapeKeyword("%message%", eventText); //TODO validate or escape
 
     return part.toString();
 
 }
 
 
-void HTMLChatTheme::fillPartWithMessageKeywords(HTMLChatPart& part, const MessageChatEvent* event) const {
+void HTMLChatTheme::fillPartWithUserKeywords(HTMLChatPart& part, const UserChatEvent* event) const {
 
-    part.replaceMessageBody(event->body());
     part.replaceAndEscapeKeyword("%time%", event->timeStamp().toString());
     part.replaceTimeKeyword("time", event->timeStamp());
     part.replaceAndEscapeKeyword("%sender%", event->nick());
@@ -202,17 +218,18 @@ void HTMLChatTheme::fillPartWithMessageKeywords(HTMLChatPart& part, const Messag
     part.replaceAndEscapeKeyword("%senderDisplayName%", event->jid());
     part.replaceAndEscapeKeyword("%userIconPath%", event->userIconPath());
     part.replaceAndEscapeKeyword("%senderStatusIcon%", event->userStatusIcon());
-	
-    part.replaceAndEscapeKeyword("%messageDirection%", "ltr"); //TODO
-    part.replaceSenderColorKeyword(event->userHash()); //TODO
+    part.replaceSenderColorKeyword(event->userHash());
 
-	//TODO %textbackgroundcolor{X}%
-	//TODO %senderColor{N}%
+    part.replaceAndEscapeKeyword("%messageDirection%", "ltr"); //TODO
+
+    //TODO %textbackgroundcolor{X}%
+	//TODO %messageClasses%
+	//TODO %shortTime%
 }
 
 
 void HTMLChatTheme::fillPartWithEventKeywords(HTMLChatPart& part, const ChatEvent* event, QString eventText) const {
-    part.replaceAndEscapeKeyword("%message%", eventText);
+    part.replaceAndEscapeKeyword("%message%", eventText); //TODO validate or escape
     part.replaceAndEscapeKeyword("%time%", event->timeStamp().toString());
     part.replaceTimeKeyword("time", event->timeStamp());
 }
@@ -227,28 +244,11 @@ void HTMLChatTheme::fillPartWithThemeKeywords(HTMLChatPart& part, ChatTheme::Cha
 
     part.replaceAndEscapeKeyword("%sourceName%", sessionInfo.sourceName);
     part.replaceAndEscapeKeyword("%destinationName%", sessionInfo.destinationName);
-    
-	part.replaceAndEscapeKeyword("%destinationDisplayName%", sessionInfo.destinationName);
+
+    part.replaceAndEscapeKeyword("%destinationDisplayName%", sessionInfo.destinationName);
 
     part.replaceAndEscapeKeyword("%incomingIconPath%", sessionInfo.incomingIconPath);
     part.replaceAndEscapeKeyword("%outgoingIconPath%", sessionInfo.outgoingIconPath);
-}
-
-
-QString HTMLChatTheme::createIncomingMessagePart(const MessageChatEvent * event) const {
-
-    HTMLChatPart part;
-
-    if (event->isConsecutive()) {
-        part = incomingConsecutiveMessageTemplate.createFreshHTMLPart();
-    }
-    else {
-        part = incomingNextMessageTemplate.createFreshHTMLPart();
-    }
-
-    fillPartWithMessageKeywords(part, event);
-
-    return part.toString();
 }
 
 

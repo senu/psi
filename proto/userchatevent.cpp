@@ -1,3 +1,4 @@
+#include <QHash>
 #include "userchatevent.h"
 
 
@@ -51,6 +52,6 @@ void UserChatEvent::setUserStatusIcon(QString userStatusIcon) {
 }
 
 
-int UserChatEvent::userHash() const {
-    return _jid.length() > 0 ? _jid[0].unicode() : 700; //TODO best hash function you ever seen
+uint UserChatEvent::userHash() const {
+    return qHash(_jid);
 }

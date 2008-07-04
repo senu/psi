@@ -1,4 +1,5 @@
 #include <QRegExp>
+#include <QColor>
 #include "htmlChatPart.h"
 
 
@@ -43,7 +44,7 @@ void HTMLChatPart::replaceTimeKeyword(QString keyword, QDateTime time) {
 // [it's Kopete color list]
 
 
-void HTMLChatPart::replaceSenderColorKeyword(int userHash) {
+void HTMLChatPart::replaceSenderColorKeyword(uint userHash) {
     static const char* const colorList[] = {
         "red", "blue", "gray", "magenta", "violet", "#808000", "yellowgreen",
         "darkred", "darkgreen", "darksalmon", "darkcyan", "#B07D2B", "mediumpurple",
@@ -59,6 +60,15 @@ void HTMLChatPart::replaceSenderColorKeyword(int userHash) {
 	QRegExp colorPattern("%senderColor(?:\\{([^}]*)\\})?%");
 
     for (int pos = 0; (pos = colorPattern.indexIn(content, pos)) != -1;) {
+		bool doLight = colorPattern.numCaptures() > 0;
+		if (doLight) {
+			int factor = colorPattern.cap(1).toUInt(&doLight);
+			
+			if (doLight) {
+				colorString = QColor(colorString).lighter(factor).name();
+			}
+		}
+		
         content.replace(pos, colorPattern.cap(0).length(), colorString);
     }
 }

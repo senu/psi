@@ -18,6 +18,7 @@ class TestHTMLChatView : public CPPUNIT_NS::TestCase {
     CPPUNIT_TEST(messagesAndEvents);
 
     CPPUNIT_TEST(clearMessages);
+    CPPUNIT_TEST(emoteEvent);
     CPPUNIT_TEST(tchemeChanged);
 
     CPPUNIT_TEST(noActionTemplate);
@@ -33,6 +34,8 @@ protected:
     /** No changes in output message*/
     void onlyFooterAndHeader();
     void messagesAndEvents();
+	
+    void emoteEvent();
 
     void clearMessages();
     void tchemeChanged();

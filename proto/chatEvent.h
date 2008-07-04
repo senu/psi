@@ -11,7 +11,7 @@
  *
  *  eg. FileTransfer, Status, Mood events
  */
-class ChatEvent : public AbstractChatEvent {
+class ChatEvent : public virtual AbstractChatEvent {
 
 public:
     QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const = 0;

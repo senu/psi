@@ -6,16 +6,6 @@ QString EmoteChatEvent::getRightTemplateAndFillItWithData(const ChatTheme& theme
 }
 
 
-void EmoteChatEvent::setNick(QString nick) {
-    _nick = nick;
-}
-
-
-QString EmoteChatEvent::nick() const {
-    return _nick;
-}
-
-
 void EmoteChatEvent::setMessage(QString message) {
     _message = message;
 }

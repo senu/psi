@@ -33,7 +33,7 @@ class HTMLChatPart {
 	void replaceTimeKeyword(QString keyword, QDateTime time); 
 	
 	/** Replaces time keyword %senderColor% with color computed using userHash */
-	void replaceSenderColorKeyword(int userHash); 
+	void replaceSenderColorKeyword(uint userHash); 
 
 	/** Escapes string */
 	static QString escapeString(QString string); //TODO unused

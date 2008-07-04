@@ -2,13 +2,14 @@
 #define	_USEREVENT_H
 
 #include <QString>
+#include "chatEvent.h"
 
 
 /** Abstract ChatEvent with sender information (nick,jid,icon, ...) 
  *   
  *  For message and status events  
  */
-class UserChatEvent {
+class UserChatEvent : virtual public AbstractChatEvent { 
 
 public:
 
@@ -28,7 +29,7 @@ public:
     void setUserStatusIcon(QString userStatusIcon);
 
     /** Returns userHash */
-    virtual int userHash() const;
+    virtual uint userHash() const;
 
 
 private:

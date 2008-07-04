@@ -92,6 +92,10 @@ void TestHTMLChatView::noOutgoingTemplates() {
     CPPUNIT_FAIL("test not written");
 }
 
+void TestHTMLChatView::emoteEvent() {
+    CPPUNIT_FAIL("test not written");
+}
+
 
 void TestHTMLChatView::prepareTest(QString themePath) {
     form = new QFrame(0);

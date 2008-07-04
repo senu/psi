@@ -63,11 +63,15 @@ public:
 
 private:
 
-    /** Fills part with keywords from message event (common for in/out next/cons messages) */
-    void fillPartWithMessageKeywords(HTMLChatPart& part, const MessageChatEvent* event) const;
+    /** Fills part with user (eg nick) keywords from event (common for in/out next/cons messages and emote) */
+    void fillPartWithUserKeywords(HTMLChatPart& part, const UserChatEvent* event) const;
 
-    /** Fills part with keywords from event; %message% = eventText (common for eg filetransfer, mood) */
+    /** Fills part with keywords from event; %message% = eventText (common for eg filetransfer, mood) 
+	 *  
+	 *  Not for messages nor emote!
+	 */
     void fillPartWithEventKeywords(HTMLChatPart& part, const ChatEvent* event, QString eventText) const;
+	
     /** Returns dir/relativePath (to Contents dir) */
     QString readFileContents(QDir dir, QString relativePath);
 

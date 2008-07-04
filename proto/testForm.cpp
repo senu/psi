@@ -149,6 +149,9 @@ void TestForm::onEventButtonClicked() {
     ev3->setLocal(false);
     ev3->setMessage("is working hard");
     ev3->setNick("Pawel Wiejacha");
+    ev3->setService("Jabber");
+	ev3->setJid("senu@jabber.pl");
+    ev3->setUserIconPath("http://userserve-ak.last.fm/serve/50/4272669.jpg");
 	ev3->setTimeStamp(QDateTime::currentDateTime());
 
     emit eventCreated(ev3);

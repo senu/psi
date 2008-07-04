@@ -4,33 +4,30 @@
 #include <Qt>
 #include <QString>
 
-#include "chatEvent.h"
 #include "chatTheme.h"
+#include "userchatevent.h"
 
 class ChatTheme;
 class AstractChatEvent;
 
+
 /** Emote (/me is reading...) ChatEvent */
-class EmoteChatEvent : public ChatEvent 
-{
-  public:	
-	/** eg 'is reading' */
-	QString message() const;
-	void setMessage(QString message);
+class EmoteChatEvent : public ChatEvent, public UserChatEvent {
 
-	QString nick() const;
-	void setNick(QString nick);
+public:
+    /** eg 'is reading' */
+    QString message() const;
+    void setMessage(QString message);
 
-	bool isLocal() const;
-	void setLocal(bool isLocal);
-	
+    bool isLocal() const;
+    void setLocal(bool isLocal);
 
-	QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const;
+    QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const;
 
-  private:
-	QString _message; 
-	QString _nick; 
-	bool _isLocal;
+private:
+    QString _message;
+    QString _nick;
+    bool _isLocal;
 };
 
 

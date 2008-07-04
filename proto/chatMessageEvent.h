@@ -11,7 +11,7 @@
 class AbstractChatEvent;
 
 /** Message ChatEvent - incoming/outgoing consecutive/next */
-class MessageChatEvent : public AbstractChatEvent, public UserChatEvent
+class MessageChatEvent : public UserChatEvent
 {
 public:	
 
