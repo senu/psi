@@ -1,6 +1,6 @@
 #include <QRegExp>
 #include <QColor>
-#include <qt4/QtCore/qdatetime.h>
+#include <QDateTime>
 #include "htmlChatPart.h"
 
 

@@ -29,6 +29,7 @@ protected:
 
     /** per-Node structure used in XHTML-IM validation */
     struct NodeInfo {
+		NodeInfo();
 
         /** Allowed direct child elements*/
         QStringList allowedTags;
@@ -36,10 +37,10 @@ protected:
         /** Allowed tag attributes */
         QStringList allowedAttributes;
 
-        /** Can have textNode - eg. false for <br> */
+        /** Can have text child - eg. false for <br> */
         bool canHaveText;
 
-        bool canBeEmpty; //TODO i need to check xhtml rfc. Do we need that?
+        bool canBeEmpty; //TODO unused. Do we need that?
     };
 
 	/** Traverse through Tree(cur) and cut off bad elements/attributes/styles.

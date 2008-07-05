@@ -1,12 +1,8 @@
 #include <QtTest>
-
-#include "testhtmlchatview.h"
-#include <qt4/QtCore/qdatetime.h>
+#include <QDateTime>
 #include <QString>
 
 #include "testhtmlchatview.h"
-
-
 #include "config.h"
 
 
