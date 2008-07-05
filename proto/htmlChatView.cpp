@@ -24,7 +24,7 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme)
 void HTMLChatView::clear() {
     //clears Chat div
     appendedEvents.clear();
-    evaluateJS("psi_clearMessages()"); 
+    evaluateJS("psi_clearMessages()");
 }
 
 
@@ -74,7 +74,6 @@ void HTMLChatView::onInitDocumentFinished() {
 
 
     foreach(event, appendedEvents) {
-        qDebug() << event;
         if (event->isMessageChatEvent()) {
             appendMessage(dynamic_cast<const MessageChatEvent*> (event), true);
         }
@@ -82,17 +81,21 @@ void HTMLChatView::onInitDocumentFinished() {
             appendEvent(dynamic_cast<const ChatEvent*> (event), true);
         }
     }
+
+    emit initDocumentFinished();
 }
 
 
 void HTMLChatView::onAppendFinished() {
-    qDebug() << "append finished"; //TODO we get this after DOM changed, but before view changed :/
+    //    qDebug() << "append finished"; //TODO we get this after DOM changed, but before view changed :/
     webView.page()->mainFrame()->setScrollBarValue(Qt::Vertical, 10000); //TODO 
+
+    emit appendFinished();
 }
 
 
 void HTMLChatView::onDupa(QRect geom) {
-    qDebug() << "dupa" << geom;
+    qDebug() << "dupa" << geom; //TODO
     throw 1;
 }
 
@@ -170,7 +173,7 @@ void HTMLChatView::appendEvent(const ChatEvent* event) {
 
 void HTMLChatView::evaluateJS(QString scriptSource) {
     webView.page()->mainFrame()->evaluateJavaScript(scriptSource);
-    //    qDebug() << "HTMLChatView::evaluateJS(" << scriptSource << ")\n";
+    //    Debug() << "HTMLChatView::evaluateJS(" << scriptSource << ")\n";
 }
 
 
@@ -187,7 +190,7 @@ void HTMLChatView::importJSChatFunctions() {
 
 
 HTMLChatView::~HTMLChatView() {
-    qDebug() << dumpContent();
+    //    qDebug() << dumpContent();
 }
 
 

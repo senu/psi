@@ -10,6 +10,21 @@
 #include "../htmlChatView.h"
 
 
+/** We cannot inherit from TestCase AND QObject */
+class CppUnitHelper : public QObject {
+
+Q_OBJECT
+    public
+slots:
+    void onAppendFinished();
+    void onInitDocumentFinished();
+
+public:
+    bool append;
+    bool init;
+};
+
+
 /** CppUnit unit test for HTMLChatView */
 class TestHTMLChatView : public CPPUNIT_NS::TestCase {
 
@@ -19,7 +34,7 @@ class TestHTMLChatView : public CPPUNIT_NS::TestCase {
 
     CPPUNIT_TEST(clearMessages);
     CPPUNIT_TEST(emoteEvent);
-    CPPUNIT_TEST(tchemeChanged);
+    CPPUNIT_TEST(themeChanged);
 
     CPPUNIT_TEST(noActionTemplate);
     CPPUNIT_TEST(noOutgoingTemplates);
@@ -28,17 +43,20 @@ class TestHTMLChatView : public CPPUNIT_NS::TestCase {
 
 public:
     void setUp(void);
+
+    /** :/ */
+    void waitUntil(volatile  bool * flag);
     //    void tearDown(void);
 
 protected:
     /** No changes in output message*/
     void onlyFooterAndHeader();
     void messagesAndEvents();
-	
+
     void emoteEvent();
 
     void clearMessages();
-    void tchemeChanged();
+    void themeChanged();
 
     void noActionTemplate();
     void noOutgoingTemplates();
@@ -54,6 +72,8 @@ protected:
     HTMLChatView * view;
     HTMLChatTheme theme;
     QFrame * form;
+
+    CppUnitHelper helper;
 };
 
 

@@ -154,10 +154,7 @@ function psi_runTests() {
     out = '<div style=""><strong style="">xxx</strong></div>';
    
     psi_cssRunTest("6. bad; bad; bad; prop.", inp, out, results);
-    
-
-
-
+ 
 }
 
 function psi_cssRunTest(name, input, validOutput, results) {

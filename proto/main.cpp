@@ -16,6 +16,9 @@
 #include "tests/testMessageValidator.h"
 #endif
 
+// ./proto [tests]
+
+
 int main(int argc, char *argv[]) {
 
     QApplication app(argc, argv);
@@ -23,38 +26,44 @@ int main(int argc, char *argv[]) {
     int ret = 0;
 
 #ifdef TESTS
-	MessageValidator vaildator;
-	
-	CPPUNIT_TEST_SUITE_REGISTRATION (TestMessageValidator);
-//	CPPUNIT_TEST_SUITE_REGISTRATION (TestHTMLChatView);
+    if (argc > 1) {
 
-// informs test-listener about testresults
-    CPPUNIT_NS :: TestResult testresult;
+        MessageValidator vaildator;
 
-    // register listener for collecting the test-results
-    CPPUNIT_NS :: TestResultCollector collectedresults;
-    testresult.addListener (&collectedresults);
+        CPPUNIT_TEST_SUITE_REGISTRATION(TestMessageValidator);
+        CPPUNIT_TEST_SUITE_REGISTRATION (TestHTMLChatView);
 
-    // register listener for per-test progress output
-    CPPUNIT_NS :: BriefTestProgressListener progress;
-    testresult.addListener (&progress);
+        // informs test-listener about testresults
+        CPPUNIT_NS::TestResult testresult;
 
-    // insert test-suite at test-runner by registry
-    CPPUNIT_NS :: TestRunner testrunner;
-    testrunner.addTest (CPPUNIT_NS :: TestFactoryRegistry :: getRegistry ().makeTest ());
-    testrunner.run (testresult);
+        // register listener for collecting the test-results
+        CPPUNIT_NS::TestResultCollector collectedresults;
+        testresult.addListener(&collectedresults);
 
-    // output results in compiler-format
-    CPPUNIT_NS :: CompilerOutputter compileroutputter (&collectedresults, std::cerr);
-    compileroutputter.write ();
+        // register listener for per-test progress output
+        CPPUNIT_NS::BriefTestProgressListener progress;
+        testresult.addListener(&progress);
+
+        // insert test-suite at test-runner by registry
+        CPPUNIT_NS::TestRunner testrunner;
+        testrunner.addTest(CPPUNIT_NS::TestFactoryRegistry::getRegistry().makeTest());
+        testrunner.run(testresult);
+
+        // output results in compiler-format
+        CPPUNIT_NS::CompilerOutputter compileroutputter(&collectedresults, std::cerr);
+        compileroutputter.write();
+
+		exit(0);
+
+    }
 #endif
 
     TestForm * form = new TestForm(0);
     form->show();
     ret = app.exec();
     delete form;
-	/*
-*/
+    /*
+     */
 
     return ret;
 

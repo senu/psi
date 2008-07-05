@@ -17,7 +17,7 @@ HTMLChatTheme::HTMLChatTheme() {
 
 QString HTMLChatTheme::readFileContents(QDir dir, QString relativePath) {
     QFile file(dir.absoluteFilePath(relativePath));
-    qDebug() << "loading theme" << dir.absoluteFilePath(relativePath);
+//    qDebug() << "loading theme" << dir.absoluteFilePath(relativePath);
 
     if (!file.open(QIODevice::ReadOnly)) {
         qDebug() << "WARNING\n\n" << "file not found"; //TODO 
@@ -29,7 +29,7 @@ QString HTMLChatTheme::readFileContents(QDir dir, QString relativePath) {
 
 
 void HTMLChatTheme::readTheme(QString path) {
-    qDebug() << "opening" << path;
+//    qDebug() << "opening" << path;
     QDir dir(path + "Contents/");
 
     setBaseHref(path + "/Contents/Resources/");
@@ -228,6 +228,7 @@ QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const 
 
         if (!outgoingEmoteEventTemplate.isEmoteTemplate()) {
             eventText = event->nick() + " " + eventText;
+			part.replaceAndEscapeKeyword("%status%", "emote"); //TODO ask David Smith
         }
     }
     else {
@@ -235,6 +236,7 @@ QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const 
 
         if (!incomingEmoteEventTemplate.isEmoteTemplate()) {
             eventText = event->nick() + " " + eventText;
+			part.replaceAndEscapeKeyword("%status%", "emote"); //TODO ask David Smith
         }
     }
 

@@ -58,6 +58,10 @@ slots:
     void setChatInfo(ChatTheme::ChatInfo chatInfo); //TODO update chatview
     ChatTheme::ChatInfo chatInfo() const;
 
+signals:
+	void appendFinished();
+	void initDocumentFinished();
+
     private
 slots:
     /** Load JS code, append header, chat div, and footer 
@@ -75,7 +79,6 @@ slots:
 
     /** Creates html document with base href tag somewhere; themeVariant is without css suffix */ //TODO avoid creating document
     QString createEmptyDocument(QString baseHref, QString themeVariant);
-
 
 
 private:
