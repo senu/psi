@@ -38,6 +38,7 @@ Q_OBJECT
 	void onLoadTheme();
 	void onLoadVariant();
 	void onClear();
+	void onRunTests();
 
   signals:      
     /** on message created */

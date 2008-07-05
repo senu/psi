@@ -21,7 +21,7 @@ function psi_appendNextMessage(messagePart, messageBody) {
 
         if(insertDiv != null) //could be removed by appendEvent
             insertDiv.parentNode.removeChild(insertDiv);
-		
+
         newNode = document.createElement('div');
         newNode.innerHTML=psi_setMessageBody(messagePart, messageBody);
         psi_appendChilds(chatElement, newNode);
@@ -60,30 +60,26 @@ function psi_appendEvent(eventPart) {
 allowed = [
     "background-color", "color", "font-family", "font-size", "font-style",
     "font-weight", "margin-left", "margin-right", "text-align", "text-decoration", 
-    "margin-left-value", "margin-right-value", //GECKO
 ];
 
 
-/** Takes String and returns DOM element (<span>) with validated CSS */
-function dfs(element) {	
+function psi_dfs(element) {	
     if(element.nodeType == Node.ELEMENT_NODE) {
-        //		alert(element.tagName);
+        
         //check style
         var prevProperty = ''; 
         for(var j=0; j<element.style.length; j++) {
             var cssProperty = element.style.item(j);
             if(allowed.indexOf(cssProperty) == -1 && prevProperty != cssProperty) {
-                //				alert(cssProperty + ' - not allowed');
                 prevValue = element.style.removeProperty(cssProperty);
-                //				alert(cssProperty+' -> '+prevValue);
                 j--;
             }
             prevProperty = cssProperty;
         }
-		
+
         //check children
         for(var i=0; i<element.childNodes.length; i++) {
-            dfs(element.childNodes[i]);
+            psi_dfs(element.childNodes[i]);
         }
     }
 }
@@ -93,11 +89,12 @@ function psi_setMessageBody(messagePart, messageBody) {
     return messagePart.replace("%message%", psi_validateCSS(messageBody));
 }
 
+/** Takes String and returns DOM element (<span>) with validated CSS */
 function psi_validateCSS(elementString) {
     returned = document.createElement('span');	
     returned.innerHTML = elementString;
 
-    dfs(returned);
+    psi_dfs(returned);
     return returned.innerHTML;
 }
 
@@ -106,39 +103,92 @@ function psi_removeSpaces(string) {
     string = '' + string;
     splitstring = string.split(" ");
     for(i = 0; i < splitstring.length; i++)
-	tstring += splitstring[i];
+        tstring += splitstring[i];
     return tstring;
 }
 
-function runTests() {
-    results = document.getElementById('Chat');
+
+function psi_runTests() {
+    results = document.getElementById('results');
 
     title = document.createElement('h1');
     title.appendChild(document.createTextNode("Results:"));
     results.appendChild(title);
 
-    e1 =     '<div><strong style="color:red; margin-left: 300px;">strong</strong>y<br style="position:   absolute"/>yyy'+
+    inp = '<div><strong style="color:red; margin-left: 300px;">strong</strong>y<br style="position:   absolute"/>yyy'+
         '<em style="color:blue;">zzz</em><em style=" border: solid 1px ;   color:green;">aaa</em></div>';
-    ve1Str = '<div><strong style="color:red; margin-left: 300px;">strong</strong>y<br style="">yyy'+
+    out = '<div><strong style="color:red; margin-left: 300px;">strong</strong>y<br style="">yyy'+
         '<em style="color:blue;">zzz</em><em style="border-color: initial; color: green;">aaa</em></div>';
 
+    psi_cssRunTest("1. sample test", inp, out, results);
 
-    pe1Str = psi_validateCSS(e1);
+    inp = '';
+    out = '';
+   
+    psi_cssRunTest("2. empty string", inp, out, results);
+    
+    inp = '<div style=""></div>';
+    out = '<div style=""></div>';
+   
+    psi_cssRunTest("3. empty style attr", inp, out, results);
+    
+    inp = '<div style=""><strong style="clear: both;">xxx</strong></div>';
+    out = '<div style=""><strong style="">xxx</strong></div>';
+   
+    psi_cssRunTest("4. single bad style prop.", inp, out, results);
+    
+    
+    inp = '<div style="">a<strong style="cle%ar: b;:o=th; color:red">xxx</strong></div>';
+    out = '<div style="">a<strong style="cle%ar: b;:o=th; color:red">xxx</strong></div>';
+
+    //NOTICE imho webkit output is invalid, but it displays test proper way
+    psi_cssRunTest("5. invalid style attribute", inp, out, results);
+
+
+    inp = '<div style=""><strong style="clear: both; text-align:right;   dispaly:none">xxx</strong></div>';
+    out = '<div style=""><strong style="text-align:right;">xxx</strong></div>';
+   
+    psi_cssRunTest("6. bad; good; bad; prop.", inp, out, results);
+    
+    inp = '<div style=""><strong style="clear: both; cursor: corsshair;  dispaly:none">xxx</strong></div>';
+    out = '<div style=""><strong style="">xxx</strong></div>';
+   
+    psi_cssRunTest("6. bad; bad; bad; prop.", inp, out, results);
+    
+
+
+
+}
+
+function psi_cssRunTest(name, input, validOutput, results) {
+    pe1Str = psi_validateCSS(input);
     output = document.createElement('p');
     output.innerHTML = pe1Str;
+    
+    pe1Str = psi_removeSpaces(pe1Str);
+    validOutput =  psi_removeSpaces(validOutput);
 
-    if(psi_removeSpaces(pe1Str) == psi_removeSpaces(ve1Str)) {
-        results.appendChild(document.createTextNode("1 -> OK"));
+    summary = document.createElement('strong');
+   
+    if(pe1Str == validOutput) {
+        summary.innerHTML = name + ' -> <span style="color: darkgreen">OK</span>';
+        results.appendChild(summary);
     }
     else {
-        results.appendChild(document.createTextNode("1 -> FAILED"));	
+        summary.innerHTML = name + ' -> <span style="color: red">FAILED</span>';
+        results.appendChild(summary);
+
+        results.appendChild(document.createElement('br'));
+        results.appendChild(document.createElement('br'));
+        results.appendChild(document.createTextNode(validOutput));
+        results.appendChild(document.createElement('br'));
+
+        results.appendChild(document.createTextNode(pe1Str));
+        //results.innerHTML += psi_validateCSS(input);
     }
 
-    results.appendChild(output);
-	
-    //    alert(pe1Str.replace(' ', '')+'\n'+ve1Str.replace(' ', ''));
-	
-		
+   
+    results.appendChild(document.createElement('br'));
 }
 
 
@@ -149,7 +199,7 @@ function psi_initDocument(header, footer) {
 
         footerElement = document.createElement("span");
         headerElement = document.createElement("span"); 
-	
+
         footerElement.innerHTML = footer;
         headerElement.innerHTML = header;
         //		alert(document.baseURI);
@@ -157,7 +207,7 @@ function psi_initDocument(header, footer) {
         psi_appendChilds(document.body, headerElement);
         document.body.appendChild(chatElement);
         psi_appendChilds(document.body, footerElement);
-        
+
         //       runTests();
         jsNotifier.initFinished();
     }
