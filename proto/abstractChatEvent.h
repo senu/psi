@@ -13,21 +13,8 @@ class ChatTheme;
 class AbstractChatEvent {
 
 public:
-
-    /** Creates themed string from event. eg
-     *   <div class="sth"> <b>nick</b> :: message body </div> for HTMLChatTheme and MessageChatEvent or
-     *   <font color="red">Connection broken.</font> for PlainChatTheme and SystemChatEvent
-     *
-     *   it will call theme.theRightTemplate.createChatPart( self )	 	 
-     *
-     **/
-    virtual QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const = 0;
-
-
-    /** Returns true if it's Message ChatEvent */
-    virtual bool isMessageChatEvent() const {
-        return false;
-    }
+    /** Returns true if it's MessageChatEvent */
+    virtual bool isMessageChatEvent() const;
 
     /** Returns timeStamp */
     QDateTime timeStamp() const;

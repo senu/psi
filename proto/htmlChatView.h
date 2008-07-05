@@ -55,12 +55,12 @@ slots:
 
     //reimplemented
     void setVisible(bool visible);
-    void setChatInfo(ChatTheme::ChatInfo chatInfo); //TODO update chatview
+    void setChatInfo(ChatTheme::ChatInfo chatInfo);
     ChatTheme::ChatInfo chatInfo() const;
 
 signals:
-	void appendFinished();
-	void initDocumentFinished();
+    void appendFinished();
+    void initDocumentFinished();
 
     private
 slots:

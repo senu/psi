@@ -119,7 +119,7 @@ QString HTMLChatTheme::createIncomingMessagePart(const MessageChatEvent * event)
     }
 
     fillPartWithUserKeywords(part, event);
-    part.replaceAndEscapeKeyword("%body%", event->body());
+    part.replaceMessageBody(event->body());
     part.replaceAndEscapeKeyword("%messageClasses%", "message incoming");
 
     return part.toString();
@@ -137,7 +137,7 @@ QString HTMLChatTheme::createOutgoingMessagePart(const MessageChatEvent * event)
     }
 
     fillPartWithUserKeywords(part, event);
-    part.replaceAndEscapeKeyword("%body%", event->body());
+    part.replaceMessageBody(event->body());
     part.replaceAndEscapeKeyword("%messageClasses%", "message outgoing");
 
     return part.toString();

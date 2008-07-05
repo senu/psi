@@ -10,49 +10,46 @@
 
 class AbstractChatEvent;
 
+
 /** Message ChatEvent - incoming/outgoing consecutive/next */
-class MessageChatEvent : public UserChatEvent
-{
-public:	
+class MessageChatEvent : public UserChatEvent {
 
-	MessageChatEvent() {}; // I think there's no need for specialized constructors. 
-					  // We will have sth like ChatMessage toChatMessage(const XMPP::Message& )
+public:
+    MessageChatEvent();
 
-	//getters
-	QString subject() const;
-	QString body() const;
+    //getters
+    QString subject() const;
+    QString body() const;
 
-	bool wasEncrypted();
+    bool wasEncrypted();
 
-	bool isLocal() const; //our messgage? (outgoing)
-	bool isSpooled() const; // offline storage
+    bool isLocal() const; //our messgage? (outgoing)
+    bool isSpooled() const; // offline storage
 
-	bool isConsecutive() const;
+    bool isConsecutive() const;
 
-	//setters
-	void setSubject(QString);
-	void setBody(QString);
+    //setters
+    void setSubject(QString);
+    void setBody(QString);
 
-	bool setWasEncrypted();
+    bool setWasEncrypted();
 
-	/** Is it our message? */
-	void setLocal(bool);		 //our message? (outgoing)
-	void setSpooled(bool); 		// offline storage
-	void setConsecutive(bool);
-	
+    /** Is it our message? */
+    void setLocal(bool); //our message? (outgoing)
+    void setSpooled(bool); // offline storage
+    void setConsecutive(bool);
 
     //reimplemented 
-    QString getRightTemplateAndFillItWithData(const ChatTheme&) const;
-	bool isMessageChatEvent() const;
+    bool isMessageChatEvent() const;
 
-  private:
-	QString _body;
+private:
+    QString _body;
 
-	bool _isConsecutive;
-	bool _isSpooled;
-	bool _isLocal;
+    bool _isConsecutive;
+    bool _isSpooled;
+    bool _isLocal;
 
-    
-}; 
+
+};
 
 #endif

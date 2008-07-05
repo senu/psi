@@ -6,14 +6,7 @@
 #include <QStringList>
 #include "chatTheme.h"
 
-/** Abstract List of theme names; eg for selecting theme 
- *
- *  TODO:
- *  Pro and Pro.AdiumMessageStyle name conflicts
- *  validate theme
- *
- */
-
+/** Abstract List of theme names; eg for selecting theme */
 class ChatThemeList {
 public:	
 	virtual void readThemes() = 0;

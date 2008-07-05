@@ -14,7 +14,7 @@
 class ChatEvent : public virtual AbstractChatEvent {
 
 public:
-    QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const = 0;
+    virtual QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const = 0;
 };
 
 #endif

@@ -28,7 +28,7 @@ public:
      *  We need this method because user input must be validated by CSS validator  
      *  written in JS.
      */
-    void replaceMessageBody(QString value); //TODO unused
+    void replaceMessageBody(QString value); 
 
     /** Replaces %keyword% with value */
     void replaceKeyword(QString keyword, QString value);

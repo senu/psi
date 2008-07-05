@@ -9,3 +9,8 @@ QDateTime AbstractChatEvent::timeStamp() const {
 void AbstractChatEvent::setTimeStamp(QDateTime timeStamp) {
     _timeStamp = timeStamp;
 }
+
+
+bool AbstractChatEvent::isMessageChatEvent() const {
+    return false;
+}

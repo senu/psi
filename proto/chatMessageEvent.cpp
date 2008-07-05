@@ -2,8 +2,8 @@
 #include <QtDebug>
 
 
-QString MessageChatEvent::getRightTemplateAndFillItWithData(const ChatTheme& theme) const {
-    return "NOT IMPLEMENTED !!!!cos(0)"; //TODO move 
+MessageChatEvent::MessageChatEvent() {
+
 }
 
 
