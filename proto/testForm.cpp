@@ -1,16 +1,14 @@
-
-#include "fileTransferChatEvent.h"
-
-
-#include "htmlChatView.h"
-
 #include <QPushButton>
 #include <QWidget>
 #include <QUrl>
 
 #include "testForm.h"
 #include "htmlChatView.h"
+#include "fileTransferChatEvent.h"
+#include "htmlChatView.h"
+
 #include "config.h"
+#include "htmlchateditframe.h"
 
 
 TestForm::~TestForm() {
@@ -75,6 +73,11 @@ TestForm::TestForm(QWidget *parent)
     variantComboBox->setGeometry(200, 700, 180, 40);
     variantComboBox->show();
 
+
+	HTMLChatEditFrame * frame = new HTMLChatEditFrame(this);
+	frame->show();
+
+	
     this->setGeometry(0, 0, 920, 950);
 
     this->show();

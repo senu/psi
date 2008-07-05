@@ -1,3 +1,4 @@
+#include <QTimer>
 #include <QList>
 
 #include "htmlChatView.h"
@@ -87,16 +88,14 @@ void HTMLChatView::onInitDocumentFinished() {
 
 
 void HTMLChatView::onAppendFinished() {
-    //    qDebug() << "append finished"; //TODO we get this after DOM changed, but before view changed :/
-    webView.page()->mainFrame()->setScrollBarValue(Qt::Vertical, 10000); //TODO 
-
-    emit appendFinished();
+	QTimer::singleShot(0, this, SLOT(onDoScrolling())); //advice from qt mailing list
 }
 
 
-void HTMLChatView::onDupa(QRect geom) {
-    qDebug() << "dupa" << geom; //TODO
-    throw 1;
+void HTMLChatView::onDoScrolling() {
+    webView.page()->mainFrame()->setScrollBarValue(Qt::Vertical, 10000); //TODO 
+    qDebug() << "scroll"; 
+    emit appendFinished();
 }
 
 

@@ -75,7 +75,7 @@ slots:
     /** JS::psi_append* finished */
     void onAppendFinished();
 
-    void onDupa(QRect geom);
+    void onDoScrolling();
 
     /** Creates html document with base href tag somewhere; themeVariant is without css suffix */ //TODO avoid creating document
     QString createEmptyDocument(QString baseHref, QString themeVariant);
