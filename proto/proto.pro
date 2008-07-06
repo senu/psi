@@ -25,7 +25,6 @@ HEADERS += chatMessageEvent.h \
   		   messageValidator.h\
 		   chatThemeList.h\
 		   htmlChatThemeList.h\
-		   config.h\ 
 		   jsNotifier.h\
 		   userchatevent.h\
 		   htmlchatedit.h\

@@ -3,7 +3,6 @@
 #include <QString>
 
 #include "testhtmlchatview.h"
-#include "config.h"
 
 
 void TestHTMLChatView::setUp() {
@@ -74,7 +73,7 @@ void TestHTMLChatView::themeChanged() {
 
     waitUntil(&(helper.append));
 
-    theme.readTheme(_THEMEPATH"themes/testingTheme2/");
+    theme.readTheme(QDir::currentPath() + "/themes/testingTheme2/");
 
     helper.init = false;
     view->setTheme(theme);
@@ -203,8 +202,8 @@ void TestHTMLChatView::prepareTest(QString themePath) {
     helper.append = false;
     helper.init = false;
 
-    theme.readTheme(_THEMEPATH + QString("themes/") + themePath);
-    view = new HTMLChatView(form, theme);
+    theme.readTheme(QDir::currentPath() + QString("/themes/") + themePath);
+    view = new HTMLChatView(form, theme, QDir::currentPath() + '/');
 
     QObject::connect(view, SIGNAL(appendFinished()), &helper, SLOT(onAppendFinished()));
     QObject::connect(view, SIGNAL(initDocumentFinished()), &helper, SLOT(onInitDocumentFinished()));

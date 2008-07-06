@@ -7,7 +7,8 @@
 class HTMLChatThemeList : public ChatThemeList {
 public:	
 	//reimplemented
-	void readThemes();
+    /** Path to themes/ dir */
+	void readThemes(const QString& themesPath);
 	
 	virtual bool validateTheme(QString themeFolder); 
 	

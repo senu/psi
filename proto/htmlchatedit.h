@@ -13,8 +13,8 @@ class HTMLChatEdit : public QTextEdit {
 
     Q_OBJECT
 public:
-    /** ToolBar is a QToolBar where actions/widgets are placed */
-    HTMLChatEdit(QWidget* parent, QToolBar* toolBar);
+    /** ToolBar is a QToolBar where actions/widgets are placed; iconPath is a path to icons/ dir */
+    HTMLChatEdit(QWidget* parent, QToolBar* toolBar, const QString& iconPath);
     ~HTMLChatEdit();
     
     /** Returns XHTML-IM (validated) message */

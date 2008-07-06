@@ -9,14 +9,13 @@
 #include <QFontDatabase>
 
 #include "htmlchatedit.h"
-#include "config.h"
 #include "messageValidator.h"
 
 
-HTMLChatEdit::HTMLChatEdit(QWidget* parent, QToolBar * _toolBar) : QTextEdit(parent) {
+HTMLChatEdit::HTMLChatEdit(QWidget* parent, QToolBar * _toolBar, const QString& _iconPath)
+    : QTextEdit(parent), iconPath(_iconPath) {
 
     toolBar = _toolBar;
-    iconPath = QString(_THEMEPATH) + "/icons/";
 
     initActions();
 
@@ -151,8 +150,9 @@ void HTMLChatEdit::changeTextButtons(const QTextCharFormat& format) {
     actionForegroundColor->setIcon(pixmap);
     
     pixmap.fill(format.background().color());
-    actionBackgroundColor->setIcon(pixmap);
-    
+//    qDebug() << format.background().color();
+    actionBackgroundColor->setIcon(pixmap);//TODO format.background().color() is wrong after style/font change
+
 }
 
 
@@ -221,7 +221,7 @@ void HTMLChatEdit::initActions() {
 
     QFontDatabase fontDB;
 
-    foreach(int size, fontDB.standardSizes()) {
+foreach(int size, fontDB.standardSizes()) {
         sizeCombo->addItem(QString::number(size));
     }
 
@@ -281,7 +281,7 @@ QString HTMLChatEdit::message() {
     return val.validateMessage(html, &modified);
 
 
-//    return html;
+    //    return html;
 }
 
 

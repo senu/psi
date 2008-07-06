@@ -22,6 +22,7 @@ Q_OBJECT
 	~TestForm();			
   private:
     QLineEdit * messageEdit;
+    QLineEdit * themePathEdit;
 	QComboBox *themeComboBox;
 	QComboBox *variantComboBox;
 

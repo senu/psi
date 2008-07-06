@@ -28,6 +28,8 @@ int main(int argc, char *argv[]) {
 #ifdef TESTS
     if (argc > 1) {
 
+        qDebug() << "'themes' dir must be in:" << QDir::currentPath() + '/';
+
         MessageValidator vaildator;
 
         CPPUNIT_TEST_SUITE_REGISTRATION(TestMessageValidator);

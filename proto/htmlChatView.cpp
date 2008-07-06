@@ -2,13 +2,12 @@
 #include <QList>
 
 #include "htmlChatView.h"
-#include "config.h"
 
 class MessageChatEvent;
 
 
-HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme)
-: ChatView(parent), theme(_theme) {
+HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, QString _themePath)
+: ChatView(parent), themePath(_themePath), theme(_theme) {
     webView.setParent(parent);
 
     _chatInfo.chatName = "Kot Behemot";
@@ -32,7 +31,6 @@ void HTMLChatView::clear() {
 void HTMLChatView::init() {
 
     QObject::connect(&webView, SIGNAL(loadFinished(bool)), this, SLOT(onEmptyDocumentLoaded(bool)));
-    QObject::connect(webView.page(), SIGNAL(geometryChangeRequested(QRect)), this, SLOT(onDupa(QRect)));
     QObject::connect(&jsNotifier, SIGNAL(onInitFinished()), this, SLOT(onInitDocumentFinished()));
     QObject::connect(&jsNotifier, SIGNAL(onAppendFinished()), this, SLOT(onAppendFinished()));
 
@@ -88,20 +86,18 @@ void HTMLChatView::onInitDocumentFinished() {
 
 
 void HTMLChatView::onAppendFinished() {
-	QTimer::singleShot(0, this, SLOT(onDoScrolling())); //advice from qt mailing list
+    QTimer::singleShot(0, this, SLOT(onDoScrolling())); //advice from qt mailing list
 }
 
 
 void HTMLChatView::onDoScrolling() {
     webView.page()->mainFrame()->setScrollBarValue(Qt::Vertical, 10000); //TODO 
-    qDebug() << "scroll"; 
+//    qDebug() << "scroll";
     emit appendFinished();
 }
 
 
 QString HTMLChatView::createEmptyDocument(QString baseHref, QString themeVariant) {
-    QFile docFile(_THEMEPATH"emptyDocument.html");
-
     return QString(
                    "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                    "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
@@ -178,7 +174,7 @@ void HTMLChatView::evaluateJS(QString scriptSource) {
 
 void HTMLChatView::importJSChatFunctions() {
     // reading from file only while developing	
-    QFile file(_THEMEPATH"htmlChatView.js");
+    QFile file(themePath + "htmlChatView.js");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
 

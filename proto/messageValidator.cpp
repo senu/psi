@@ -82,8 +82,8 @@ void MessageValidator::dfs(QDomElement cur, int tabs, bool* modified) {
         QString attrName = cur.attributes().item(i).toAttr().name();
 
         if (!curNI.allowedAttributes.contains(attrName)) {
-            qDebug() << "VALIDATIN ERR" << "TA" << attrName  << " in " << parentName;
-            qDebug() << "note allowed attributes are:" << curNI.allowedAttributes;
+       //     qDebug() << "VALIDATIN ERR" << "TA" << attrName  << " in " << parentName;
+         //   qDebug() << "note allowed attributes are:" << curNI.allowedAttributes;
 
             cur.attributes().removeNamedItem(attrName);
             *modified = true;

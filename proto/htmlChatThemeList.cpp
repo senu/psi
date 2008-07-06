@@ -4,10 +4,9 @@
 #include <QStringList>
 #include <QString>
 
-#include "config.h"
 
-void HTMLChatThemeList::readThemes() {
-	QString path=_THEMEPATH"themes";
+void HTMLChatThemeList::readThemes(const QString& _path) {
+	QString path = _path+"themes";
 	
 	QDir dir(path);
 
@@ -34,6 +33,6 @@ bool HTMLChatThemeList::validateTheme(QString themePath) {
 
 	if(!dir.exists())
 		throw (long double)1;
-	
-	return dir.exists("Contents/Resources");
+
+    return dir.exists("Contents/Resources");
 }

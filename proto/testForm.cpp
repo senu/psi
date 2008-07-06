@@ -7,7 +7,6 @@
 #include "fileTransferChatEvent.h"
 #include "htmlChatView.h"
 
-#include "config.h"
 #include "htmlchateditframe.h"
 
 
@@ -30,7 +29,7 @@ TestForm::TestForm(QWidget *parent)
     QPushButton * loadThemeBtn = new QPushButton("load theme", this);
     QPushButton * variantThemeBtn = new QPushButton("load variant", this);
     QPushButton * clearBtn = new QPushButton("clear messages", this);
-    QPushButton * runTestsBtn = new QPushButton("run tests", this);
+    QPushButton * runTestsBtn = new QPushButton("css tests", this);
 
     themeComboBox = new QComboBox(this);
     variantComboBox = new QComboBox(this);
@@ -54,8 +53,10 @@ TestForm::TestForm(QWidget *parent)
     messageEdit = new QLineEdit("message body", this);
     messageEdit->setGeometry(0, 880, 180, 30);
 
+    themePathEdit = new QLineEdit("/home/senu/dev/psi/gsoc/repo/psi-fork/proto/", this);
+    themePathEdit->setGeometry(300, 880, 180, 30);
 
-    themeList.readThemes();
+    themeList.readThemes(themePathEdit->text());
 
     QString themePath;
     QStringList themeNames = themeList.themeNames();
@@ -74,7 +75,7 @@ TestForm::TestForm(QWidget *parent)
     variantComboBox->show();
 
 
-	HTMLChatEditFrame * frame = new HTMLChatEditFrame(this);
+	HTMLChatEditFrame * frame = new HTMLChatEditFrame(this, themePathEdit->text()+"/icons/");
 	frame->show();
 
 	
@@ -186,7 +187,7 @@ void TestForm::onLoadVariant() {
     theme->setCurrentVariant(variantComboBox->currentText());
 
     if (view == NULL) {
-        view = new HTMLChatView(this, *theme);
+        view = new HTMLChatView(this, *theme, themePathEdit->text());
         view->init();
         view->setGeometry(0, 0, 300, 200);
         view->show();
@@ -208,5 +209,5 @@ void TestForm::onClear() {
 void TestForm::onRunTests() {
 	QWebView * testsView = new QWebView(0);
 	testsView->show();
-	testsView->load(QUrl(_THEMEPATH"/tests/testRunner.html")); //TODO
+	testsView->load(QUrl(themePathEdit->text()+"/tests/testRunner.html")); //TODO
 }

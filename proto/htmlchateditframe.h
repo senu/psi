@@ -12,7 +12,8 @@ class HTMLChatEditFrame : public QWidget {
    Q_OBJECT
 
 public:
-	HTMLChatEditFrame(QWidget * parent);
+    /** iconPath is a path to icons/ dir */
+	HTMLChatEditFrame(QWidget * parent, const QString& iconPath);
 	~HTMLChatEditFrame();
 
 private:

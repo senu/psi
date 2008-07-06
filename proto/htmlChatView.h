@@ -23,7 +23,7 @@ class HTMLChatView : public ChatView {
     Q_OBJECT
 
 public:
-    HTMLChatView(QWidget * parent, HTMLChatTheme theme);
+    HTMLChatView(QWidget * parent, HTMLChatTheme theme, QString themePath);
 
     ~HTMLChatView();
     QWebView webView;
@@ -31,6 +31,8 @@ public:
     /** Sets theme */
     void setTheme(HTMLChatTheme theme);
 
+    /** Only in dev version; (only for loading JavaScript file); path to theme/ dir */
+    QString themePath;
 
     public
 slots:

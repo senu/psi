@@ -9,7 +9,8 @@
 /** Abstract List of theme names; eg for selecting theme */
 class ChatThemeList {
 public:	
-	virtual void readThemes() = 0;
+    /** Path to themes/ dir */
+	virtual void readThemes(const QString& path) = 0;
 	QStringList themeNames();
 	QString themePath(QString themeName);
 	

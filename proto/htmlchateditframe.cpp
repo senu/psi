@@ -3,7 +3,7 @@
 #include "htmlchateditframe.h"
 
 
-HTMLChatEditFrame::HTMLChatEditFrame(QWidget* parent) : QWidget(parent) {
+HTMLChatEditFrame::HTMLChatEditFrame(QWidget* parent, const QString& iconPath) : QWidget(parent) {
 
     QPushButton * linkBtn = new QPushButton("link", this);
     
@@ -12,7 +12,7 @@ HTMLChatEditFrame::HTMLChatEditFrame(QWidget* parent) : QWidget(parent) {
 
     linkBtn->move(0, 40);
 
-    editor = new HTMLChatEdit(this, toolBar);
+    editor = new HTMLChatEdit(this, toolBar, iconPath);
     editor->setGeometry(0, 90, 400, 300);
 
     this->setGeometry(0, 0, 600, 400);
