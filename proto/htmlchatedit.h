@@ -13,8 +13,12 @@ class HTMLChatEdit : public QTextEdit {
 
     Q_OBJECT
 public:
+    /** ToolBar is a QToolBar where actions/widgets are placed */
     HTMLChatEdit(QWidget* parent, QToolBar* toolBar);
     ~HTMLChatEdit();
+    
+    /** Returns XHTML-IM (validated) message */
+    QString message();
 
     public
 slots:
@@ -32,7 +36,12 @@ slots:
     void insertImage(QString url);
     void insertAnchor(QString url, QString name);
 
-    void cursorPosChanged();
+    /** Show current text align */
+    void changeAlignButtons();
+    
+    /** Show current text style */
+    void changeTextButtons(const QTextCharFormat& format);
+
 
 private:
     void mergeFormat(const QTextCharFormat &format);
@@ -53,6 +62,8 @@ private:
     *actionAlignCenter,
     *actionAlignRight,
     *actionAlignJustify;
+
+    QActionGroup * alignActions;
 
     QString iconPath; //TODO we need icons we can use in Psi!
 };

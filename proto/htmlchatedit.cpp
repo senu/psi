@@ -1,4 +1,3 @@
-
 #include <QTextEdit>
 #include <QTextCursor>
 #include <QUrl>
@@ -11,6 +10,7 @@
 
 #include "htmlchatedit.h"
 #include "config.h"
+#include "messageValidator.h"
 
 
 HTMLChatEdit::HTMLChatEdit(QWidget* parent, QToolBar * _toolBar) : QTextEdit(parent) {
@@ -21,6 +21,10 @@ HTMLChatEdit::HTMLChatEdit(QWidget* parent, QToolBar * _toolBar) : QTextEdit(par
     initActions();
 
     setText("Lorem ipsum costam costam i jeszcze cos tam costam.");
+
+    connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(changeAlignButtons()));
+    connect(this, SIGNAL(currentCharFormatChanged(const QTextCharFormat&)),
+            this, SLOT(changeTextButtons(const QTextCharFormat&)));
 
     show();
 }
@@ -114,7 +118,37 @@ void HTMLChatEdit::insertAnchor(QString url, QString name) {
 }
 
 
-void HTMLChatEdit::cursorPosChanged() {
+void HTMLChatEdit::changeAlignButtons() {
+    Qt::Alignment aligment = alignment();
+           
+    foreach(QAction* action, alignActions->actions()) {
+        if(action->property("align").toInt() & aligment) {
+            action->setChecked(true);
+            break;
+        }
+    }
+}
+
+
+void HTMLChatEdit::changeTextButtons(const QTextCharFormat& format) {
+    
+    QFont font = format.font();
+    
+    actionTextBold->setChecked(font.bold());
+    actionTextItalic->setChecked(font.italic());
+    actionTextUnderline->setChecked(font.underline());
+    
+    fontCombo->setCurrentIndex(fontCombo->findText(font.family()));
+    sizeCombo->setCurrentIndex(sizeCombo->findText(QString::number(font.pointSize())));
+
+    QPixmap pixmap(14, 14); 
+    
+    pixmap.fill(format.foreground().color());
+    actionForegroundColor->setIcon(pixmap);
+    
+    pixmap.fill(format.background().color());
+    actionBackgroundColor->setIcon(pixmap);
+    
 }
 
 
@@ -146,7 +180,7 @@ void HTMLChatEdit::initActions() {
     actionTextUnderline->setCheckable(true);
 
     //align
-    QActionGroup * alignActions = new QActionGroup(this);
+    alignActions = new QActionGroup(this);
 
     actionAlignLeft = new QAction(QIcon(iconPath + "textleft.png"), tr("&Left"), alignActions);
     actionAlignLeft->setShortcut(Qt::CTRL + Qt::Key_L);
@@ -169,7 +203,7 @@ void HTMLChatEdit::initActions() {
     actionAlignJustify->setCheckable(true);
 
     //colors
-    QPixmap pixmap(16, 16); //TODO fore and background color icon
+    QPixmap pixmap(14, 14); //TODO fore and background color icon
     pixmap.fill(Qt::black);
     actionForegroundColor = new QAction(pixmap, tr("&Foreground color..."), this);
 
@@ -182,7 +216,6 @@ void HTMLChatEdit::initActions() {
     sizeCombo->setEditable(true);
 
     QFontDatabase fontDB;
-
 
     foreach(int size, fontDB.standardSizes()) {
         sizeCombo->addItem(QString::number(size));
@@ -233,9 +266,19 @@ void HTMLChatEdit::initActions() {
 
 
 HTMLChatEdit::~HTMLChatEdit() {
-    qDebug() << toHtml();
+    qDebug() << message();
 }
 
+QString HTMLChatEdit::message() {
+    QString html = toHtml();
+
+    MessageValidator val;
+    bool modified;
+    return val.validateMessage(html, &modified);
+
+
+//    return html;
+}
 
 
 

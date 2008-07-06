@@ -7,7 +7,7 @@
 
 //Elements
 const QString structureElements[] = {
-    "body", "html", "title"
+    "body", "html", "head", "title"
     //TODO - workaround
     , "msg"
 };
@@ -82,8 +82,8 @@ void MessageValidator::dfs(QDomElement cur, int tabs, bool* modified) {
         QString attrName = cur.attributes().item(i).toAttr().name();
 
         if (!curNI.allowedAttributes.contains(attrName)) {
-            // qDebug() << "VALIDATIN ERR" << "TA" << attrName  << " in " << parentName;
-            // qDebug() << "note allowed attributes are:" << curNI.allowedAttributes;
+            qDebug() << "VALIDATIN ERR" << "TA" << attrName  << " in " << parentName;
+            qDebug() << "note allowed attributes are:" << curNI.allowedAttributes;
 
             cur.attributes().removeNamedItem(attrName);
             *modified = true;
@@ -99,8 +99,14 @@ void MessageValidator::dfs(QDomElement cur, int tabs, bool* modified) {
         if (node.isElement()) {
             QString childName = node.toElement().tagName();
 
+            if(childName == "style") { //this action is not XHTML-IM compliant!
+                cur.removeChild(node);
+                *modified = true;
+                i--;
+            }
+
             //is subElement valid here?
-            if (!curNI.allowedTags.contains(childName)) {
+            else if (!curNI.allowedTags.contains(childName)) {
 
                 //qDebug() << "VALIDATIN ERR" << "TS" << childName << " in " << parentName;
                 //qDebug() << "note allowed subElements are:" << curNI.allowedTags;
@@ -182,6 +188,16 @@ void MessageValidator::generateAllowedDict() {
 
 	//misc
 	hypertextNI.allowedTags.append("img");
+	
+    allowed["html"].allowedTags.append("body");
+	allowed["html"].allowedTags.append("head");
+    
+	allowed["head"].allowedTags.append("title");
+    
+	allowed["body"].allowedAttributes.append("style");
+	allowed["body"].allowedAttributes.append("class");
+	allowed["body"].allowedAttributes.append("id");
+	allowed["body"].allowedAttributes.append("title");
 	
 	allowed["br"].canHaveText = false;
 	
