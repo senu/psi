@@ -33,8 +33,8 @@ slots:
     void textForegroundColor();
     void textBackgroundColor();
 
-    void insertImage(QString url);
-    void insertAnchor(QString url, QString name);
+    void insertImage();
+    void insertAnchor();
 
     /** Show current text align */
     void changeAlignButtons();

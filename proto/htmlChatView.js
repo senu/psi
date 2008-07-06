@@ -67,15 +67,25 @@ function psi_dfs(element) {
     if(element.nodeType == Node.ELEMENT_NODE) {
         
         //check style
-        var prevProperty = ''; 
+        var newStyle = '';
         for(var j=0; j<element.style.length; j++) {
             var cssProperty = element.style.item(j);
-            if(allowed.indexOf(cssProperty) == -1 && prevProperty != cssProperty) {
-                prevValue = element.style.removeProperty(cssProperty);
-                j--;
+            //            alert(cssProperty);
+            if(allowed.indexOf(cssProperty) != -1) {
+                newStyle += cssProperty + ':' + element.style.getPropertyValue(cssProperty) + ';';
             }
-            prevProperty = cssProperty;
         }
+
+       
+        if(element.hasAttribute('style')) { 
+            if(newStyle.length == 0) {
+                element.removeAttribute('style');
+            }
+            else {
+                element.setAttribute('style', newStyle);
+            }
+        }
+
 
         //check children
         for(var i=0; i<element.childNodes.length; i++) {
@@ -117,44 +127,51 @@ function psi_runTests() {
 
     inp = '<div><strong style="color:red; margin-left: 300px;">strong</strong>y<br style="position:   absolute"/>yyy'+
         '<em style="color:blue;">zzz</em><em style=" border: solid 1px ;   color:green;">aaa</em></div>';
-    out = '<div><strong style="color:red; margin-left: 300px;">strong</strong>y<br style="">yyy'+
-        '<em style="color:blue;">zzz</em><em style="border-color: initial; color: green;">aaa</em></div>';
+    out = '<div><strong style="color:red; margin-left: 300px;">strong</strong>y<br>yyy'+
+        '<em style="color:blue;">zzz</em><em style="color: green;">aaa</em></div>';
 
     psi_cssRunTest("1. sample test", inp, out, results);
-
+    
     inp = '';
     out = '';
    
     psi_cssRunTest("2. empty string", inp, out, results);
     
     inp = '<div style=""></div>';
-    out = '<div style=""></div>';
+    out = '<div></div>';
    
     psi_cssRunTest("3. empty style attr", inp, out, results);
     
     inp = '<div style=""><strong style="clear: both;">xxx</strong></div>';
-    out = '<div style=""><strong style="">xxx</strong></div>';
+    out = '<div><strong>xxx</strong></div>';
    
     psi_cssRunTest("4. single bad style prop.", inp, out, results);
     
     
     inp = '<div style="">a<strong style="cle%ar: b;:o=th; color:red">xxx</strong></div>';
-    out = '<div style="">a<strong style="cle%ar: b;:o=th; color:red">xxx</strong></div>';
+    out = '<div>a<strong style="color:red;">xxx</strong></div>';
 
     //NOTICE imho webkit output is invalid, but it displays test proper way
     psi_cssRunTest("5. invalid style attribute", inp, out, results);
 
 
     inp = '<div style=""><strong style="clear: both; text-align:right;   dispaly:none">xxx</strong></div>';
-    out = '<div style=""><strong style="text-align:right;">xxx</strong></div>';
+    out = '<div><strong style="text-align:right;">xxx</strong></div>';
    
     psi_cssRunTest("6. bad; good; bad; prop.", inp, out, results);
     
     inp = '<div style=""><strong style="clear: both; cursor: corsshair;  dispaly:none">xxx</strong></div>';
-    out = '<div style=""><strong style="">xxx</strong></div>';
+    out = '<div><strong>xxx</strong></div>';
    
     psi_cssRunTest("6. bad; bad; bad; prop.", inp, out, results);
- 
+
+
+
+    inp = '<div style=""><strong style="-qt-block-indent:0; color: red; foo: bar">xxx</strong></div>';
+    out = '<div><strong style="color: red;">xxx</strong></div>';
+   
+    psi_cssRunTest("7. unknown prop.", inp, out, results);
+      
 }
 
 function psi_cssRunTest(name, input, validOutput, results) {

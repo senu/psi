@@ -5,12 +5,12 @@
 
 HTMLChatEditFrame::HTMLChatEditFrame(QWidget* parent) : QWidget(parent) {
 
-    QPushButton * boldBtn = new QPushButton("bold", this);
+    QPushButton * linkBtn = new QPushButton("link", this);
     
     toolBar = new QToolBar(this);
     toolBar->setIconSize(QSize(16,16));
 
-    boldBtn->move(0, 40);
+    linkBtn->move(0, 40);
 
     editor = new HTMLChatEdit(this, toolBar);
     editor->setGeometry(0, 90, 400, 300);
@@ -18,7 +18,7 @@ HTMLChatEditFrame::HTMLChatEditFrame(QWidget* parent) : QWidget(parent) {
     this->setGeometry(0, 0, 600, 400);
     this->show();
 
-    QObject::connect(boldBtn, SIGNAL(clicked()), editor, SLOT(textBold()));
+    QObject::connect(linkBtn, SIGNAL(clicked()), editor, SLOT(insertAnchor()));
 }
 
 

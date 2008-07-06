@@ -104,7 +104,7 @@ void HTMLChatEdit::textBackgroundColor() {
 }
 
 
-void HTMLChatEdit::insertImage(QString url) { //TODO
+void HTMLChatEdit::insertImage() { //TODO
 
     QTextCursor cursor = textCursor();
     QImage img = QImage("/usr/share/icons/oxygen/128x128/apps/kmail.png");
@@ -114,7 +114,11 @@ void HTMLChatEdit::insertImage(QString url) { //TODO
 }
 
 
-void HTMLChatEdit::insertAnchor(QString url, QString name) {
+void HTMLChatEdit::insertAnchor() { //TODO
+    QString href = "http://psi-im.org";
+    QString name = "visit psi";
+
+    textCursor().insertHtml(QString("<a href=\"%1\">%2</a><strong style=\"dupa: placki; font-family: 'F\"ixed'; color: red;\">zzzz</strong>").arg(href).arg(name)); //TODO escape
 }
 
 
