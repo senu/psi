@@ -4,6 +4,8 @@
 #include <QTextEdit>
 #include <QAction>
 #include <QToolBar>
+#include <QComboBox>
+#include <QFontComboBox>
 
 
 /** XHTML-IM message composer */
@@ -24,8 +26,8 @@ slots:
 
     void fontFamily(const QString& fontName);
     void fontSize(const QString& size);
-    void textColor();
-    void textBackground();
+    void textForegroundColor();
+    void textBackgroundColor();
 
     void insertImage(QString url);
     void insertAnchor(QString url, QString name);
@@ -39,18 +41,20 @@ private:
     void initActions();
 
     QToolBar * toolBar;
+    QComboBox * sizeCombo;
+    QFontComboBox * fontCombo;
 
     QAction *actionTextBold,
     *actionTextItalic,
     *actionTextUnderline,
-    *actionTextColor,
-    *actionTextBackground,
+    *actionForegroundColor,
+    *actionBackgroundColor,
     *actionAlignLeft,
     *actionAlignCenter,
     *actionAlignRight,
     *actionAlignJustify;
 
-	QString iconPath; //TODO we need icons we can use in Psi!
+    QString iconPath; //TODO we need icons we can use in Psi!
 };
 
 #endif
