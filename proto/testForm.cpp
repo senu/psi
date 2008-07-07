@@ -34,27 +34,24 @@ TestForm::TestForm(QWidget *parent)
     themeComboBox = new QComboBox(this);
     variantComboBox = new QComboBox(this);
 
-    nextMessageBtn->setGeometry(0, 800, 100, 30);
+    nextMessageBtn->setGeometry(0, 650, 100, 30);
     nextMessageBtn->show();
 
-    consMessageBtn->setGeometry(110, 800, 100, 30);
+    consMessageBtn->setGeometry(110, 650, 100, 30);
     consMessageBtn->show();
 
-    eventMessageBtn->setGeometry(220, 800, 100, 30);
+    eventMessageBtn->setGeometry(220, 650, 100, 30);
     eventMessageBtn->show();
 
-    loadThemeBtn->setGeometry(330, 800, 140, 30);
+    loadThemeBtn->setGeometry(330, 650, 140, 30);
     loadThemeBtn->show();
 
-    variantThemeBtn->setGeometry(480, 800, 140, 30);
-    clearBtn->setGeometry(640, 800, 140, 30);
-    runTestsBtn->setGeometry(800, 800, 140, 30);
-
-    messageEdit = new QLineEdit("message body", this);
-    messageEdit->setGeometry(0, 880, 180, 30);
+    variantThemeBtn->setGeometry(480, 650, 140, 30);
+    clearBtn->setGeometry(640, 650, 140, 30);
+    runTestsBtn->setGeometry(800, 650, 140, 30);
 
     themePathEdit = new QLineEdit("/home/senu/dev/psi/gsoc/repo/psi-fork/proto/", this);
-    themePathEdit->setGeometry(300, 880, 180, 30);
+    themePathEdit->setGeometry(500, 700, 180, 30);
 
     themeList.readThemes(themePathEdit->text());
 
@@ -74,9 +71,9 @@ TestForm::TestForm(QWidget *parent)
     variantComboBox->setGeometry(200, 700, 180, 40);
     variantComboBox->show();
 
+    frame = new HTMLChatEditFrame(this, themePathEdit->text()+"/icons/");
+    frame->move(0,750);
 
-	HTMLChatEditFrame * frame = new HTMLChatEditFrame(this, themePathEdit->text()+"/icons/");
-	frame->show();
 
 	
     this->setGeometry(0, 0, 920, 950);
@@ -98,7 +95,7 @@ void TestForm::onConsecutiveButtonClicked() {
     MessageChatEvent * ce = new MessageChatEvent();
 
     bool modified;
-    ce->setBody(msgVal.validateMessage("<msg>" + messageEdit->text() + "</msg>", &modified));
+    ce->setBody(msgVal.validateMessage(frame->toHTML(), &modified));
 
     ce->setTimeStamp(QDateTime::currentDateTime());
     ce->setNick("Pawel Wiejacha");
@@ -117,7 +114,7 @@ void TestForm::onNextButtonClicked() { // copy-paste :D
     MessageChatEvent * ce = new MessageChatEvent();
 
     bool modified;
-    ce->setBody(msgVal.validateMessage("<body>" + messageEdit->text() + "</body>", &modified));
+    ce->setBody(msgVal.validateMessage(frame->toHTML(), &modified));
 
     ce->setTimeStamp(QDateTime::currentDateTime());
     ce->setConsecutive(false);

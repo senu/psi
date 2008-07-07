@@ -10,6 +10,7 @@
 #include "chatMessageEvent.h"
 #include "htmlChatThemeList.h"
 #include "htmlChatView.h"
+#include "htmlchateditframe.h"
 #include "messageValidator.h"
 
 
@@ -21,8 +22,8 @@ Q_OBJECT
     TestForm(QWidget * parent);
 	~TestForm();			
   private:
-    QLineEdit * messageEdit;
     QLineEdit * themePathEdit;
+    HTMLChatEditFrame * frame;
 	QComboBox *themeComboBox;
 	QComboBox *variantComboBox;
 

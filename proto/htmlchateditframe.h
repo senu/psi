@@ -16,6 +16,10 @@ public:
 	HTMLChatEditFrame(QWidget * parent, const QString& iconPath);
 	~HTMLChatEditFrame();
 
+    /** Returns composed in editor XHTML-IM message */
+    QString toHTML();
+
+
 private:
 	HTMLChatEdit * editor;
     QToolBar * toolBar;

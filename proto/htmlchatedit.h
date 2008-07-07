@@ -6,6 +6,16 @@
 #include <QToolBar>
 #include <QComboBox>
 #include <QFontComboBox>
+#include <QTextEdit>
+#include <QTextCursor>
+#include <QUrl>
+#include <QImage>
+#include <QtDebug>
+#include <QActionGroup>
+#include <QColor>
+#include <QColorDialog>
+#include <QFontDatabase>
+#include <QTextBlock>
 
 
 /** XHTML-IM message composer */
@@ -16,7 +26,7 @@ public:
     /** ToolBar is a QToolBar where actions/widgets are placed; iconPath is a path to icons/ dir */
     HTMLChatEdit(QWidget* parent, QToolBar* toolBar, const QString& iconPath);
     ~HTMLChatEdit();
-    
+
     /** Returns XHTML-IM (validated) message */
     QString message();
 
@@ -38,7 +48,7 @@ slots:
 
     /** Show current text align */
     void changeAlignButtons();
-    
+
     /** Show current text style */
     void changeTextButtons(const QTextCharFormat& format);
 
@@ -48,6 +58,14 @@ private:
 
     /*Creates and connects QActions */
     void initActions();
+
+    //XHTML-IM message creator
+
+    /** Creates \<p\> style attribute value */
+    QString createBlockStyle(const QTextBlockFormat& blockFormat);
+    
+    /** Creates \<span\> (text fragment) style attribute value */
+    QString createFragmentStyle(const QTextCharFormat& fragmentFormat);
 
     QToolBar * toolBar;
     QComboBox * sizeCombo;

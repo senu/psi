@@ -1,19 +1,9 @@
-#include <QTextEdit>
-#include <QTextCursor>
-#include <QUrl>
-#include <QImage>
-#include <QtDebug>
-#include <QActionGroup>
-#include <QColor>
-#include <QColorDialog>
-#include <QFontDatabase>
-
 #include "htmlchatedit.h"
 #include "messageValidator.h"
 
 
 HTMLChatEdit::HTMLChatEdit(QWidget* parent, QToolBar * _toolBar, const QString& _iconPath)
-    : QTextEdit(parent), iconPath(_iconPath) {
+: QTextEdit(parent), iconPath(_iconPath) {
 
     toolBar = _toolBar;
 
@@ -123,9 +113,10 @@ void HTMLChatEdit::insertAnchor() { //TODO
 
 void HTMLChatEdit::changeAlignButtons() {
     Qt::Alignment aligment = alignment();
-           
+
+
     foreach(QAction* action, alignActions->actions()) {
-        if(action->property("align").toInt() & aligment) {
+        if (action->property("align").toInt() & aligment) {
             action->setChecked(true);
             break;
         }
@@ -134,24 +125,24 @@ void HTMLChatEdit::changeAlignButtons() {
 
 
 void HTMLChatEdit::changeTextButtons(const QTextCharFormat& format) {
-    
+
     QFont font = format.font();
-    
+
     actionTextBold->setChecked(font.bold());
     actionTextItalic->setChecked(font.italic());
     actionTextUnderline->setChecked(font.underline());
-    
+
     fontCombo->setCurrentIndex(fontCombo->findText(font.family()));
     sizeCombo->setCurrentIndex(sizeCombo->findText(QString::number(font.pointSize())));
 
-    QPixmap pixmap(14, 14); 
-    
+    QPixmap pixmap(14, 14);
+
     pixmap.fill(format.foreground().color());
     actionForegroundColor->setIcon(pixmap);
-    
+
     pixmap.fill(format.background().color());
-//    qDebug() << format.background().color();
-    actionBackgroundColor->setIcon(pixmap);//TODO format.background().color() is wrong after style/font change
+    //    qDebug() << format.background().color();
+    actionBackgroundColor->setIcon(pixmap); //TODO format.background().color() is wrong after style/font change
 
 }
 
@@ -221,7 +212,8 @@ void HTMLChatEdit::initActions() {
 
     QFontDatabase fontDB;
 
-foreach(int size, fontDB.standardSizes()) {
+
+    foreach(int size, fontDB.standardSizes()) {
         sizeCombo->addItem(QString::number(size));
     }
 
@@ -273,15 +265,135 @@ HTMLChatEdit::~HTMLChatEdit() {
     qDebug() << message();
 }
 
-QString HTMLChatEdit::message() {
-    QString html = toHtml();
 
-    MessageValidator val;
-    bool modified;
-    return val.validateMessage(html, &modified);
+QString HTMLChatEdit::createBlockStyle(const QTextBlockFormat& blockFormat) {
+    QString style = "text-align:";
+
+    switch (blockFormat.alignment()) {
+        case Qt::AlignLeft :
+                    style += "left";
+            break;
+        case Qt::AlignRight :
+                    style += "right";
+            break;
+        case Qt::AlignCenter :
+                    style += "center";
+            break;
+        case Qt::AlignJustify :
+                    style += "justify";
+            break;
+    }
+
+    return style;
+}
 
 
-    //    return html;
+QString HTMLChatEdit::createFragmentStyle(const QTextCharFormat& fragmentFormat) {
+    QString style = "text-decoration:";
+
+    //text-decoration
+    bool haveOneDec = false; // at least one decoration
+
+    if (fragmentFormat.fontOverline()) {
+        haveOneDec = true;
+        style += " overline";
+    }
+
+    if (fragmentFormat.fontUnderline()) {
+        haveOneDec = true;
+        style += " underline";
+    }
+
+    if (fragmentFormat.fontStrikeOut()) {
+        haveOneDec = true;
+        style += " line-through";
+    }
+
+    if (!haveOneDec) {
+        style += "none";
+    }
+
+    //font-style
+    style += "; font-style:" + (fragmentFormat.fontItalic() ? QLatin1String("italic") : QLatin1String("normal"));
+
+    if (fragmentFormat.hasProperty(QTextFormat::FontWeight)) {
+        style += QLatin1String("; font-weight:");
+        style += QString::number(fragmentFormat.fontWeight() * 8); //TODO
+    }
+
+    //font-family
+    if (!fragmentFormat.fontFamily().isEmpty()) {
+        if (fragmentFormat.fontFamily().contains('\'')) {
+            style += "; font-family: \"" + fragmentFormat.fontFamily() + "\""; //todo escape!
+        }
+        else {
+            style += "; font-family: '" + fragmentFormat.fontFamily() + "\'";
+        }
+    }
+
+    //font-size
+    if (fragmentFormat.hasProperty(QTextFormat::FontPointSize)) {
+        style += "; font-size:" + QString::number(fragmentFormat.fontPointSize()) + "pt";
+    }
+
+    //colors
+    style += "; color:" + fragmentFormat.foreground().color().name();
+    style += "; background-color:" + fragmentFormat.background().color().name() + ";";
+
+    return style;
+}
+
+
+QString HTMLChatEdit::message() { //TODO escape
+
+    QString msg; //new message [ QTextDocument -> xhtml-im ];
+
+    QTextBlock currentBlock = document()->begin();
+
+
+    //each textBlock [== text, image, hyperlink] - we omit tables, lists, frames
+    while (currentBlock.isValid()) {
+        QTextBlockFormat curTBF = currentBlock.blockFormat();
+//        qDebug() << "TB" << currentBlock.text() << "[ " << curTBF.alignment() << " ]";
+
+        QString block = ""; // inner of block 
+
+        //each framgent
+        for (QTextBlock::iterator it = currentBlock.begin(); !(it.atEnd()); ++it) {
+            QTextFragment currentFragment = it.fragment();
+
+            if (currentFragment.isValid()) {
+                QTextCharFormat curTCF = currentFragment.charFormat();
+
+                block += "<span style=\"" + createFragmentStyle(curTCF) + "\">"
+                        + currentFragment.text() + "</span>\n";
+
+
+//                qDebug() << "    TF" << currentFragment.text()
+  //                      << "[ " << curTCF.font() << curTCF.underlineStyle() << curTCF.anchorHref() << curTCF.isImageFormat() << " ]";
+            }
+        }
+
+        msg += "<p style=\"" + createBlockStyle(curTBF) + "\">" + block + "</p>\n";
+
+        currentBlock = currentBlock.next();
+    }
+
+    /*
+     */
+
+
+    return "<html><body><div>"+msg+"</div></body></html>";
+
+
+//    QString html = toHtml();
+
+    //    MessageValidator val;
+    //    bool modified;
+//  return val.validateMessage(html, &modified);
+
+
+            //    return html + "\n" + msg;
 }
 
 

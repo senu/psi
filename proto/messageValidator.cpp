@@ -8,8 +8,6 @@
 //Elements
 const QString structureElements[] = {
     "body", "html", "head", "title"
-    //TODO - workaround
-    , "msg"
 };
 
 const QString textElements[] = {
