@@ -1,5 +1,10 @@
+
+#include <qt4/QtCore/qurl.h>
+
 #include <QTimer>
 #include <QList>
+#include <qt4/QtGui/qwidget.h>
+#include <QMessageBox>
 
 #include "htmlChatView.h"
 
@@ -10,6 +15,9 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, QString _them
 : ChatView(parent), themePath(_themePath), theme(_theme) {
     webView.setParent(parent);
 
+    webView.page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    webView.setContextMenuPolicy(Qt::NoContextMenu);
+
     _chatInfo.chatName = "Kot Behemot";
     _chatInfo.destinationName = "Kot Behemot";
     _chatInfo.destinationDisplayName = "behemot@jabber.ru";
@@ -17,6 +25,8 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, QString _them
     _chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg";
     _chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";
     _chatInfo.timeOpened = QDateTime::currentDateTime();
+  
+    connect(webView.page(), SIGNAL(linkClicked(const QUrl&)), this, SLOT(onLinkClicked(const QUrl&)));
 
 }
 
@@ -30,9 +40,9 @@ void HTMLChatView::clear() {
 
 void HTMLChatView::init() {
 
-    QObject::connect(&webView, SIGNAL(loadFinished(bool)), this, SLOT(onEmptyDocumentLoaded(bool)));
-    QObject::connect(&jsNotifier, SIGNAL(onInitFinished()), this, SLOT(onInitDocumentFinished()));
-    QObject::connect(&jsNotifier, SIGNAL(onAppendFinished()), this, SLOT(onAppendFinished()));
+    connect(&webView, SIGNAL(loadFinished(bool)), this, SLOT(onEmptyDocumentLoaded(bool)));
+    connect(&jsNotifier, SIGNAL(onInitFinished()), this, SLOT(onInitDocumentFinished()));
+    connect(&jsNotifier, SIGNAL(onAppendFinished()), this, SLOT(onAppendFinished()));
 
     webView.setHtml(createEmptyDocument(theme.baseHref(), theme.currentVariant()), theme.baseHref());
     //rest in onEmptyDocumentLoaded
@@ -92,8 +102,13 @@ void HTMLChatView::onAppendFinished() {
 
 void HTMLChatView::onDoScrolling() {
     webView.page()->mainFrame()->setScrollBarValue(Qt::Vertical, 10000); //TODO 
-//    qDebug() << "scroll";
+    //    qDebug() << "scroll";
     emit appendFinished();
+}
+
+
+void HTMLChatView::onLinkClicked(const QUrl& url) {
+    QMessageBox::about(this, "open url", url.toString());
 }
 
 
@@ -174,7 +189,7 @@ void HTMLChatView::evaluateJS(QString scriptSource) {
 
 void HTMLChatView::importJSChatFunctions() {
     // reading from file only while developing	
-    QFile file(themePath + "htmlChatView.js");
+    QFile file(themePath + "/htmlChatView.js");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
 

@@ -6,7 +6,13 @@
 
 
 void HTMLChatThemeList::readThemes(const QString& _path) {
-	QString path = _path+"themes";
+    QString path = _path;
+    if (!path.endsWith("/")) {
+        path = path + "/";
+    }
+	if (!path.endsWith("themes/")) {
+	    path = path + "themes/";
+    }
 	
 	QDir dir(path);
 

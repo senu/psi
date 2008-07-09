@@ -28,7 +28,11 @@ HEADERS += chatMessageEvent.h \
 		   jsNotifier.h\
 		   userchatevent.h\
 		   htmlchatedit.h\
-		   htmlchateditframe.h
+		   htmlchateditframe.h\
+		   plaintextchatview.h
+
+FORMS = chatdlg.ui
+
 
 tests {
   HEADERS += tests/testMessageValidator.h tests/testhtmlchatview.h
@@ -40,7 +44,7 @@ tests {
 }
 
 
-SOURCES += abstractChatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp testForm.cpp chatMessageEvent.cpp htmlChatPart.cpp statusChatEvent.cpp chatThemeList.cpp htmlChatThemeList.cpp messageValidator.cpp emoteChatEvent.cpp htmlchatemotetemplate.cpp jsNotifier.cpp userchatevent.cpp htmlchatedit.cpp htmlchateditframe.cpp
+SOURCES += abstractChatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp testForm.cpp chatMessageEvent.cpp htmlChatPart.cpp statusChatEvent.cpp chatThemeList.cpp htmlChatThemeList.cpp messageValidator.cpp emoteChatEvent.cpp htmlchatemotetemplate.cpp jsNotifier.cpp userchatevent.cpp htmlchatedit.cpp htmlchateditframe.cpp plaintextchatview.cpp
 
 
 QT += webkit xml 

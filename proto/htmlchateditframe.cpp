@@ -6,9 +6,9 @@
 HTMLChatEditFrame::HTMLChatEditFrame(QWidget* parent, const QString& iconPath) : QWidget(parent) {
 
     QPushButton * linkBtn = new QPushButton("link", this);
-    
+
     toolBar = new QToolBar(this);
-    toolBar->setIconSize(QSize(16,16));
+    toolBar->setIconSize(QSize(16, 16));
 
     linkBtn->move(450, 40);
 
@@ -26,6 +26,7 @@ HTMLChatEditFrame::HTMLChatEditFrame(QWidget* parent, const QString& iconPath) :
 HTMLChatEditFrame::~HTMLChatEditFrame() {
     delete editor;
 }
+
 
 QString HTMLChatEditFrame::toHTML() {
     return editor->message();

@@ -1,6 +1,8 @@
 #include <QPushButton>
 #include <QWidget>
 #include <QUrl>
+#include <QFileDialog>
+#include <QDir>
 
 #include "testForm.h"
 #include "htmlChatView.h"
@@ -8,6 +10,7 @@
 #include "htmlChatView.h"
 
 #include "htmlchateditframe.h"
+#include "plaintextchatview.h"
 
 
 TestForm::~TestForm() {
@@ -50,7 +53,16 @@ TestForm::TestForm(QWidget *parent)
     clearBtn->setGeometry(640, 650, 140, 30);
     runTestsBtn->setGeometry(800, 650, 140, 30);
 
-    themePathEdit = new QLineEdit("/home/senu/dev/psi/gsoc/repo/psi-fork/proto/", this);
+    QString path = "/home/senu/dev/psi/gsoc/repo/psi-fork/proto/";
+    while (!QDir(path).isReadable()) {
+        QFileDialog dialog(this, "Choose the theme parent folder", path);
+        dialog.setFileMode(QFileDialog::DirectoryOnly);
+        dialog.exec();
+        path = dialog.directory().canonicalPath();
+        qDebug() << "User chose folder " << path << " for themes.";
+    }
+
+    themePathEdit = new QLineEdit(path, this);
     themePathEdit->setGeometry(500, 700, 180, 30);
 
     themeList.readThemes(themePathEdit->text());
@@ -74,20 +86,22 @@ TestForm::TestForm(QWidget *parent)
     frame = new HTMLChatEditFrame(this, themePathEdit->text()+"/icons/");
     frame->move(0,750);
 
+    PlainTextChatView * view2 = new PlainTextChatView(this);
+    view2->setGeometry(0,0, 500, 400);
 
 	
     this->setGeometry(0, 0, 920, 950);
 
     this->show();
 
-    QObject::connect(nextMessageBtn, SIGNAL(clicked()), this, SLOT(onNextButtonClicked()));
-    QObject::connect(consMessageBtn, SIGNAL(clicked()), this, SLOT(onConsecutiveButtonClicked()));
-    QObject::connect(eventMessageBtn, SIGNAL(clicked()), this, SLOT(onEventButtonClicked()));
-    QObject::connect(loadThemeBtn, SIGNAL(clicked()), this, SLOT(onLoadTheme()));
-    QObject::connect(variantThemeBtn, SIGNAL(clicked()), this, SLOT(onLoadVariant()));
-    QObject::connect(clearBtn, SIGNAL(clicked()), this, SLOT(onClear()));
+    connect(nextMessageBtn, SIGNAL(clicked()), this, SLOT(onNextButtonClicked()));
+    connect(consMessageBtn, SIGNAL(clicked()), this, SLOT(onConsecutiveButtonClicked()));
+    connect(eventMessageBtn, SIGNAL(clicked()), this, SLOT(onEventButtonClicked()));
+    connect(loadThemeBtn, SIGNAL(clicked()), this, SLOT(onLoadTheme()));
+    connect(variantThemeBtn, SIGNAL(clicked()), this, SLOT(onLoadVariant()));
+    connect(clearBtn, SIGNAL(clicked()), this, SLOT(onClear()));
 
-    QObject::connect(runTestsBtn, SIGNAL(clicked()), this, SLOT(onRunTests()));
+    connect(runTestsBtn, SIGNAL(clicked()), this, SLOT(onRunTests()));
 }
 
 
@@ -189,8 +203,8 @@ void TestForm::onLoadVariant() {
         view->setGeometry(0, 0, 300, 200);
         view->show();
 
-        QObject::connect(this, SIGNAL(messageCreated(const MessageChatEvent*)), view, SLOT(appendMessage(const MessageChatEvent*)));
-        QObject::connect(this, SIGNAL(eventCreated(const ChatEvent*)), view, SLOT(appendEvent(const ChatEvent*)));
+        connect(this, SIGNAL(messageCreated(const MessageChatEvent*)), view, SLOT(appendMessage(const MessageChatEvent*)));
+        connect(this, SIGNAL(eventCreated(const ChatEvent*)), view, SLOT(appendEvent(const ChatEvent*)));
     }
     else {
         view->setTheme(*theme);

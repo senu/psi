@@ -104,7 +104,7 @@ void HTMLChatEdit::insertImage() { //TODO
 
 
 void HTMLChatEdit::insertAnchor() { //TODO
-    QString href = "http://psi-im.org";
+    QString href = "http://google.com";
     QString name = "visit psi";
 
     textCursor().insertHtml(QString("<a href=\"%1\">%2</a><strong style=\"dupa: placki; font-family: 'F\"ixed'; color: red;\">zzzz</strong>").arg(href).arg(name)); //TODO escape
@@ -112,6 +112,8 @@ void HTMLChatEdit::insertAnchor() { //TODO
 
 
 void HTMLChatEdit::changeAlignButtons() {
+    //    qDebug() << cursor(). format.background().color();
+
     Qt::Alignment aligment = alignment();
 
 
@@ -126,6 +128,7 @@ void HTMLChatEdit::changeAlignButtons() {
 
 void HTMLChatEdit::changeTextButtons(const QTextCharFormat& format) {
 
+    qDebug() << format.background().color();
     QFont font = format.font();
 
     actionTextBold->setChecked(font.bold());
@@ -141,7 +144,6 @@ void HTMLChatEdit::changeTextButtons(const QTextCharFormat& format) {
     actionForegroundColor->setIcon(pixmap);
 
     pixmap.fill(format.background().color());
-    //    qDebug() << format.background().color();
     actionBackgroundColor->setIcon(pixmap); //TODO format.background().color() is wrong after style/font change
 
 }
@@ -338,7 +340,7 @@ QString HTMLChatEdit::createFragmentStyle(const QTextCharFormat& fragmentFormat)
 
     //colors
     style += "; color:" + fragmentFormat.foreground().color().name();
-    style += "; background-color:" + fragmentFormat.background().color().name() + ";";
+    //    style += "; background-color:" + fragmentFormat.background().color().name() + ";";
 
     return style;
 }
@@ -354,7 +356,7 @@ QString HTMLChatEdit::message() { //TODO escape
     //each textBlock [== text, image, hyperlink] - we omit tables, lists, frames
     while (currentBlock.isValid()) {
         QTextBlockFormat curTBF = currentBlock.blockFormat();
-//        qDebug() << "TB" << currentBlock.text() << "[ " << curTBF.alignment() << " ]";
+        //        qDebug() << "TB" << currentBlock.text() << "[ " << curTBF.alignment() << " ]";
 
         QString block = ""; // inner of block 
 
@@ -365,12 +367,18 @@ QString HTMLChatEdit::message() { //TODO escape
             if (currentFragment.isValid()) {
                 QTextCharFormat curTCF = currentFragment.charFormat();
 
-                block += "<span style=\"" + createFragmentStyle(curTCF) + "\">"
-                        + currentFragment.text() + "</span>\n";
+                if (curTCF.isImageFormat()) {
+                    block += "<img src=\"http://www.netbeans.org/images/v5/nb-logo2.gif\" ale=\"image\"/>";
+                }
+                else if (!curTCF.anchorHref().isEmpty()) {
+                    block += "<a href=\"" + curTCF.anchorHref() + "\">" + currentFragment.text() + "</a>";
 
+                }
+                else {
+                    block += "<span style=\"" + createFragmentStyle(curTCF) + "\">"
+                            + currentFragment.text() + "</span>\n";
+                }
 
-//                qDebug() << "    TF" << currentFragment.text()
-  //                      << "[ " << curTCF.font() << curTCF.underlineStyle() << curTCF.anchorHref() << curTCF.isImageFormat() << " ]";
             }
         }
 
@@ -379,21 +387,8 @@ QString HTMLChatEdit::message() { //TODO escape
         currentBlock = currentBlock.next();
     }
 
-    /*
-     */
 
-
-    return "<html><body><div>"+msg+"</div></body></html>";
-
-
-//    QString html = toHtml();
-
-    //    MessageValidator val;
-    //    bool modified;
-//  return val.validateMessage(html, &modified);
-
-
-            //    return html + "\n" + msg;
+    return "<html><body><div>" + msg + "</div></body></html>";
 }
 
 
