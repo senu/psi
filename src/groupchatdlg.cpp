@@ -128,7 +128,7 @@ protected:
 
 private:
 	ChatEdit* mle() const { return dlg->ui_.mle->chatEdit(); }
-	ChatView* te_log() const { return dlg->ui_.log; }
+	PlainTextChatView* te_log() const { return dlg->ui_.log; }
 
 public slots:
 	void addEmoticon(const PsiIcon *icon) {

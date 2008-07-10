@@ -45,7 +45,7 @@ class PsiAccount;
 class UserListItem;
 class QDropEvent;
 class QDragEnterEvent;
-class ChatView;
+class __PlainTextChatView;
 class ChatEdit;
 
 class ChatDlg : public TabbableWidget
@@ -173,7 +173,7 @@ protected:
 
 	QString whoNick(bool local) const;
 
-	virtual ChatView* chatView() const = 0;
+	virtual __PlainTextChatView* chatView() const = 0;
 	virtual ChatEdit* chatEdit() const = 0;
 
 private:

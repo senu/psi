@@ -436,7 +436,7 @@ QString PsiChatDlg::colorString(bool local, ChatDlg::SpooledType spooled) const
 	return "#0000FF";
 }
 
-ChatView* PsiChatDlg::chatView() const
+PlainTextChatView__* PsiChatDlg::chatView() const
 {
 	return ui_.log;
 }

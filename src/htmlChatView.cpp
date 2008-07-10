@@ -1,9 +1,7 @@
-
-#include <qt4/QtCore/qurl.h>
-
+#include <QUrl>
 #include <QTimer>
 #include <QList>
-#include <qt4/QtGui/qwidget.h>
+#include <QWidget>
 #include <QMessageBox>
 
 #include "htmlChatView.h"

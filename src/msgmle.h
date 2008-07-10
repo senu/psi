@@ -32,90 +32,96 @@ class QResizeEvent;
 class QTimer;
 class SpellHighlighter;
 
-class ChatView : public PsiTextView
+/** Old ChatView - it  will be removed! */
+class PlainTextChatView : public PsiTextView //PlainTextChatView
 {
-	Q_OBJECT
+
+    Q_OBJECT
 public:
-	ChatView(QWidget* parent);
-	~ChatView();
+    PlainTextChatView(QWidget* parent);
+    ~PlainTextChatView();
 
-	void setDialog(QWidget* dialog);
+    void setDialog(QWidget* dialog);
 
-	// reimplemented
-	QSize sizeHint() const;
+    // reimplemented
+    QSize sizeHint() const;
 
-	void appendText(const QString &text);
-	bool handleCopyEvent(QObject *object, QEvent *event, ChatEdit *chatEdit);
+    void appendText(const QString &text);
+    bool handleCopyEvent(QObject *object, QEvent *event, ChatEdit *chatEdit);
 
-	QString formatTimeStamp(const QDateTime &time);
+    QString formatTimeStamp(const QDateTime &time);
 
 protected:
-	// override the tab/esc behavior
-	bool focusNextPrevChild(bool next);
-	void keyPressEvent(QKeyEvent *);
+    // override the tab/esc behavior
+    bool focusNextPrevChild(bool next);
+    void keyPressEvent(QKeyEvent *);
 
-protected slots:
-	void autoCopy();
-
-private:
-	QWidget* dialog_;
-};
-
-class ChatEdit : public QTextEdit
-{
-	Q_OBJECT
-
-public:
-	ChatEdit(QWidget* parent);
-	~ChatEdit();
-
-	void setDialog(QWidget* dialog);
-
-	// reimplemented
-	QSize sizeHint() const;
-
-	static bool checkSpellingGloballyEnabled();
-	void setCheckSpelling(bool);
-
-protected slots:
- 	void applySuggestion();
- 	void addToDictionary();
-	void optionsChanged();
-
-protected:
-	// override the tab/esc behavior
-	bool focusNextPrevChild(bool next);
-	void keyPressEvent(QKeyEvent *);
-	bool event(QEvent * event);
-	void contextMenuEvent(QContextMenuEvent *e);
+    protected
+slots:
+    void autoCopy();
 
 private:
-	QWidget	*dialog_;
-	bool check_spelling_;
-	SpellHighlighter* spellhighlighter_;
-	QPoint last_click_;
-	int previous_position_;
+    QWidget* dialog_;
 };
 
 
-class LineEdit : public ChatEdit
-{
-	Q_OBJECT
-public:
-	LineEdit(QWidget* parent);
-	~LineEdit();
+class ChatEdit : public QTextEdit {
 
-	// reimplemented
-	QSize minimumSizeHint() const;
-	QSize sizeHint() const;
+    Q_OBJECT
+
+public:
+    ChatEdit(QWidget* parent);
+    ~ChatEdit();
+
+    void setDialog(QWidget* dialog);
+
+    // reimplemented
+    QSize sizeHint() const;
+
+    static bool checkSpellingGloballyEnabled();
+    void setCheckSpelling(bool);
+
+    protected
+slots:
+    void applySuggestion();
+    void addToDictionary();
+    void optionsChanged();
 
 protected:
-	// reimplemented
-	void resizeEvent(QResizeEvent*);
+    // override the tab/esc behavior
+    bool focusNextPrevChild(bool next);
+    void keyPressEvent(QKeyEvent *);
+    bool event(QEvent * event);
+    void contextMenuEvent(QContextMenuEvent *e);
 
-private slots:
-	void recalculateSize();
-	void updateScrollBar();
+private:
+    QWidget *dialog_;
+    bool check_spelling_;
+    SpellHighlighter* spellhighlighter_;
+    QPoint last_click_;
+    int previous_position_;
+};
+
+
+class LineEdit : public ChatEdit {
+
+    Q_OBJECT
+public:
+    LineEdit(QWidget* parent);
+    ~LineEdit();
+
+    // reimplemented
+    QSize minimumSizeHint() const;
+    QSize sizeHint() const;
+
+protected:
+    // reimplemented
+    void resizeEvent(QResizeEvent*);
+
+    private
+slots:
+    void recalculateSize();
+    void updateScrollBar();
 };
 
 #endif

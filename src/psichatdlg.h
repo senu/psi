@@ -53,7 +53,7 @@ private:
 	void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
 	void appendMessageFields(const Message& m);
 	void updateLastMsgTime(QDateTime t);
-	ChatView* chatView() const;
+	__PlainTextChatView* chatView() const;
 	ChatEdit* chatEdit() const;
 
 private:

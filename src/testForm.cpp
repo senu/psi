@@ -53,7 +53,7 @@ TestForm::TestForm(QWidget *parent)
     clearBtn->setGeometry(640, 650, 140, 30);
     runTestsBtn->setGeometry(800, 650, 140, 30);
 
-    QString path = "/home/senu/dev/psi/gsoc/repo/psi-fork/proto/";
+    QString path = "/home/senu/dev/psi/gsoc/repo/psi-fork/src/";
     while (!QDir(path).isReadable()) {
         QFileDialog dialog(this, "Choose the theme parent folder", path);
         dialog.setFileMode(QFileDialog::DirectoryOnly);

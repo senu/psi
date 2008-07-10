@@ -40,10 +40,11 @@
 #include "spellchecker.h"
 #include "psioptions.h"
 
+
 //----------------------------------------------------------------------------
-// ChatView
+// PlainTextChatView
 //----------------------------------------------------------------------------
-ChatView::ChatView(QWidget *parent)
+PlainTextChatView::PlainTextChatView(QWidget *parent)
 	: PsiTextView(parent)
 	, dialog_(0)
 {
@@ -59,26 +60,26 @@ ChatView::ChatView(QWidget *parent)
 #endif
 }
 
-ChatView::~ChatView()
+PlainTextChatView::~PlainTextChatView()
 {
 }
 
-void ChatView::setDialog(QWidget* dialog)
+void PlainTextChatView::setDialog(QWidget* dialog)
 {
 	dialog_ = dialog;
 }
 
-QSize ChatView::sizeHint() const
+QSize PlainTextChatView::sizeHint() const
 {
 	return minimumSizeHint();
 }
 
-bool ChatView::focusNextPrevChild(bool next)
+bool PlainTextChatView::focusNextPrevChild(bool next)
 {
 	return QWidget::focusNextPrevChild(next);
 }
 
-void ChatView::keyPressEvent(QKeyEvent *e)
+void PlainTextChatView::keyPressEvent(QKeyEvent *e)
 {
 /*	if(e->key() == Qt::Key_Escape)
 		e->ignore(); 
@@ -107,13 +108,16 @@ void ChatView::keyPressEvent(QKeyEvent *e)
 
 /**
  * Copies any selected text to the clipboard
- * if autoCopy is enabled and ChatView is in read-only mode.
+ * if autoCopy is enabled and PlainTextChatView is in read-only mode.
  */
-void ChatView::autoCopy()
+void PlainTextChatView::autoCopy()
 {
+	//wv dec
+	/*
 	if (isReadOnly() && PsiOptions::instance()->getOption("options.ui.automatically-copy-selected-text").toBool()) {
 		copy();
 	}
+	*/
 }
 
 /**
@@ -123,7 +127,7 @@ void ChatView::autoCopy()
  * \param event received event
  * \param chatEdit pointer to the dialog's ChatEdit widget that receives user input
  */
-bool ChatView::handleCopyEvent(QObject *object, QEvent *event, ChatEdit *chatEdit)
+bool PlainTextChatView::handleCopyEvent(QObject *object, QEvent *event, ChatEdit *chatEdit)
 {
 	if (object == chatEdit && event->type() == QEvent::KeyPress) {
 		QKeyEvent *e = (QKeyEvent *)event;
@@ -142,7 +146,7 @@ bool ChatView::handleCopyEvent(QObject *object, QEvent *event, ChatEdit *chatEdi
 	return false;
 }
 
-void ChatView::appendText(const QString &text)
+void PlainTextChatView::appendText(const QString &text)
 {
 	bool doScrollToBottom = atBottom();
 	
@@ -162,7 +166,7 @@ void ChatView::appendText(const QString &text)
  * \brief Common function for ChatDlg and GCMainDlg. FIXME: Extract common
  * chat window from both dialogs and move this function to that class.
  */
-QString ChatView::formatTimeStamp(const QDateTime &time)
+QString PlainTextChatView::formatTimeStamp(const QDateTime &time)
 {
 	// TODO: provide an option for user to customize
 	// time stamp format
