@@ -15,31 +15,17 @@ class ChatView;
 class ChatEdit;
 
 
-class PlainTextChatView__ : public ChatView {
+/** used only in chatdlg */
+class __PlainTextChatView : public ChatView {
 
     Q_OBJECT
-
 public:
-    PlainTextChatView__(QWidget* parent);
-
     void appendEvent(const ChatEvent* event);
     void appendMessage(const MessageChatEvent* event);
 
     void clear();
 
     void init();
-
-    //~ChatView__()
-
-
-};
-
-
-/** used only in chatdlg */
-class __PlainTextChatView : public PlainTextChatView__ {
-
-    Q_OBJECT
-public:
 
 
     void setReadOnly(bool readOnly) {
@@ -57,11 +43,13 @@ public:
     }
 
 
-    __PlainTextChatView(QWidget *parent) : PlainTextChatView__(parent), _dialog(0), textview(parent) {
+    __PlainTextChatView(QWidget *parent) : ChatView(parent), _dialog(0), textview(this) {
     }
 
 
     //TODO remove/change this
+
+
     /**
      * Handle KeyPress events that happen in ChatEdit widget. This is used
      * to 'fix' the copy shortcut.
@@ -83,6 +71,39 @@ public:
         }
 
         return false;
+    }
+
+
+    void appendText(const QString &text) {
+        bool doScrollToBottom = atBottom();
+
+        // prevent scrolling back to selected text when 
+        // restoring selection
+        int scrollbarValue = verticalScrollBar()->value();
+
+        textview.appendText(text);
+
+        if (doScrollToBottom)
+            scrollToBottom();
+        else
+            verticalScrollBar()->setValue(scrollbarValue);
+    }
+
+
+    /**
+     * This function returns true if vertical scroll bar is 
+     * at its maximum position.
+     */
+    bool atBottom() {
+        // '32' is 32 pixels margin, which was used in the old code
+        return (verticalScrollBar()->maximum() - verticalScrollBar()->value()) <= 32;
+    }
+
+    //reimplemented
+
+
+    QSize sizeHint() const {
+        return textview.minimumSizeHint();
     }
 
     public

@@ -218,6 +218,10 @@ HEADERS += \
 	$$PWD/psichatedit.h\
 	$$PWD/plaintextchatview.h\
 	$$PWD/chatview.h\
+	$$PWD/chatEvent.h\
+	$$PWD/userchatevent.h\
+	$$PWD/emotechatevent.h\
+	$$PWD/abstractChatEvent.h\
 
 
 # Source files
@@ -331,6 +335,10 @@ SOURCES += \
 	$$PWD/bookmarkmanagedlg.cpp\
 	$$PWD/plaintextchatview.cpp\
 	$$PWD/chatview.cpp\
+	$$PWD/chatEvent.cpp\
+	$$PWD/userchatevent.cpp\
+	$$PWD/emotechatevent.cpp\
+	$$PWD/abstractChatEvent.cpp\
 
 whiteboarding {
 	# Whiteboarding support. Still experimental.

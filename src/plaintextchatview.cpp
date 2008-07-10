@@ -1,22 +1,20 @@
 #include "plaintextchatview.h"
 
 
-PlainTextChatView__::PlainTextChatView__(QWidget* parent)
-: ChatView(parent) {
 
-}
-
-void PlainTextChatView__::appendEvent(const ChatEvent* event) {
-}
-
-
-void PlainTextChatView__::appendMessage(const MessageChatEvent* event) {
+void __PlainTextChatView::appendEvent(const ChatEvent* event) {
+    //TODO we need plaintextchattheme
+   appendText("got event"); 
 }
 
 
-void PlainTextChatView__::clear() {
+void __PlainTextChatView::appendMessage(const MessageChatEvent* event) {
 }
 
 
-void PlainTextChatView__::init() {
+void __PlainTextChatView::clear() {
+}
+
+
+void __PlainTextChatView::init() {
 }

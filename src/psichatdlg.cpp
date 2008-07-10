@@ -39,6 +39,8 @@
 #include "jidutil.h"
 #include "textutil.h"
 
+#include "emotechatevent.h"
+
 
 PsiChatDlg::PsiChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager)
 : ChatDlg(jid, pa, tabManager) {
@@ -374,30 +376,33 @@ void PsiChatDlg::updateCounter() {
 
 void PsiChatDlg::appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) {
     updateLastMsgTime(time);
-    //TODO wv EmoteChatEvent
-    /*
-    QString color = colorString(local, spooled);
-    QString timestr = chatView()->formatTimeStamp(time);
 
-    chatView()->appendText(QString("<span style=\"color: %1\">").arg(color) + QString("[%1]").arg(timestr) + QString(" *%1 ").arg(whoNick(local)) + txt + "</span>");
-     */
+    EmoteChatEvent * ev = new EmoteChatEvent(); //ev will be freed in ChatView
+    ev->setJid(whoNick(local));
+    ev->setTimeStamp(time);
+    ev->setLocal(local);
+    //TODO spooled
+    ev->setService("Jabber");
+    ev->setMessage(txt);//TODO escape
+
+    chatView()->appendEvent(ev);
 }
 
 
 void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) {
     updateLastMsgTime(time);
     //TODO wv appendMessage
-    /*
-    QString color = colorString(local, spooled);
-    QString timestr = chatView()->formatTimeStamp(time);
+    
+    QString color = "#FF0000";//= colorString(local, spooled);
+    QString timestr = "czias"; //chatView()->formatTimeStamp(time);
 
-    if (PsiOptions::instance()->getOption("options.ui.chat.use-chat-says-style").toBool()) {
-        chatView()->appendText(QString("<p style=\"color: %1\">").arg(color) + QString("[%1] ").arg(timestr) + tr("%1 says:").arg(whoNick(local)) + "</p>" + txt);
-    }
-    else {
+//    if (PsiOptions::instance()->getOption("options.ui.chat.use-chat-says-style").toBool()) {
+  //      chatView()->appendText(QString("<p style=\"color: %1\">").arg(color) + QString("[%1] ").arg(timestr) + tr("%1 says:").arg(whoNick(local)) + "</p>" + txt);
+    //}
+//    else {
         chatView()->appendText(QString("<span style=\"color: %1\">").arg(color) + QString("[%1] &lt;").arg(timestr) + whoNick(local) + QString("&gt;</span> ") + txt);
-    }
-     */
+  //  }
+     
 }
 
 
