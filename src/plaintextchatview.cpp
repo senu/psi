@@ -2,7 +2,7 @@
 
 
 PlainTextChatView__::PlainTextChatView__(QWidget* parent)
-: ChatView__(parent) {
+: ChatView(parent) {
 
 }
 

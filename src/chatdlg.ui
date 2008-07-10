@@ -326,7 +326,7 @@
   <customwidget>
    <class>__PlainTextChatView</class>
    <extends>QTextEdit</extends>
-   <header>msgmle.h</header>
+   <header>plaintextchatview.h</header>
   </customwidget>
   <customwidget>
    <class>ChatSplitter</class>

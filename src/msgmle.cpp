@@ -36,8 +36,6 @@
 #include <QDateTime>
 
 #include "shortcutmanager.h"
-#include "spellhighlighter.h"
-#include "spellchecker.h"
 #include "psioptions.h"
 
 
@@ -112,7 +110,7 @@ void PlainTextChatView::keyPressEvent(QKeyEvent *e)
  */
 void PlainTextChatView::autoCopy()
 {
-	//wv dec
+	//TODO wv dec
 	/*
 	if (isReadOnly() && PsiOptions::instance()->getOption("options.ui.automatically-copy-selected-text").toBool()) {
 		copy();

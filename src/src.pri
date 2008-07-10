@@ -214,7 +214,11 @@ HEADERS += \
 	$$PWD/psicontactlist.h \
 	$$PWD/accountlabel.h \
 	$$PWD/psiactions.h \
-	$$PWD/bookmarkmanagedlg.h
+	$$PWD/bookmarkmanagedlg.h\
+	$$PWD/psichatedit.h\
+	$$PWD/plaintextchatview.h\
+	$$PWD/chatview.h\
+
 
 # Source files
 SOURCES += \
@@ -324,7 +328,9 @@ SOURCES += \
 	$$PWD/psicon.cpp \
 	$$PWD/psiaccount.cpp \
 	$$PWD/accountlabel.cpp \
-	$$PWD/bookmarkmanagedlg.cpp
+	$$PWD/bookmarkmanagedlg.cpp\
+	$$PWD/plaintextchatview.cpp\
+	$$PWD/chatview.cpp\
 
 whiteboarding {
 	# Whiteboarding support. Still experimental.
