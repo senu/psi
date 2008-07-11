@@ -8,7 +8,7 @@ DEPENDPATH += . .
 CONFIG += tests qtestlib
 
 # Input
-HEADERS += chatMessageEvent.h \
+HEADERS += messagechatevent.h \
            chatTheme.h \
            chatView.h \
 		   abstractChatEvent.h \
@@ -29,7 +29,6 @@ HEADERS += chatMessageEvent.h \
 		   userchatevent.h\
 		   htmlchatedit.h\
 		   htmlchateditframe.h\
-		   plaintextchatview.h
 
 #FORMS = chatdlg.ui
 
@@ -44,7 +43,7 @@ tests {
 }
 
 
-SOURCES += abstractChatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main_chatdlg.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp testForm.cpp chatMessageEvent.cpp htmlChatPart.cpp statusChatEvent.cpp chatThemeList.cpp htmlChatThemeList.cpp messageValidator.cpp emoteChatEvent.cpp htmlchatemotetemplate.cpp jsNotifier.cpp userchatevent.cpp htmlchatedit.cpp htmlchateditframe.cpp plaintextchatview.cpp
+SOURCES += abstractChatEvent.cpp chatView.cpp fileTransferChatEvent.cpp main_chatdlg.cpp htmlChatView.cpp htmlChatTheme.cpp htmlChatTemplate.cpp testForm.cpp messagechatevent.cpp htmlChatPart.cpp statusChatEvent.cpp chatThemeList.cpp htmlChatThemeList.cpp messageValidator.cpp emoteChatEvent.cpp htmlchatemotetemplate.cpp jsNotifier.cpp userchatevent.cpp htmlchatedit.cpp htmlchateditframe.cpp 
 
 
 QT += webkit xml 

@@ -7,7 +7,7 @@
 #include <QFrame> 
 #include <QLineEdit>
 
-#include "chatMessageEvent.h"
+#include "messagechatevent.h"
 #include "htmlChatThemeList.h"
 #include "htmlChatView.h"
 #include "htmlchateditframe.h"

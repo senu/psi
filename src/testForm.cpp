@@ -10,7 +10,6 @@
 #include "htmlChatView.h"
 
 #include "htmlchateditframe.h"
-#include "plaintextchatview.h"
 
 
 TestForm::~TestForm() {
@@ -85,9 +84,6 @@ TestForm::TestForm(QWidget *parent)
 
     frame = new HTMLChatEditFrame(this, themePathEdit->text()+"/icons/");
     frame->move(0,750);
-
-    PlainTextChatView * view2 = new PlainTextChatView(this);
-    view2->setGeometry(0,0, 500, 400);
 
 	
     this->setGeometry(0, 0, 920, 950);
