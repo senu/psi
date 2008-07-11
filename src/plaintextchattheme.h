@@ -11,6 +11,7 @@
 #include "statusChatEvent.h"
 #include "messagechatevent.h"
 #include "emotechatevent.h"
+#include "systemchatevent.h"
 
 class ChatTheme;
 class FileTransferChatEvent;
@@ -29,17 +30,18 @@ public:
     /** Reads theme from filesystem */
     //    PlainTextChatTheme(QString path); //TODO theme options from psi options passed here
 
-    QString createIncomingMessagePart(const MessageChatEvent *) const;
-    QString createOutgoingMessagePart(const MessageChatEvent *) const;
+    QString createIncomingMessagePart(const MessageChatEvent* event) const;
+    QString createOutgoingMessagePart(const MessageChatEvent* event) const;
 
-    QString createFileTransferEventPart(const FileTransferChatEvent * event) const;
-    QString createStatusEventPart(const StatusChatEvent * event) const;
+    QString createFileTransferEventPart(const FileTransferChatEvent* event) const;
+    QString createStatusEventPart(const StatusChatEvent* event) const;
 
-    QString createEmoteEventPart(const EmoteChatEvent * event) const;
+    QString createEmoteEventPart(const EmoteChatEvent* event) const;
+    QString createSystemEventPart(const SystemChatEvent* event) const;
 private:
     /** Creates time string */
     QString formatTimeStamp(const QDateTime &time) const;
-    
+
     /** Returns color name based on message type*/
     QString colorString(bool local, bool isSpooled) const; //TODO make it customizable
 };

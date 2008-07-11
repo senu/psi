@@ -32,6 +32,7 @@
 #include "advwidget.h"
 
 #include "tabbablewidget.h"
+#include "systemchatevent.h"
 
 
 namespace XMPP
@@ -166,6 +167,7 @@ protected:
 	void appendMessage(const Message &, bool local = false);
 	virtual bool isEncryptionEnabled() const;
 	virtual void appendSysMsg(const QString& txt) = 0;
+	virtual void appendSysMsg(const SystemChatEvent* event) = 0;
 	virtual void appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) = 0;
 	virtual void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) = 0;
 	virtual void appendMessageFields(const Message& m) = 0;

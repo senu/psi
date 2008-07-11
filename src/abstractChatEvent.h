@@ -22,7 +22,7 @@ public:
     /** Sets timeStamp */
     void setTimeStamp(QDateTime timeStamp);
 
-private:
+protected:
 
     QDateTime _timeStamp;
 

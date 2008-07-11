@@ -45,6 +45,7 @@ public:
 
 
     __PlainTextChatView(QWidget *parent) : ChatView(parent), _dialog(0), textview(this) {
+        qDebug() << "pt v" << geometry();
     }
 
 

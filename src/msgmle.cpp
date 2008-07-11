@@ -35,6 +35,7 @@
 #include <QTimer>
 #include <QDateTime>
 
+#include <QDebug>
 #include "shortcutmanager.h"
 #include "psioptions.h"
 
@@ -69,6 +70,7 @@ void PlainTextChatView::setDialog(QWidget* dialog)
 
 QSize PlainTextChatView::sizeHint() const
 {
+    qDebug() << minimumSizeHint();
 	return minimumSizeHint();
 }
 

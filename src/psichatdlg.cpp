@@ -41,6 +41,8 @@
 
 #include "emotechatevent.h"
 #include "messagechatevent.h"
+#include "systemchatevent.h"
+#include "esystemchatevent.h"
 
 
 PsiChatDlg::PsiChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager)
@@ -410,7 +412,7 @@ void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time,
 
 void PsiChatDlg::appendMessageFields(const Message& m) {
     //TODO vw rf
-    /*
+
     if (!m.subject().isEmpty()) {
         chatView()->appendText(QString("<b>") + tr("Subject:") + "</b> " + QString("%1").arg(Qt::escape(m.subject())));
     }
@@ -423,7 +425,7 @@ void PsiChatDlg::appendMessageFields(const Message& m) {
             chatView()->appendText(QString("<b>") + tr("Desc:") + "</b> " + QString("%1").arg(u.desc()));
         }
     }
-     */
+
 }
 
 
@@ -432,16 +434,19 @@ bool PsiChatDlg::isEncryptionEnabled() const {
 }
 
 
-void PsiChatDlg::appendSysMsg(const QString &str) {
-    QDateTime t = QDateTime::currentDateTime();
-    updateLastMsgTime(t);
-    //TODO wv SystemMessage
-    /*
-    QString timestr = chatView()->formatTimeStamp(t);
-    QString color = "#00A000";
+void PsiChatDlg::appendSysMsg(const SystemChatEvent* event) {
+    chatView()->appendEvent(event);
+}
 
-    chatView()->appendText(QString("<font color=\"%1\">[%2]").arg(color, timestr) + QString(" *** %1</font>").arg(str));
-     */
+
+void PsiChatDlg::appendSysMsg(const QString &str) {
+    QDateTime time = QDateTime::currentDateTime();
+    updateLastMsgTime(time);
+
+    ExtendedSystemChatEvent * ev = new ExtendedSystemChatEvent(str);
+    ev->setType(SystemChatEvent::Other);
+
+    chatView()->appendEvent(ev);
 }
 
 

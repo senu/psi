@@ -790,13 +790,15 @@ void ChatDlg::appendMessage(const Message &m, bool local)
 
 	if (encChanged) {
 		if (encEnabled) {
-			appendSysMsg(QString("<icon name=\"psi/cryptoYes\"> ") + tr("Encryption Enabled"));
+            SystemChatEvent * ev = new SystemChatEvent(SystemChatEvent::EncryptionEnabled); //freed in chatview
+			appendSysMsg(ev);
 			if (!local) {
 				setPGPEnabled(true);
 			}
 		}
 		else {
-			appendSysMsg(QString("<icon name=\"psi/cryptoNo\"> ") + tr("Encryption Disabled"));
+            SystemChatEvent * ev = new SystemChatEvent(SystemChatEvent::EncryptionDisabled); //freed in chatview
+			appendSysMsg(ev);
 			if (!local) {
 				setPGPEnabled(false);
 

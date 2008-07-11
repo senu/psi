@@ -53,6 +53,7 @@ public:
     QString createStatusEventPart(const StatusChatEvent * event) const;
 
     QString createEmoteEventPart(const EmoteChatEvent * event) const;
+    QString createSystemEventPart(const SystemChatEvent*) const;
 
     /** Fills part (footer/header) with keywords (chatName, timeOpened) */
     void fillPartWithThemeKeywords(HTMLChatPart& part, ChatTheme::ChatInfo sessionInfo) const;

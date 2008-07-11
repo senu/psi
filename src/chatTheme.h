@@ -9,6 +9,7 @@ class MessageChatEvent;
 class FileTransferChatEvent;
 class StatusChatEvent;
 class EmoteChatEvent;
+class SystemChatEvent;
 
 /** Chat theme; Used by ChatEvents (create*Part) and ChatView */
 class ChatTheme 													
@@ -22,6 +23,9 @@ class ChatTheme
 	virtual QString createFileTransferEventPart(const FileTransferChatEvent* ) const = 0; 
 	virtual QString createStatusEventPart(const StatusChatEvent* ) const = 0; 
 	virtual QString createEmoteEventPart(const EmoteChatEvent* ) const = 0; 
+	virtual QString createSystemEventPart(const SystemChatEvent* ) const = 0; 
+
+    
 
 	virtual ~ChatTheme() {};
 

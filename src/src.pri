@@ -221,6 +221,8 @@ HEADERS += \
 	$$PWD/chatEvent.h\
 	$$PWD/userchatevent.h\
 	$$PWD/emotechatevent.h\
+	$$PWD/systemchatevent.h\
+	$$PWD/esystemchatevent.h\
 	$$PWD/abstractChatEvent.h\
 	$$PWD/messagechatevent.h\
 	$$PWD/plaintextchattheme.h\
@@ -340,6 +342,8 @@ SOURCES += \
 	$$PWD/chatEvent.cpp\
 	$$PWD/userchatevent.cpp\
 	$$PWD/emotechatevent.cpp\
+	$$PWD/esystemchatevent.cpp\
+	$$PWD/systemchatevent.cpp\
 	$$PWD/messagechatevent.cpp\
 	$$PWD/abstractChatEvent.cpp\
 
