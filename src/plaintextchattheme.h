@@ -9,7 +9,7 @@
 
 #include "fileTransferChatEvent.h"
 #include "statusChatEvent.h"
-#include "chatMessageEvent.h"
+#include "messagechatevent.h"
 #include "emotechatevent.h"
 
 class ChatTheme;

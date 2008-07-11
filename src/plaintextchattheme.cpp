@@ -15,11 +15,25 @@ QString PlainTextChatTheme::createEmoteEventPart(const EmoteChatEvent * event) c
 }
 
 
-QString PlainTextChatTheme::createIncomingMessagePart(const MessageChatEvent *) const {
+QString PlainTextChatTheme::createIncomingMessagePart(const MessageChatEvent * event) const {
+
+    QString color(colorString(event->isLocal(), event->isSpooled()));
+    QString timeStr(formatTimeStamp(event->timeStamp()));
+    
+    //if (PsiOptions::instance()->getOption("options.ui.chat.use-chat-says-style").toBool()) { //TODO
+    if (0) {
+        return QString("<p style=\"color: %1\">").arg(color) + QString("[%1] ").arg(timeStr)
+                + QObject::tr("%1 says:").arg(event->nick()) + "</p>" + event->body();
+    }
+    else {
+        return QString("<span style=\"color: %1\">").arg(color) + QString("[%1] &lt;").arg(timeStr)
+                + event->nick() + QString("&gt;</span> ") + event->body();
+    }
 }
 
 
-QString PlainTextChatTheme::createOutgoingMessagePart(const MessageChatEvent *) const {
+QString PlainTextChatTheme::createOutgoingMessagePart(const MessageChatEvent * event) const {
+    return createIncomingMessagePart(event); 
 }
 
 

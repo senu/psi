@@ -16,6 +16,14 @@ void __PlainTextChatView::appendEvent(const ChatEvent* event) {
 
 
 void __PlainTextChatView::appendMessage(const MessageChatEvent* event) {
+    QString part;
+    
+    if (event->isLocal())
+        part = theme.createOutgoingMessagePart(event);
+    else
+        part = theme.createIncomingMessagePart(event);
+
+    appendText(part);
 }
 
 

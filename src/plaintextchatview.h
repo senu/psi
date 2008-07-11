@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QScrollBar>
+#include <QtDebug>
 #include "chatView.h"
 #include "psitextview.h"
 #include "psichatedit.h"
@@ -102,8 +103,9 @@ public:
     //reimplemented
 
 
-    QSize sizeHint() const {
-        return textview.minimumSizeHint();
+    QSize sizeHint() const { //TODO
+        qDebug() << "sizeHint" << minimumSizeHint() << textview.minimumSizeHint();
+        return minimumSizeHint();
     }
 
     public

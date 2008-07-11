@@ -40,6 +40,7 @@
 #include "textutil.h"
 
 #include "emotechatevent.h"
+#include "messagechatevent.h"
 
 
 PsiChatDlg::PsiChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager)
@@ -378,13 +379,13 @@ void PsiChatDlg::appendEmoteMessage(SpooledType spooled, const QDateTime& time, 
     updateLastMsgTime(time);
 
     EmoteChatEvent * ev = new EmoteChatEvent(); //ev will be freed in ChatView
-//    ev->setJid(whoNick(local)); //TODO
+    //    ev->setJid(whoNick(local)); //TODO
     ev->setNick(whoNick(local));
     ev->setTimeStamp(time);
     ev->setLocal(local);
-    //TODO spooled
+    ev->setSpooled(spooled);
     ev->setService("Jabber");
-    ev->setMessage(txt);//TODO escape
+    ev->setMessage(txt); //TODO escape?
 
     chatView()->appendEvent(ev);
 }
@@ -392,18 +393,18 @@ void PsiChatDlg::appendEmoteMessage(SpooledType spooled, const QDateTime& time, 
 
 void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) {
     updateLastMsgTime(time);
-    //TODO wv appendMessage
-    
-    QString color = "#FF0000";//= colorString(local, spooled);
-    QString timestr = "czias"; //chatView()->formatTimeStamp(time);
 
-//    if (PsiOptions::instance()->getOption("options.ui.chat.use-chat-says-style").toBool()) {
-  //      chatView()->appendText(QString("<p style=\"color: %1\">").arg(color) + QString("[%1] ").arg(timestr) + tr("%1 says:").arg(whoNick(local)) + "</p>" + txt);
-    //}
-//    else {
-        chatView()->appendText(QString("<span style=\"color: %1\">").arg(color) + QString("[%1] &lt;").arg(timestr) + whoNick(local) + QString("&gt;</span> ") + txt);
-  //  }
-     
+    MessageChatEvent * msg = new MessageChatEvent(); //will be created in another place, of course
+
+    msg->setNick(whoNick(local));
+    msg->setTimeStamp(time);
+    msg->setLocal(local);
+    msg->setSpooled(spooled);
+    msg->setService("Jabber");
+    msg->setBody(txt); //TODO escape?
+
+    chatView()->appendMessage(msg);
+
 }
 
 
@@ -474,10 +475,10 @@ void PsiChatDlg::chatEditCreated() {
 
 
 void PsiChatDlg::updateLastMsgTime(QDateTime t) {
+    lastMsgTime_ = t; //TODO ?
     //TODO wv remove
     /*
     bool doInsert = t.date() != lastMsgTime_.date();
-    lastMsgTime_ = t;
     if (doInsert) {
         QString color = "#00A000";
         chatView()->appendText(QString("<font color=\"%1\">*** %2</font>").arg(color).arg(t.date().toString(Qt::ISODate)));

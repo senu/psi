@@ -222,7 +222,8 @@ HEADERS += \
 	$$PWD/userchatevent.h\
 	$$PWD/emotechatevent.h\
 	$$PWD/abstractChatEvent.h\
-	$$PWD/plaintextchattheme.cpp\
+	$$PWD/messagechatevent.h\
+	$$PWD/plaintextchattheme.h\
 
 # Source files
 SOURCES += \
@@ -339,6 +340,7 @@ SOURCES += \
 	$$PWD/chatEvent.cpp\
 	$$PWD/userchatevent.cpp\
 	$$PWD/emotechatevent.cpp\
+	$$PWD/messagechatevent.cpp\
 	$$PWD/abstractChatEvent.cpp\
 
 whiteboarding {

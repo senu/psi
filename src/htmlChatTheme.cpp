@@ -127,6 +127,7 @@ QString HTMLChatTheme::createIncomingMessagePart(const MessageChatEvent * event)
 
 
 QString HTMLChatTheme::createOutgoingMessagePart(const MessageChatEvent * event) const {
+    
     HTMLChatPart part;
 
     if (event->isConsecutive()) {
