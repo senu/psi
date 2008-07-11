@@ -1,10 +1,17 @@
 #include "plaintextchatview.h"
 
 
-
 void __PlainTextChatView::appendEvent(const ChatEvent* event) {
-    //TODO we need plaintextchattheme
-   appendText("got event"); 
+    QString part = event->getRightTemplateAndFillItWithData(theme);
+    //TODO ask kev - will we hide PT chat view or destroy it and refill with messages when recreated?
+    /*
+        if (!alreadyAppended) {
+            appendedEvents.append(event);
+        }
+     **/
+
+
+    appendText(part);
 }
 
 

@@ -6,7 +6,7 @@
 #include "chatView.h"
 #include "psitextview.h"
 #include "psichatedit.h"
-
+#include "plaintextchattheme.h"
 
 //#include "msgmle.h"
 
@@ -128,7 +128,10 @@ slots:
 
 protected:
     QWidget* _dialog;
+    
     PsiTextView textview;
+    PlainTextChatTheme theme;
+            
 
 };
 

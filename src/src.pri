@@ -222,7 +222,7 @@ HEADERS += \
 	$$PWD/userchatevent.h\
 	$$PWD/emotechatevent.h\
 	$$PWD/abstractChatEvent.h\
-
+	$$PWD/plaintextchattheme.cpp\
 
 # Source files
 SOURCES += \
@@ -334,6 +334,7 @@ SOURCES += \
 	$$PWD/accountlabel.cpp \
 	$$PWD/bookmarkmanagedlg.cpp\
 	$$PWD/plaintextchatview.cpp\
+	$$PWD/plaintextchattheme.cpp\
 	$$PWD/chatview.cpp\
 	$$PWD/chatEvent.cpp\
 	$$PWD/userchatevent.cpp\

@@ -52,6 +52,25 @@ void UserChatEvent::setUserStatusIcon(QString userStatusIcon) {
 }
 
 
+void UserChatEvent::setLocal(bool is) {
+    _isLocal = is;
+}
+
+
+bool UserChatEvent::isLocal() const {
+    return _isLocal;
+}
+
+
+void UserChatEvent::setSpooled(bool is) {
+    _isSpooled = is;
+}
+
+
+bool UserChatEvent::isSpooled() const {
+    return _isSpooled;
+}
+
 uint UserChatEvent::userHash() const {
     return qHash(_jid);
 }

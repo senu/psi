@@ -22,10 +22,6 @@ public:
     QString body() const;
 
     bool wasEncrypted();
-
-    bool isLocal() const; //our messgage? (outgoing)
-    bool isSpooled() const; // offline storage
-
     bool isConsecutive() const;
 
     //setters
@@ -34,9 +30,6 @@ public:
 
     bool setWasEncrypted();
 
-    /** Is it our message? */
-    void setLocal(bool); //our message? (outgoing)
-    void setSpooled(bool); // offline storage
     void setConsecutive(bool);
 
     //reimplemented 
@@ -46,8 +39,6 @@ private:
     QString _body;
 
     bool _isConsecutive;
-    bool _isSpooled;
-    bool _isLocal;
 
 
 };

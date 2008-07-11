@@ -378,7 +378,8 @@ void PsiChatDlg::appendEmoteMessage(SpooledType spooled, const QDateTime& time, 
     updateLastMsgTime(time);
 
     EmoteChatEvent * ev = new EmoteChatEvent(); //ev will be freed in ChatView
-    ev->setJid(whoNick(local));
+//    ev->setJid(whoNick(local)); //TODO
+    ev->setNick(whoNick(local));
     ev->setTimeStamp(time);
     ev->setLocal(local);
     //TODO spooled

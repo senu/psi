@@ -27,16 +27,6 @@ bool MessageChatEvent::isConsecutive() const {
 }
 
 
-void MessageChatEvent::setLocal(bool is) {
-    _isLocal = is;
-}
-
-
-bool MessageChatEvent::isLocal() const {
-    return _isLocal;
-}
-
-
 bool MessageChatEvent::isMessageChatEvent() const {
     return true;
 }

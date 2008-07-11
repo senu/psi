@@ -9,18 +9,27 @@
  *   
  *  For message and status events  
  */
-class UserChatEvent : virtual public AbstractChatEvent { 
-
-public:
+class UserChatEvent : virtual public AbstractChatEvent {
+ public:
 
     QString jid() const;
     QString nick() const;
     QString userIconPath() const;
     QString service() const;
+    
+    /** Is it our message? */
+    bool isLocal() const;
+    
+    /** offline storage */ //TODO enum/ better name
+    bool isSpooled() const;
+    
     void setJid(QString);
     void setNick(QString);
-    void setService(QString);
     void setUserIconPath(QString);
+    void setService(QString);
+    void setLocal(bool); //our message? (outgoing)
+    void setSpooled(bool); // offline storage
+
 
     /** Returns userStatusIcon */
     QString userStatusIcon() const;
@@ -38,6 +47,9 @@ private:
     QString _service;
     QString _userIconPath;
     QString _userStatusIcon;
+
+    bool _isSpooled;
+    bool _isLocal;
 
 };
 
