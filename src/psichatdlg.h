@@ -54,11 +54,13 @@ private:
 	void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
 	void appendMessageFields(const Message& m);
 	void updateLastMsgTime(QDateTime t);
-	__PlainTextChatView* chatView() const;
+	ChatView* chatView() const;
 	ChatEdit* chatEdit() const;
 
 private:
 	Ui::ChatDlg ui_;
+
+    ChatView * _chatView;
 
 	QMenu* pm_settings_;
 

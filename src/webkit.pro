@@ -12,12 +12,13 @@ HEADERS += messagechatevent.h \
            chatTheme.h \
            chatView.h \
 		   abstractChatEvent.h \
-		   chatEvent.h\
 		   fileTransferChatEvent.h \
 		   statusChatEvent.h\
 		   emoteChatEvent.h\
+		   userchatevent.h\
+		   chatEvent.h\
            htmlChatTemplate.h \
-		   htmlchatemotetemplate.cpp\
+		   htmlchatemotetemplate.h\
            htmlChatTheme.h \
            htmlChatView.h \
            testForm.h \
@@ -26,7 +27,6 @@ HEADERS += messagechatevent.h \
 		   chatThemeList.h\
 		   htmlChatThemeList.h\
 		   jsNotifier.h\
-		   userchatevent.h\
 		   htmlchatedit.h\
 		   htmlchateditframe.h\
 

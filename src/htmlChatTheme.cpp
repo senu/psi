@@ -17,7 +17,7 @@ HTMLChatTheme::HTMLChatTheme() {
 
 QString HTMLChatTheme::readFileContents(QDir dir, QString relativePath) {
     QFile file(dir.absoluteFilePath(relativePath));
-    //    qDebug() << "loading theme" << dir.absoluteFilePath(relativePath);
+    qDebug() << "loading theme file" << dir.absoluteFilePath(relativePath);
 
     if (!file.open(QIODevice::ReadOnly)) {
         qDebug() << "WARNING\n\n" << "file not found"; //TODO 
@@ -150,21 +150,21 @@ QString HTMLChatTheme::createFileTransferEventPart(const FileTransferChatEvent *
     FileTransferChatEvent::FileTransferEventType type = event->type;
 
     QString eventText, //TODO translate
-            statusStr; //%status%
+        statusStr; //%status%
 
 
     switch (type) {
         case FileTransferChatEvent::Finished :
 
-                    eventText = "Finished downloading " + event->fileName() + ".";
+                eventText = "Finished downloading " + event->fileName() + ".";
             statusStr = "fileTransferComplete";
             break;
         case FileTransferChatEvent::Initiated :
-                    eventText = "Incoming file transfer" + event->fileName() + ".";
+                eventText = "Incoming file transfer" + event->fileName() + ".";
             statusStr = "fileTransferBegan";
             break;
         case FileTransferChatEvent::Aborted :
-                    eventText = "Aborted downloading " + event->fileName() + ".";
+                eventText = "Aborted downloading " + event->fileName() + ".";
             statusStr = "fileTransferAborted"; //TODO not in adium!
             break;
     }
@@ -185,25 +185,25 @@ QString HTMLChatTheme::createStatusEventPart(const StatusChatEvent * event) cons
 
     switch (type) {
         case StatusChatEvent::Online :
-                    statusStr = "online";
+                statusStr = "online";
             break;
         case StatusChatEvent::Offline :
-                    statusStr = "offline";
+                statusStr = "offline";
             break;
         case StatusChatEvent::Away :
-                    statusStr = "idle"; //TODO ask Kev (adium compatibility)
+                statusStr = "idle"; //TODO ask Kev (adium compatibility)
             break;
         case StatusChatEvent::Xa :
-                    statusStr = "away";
+                statusStr = "away";
             break;
         case StatusChatEvent::Dnd :
-                    statusStr = "away";
+                statusStr = "away";
             break;
         case StatusChatEvent::Chat :
-                    statusStr = "online";
+                statusStr = "online";
             break;
         case StatusChatEvent::Invisible : //TODO - ?!?
-                    statusStr = "offline";
+                statusStr = "offline";
             break;
     }
 
@@ -251,8 +251,9 @@ QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const 
 
 
 QString HTMLChatTheme::createSystemEventPart(const SystemChatEvent*) const {
-    return "sysmessage";//TODO
+    return "sysmessage"; //TODO
 }
+
 
 void HTMLChatTheme::fillPartWithUserKeywords(HTMLChatPart& part, const UserChatEvent* event) const {
 

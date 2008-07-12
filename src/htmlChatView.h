@@ -34,8 +34,25 @@ public:
     /** Only in dev version; (only for loading JavaScript file); path to theme/ dir */
     QString themePath;
 
+
+    //reimplemented
+    bool atBottom() const;
+
+
     public
+
+
 slots:
+    /**
+     * Scrolls the vertical scroll bar to its maximum position i.e. to the bottom.
+     */
+    void scrollToBottom();
+
+    /**
+     * Scrolls the vertical scroll bar to its minimum position i.e. to the top.
+     */
+    void scrollToTop();
+
     void evaluateJS(QString scriptSource);
 
     /** Reads JavaScript code (function definitions) from file and evaluates it in webkit */

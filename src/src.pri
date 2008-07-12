@@ -1,4 +1,4 @@
-QT += xml network qt3support
+QT += xml network qt3support webkit
 
 # cutestuff
 include($$PWD/../cutestuff/cutestuff.pri)
@@ -226,6 +226,15 @@ HEADERS += \
 	$$PWD/abstractChatEvent.h\
 	$$PWD/messagechatevent.h\
 	$$PWD/plaintextchattheme.h\
+	$$PWD/chatviewfactory.h\
+	$$PWD/htmlChatView.h\
+	$$PWD/htmlChatTheme.h\
+	$$PWD/htmlChatTemplate.h \
+	$$PWD/htmlchatemotetemplate.h\
+	$$PWD/htmlChatPart.h\
+	$$PWD/fileTransferChatEvent.h \
+	$$PWD/statuschatevent.h \
+	$$PWD/jsNotifier.h\
 
 # Source files
 SOURCES += \
@@ -346,6 +355,16 @@ SOURCES += \
 	$$PWD/systemchatevent.cpp\
 	$$PWD/messagechatevent.cpp\
 	$$PWD/abstractChatEvent.cpp\
+	$$PWD/chatviewfactory.cpp\
+	$$PWD/htmlChatView.cpp\
+	$$PWD/htmlChatTheme.cpp\
+	$$PWD/htmlChatTemplate.cpp \
+	$$PWD/htmlchatemotetemplate.cpp\
+	$$PWD/htmlChatPart.cpp\
+	$$PWD/fileTransferChatEvent.cpp \
+	$$PWD/jsNotifier.cpp\
+	$$PWD/statuschatevent.cpp \
+
 
 whiteboarding {
 	# Whiteboarding support. Still experimental.

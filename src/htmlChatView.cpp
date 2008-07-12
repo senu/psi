@@ -23,7 +23,7 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, QString _them
     _chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg";
     _chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";
     _chatInfo.timeOpened = QDateTime::currentDateTime();
-  
+
     connect(webView.page(), SIGNAL(linkClicked(const QUrl&)), this, SLOT(onLinkClicked(const QUrl&)));
 
 }
@@ -99,8 +99,7 @@ void HTMLChatView::onAppendFinished() {
 
 
 void HTMLChatView::onDoScrolling() {
-    webView.page()->mainFrame()->setScrollBarValue(Qt::Vertical, 10000); //TODO 
-    //    qDebug() << "scroll";
+    scrollToBottom();
     emit appendFinished();
 }
 
@@ -188,8 +187,9 @@ void HTMLChatView::evaluateJS(QString scriptSource) {
 void HTMLChatView::importJSChatFunctions() {
     // reading from file only while developing	
     QFile file(themePath + "/htmlChatView.js");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        exit(7);
+    }
 
     QString jsCode = file.readAll();
     evaluateJS(jsCode);
@@ -243,5 +243,21 @@ void HTMLChatView::setTheme(HTMLChatTheme _theme) {
 }
 
 
+bool HTMLChatView::atBottom() const {
+    return (webView.page()->mainFrame()->scrollBarMaximum(Qt::Vertical) ==
+        webView.page()->mainFrame()->scrollBarValue(Qt::Vertical));
+}
 
+
+void HTMLChatView::scrollToBottom() {
+    webView.page()->mainFrame()->setScrollBarValue(
+                                                   Qt::Vertical,
+                                                   webView.page()->mainFrame()->scrollBarMaximum(Qt::Vertical)
+                                                   );
+}
+
+
+void HTMLChatView::scrollToTop() {
+    webView.page()->mainFrame()->setScrollBarValue(Qt::Vertical, 0);
+}
 

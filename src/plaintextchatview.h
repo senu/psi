@@ -34,17 +34,7 @@ public:
     }
 
 
-    QScrollBar * verticalScrollBar() const {
-        return textview.verticalScrollBar();
-    }
-
-
-    void setDialog(QWidget* dialog) {
-        _dialog = dialog;
-    }
-
-
-    __PlainTextChatView(QWidget *parent) : ChatView(parent), _dialog(0), textview(this) {
+    __PlainTextChatView(QWidget *parent) : ChatView(parent), textview(this) {
         qDebug() << "pt v" << geometry();
     }
 
@@ -63,9 +53,9 @@ public:
         if (object == chatEdit && event->type() == QEvent::KeyPress) {
             QKeyEvent *e = (QKeyEvent *) event;
             if ((e->key() == Qt::Key_C && (e->modifiers() & Qt::ControlModifier)) ||
-                    (e->key() == Qt::Key_Insert && (e->modifiers() & Qt::ControlModifier))) {
+                (e->key() == Qt::Key_Insert && (e->modifiers() & Qt::ControlModifier))) {
                 if (!chatEdit->textCursor().hasSelection() &&
-                        textview.textCursor().hasSelection()) {
+                    textview.textCursor().hasSelection()) {
                     textview.copy();
                     return true;
                 }
@@ -91,23 +81,22 @@ public:
             verticalScrollBar()->setValue(scrollbarValue);
     }
 
-
-    /**
-     * This function returns true if vertical scroll bar is 
-     * at its maximum position.
-     */
-    bool atBottom() {
-        // '32' is 32 pixels margin, which was used in the old code
-        return (verticalScrollBar()->maximum() - verticalScrollBar()->value()) <= 32;
-    }
-
     //reimplemented
+
+    /** Used for scrollToTop/Bottom */
+    QScrollBar * verticalScrollBar() const;
 
 
     QSize sizeHint() const { //TODO
         qDebug() << "sizeHint" << minimumSizeHint() << textview.minimumSizeHint();
         return minimumSizeHint();
     }
+
+    /**
+     * This function returns true if vertical scroll bar is 
+     * at its maximum position.
+     */
+    bool atBottom() const;
 
     public
 
@@ -116,25 +105,18 @@ slots:
     /**
      * Scrolls the vertical scroll bar to its maximum position i.e. to the bottom.
      */
-    void scrollToBottom() {
-        verticalScrollBar()->setValue(verticalScrollBar()->maximum());
-    }
-
+    virtual void scrollToBottom();
 
     /**
      * Scrolls the vertical scroll bar to its minimum position i.e. to the top.
      */
-    void scrollToTop() {
-        verticalScrollBar()->setValue(verticalScrollBar()->minimum());
-    }
+    virtual void scrollToTop();
 
 
 protected:
-    QWidget* _dialog;
-    
     PsiTextView textview;
     PlainTextChatTheme theme;
-            
+
 
 };
 

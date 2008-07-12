@@ -44,6 +44,8 @@
 #include "systemchatevent.h"
 #include "esystemchatevent.h"
 
+#include "chatviewfactory.h"
+
 
 PsiChatDlg::PsiChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager)
 : ChatDlg(jid, pa, tabManager) {
@@ -60,6 +62,12 @@ void PsiChatDlg::initUi() {
     ui_.lb_status->setPsiIcon(IconsetFactory::iconPtr("status/noauth"));
 
     ui_.tb_emoticons->setIcon(IconsetFactory::icon("psi/smile").icon());
+
+
+    _chatView = ChatViewFactory::createChatView(false, "TODO@jabber.org", this);
+    _chatView->setGeometry(0,20,400,440);
+    _chatView->init();
+    
 
     connect(ui_.mle, SIGNAL(textEditCreated(QTextEdit*)), SLOT(chatEditCreated()));
     chatEditCreated();
@@ -401,6 +409,7 @@ void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time,
     msg->setNick(whoNick(local));
     msg->setTimeStamp(time);
     msg->setLocal(local);
+    msg->setConsecutive(false);
     msg->setSpooled(spooled);
     msg->setService("Jabber");
     msg->setBody(txt); //TODO escape?
@@ -413,6 +422,7 @@ void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time,
 void PsiChatDlg::appendMessageFields(const Message& m) {
     //TODO vw rf
 
+    /*
     if (!m.subject().isEmpty()) {
         chatView()->appendText(QString("<b>") + tr("Subject:") + "</b> " + QString("%1").arg(Qt::escape(m.subject())));
     }
@@ -425,6 +435,7 @@ void PsiChatDlg::appendMessageFields(const Message& m) {
             chatView()->appendText(QString("<b>") + tr("Desc:") + "</b> " + QString("%1").arg(u.desc()));
         }
     }
+    */
 
 }
 
@@ -461,8 +472,9 @@ QString PsiChatDlg::colorString(bool local, ChatDlg::SpooledType spooled) const 
 }
 
 
-__PlainTextChatView* PsiChatDlg::chatView() const {
-    return ui_.log;
+ChatView* PsiChatDlg::chatView() const {
+//    return ui_.log; //TODO
+    return _chatView;
 }
 
 
