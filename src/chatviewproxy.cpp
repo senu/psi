@@ -12,6 +12,7 @@ ChatViewProxy::ChatViewProxy(QWidget* parent)
     _chatView = ChatViewFactory::createChatView(false, "TODO@jabber.org", this);
 //    _chatView->setGeometry(0,20,400,440);
     _chatView->init();
+    qDebug() << "proxy" << geometry();
 }
 
 

@@ -31,7 +31,7 @@ public:
     /** Reads theme from filesystem */
     HTMLChatTheme(QString path);
 
-    /** Returns theme path (-/Contents) */
+    /** Returns theme path sth/Contents/Resources/ ; there must be slash at the end! */
     QString baseHref() const;
     void setBaseHref(QString);
 
@@ -44,8 +44,8 @@ public:
     /** Sets current theme variant (withou .css suffix) */
     void setCurrentVariant(QString variant);
 
-    /** Reads theme from filesystem */
-    void readTheme(QString path);
+    /** Reads theme from filesystem (path to Contents/Resources) */
+    void readTheme(QDir dir);
 
     QString createIncomingMessagePart(const MessageChatEvent *) const;
     QString createOutgoingMessagePart(const MessageChatEvent *) const;

@@ -28,25 +28,28 @@ QString HTMLChatTheme::readFileContents(QDir dir, QString relativePath) {
 }
 
 
-void HTMLChatTheme::readTheme(QString path) {
+void HTMLChatTheme::readTheme(QDir dir) {
     //    qDebug() << "opening" << path;
-    QDir dir(path + "Contents/");
 
-    setBaseHref(path + "/Contents/Resources/");
+    if (!dir.cd("Contents/Resources/")) {
+        exit(-9);
+    }
+        
+    setBaseHref(dir.path()+"/");
 
-    incomingConsecutiveMessageTemplate.setContent(readFileContents(dir, "Resources/Incoming/NextContent.html"));
-    incomingNextMessageTemplate.setContent(readFileContents(dir, "Resources/Incoming/Content.html"));
+    incomingConsecutiveMessageTemplate.setContent(readFileContents(dir, "Incoming/NextContent.html"));
+    incomingNextMessageTemplate.setContent(readFileContents(dir, "Incoming/Content.html"));
 
     // outgoing messages
-    if (dir.exists("Resources/Outgoing/NextContent.html")) {
-        outgoingConsecutiveMessageTemplate.setContent(readFileContents(dir, "Resources/Outgoing/NextContent.html"));
+    if (dir.exists("Outgoing/NextContent.html")) {
+        outgoingConsecutiveMessageTemplate.setContent(readFileContents(dir, "Outgoing/NextContent.html"));
     }
     else {
         outgoingConsecutiveMessageTemplate.setContent(incomingConsecutiveMessageTemplate.content());
     }
 
-    if (dir.exists("Resources/Outgoing/Content.html")) {
-        outgoingNextMessageTemplate.setContent(readFileContents(dir, "Resources/Outgoing/Content.html"));
+    if (dir.exists("Outgoing/Content.html")) {
+        outgoingNextMessageTemplate.setContent(readFileContents(dir, "Outgoing/Content.html"));
     }
     else {
         outgoingNextMessageTemplate.setContent(incomingNextMessageTemplate.content());
@@ -54,21 +57,21 @@ void HTMLChatTheme::readTheme(QString path) {
 
 
     // status/event template
-    fileTransferEventTemplate.setContent(readFileContents(dir, "Resources/Status.html"));
-    systemEventTemplate.setContent(readFileContents(dir, "Resources/Status.html"));
+    fileTransferEventTemplate.setContent(readFileContents(dir, "Status.html"));
+    systemEventTemplate.setContent(readFileContents(dir, "Status.html"));
 
 
     // action
-    if (dir.exists("Resources/Incoming/Action.html")) {
-        incomingEmoteEventTemplate.setContent(readFileContents(dir, "Resources/Incoming/Action.html"));
+    if (dir.exists("Incoming/Action.html")) {
+        incomingEmoteEventTemplate.setContent(readFileContents(dir, "Incoming/Action.html"));
         incomingEmoteEventTemplate.setEmoteTemplate(true);
     }
     else {
         incomingEmoteEventTemplate.setContent(fileTransferEventTemplate.content());
     }
 
-    if (dir.exists("Resources/Outgoing/Action.html")) {
-        outgoingEmoteEventTemplate.setContent(readFileContents(dir, "Resources/Outgoing/Action.html"));
+    if (dir.exists("Outgoing/Action.html")) {
+        outgoingEmoteEventTemplate.setContent(readFileContents(dir, "Outgoing/Action.html"));
         incomingEmoteEventTemplate.setEmoteTemplate(true);
     }
     else {
@@ -76,12 +79,12 @@ void HTMLChatTheme::readTheme(QString path) {
     }
 
 
-    headerTemplate.setContent(readFileContents(dir, "Resources/Header.html"));
-    footerTemplate.setContent(readFileContents(dir, "Resources/Footer.html"));
+    headerTemplate.setContent(readFileContents(dir, "Header.html"));
+    footerTemplate.setContent(readFileContents(dir, "Footer.html"));
 
     //read Variants
 
-    if (!dir.cd("Resources/Variants/")) {
+    if (!dir.cd("Variants/")) {
         qDebug() << "no Variants dir";
         return; //no variants
     }

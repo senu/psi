@@ -2,7 +2,7 @@
 #include <QtXml>
 
 #include "messageValidator.h"
-#include "chatMessageEvent.h"
+#include "messagechatevent.h"
 
 
 //Elements

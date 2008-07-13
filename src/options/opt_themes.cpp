@@ -1,3 +1,5 @@
+#include <QDebug>
+
 #include "opt_themes.h"
 #include "psioptions.h"
 #include "ui_opt_themes.h"
@@ -17,6 +19,7 @@ public:
 OptionsTabThemes::OptionsTabThemes(QObject *parent)
 : OptionsTab(parent, "themes", "", tr("Themes"), tr("Configure how Psi themes"), "psi/playSound") {//TODO icon
     w = 0;
+    theme = 0;
 }
 
 
@@ -32,11 +35,13 @@ QWidget *OptionsTabThemes::widget() {
     OptThemeUI *d = (OptThemeUI *) w;
 
 
-    HTMLChatThemeList themeList;
     themeList.readThemes("/home/senu/dev/psi/gsoc/repo/psi-fork/src"); //TODO
 
     d->themeCB->addItems(themeList.themeNames());
 
+    connect(d->themeCB, SIGNAL(currentIndexChanged(int)), this, SLOT(onThemeLoaded(int)));
+
+    onThemeLoaded(d->themeCB->currentIndex());
     /*
         QWhatsThis::add(d->,
                         tr("If your system supports multiple sound players, you may"
@@ -51,23 +56,60 @@ QWidget *OptionsTabThemes::widget() {
 }
 
 
+void OptionsTabThemes::onThemeLoaded(int themeIndex) {
+
+    if (themeIndex == -1) {
+        return;
+    }
+
+    OptThemeUI * d = (OptThemeUI*) w;
+    QString themeName = d->themeCB->currentText();
+
+    delete theme;
+    theme = new HTMLChatTheme(themeList.themePath(themeName)); //TODO free it
+
+    qDebug() << theme->variants();
+
+    d->variantCB->clear();
+    d->variantCB->addItems(theme->variants());
+}
+
+
+void OptionsTabThemes::onVariantLoaded(int variantIndex) {
+    
+    OptThemeUI * d = (OptThemeUI*) w;
+    theme->setCurrentVariant(d->variantCB->currentText());
+    //TODO ask kev - currently we load theme every time windows is oppened?
+}
+
+
 void OptionsTabThemes::applyOptions() {
     if (!w)
         return;
 
     OptThemeUI *d = (OptThemeUI *) w;
-    
+
     PsiOptions::instance()->setOption("options.ui.themes.htmlviewinmuc", d->useHtmlViewInMucCK->isChecked());
-    PsiOptions::instance()->setOption("options.ui.themes.htmlviewinchats",
-                                      d->useHtmlViewInChatsCK->isChecked());
+    PsiOptions::instance()->setOption("options.ui.themes.htmlviewinchats", d->useHtmlViewInChatsCK->isChecked());
+    if (theme) {
+        PsiOptions::instance()->setOption("options.ui.themes.themename",
+                                          d->themeCB->currentText()); //TODO
+        PsiOptions::instance()->setOption("options.ui.themes.themepath",
+                                          QDir::cleanPath(theme->baseHref()+"/../..")); //TODO
+        PsiOptions::instance()->setOption("options.ui.themes.variantname",
+                                          theme->currentVariant());
+
+    }
 }
 
 
 void OptionsTabThemes::restoreOptions() {
+
+
     if (!w)
         return;
 
-    OptThemeUI *d = (OptThemeUI *) w;
+    OptThemeUI * d = (OptThemeUI *) w;
     d->useHtmlViewInMucCK->setChecked(PsiOptions::instance()->getOption("options.ui.themes.htmlviewinmuc").toBool());
     d->useHtmlViewInChatsCK->setChecked(PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool());
 
