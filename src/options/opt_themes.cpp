@@ -1,4 +1,5 @@
 #include "opt_themes.h"
+#include "psioptions.h"
 #include "ui_opt_themes.h"
 
 
@@ -55,8 +56,10 @@ void OptionsTabThemes::applyOptions() {
         return;
 
     OptThemeUI *d = (OptThemeUI *) w;
-    //    PsiOptions::instance()->setOption("options.ui.themes.htmlviewinmuc", d->->text());
-    //  PsiOptions::instance()->setOption("options.ui.notifications.sounds.silent-while-away", !d->ck_awayTheme->isChecked());
+    
+    PsiOptions::instance()->setOption("options.ui.themes.htmlviewinmuc", d->useHtmlViewInMucCK->isChecked());
+    PsiOptions::instance()->setOption("options.ui.themes.htmlviewinchats",
+                                      d->useHtmlViewInChatsCK->isChecked());
 }
 
 
@@ -65,9 +68,9 @@ void OptionsTabThemes::restoreOptions() {
         return;
 
     OptThemeUI *d = (OptThemeUI *) w;
+    d->useHtmlViewInMucCK->setChecked(PsiOptions::instance()->getOption("options.ui.themes.htmlviewinmuc").toBool());
+    d->useHtmlViewInChatsCK->setChecked(PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool());
 
-    //    d->ck_awayTheme->setChecked(!PsiOptions::instance()->getOption("options.ui.notifications.sounds.silent-while-away").toBool());
-    //   d->ck_gcTheme->setChecked(PsiOptions::instance()->getOption("options.ui.notifications.sounds.notify-every-muc-message").toBool());
 }
 
 
