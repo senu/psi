@@ -198,7 +198,7 @@ void HTMLChatView::importJSChatFunctions() {
 
 
 HTMLChatView::~HTMLChatView() {
-    //    qDebug() << dumpContent();
+        qDebug() << dumpContent();
 }
 
 

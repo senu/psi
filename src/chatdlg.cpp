@@ -317,6 +317,7 @@ void ChatDlg::showEvent(QShowEvent *) {
 
 void ChatDlg::logSelectionChanged() {
 #ifdef Q_WS_MAC
+    //TODO
     // A hack to only give the message log focus when text is selected
     if (chatView()->hasSelectedText()) {
         chatView()->setFocus();

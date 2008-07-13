@@ -1,6 +1,7 @@
 #include "chatviewfactory.h"
 #include "msgmle.h"
 #include "psioptions.h"
+#include "applicationinfo.h"
 
 #include "htmlChatTheme.h"
 
@@ -14,7 +15,7 @@ ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid, QWidge
         HTMLChatTheme theme(themePath);
         theme.setCurrentVariant(PsiOptions::instance()->getOption("options.ui.themes.variantname").toString());
 
-        return new HTMLChatView(parent, theme, "/home/senu/dev/psi/gsoc/repo/psi-fork/src/");
+        return new HTMLChatView(parent, theme, ApplicationInfo::homeDir());
     }
     return new __PlainTextChatView(parent);
 }

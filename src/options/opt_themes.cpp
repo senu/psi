@@ -1,6 +1,7 @@
 #include <QDebug>
 
 #include "opt_themes.h"
+#include "applicationinfo.h"
 #include "psioptions.h"
 #include "ui_opt_themes.h"
 
@@ -34,14 +35,9 @@ QWidget *OptionsTabThemes::widget() {
     w = new OptThemeUI();
     OptThemeUI *d = (OptThemeUI *) w;
 
-
-    themeList.readThemes("/home/senu/dev/psi/gsoc/repo/psi-fork/src"); //TODO
-
-    d->themeCB->addItems(themeList.themeNames());
-
     connect(d->themeCB, SIGNAL(currentIndexChanged(int)), this, SLOT(onThemeLoaded(int)));
+    connect(d->variantCB, SIGNAL(currentIndexChanged(int)), this, SLOT(onVariantLoaded(int)));
 
-    onThemeLoaded(d->themeCB->currentIndex());
     /*
         QWhatsThis::add(d->,
                         tr("If your system supports multiple sound players, you may"
@@ -112,6 +108,13 @@ void OptionsTabThemes::restoreOptions() {
     OptThemeUI * d = (OptThemeUI *) w;
     d->useHtmlViewInMucCK->setChecked(PsiOptions::instance()->getOption("options.ui.themes.htmlviewinmuc").toBool());
     d->useHtmlViewInChatsCK->setChecked(PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool());
+
+    themeList.readThemes(ApplicationInfo::homeDir()); //TODO
+
+    d->themeCB->addItems(themeList.themeNames());
+
+	d->themeCB->setCurrentIndex(d->themeCB->findText(PsiOptions::instance()->getOption("options.ui.themes.themename").toString()));
+	d->variantCB->setCurrentIndex(d->variantCB->findText(PsiOptions::instance()->getOption("options.ui.themes.variantname").toString()));
 
 }
 
