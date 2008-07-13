@@ -215,7 +215,7 @@
         </layout>
        </item>
        <item>
-        <widget class="__PlainTextChatView" name="log" >
+        <widget class="ChatViewProxy" name="log" >
          <property name="sizePolicy" >
           <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
            <horstretch>0</horstretch>
@@ -224,9 +224,6 @@
          </property>
          <property name="focusPolicy" >
           <enum>Qt::NoFocus</enum>
-         </property>
-         <property name="readOnly" >
-          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -324,9 +321,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>__PlainTextChatView</class>
+   <class>ChatViewProxy</class>
    <extends>QTextEdit</extends>
-   <header>plaintextchatview.h</header>
+   <header>chatviewproxy.h</header>
   </customwidget>
   <customwidget>
    <class>ChatSplitter</class>

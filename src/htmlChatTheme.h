@@ -12,6 +12,7 @@
 #include "statusChatEvent.h"
 #include "messagechatevent.h"
 #include "emotechatevent.h"
+#include "systemchatevent.h"
 
 class ChatTheme;
 class FileTransferChatEvent;
@@ -84,6 +85,7 @@ private:
     HTMLChatTemplate outgoingNextMessageTemplate;
 
     HTMLChatTemplate fileTransferEventTemplate;
+    HTMLChatTemplate systemEventTemplate;
 
     HTMLChatEmoteTemplate incomingEmoteEventTemplate;
     HTMLChatEmoteTemplate outgoingEmoteEventTemplate;

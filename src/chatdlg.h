@@ -33,6 +33,7 @@
 
 #include "tabbablewidget.h"
 #include "systemchatevent.h"
+#include "chatView.h"
 
 
 namespace XMPP

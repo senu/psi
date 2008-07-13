@@ -7,5 +7,5 @@ ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid, QWidge
     //TODO dont die if...
     HTMLChatTheme theme("/home/senu/dev/psi/gsoc/repo/psi-fork/src/themes/Pro.uss/");
     return new HTMLChatView(parent, theme, "/home/senu/dev/psi/gsoc/repo/psi-fork/src/");
-    //new __PlainTextChatView(parent);
+ //   return new __PlainTextChatView(parent);
 }

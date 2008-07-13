@@ -1,4 +1,5 @@
 #include "opt_appearance.h"
+#include "opt_themes.h"
 #include "opt_iconset.h"
 #include "common.h"
 #include "iconwidget.h"
@@ -72,6 +73,7 @@ QSize FontLabel::sizeHint() const
 OptionsTabAppearance::OptionsTabAppearance(QObject *parent) : MetaOptionsTab(parent, "appearance", "", tr("Appearance"), tr("Psi's Appearance"), "psi/appearance")
 {    
 	addTab( new OptionsTabAppearanceGeneral(this) );
+	addTab( new OptionsTabThemes(this) );
 	addTab( new OptionsTabIconsetEmoticons(this) );
 	addTab( new OptionsTabIconsetRoster(this) );
 	addTab( new OptionsTabIconsetSystem(this) );

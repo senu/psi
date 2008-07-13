@@ -21,7 +21,8 @@ HEADERS += \
 	$$PWD/opt_sound.h \
 	$$PWD/opt_toolbars.h \
 	$$PWD/opt_advanced.h \
-	$$PWD/opt_shortcuts.h
+	$$PWD/opt_shortcuts.h\
+	$$PWD/opt_themes.h\
 
 HEADERS += $$PWD/opt_tree.h
 
@@ -36,7 +37,8 @@ SOURCES += \
 	$$PWD/opt_sound.cpp \
 	$$PWD/opt_toolbars.cpp \
 	$$PWD/opt_advanced.cpp \
-	$$PWD/opt_shortcuts.cpp
+	$$PWD/opt_shortcuts.cpp\
+	$$PWD/opt_themes.cpp\
 
 SOURCES += $$PWD/opt_tree.cpp
 
@@ -55,7 +57,8 @@ INTERFACES += \
 	$$PWD/opt_iconset_system.ui \
 	$$PWD/opt_iconset_roster.ui \
 	$$PWD/opt_general_groupchat.ui \
-	$$PWD/opt_shortcuts.ui
+	$$PWD/opt_shortcuts.ui\
+	$$PWD/opt_themes.ui\
 
 psi_plugins {
 	INTERFACES += $$PWD/opt_plugins.ui

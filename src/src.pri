@@ -232,9 +232,13 @@ HEADERS += \
 	$$PWD/htmlChatTemplate.h \
 	$$PWD/htmlchatemotetemplate.h\
 	$$PWD/htmlChatPart.h\
+	$$PWD/htmlChatThemeList.h\
 	$$PWD/fileTransferChatEvent.h \
+	$$PWD/chatTheme.h\
+	$$PWD/chatThemeList.h\
 	$$PWD/statuschatevent.h \
 	$$PWD/jsNotifier.h\
+	$$PWD/chatviewproxy.h \
 
 # Source files
 SOURCES += \
@@ -361,9 +365,12 @@ SOURCES += \
 	$$PWD/htmlChatTemplate.cpp \
 	$$PWD/htmlchatemotetemplate.cpp\
 	$$PWD/htmlChatPart.cpp\
+	$$PWD/htmlChatThemeList.cpp\
+	$$PWD/chatThemeList.cpp\
 	$$PWD/fileTransferChatEvent.cpp \
 	$$PWD/jsNotifier.cpp\
 	$$PWD/statuschatevent.cpp \
+	$$PWD/chatviewproxy.cpp \
 
 
 whiteboarding {

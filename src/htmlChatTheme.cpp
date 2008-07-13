@@ -55,6 +55,7 @@ void HTMLChatTheme::readTheme(QString path) {
 
     // status/event template
     fileTransferEventTemplate.setContent(readFileContents(dir, "Resources/Status.html"));
+    systemEventTemplate.setContent(readFileContents(dir, "Resources/Status.html"));
 
 
     // action
@@ -250,8 +251,14 @@ QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const 
 }
 
 
-QString HTMLChatTheme::createSystemEventPart(const SystemChatEvent*) const {
-    return "sysmessage"; //TODO
+QString HTMLChatTheme::createSystemEventPart(const SystemChatEvent* event) const {
+    HTMLChatPart part = systemEventTemplate.createFreshHTMLPart();
+
+    fillPartWithEventKeywords(part, event, event->message());
+    part.replaceAndEscapeKeyword("%status%", "system");
+    part.replaceAndEscapeKeyword("%messageClasses%", "system");//TODO
+    
+    return part.toString();
 }
 
 

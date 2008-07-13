@@ -44,7 +44,6 @@
 #include "systemchatevent.h"
 #include "esystemchatevent.h"
 
-#include "chatviewfactory.h"
 
 
 PsiChatDlg::PsiChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager)
@@ -62,12 +61,6 @@ void PsiChatDlg::initUi() {
     ui_.lb_status->setPsiIcon(IconsetFactory::iconPtr("status/noauth"));
 
     ui_.tb_emoticons->setIcon(IconsetFactory::icon("psi/smile").icon());
-
-
-    _chatView = ChatViewFactory::createChatView(false, "TODO@jabber.org", this);
-    _chatView->setGeometry(0,20,400,440);
-    _chatView->init();
-    
 
     connect(ui_.mle, SIGNAL(textEditCreated(QTextEdit*)), SLOT(chatEditCreated()));
     chatEditCreated();
@@ -473,8 +466,7 @@ QString PsiChatDlg::colorString(bool local, ChatDlg::SpooledType spooled) const 
 
 
 ChatView* PsiChatDlg::chatView() const {
-//    return ui_.log; //TODO
-    return _chatView;
+    return ui_.log->chatView();
 }
 
 
