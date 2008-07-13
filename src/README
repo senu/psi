@@ -1,0 +1,11 @@
+1. You need to have these values in your psi config. (going Options->appearance->themes should create them)
+
+   <themes>
+    <htmlviewinchats type="bool" >true</htmlviewinchats>
+    <htmlviewinmuc type="bool" >true</htmlviewinmuc>
+    <themename type="QString" >Pro</themename>
+    <themepath type="QString" >/home/senu/.psi/themes/Pro</themepath>
+    <variantname type="QString" >Graphite-Cochineal</variantname>
+   </themes>
+
+2. copy themes/ and htmlChatView.js to ~/.psi/ (Psi home)
