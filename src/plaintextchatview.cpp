@@ -1,27 +1,39 @@
 #include "plaintextchatview.h"
 
 
-void __PlainTextChatView::appendEvent(const ChatEvent* event) {
+__PlainTextChatView::__PlainTextChatView(QWidget *parent) : ChatView(parent), textview(this) {
+
+    layout = new QVBoxLayout(this);
+    layout->setMargin(0);
+    layout->setSpacing(0);
+
+    layout->addWidget(&textview);
+
+    setLayout(layout);
+}
+
+
+void __PlainTextChatView::appendEvent(const ChatEvent* event, bool alreadyAppended) {
+
+    ChatView::appendEvent(event, alreadyAppended);
+
     QString part = event->getRightTemplateAndFillItWithData(theme);
-    //TODO ask kev - will we hide PT chat view or destroy it and refill with messages when recreated?
-    /*
-        if (!alreadyAppended) {
-            appendedEvents.append(event);
-        }
-     **/
-
-
     appendText(part);
 }
 
 
-void __PlainTextChatView::appendMessage(const MessageChatEvent* event) {
+void __PlainTextChatView::appendMessage(const MessageChatEvent* event, bool alreadyAppended) {
+
+    ChatView::appendMessage(event, alreadyAppended);
+
     QString part;
 
-    if (event->isLocal())
+    if (event->isLocal()) {
         part = theme.createOutgoingMessagePart(event);
-    else
+    }
+    else {
         part = theme.createIncomingMessagePart(event);
+    }
 
     appendText(part);
 }
@@ -32,6 +44,8 @@ void __PlainTextChatView::clear() {
 
 
 void __PlainTextChatView::init() {
+    reappendEvents();
+    emit initDocumentFinished();
 }
 
 
@@ -51,6 +65,12 @@ bool __PlainTextChatView::atBottom() const {
     //TODO reimplement in html cv?
 }
 
+
 QScrollBar * __PlainTextChatView::verticalScrollBar() const {
     return textview.verticalScrollBar();
+}
+
+
+void __PlainTextChatView::setReadOnly(bool readOnly) {
+    textview.setReadOnly(readOnly);
 }

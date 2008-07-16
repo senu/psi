@@ -6,23 +6,22 @@
 
 #include "htmlChatView.h"
 
-class MessageChatEvent;
-
 
 HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, QString _themePath)
 : ChatView(parent), themePath(_themePath), theme(_theme) {
-    webView.setParent(parent);
+
+    webView.setParent(this);
+
+    layout = new QVBoxLayout(this);
+    layout->setMargin(0);
+    layout->setSpacing(0);
+
+    layout->addWidget(&webView);
+
+    setLayout(layout);
 
     webView.page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     webView.setContextMenuPolicy(Qt::NoContextMenu);
-
-    _chatInfo.chatName = "Kot Behemot";
-    _chatInfo.destinationName = "Kot Behemot";
-    _chatInfo.destinationDisplayName = "behemot@jabber.ru";
-    _chatInfo.sourceName = "Pawel Wiejacha";
-    _chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg";
-    _chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";
-    _chatInfo.timeOpened = QDateTime::currentDateTime();
 
     connect(webView.page(), SIGNAL(linkClicked(const QUrl&)), this, SLOT(onLinkClicked(const QUrl&)));
 
@@ -77,17 +76,7 @@ void HTMLChatView::onEmptyDocumentLoaded(bool ok) {
 
 void HTMLChatView::onInitDocumentFinished() {
 
-    const AbstractChatEvent* event;
-
-
-    foreach(event, appendedEvents) {
-        if (event->isMessageChatEvent()) {
-            appendMessage(dynamic_cast<const MessageChatEvent*> (event), true);
-        }
-        else {
-            appendEvent(dynamic_cast<const ChatEvent*> (event), true);
-        }
-    }
+    reappendEvents();
 
     emit initDocumentFinished();
 }
@@ -130,6 +119,8 @@ QString HTMLChatView::createEmptyDocument(QString baseHref, QString themeVariant
 
 
 void HTMLChatView::appendMessage(const MessageChatEvent *msg, bool alreadyAppended) {
+    ChatView::appendMessage(msg, alreadyAppended);
+
     QString part;
 
     if (msg->isLocal())
@@ -140,41 +131,23 @@ void HTMLChatView::appendMessage(const MessageChatEvent *msg, bool alreadyAppend
     escapeString(part);
 
     if (msg->isConsecutive()) {
-        if (!alreadyAppended) {
-            appendedEvents.append(msg);
-        }
         evaluateJS("psi_appendConsecutiveMessage(\"" + part + "\", \"" +
                    escapeStringCopy(msg->body()) + "\"" + ")");
     }
     else {
-        if (!alreadyAppended) {
-            appendedEvents.append(msg);
-        }
         evaluateJS("psi_appendNextMessage(\"" + part + "\", \"" +
                    escapeStringCopy(msg->body()) + "\"" + ")");
     }
 }
 
 
-void HTMLChatView::appendEvent(const ChatEvent* event, bool alreadyAppended = false) {
+void HTMLChatView::appendEvent(const ChatEvent* event, bool alreadyAppended) {
+    ChatView::appendEvent(event, alreadyAppended);
+
     QString part = event->getRightTemplateAndFillItWithData(theme);
     escapeString(part);
 
-    if (!alreadyAppended) {
-        appendedEvents.append(event);
-    }
-
     evaluateJS("psi_appendEvent(\"" + part + "\")");
-}
-
-
-void HTMLChatView::appendMessage(const MessageChatEvent* msg) {
-    appendMessage(msg, false);
-}
-
-
-void HTMLChatView::appendEvent(const ChatEvent* event) {
-    appendEvent(event, false);
 }
 
 
@@ -198,7 +171,7 @@ void HTMLChatView::importJSChatFunctions() {
 
 
 HTMLChatView::~HTMLChatView() {
-        qDebug() << dumpContent();
+    qDebug() << dumpContent();
 }
 
 

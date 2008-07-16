@@ -61,6 +61,23 @@ void PsiChatDlg::initUi() {
     ui_.lb_status->setPsiIcon(IconsetFactory::iconPtr("status/noauth"));
 
     ui_.tb_emoticons->setIcon(IconsetFactory::icon("psi/smile").icon());
+    
+    ChatTheme::ChatInfo chatInfo;
+   
+    UserListItem *ui = account()->find(jid()); //TODO ask kev (relevant)
+    QString destNick(JIDUtil::nickOrJid(ui->name(), jid().full())); //TODO   
+    
+    //TODO iss| getDisplayName() doesnt work
+    chatInfo.chatName = destNick;
+    qDebug() <<  destNick << account()->nick() << jid().full();
+    chatInfo.destinationName = destNick;
+    chatInfo.destinationDisplayName = jid().full();
+    chatInfo.sourceName = account()->nick();
+    chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg"; //TODO
+    chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";
+    chatInfo.timeOpened = QDateTime::currentDateTime();
+    
+    chatView()->init(chatInfo);
 
     connect(ui_.mle, SIGNAL(textEditCreated(QTextEdit*)), SLOT(chatEditCreated()));
     chatEditCreated();

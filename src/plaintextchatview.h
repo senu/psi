@@ -4,10 +4,12 @@
 #include <QWidget>
 #include <QScrollBar>
 #include <QtDebug>
+#include <QVBoxLayout>
 #include "chatView.h"
 #include "psitextview.h"
 #include "psichatedit.h"
 #include "plaintextchattheme.h"
+
 
 //#include "msgmle.h"
 
@@ -21,22 +23,18 @@ class __PlainTextChatView : public ChatView {
 
     Q_OBJECT
 public:
-    void appendEvent(const ChatEvent* event);
-    void appendMessage(const MessageChatEvent* event);
+    void appendEvent(const ChatEvent* event, bool alreadyAppended = false);
+    void appendMessage(const MessageChatEvent* event, bool alreadyAppended = false);
 
     void clear();
 
     void init();
 
 
-    void setReadOnly(bool readOnly) {
-        textview.setReadOnly(readOnly);
-    }
+    void setReadOnly(bool readOnly);
 
 
-    __PlainTextChatView(QWidget *parent) : ChatView(parent), textview(this) {
-        qDebug() << "pt v" << geometry();
-    }
+    __PlainTextChatView(QWidget *parent);
 
 
     //TODO remove/change this
@@ -116,6 +114,7 @@ slots:
 protected:
     PsiTextView textview;
     PlainTextChatTheme theme;
+    QVBoxLayout *layout;
 
 
 };

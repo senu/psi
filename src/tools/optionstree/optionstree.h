@@ -62,6 +62,7 @@ public:
 	bool loadOptions(const QDomElement& name, const QString& configName, const QString& configNS = "", const QString& configVersion = "");
 	
 signals:
+    /** \param option is a option name "path" */
 	void optionChanged(const QString& option);
 	void optionAboutToBeInserted(const QString& option);
 	void optionInserted(const QString& option);	

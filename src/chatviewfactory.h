@@ -17,9 +17,9 @@ public:
      * \param isGroupChat determines chat type 
      * \param jid is destination name or muc channel 
      * \param parent will be passed to created ChatView
+     * \param isHTMLChatView will be true <=> crated ChatView is a HTMLChatView
      */
-    static ChatView * createChatView(bool isGroupChat, QString jid, QWidget* parent); //TODO psi options
-
+    static ChatView * createChatView(bool isGroupChat, QString jid, QWidget * parent, bool * isHTMLChatView);
 
 };
 

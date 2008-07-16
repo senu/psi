@@ -5,6 +5,8 @@
 #include "psioptions.h"
 #include "ui_opt_themes.h"
 
+#include "iconset.h"//TODO
+
 
 class OptThemeUI : public QWidget, public Ui::OptTheme {
 
@@ -21,6 +23,9 @@ OptionsTabThemes::OptionsTabThemes(QObject *parent)
 : OptionsTab(parent, "themes", "", tr("Themes"), tr("Configure how Psi themes"), "psi/playSound") {//TODO icon
     w = 0;
     theme = 0;
+    //TDOO
+    const PsiIcon * ic = IconsetFactory::iconPtr("psi/logo_32");
+    qDebug() << ic->name();
 }
 
 
@@ -72,7 +77,7 @@ void OptionsTabThemes::onThemeLoaded(int themeIndex) {
 
 
 void OptionsTabThemes::onVariantLoaded(int variantIndex) {
-    
+
     OptThemeUI * d = (OptThemeUI*) w;
     theme->setCurrentVariant(d->variantCB->currentText());
     //TODO ask kev - currently we load theme every time windows is oppened?
@@ -91,7 +96,7 @@ void OptionsTabThemes::applyOptions() {
         PsiOptions::instance()->setOption("options.ui.themes.themename",
                                           d->themeCB->currentText()); //TODO
         PsiOptions::instance()->setOption("options.ui.themes.themepath",
-                                          QDir::cleanPath(theme->baseHref()+"/../..")); //TODO
+                                          QDir::cleanPath(theme->baseHref() + "/../..")); //TODO
         PsiOptions::instance()->setOption("options.ui.themes.variantname",
                                           theme->currentVariant());
 
@@ -113,8 +118,8 @@ void OptionsTabThemes::restoreOptions() {
 
     d->themeCB->addItems(themeList.themeNames());
 
-	d->themeCB->setCurrentIndex(d->themeCB->findText(PsiOptions::instance()->getOption("options.ui.themes.themename").toString()));
-	d->variantCB->setCurrentIndex(d->variantCB->findText(PsiOptions::instance()->getOption("options.ui.themes.variantname").toString()));
+    d->themeCB->setCurrentIndex(d->themeCB->findText(PsiOptions::instance()->getOption("options.ui.themes.themename").toString()));
+    d->variantCB->setCurrentIndex(d->variantCB->findText(PsiOptions::instance()->getOption("options.ui.themes.variantname").toString()));
 
 }
 

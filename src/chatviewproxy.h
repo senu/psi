@@ -14,11 +14,21 @@ class ChatViewProxy : public QWidget {
 public:
     ChatViewProxy(QWidget* parent);
 
-    /** Returns encapsulated ChatView widget */
+    /** Returns encapsulated ChatView widget; you have to call init(ci) after that! */
     ChatView* chatView() const;
+    
+public slots:
+	void optionsChanged();
+    
 private:
-    ChatView * _chatView;
+    ChatView* _chatView;
     QLayout* layout;
+
+    /** Is current chatView() instance of HTMLChatView? */
+    bool isHTMLChatView;
+
+    /** Creates new ChatView using ChatViewFactory and updates layout */
+    ChatView* createChatView();
 
 };
 

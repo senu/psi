@@ -6,8 +6,8 @@
 #include <QFile>
 #include <QtDebug>
 #include <QPair>
-#include <QList>
 #include <QRect>
+#include <QVBoxLayout>
 
 #include "chatView.h"
 #include "htmlChatTheme.h"
@@ -33,7 +33,9 @@ public:
 
     /** Only in dev version; (only for loading JavaScript file); path to theme/ dir */
     QString themePath;
-
+    
+    /** Creates HTML document (header,chat,footer) */
+    void init();
 
     //reimplemented
     bool atBottom() const;
@@ -61,13 +63,10 @@ slots:
     void clear();
 
     /** Appends message */
-    void appendMessage(const MessageChatEvent *msg);
+    void appendMessage(const MessageChatEvent *msg, bool alreadyAppended = false);
 
     /** Appends event (filetransfer, mood, etc) */
-    void appendEvent(const ChatEvent* event);
-
-    /** Creates HTML document (header,chat,footer) */
-    void init();
+    void appendEvent(const ChatEvent* event, bool alreadyAppended = false);
 
     /** Returns HTML contained in webView */
     QString dumpContent();
@@ -79,7 +78,6 @@ slots:
 
 signals:
     void appendFinished();
-    void initDocumentFinished();
 
     private
 slots:
@@ -88,7 +86,7 @@ slots:
      */
     void onEmptyDocumentLoaded(bool ok);
 
-    /** JS::psi_initDocument finished */
+    /** JS::psi_initDocument finished; Reappends events */
     void onInitDocumentFinished();
 
     /** JS::psi_append* finished */
@@ -111,23 +109,13 @@ private:
     /** Escapes " and \n  (for JS evaluation) */
     QString escapeStringCopy(QString str);
 
-    /** Appends message, if alreadyAppended we won't add it to appendedEvents */
-    void appendMessage(const MessageChatEvent *msg, bool alreadyAppended);
-
-    /** Appends event, if alreadyAppended we won't add it to appendedEvents */
-    void appendEvent(const ChatEvent* event, bool alreadyAppended);
-
-
-    HTMLChatTheme theme; // maybe HTMLChatTheme* to global theme - don't know
-
-    /** Session info */
-    ChatTheme::ChatInfo _chatInfo;
-
-    /* Appended events - we need to remember it in case of theme change */
-    QList <const AbstractChatEvent*> appendedEvents;
+    /** Current theme */
+    HTMLChatTheme theme;
 
     /** JavaScript - C++ bridge */
     JSNotifier jsNotifier;
+
+    QVBoxLayout * layout;
 
 };
 
