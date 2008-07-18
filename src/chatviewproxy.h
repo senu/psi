@@ -22,7 +22,7 @@ public:
     void init(const ChatTheme::ChatInfo& chatInfo, HTMLThemeManager* themeManager);
     
 public slots:
-	void optionsChanged();
+	void optionsChanged(const QString& optionName);
     
 private:
     ChatView* _chatView;

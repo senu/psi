@@ -12,7 +12,7 @@ ChatViewProxy::ChatViewProxy(QWidget* parent)
 
     setLayout(layout);
 
-    connect(PsiOptions::instance(), SIGNAL(optionChanged(const QString&)), SLOT(optionsChanged()));
+    connect(PsiOptions::instance(), SIGNAL(optionChanged(const QString&)), SLOT(optionsChanged(const QString&)));
 }
 
 
@@ -30,8 +30,9 @@ void ChatViewProxy::init(const ChatTheme::ChatInfo& chatInfo, HTMLThemeManager* 
 }
 
 
-void ChatViewProxy::optionsChanged() {
-    if (!_chatView)
+void ChatViewProxy::optionsChanged(const QString& optionName) {
+    qDebug() << optionName;
+    if (!_chatView || !optionName.startsWith("options.ui.themes"))
         return;
     
     if (PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool() != isHTMLChatView) {
@@ -44,8 +45,10 @@ void ChatViewProxy::optionsChanged() {
     }
 
     if(isHTMLChatView) { //theme change?
-        dynamic_cast<HTMLChatView *> (_chatView)->setTheme(themeManager->getTheme
-            (PsiOptions::instance()->getOption("options.ui.themes.themename").toString())); //TODO pointers
+        qDebug() << "themeChanged?";
+        dynamic_cast<HTMLChatView *> (_chatView)->setTheme(themeManager->getTheme(
+            PsiOptions::instance()->getOption("options.ui.themes.themename").toString(), //TODO pointers
+            PsiOptions::instance()->getOption("options.ui.themes.variantname").toString())); 
     }
 }
 

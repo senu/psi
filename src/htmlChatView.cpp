@@ -8,7 +8,7 @@
 
 
 HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, QString _themePath)
-: ChatView(parent), themePath(_themePath), theme(_theme) {
+: ChatView(parent), themePath(_themePath), theme(_theme), queuedTheme(0), isReady(false) {
 
     webView.setParent(this);
 
@@ -30,6 +30,7 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, QString _them
 
 void HTMLChatView::clear() {
     //clears Chat div
+    //TODO wait
     appendedEvents.clear();
     evaluateJS("psi_clearMessages()");
 }
@@ -75,6 +76,15 @@ void HTMLChatView::onEmptyDocumentLoaded(bool ok) {
 
 
 void HTMLChatView::onInitDocumentFinished() {
+
+    isReady = true;
+
+    if (queuedTheme) {
+        qDebug() << "changing queued theme";
+        setTheme(*queuedTheme);
+        delete queuedTheme;
+        queuedTheme = 0;
+    }
 
     reappendEvents();
 
@@ -172,6 +182,7 @@ void HTMLChatView::importJSChatFunctions() {
 
 HTMLChatView::~HTMLChatView() {
     qDebug() << dumpContent();
+    delete queuedTheme;
 }
 
 
@@ -210,8 +221,18 @@ ChatTheme::ChatInfo HTMLChatView::chatInfo() const {
 
 
 void HTMLChatView::setTheme(HTMLChatTheme _theme) {
+
+    if (!isReady) {
+        delete queuedTheme;
+        queuedTheme = new HTMLChatTheme(theme);
+        qDebug() << "queued theme change";
+        return;
+    }
+
     if (_theme != theme) {
+        qDebug() << theme.baseHref() << _theme.baseHref() << theme.currentVariant() << _theme.currentVariant();
         theme = _theme;
+        isReady = false;
         webView.setHtml(createEmptyDocument(theme.baseHref(), theme.currentVariant()), theme.baseHref());
     }
     //rest in onEmptyDocumentLoaded

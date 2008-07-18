@@ -91,6 +91,7 @@ void OptionsTabThemes::applyOptions() {
 
     PsiOptions::instance()->setOption("options.ui.themes.htmlviewinmuc", d->useHtmlViewInMucCK->isChecked());
     PsiOptions::instance()->setOption("options.ui.themes.htmlviewinchats", d->useHtmlViewInChatsCK->isChecked());
+    
     if (theme) {
         PsiOptions::instance()->setOption("options.ui.themes.themename",
                                           d->themeCB->currentText()); //TODO

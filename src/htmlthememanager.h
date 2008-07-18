@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QHash>
+#include <QPair>
 #include "htmlChatThemeList.h"
 #include "htmlChatTheme.h"
 
@@ -20,12 +21,12 @@ public:
      * Returns theme and loads it from filesystem if needed.
      * use theme.isValid() after this call
      */
-    HTMLChatTheme getTheme(QString themeName);
+    HTMLChatTheme getTheme(const QString& themeName, const QString& variant);
 private:
     HTMLChatThemeList * _themeList;
     
-    /** Loaded themes [path -> theme] */
-    QHash<QString, HTMLChatTheme> _themeCache;
+    /** Loaded themes [(path,variant) -> theme] */
+    QHash<QPair<QString,QString>, HTMLChatTheme> _themeCache;
     
 
 };

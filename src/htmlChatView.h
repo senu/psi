@@ -115,6 +115,16 @@ private:
     /** JavaScript - C++ bridge */
     JSNotifier jsNotifier;
 
+    /** ChatView is ready to: change theme, append events (after onInitDouemtet finished) */
+    bool isReady;
+
+    //queued actions (things we got while webkit was initializatin empty chat)
+    /** Theme changed */
+    HTMLChatTheme* queuedTheme;
+
+  
+    
+    
     QVBoxLayout * layout;
 
 };
