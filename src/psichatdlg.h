@@ -20,6 +20,9 @@ protected:
 
 private:
 	void setContactToolTip(QString text);
+    
+    /** Returns true if next message should be consecutive [our message => local == true] */
+    bool doConsecutiveMessage(const QDateTime& time, bool local);
 
 private slots:
 	void toggleSmallChat();
@@ -33,6 +36,13 @@ private slots:
 	void chatEditCreated();
 
 private:
+
+    /** Indicates if next message should be consecutive */
+    enum LastEventOwner {
+        Incoming,
+        Outgoing,
+        Other //first message or ChatEvent
+    };
 	void initToolBar();
 	void initToolButtons();
 
@@ -54,7 +64,10 @@ private:
 	void appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
 	void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
 	void appendMessageFields(const Message& m);
-	void updateLastMsgTime(QDateTime t);
+
+    /** Updates information about last ChatEvent; called after appending an event */
+	void updateLastMsgTimeAndOwner(const QDateTime& t, LastEventOwner owner);
+    
 	ChatView* chatView() const;
 	ChatEdit* chatEdit() const;
 
@@ -75,7 +88,10 @@ private:
 	IconAction* act_voice_;
 
 	bool smallChat_;
-	QDateTime lastMsgTime_;
+	QDateTime lastMsgTime;
+
+    /** Indicates if next message should be consecutive */
+    LastEventOwner lastEventOwner;
 };
 
 #endif

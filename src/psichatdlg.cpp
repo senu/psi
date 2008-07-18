@@ -1,3 +1,6 @@
+
+#include "abstractChatEvent.h"
+
 #include "psichatdlg.h"
 
 #include <QLabel>
@@ -45,8 +48,7 @@
 #include "esystemchatevent.h"
 
 
-
-PsiChatDlg::PsiChatDlg(const Jid& jid, PsiAccount* pa, 
+PsiChatDlg::PsiChatDlg(const Jid& jid, PsiAccount* pa,
                        TabManager* tabManager, HTMLThemeManager* themeManager)
 : ChatDlg(jid, pa, tabManager, themeManager) {
     connect(account()->psi(), SIGNAL(accountCountChanged()), this, SLOT(updateIdentityVisibility()));
@@ -62,12 +64,12 @@ void PsiChatDlg::initUi() {
     ui_.lb_status->setPsiIcon(IconsetFactory::iconPtr("status/noauth"));
 
     ui_.tb_emoticons->setIcon(IconsetFactory::icon("psi/smile").icon());
-    
+
     ChatTheme::ChatInfo chatInfo;
-   
+
     UserListItem *ui = account()->find(jid()); //TODO ask kev (relevant)
-    QString destNick(JIDUtil::nickOrJid(ui->name(), jid().full())); //TODO   
-    
+    QString destNick(JIDUtil::nickOrJid(ui->name(), jid().full())); //TODO
+
     //TODO iss| getDisplayName() doesnt work
     chatInfo.chatName = destNick;
     chatInfo.destinationName = destNick;
@@ -76,6 +78,9 @@ void PsiChatDlg::initUi() {
     chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg"; //TODO
     chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";
     chatInfo.timeOpened = QDateTime::currentDateTime();
+
+    lastMsgTime = QDateTime::currentDateTime();
+    lastEventOwner = Other;
     
     ui_.log->init(chatInfo, themeManager);
 
@@ -396,7 +401,6 @@ void PsiChatDlg::updateCounter() {
 
 
 void PsiChatDlg::appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) {
-    updateLastMsgTime(time);
 
     EmoteChatEvent * ev = new EmoteChatEvent(); //ev will be freed in ChatView
     //    ev->setJid(whoNick(local)); //TODO
@@ -408,24 +412,41 @@ void PsiChatDlg::appendEmoteMessage(SpooledType spooled, const QDateTime& time, 
     ev->setMessage(txt); //TODO escape?
 
     chatView()->appendEvent(ev);
+    updateLastMsgTimeAndOwner(time, local ? Outgoing : Incoming);
 }
 
 
 void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) {
-    updateLastMsgTime(time);
 
     MessageChatEvent * msg = new MessageChatEvent(); //will be created in another place, of course
 
     msg->setNick(whoNick(local));
     msg->setTimeStamp(time);
     msg->setLocal(local);
-    msg->setConsecutive(false);
+    msg->setConsecutive(doConsecutiveMessage(time, local));
     msg->setSpooled(spooled);
     msg->setService("Jabber");
     msg->setBody(txt); //TODO escape?
 
     chatView()->appendMessage(msg);
+    updateLastMsgTimeAndOwner(time, local ? Outgoing : Incoming);
+}
 
+
+void PsiChatDlg::appendSysMsg(const SystemChatEvent* event) {
+    chatView()->appendEvent(event);
+    updateLastMsgTimeAndOwner(event->timeStamp(), Other);
+}
+
+
+void PsiChatDlg::appendSysMsg(const QString &str) {
+    QDateTime time = QDateTime::currentDateTime();
+
+    ExtendedSystemChatEvent * ev = new ExtendedSystemChatEvent(str);
+    ev->setType(SystemChatEvent::Other);
+    ev->setTimeStamp(time);
+
+    appendSysMsg(ev);
 }
 
 
@@ -445,29 +466,13 @@ void PsiChatDlg::appendMessageFields(const Message& m) {
             chatView()->appendText(QString("<b>") + tr("Desc:") + "</b> " + QString("%1").arg(u.desc()));
         }
     }
-    */
+     */
 
 }
 
 
 bool PsiChatDlg::isEncryptionEnabled() const {
     return act_pgp_->isChecked();
-}
-
-
-void PsiChatDlg::appendSysMsg(const SystemChatEvent* event) {
-    chatView()->appendEvent(event);
-}
-
-
-void PsiChatDlg::appendSysMsg(const QString &str) {
-    QDateTime time = QDateTime::currentDateTime();
-    updateLastMsgTime(time);
-
-    ExtendedSystemChatEvent * ev = new ExtendedSystemChatEvent(str);
-    ev->setType(SystemChatEvent::Other);
-
-    chatView()->appendEvent(ev);
 }
 
 
@@ -500,14 +505,32 @@ void PsiChatDlg::chatEditCreated() {
 }
 
 
-void PsiChatDlg::updateLastMsgTime(QDateTime t) {
-    lastMsgTime_ = t; //TODO ?
+void PsiChatDlg::updateLastMsgTimeAndOwner(const QDateTime& t, LastEventOwner owner) {
+    lastMsgTime = t;
+    lastEventOwner = owner;
+
     //TODO wv remove
     /*
     bool doInsert = t.date() != lastMsgTime_.date();
     if (doInsert) {
         QString color = "#00A000";
-        chatView()->appendText(QString("<font color=\"%1\">*** %2</font>").arg(color).arg(t.date().toString(Qt::ISODate)));
+    chatView()->appendText(QString("<font color=\"%1\">*** %2</font>").arg(color).arg(t.date().toString(Qt::ISODate)));
     }
      */
+}
+
+
+bool PsiChatDlg::doConsecutiveMessage(const QDateTime& time, bool local) {
+    Q_ASSERT(time >= lastMsgTime);
+
+    if (lastMsgTime.secsTo(time) > 3 * 60) { //too old
+        return false;
+    }
+    
+    if ((local && lastEventOwner == Outgoing) || (!local && lastEventOwner == Incoming)) { //from the same user
+        qDebug() << local << lastEventOwner;
+        return true;
+    }
+
+    return false;
 }
