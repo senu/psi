@@ -47,6 +47,8 @@ public:
     /** Reads theme from filesystem (path to Contents/Resources) */
     void readTheme(QDir dir);
 
+    bool isValid();
+
     QString createIncomingMessagePart(const MessageChatEvent *) const;
     QString createOutgoingMessagePart(const MessageChatEvent *) const;
 
@@ -61,6 +63,10 @@ public:
 
     HTMLChatTemplate headerTemplate; //TODO accessors
     HTMLChatTemplate footerTemplate;
+
+    /** True if paths and varians are equal */
+    bool operator==(const HTMLChatTheme& other) const;
+    bool operator!=(const HTMLChatTheme& other) const;
 
 
 private:
@@ -93,6 +99,7 @@ private:
     QString _baseHref;
     QStringList _variants;
     QString _currentVariant;
+    bool _isValid;
 
 };
 

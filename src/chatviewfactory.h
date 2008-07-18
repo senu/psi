@@ -5,6 +5,7 @@
 #include "chatView.h"
 #include "htmlChatView.h"
 #include "plaintextchatview.h"
+#include "htmlthememanager.h"
 
 
 /** Crates appropriate ChavView (with ChatTheme) based on chat type and/or jid */
@@ -18,8 +19,10 @@ public:
      * \param jid is destination name or muc channel 
      * \param parent will be passed to created ChatView
      * \param isHTMLChatView will be true <=> crated ChatView is a HTMLChatView
+     * \param themeManager is needed because Kev didnt want it as singleton
      */
-    static ChatView * createChatView(bool isGroupChat, QString jid, QWidget * parent, bool * isHTMLChatView);
+    static ChatView * createChatView(bool isGroupChat, QString jid, QWidget * parent,
+                                     bool * isHTMLChatView, HTMLThemeManager* themeManager);
 
 };
 

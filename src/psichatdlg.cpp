@@ -46,8 +46,9 @@
 
 
 
-PsiChatDlg::PsiChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager)
-: ChatDlg(jid, pa, tabManager) {
+PsiChatDlg::PsiChatDlg(const Jid& jid, PsiAccount* pa, 
+                       TabManager* tabManager, HTMLThemeManager* themeManager)
+: ChatDlg(jid, pa, tabManager, themeManager) {
     connect(account()->psi(), SIGNAL(accountCountChanged()), this, SLOT(updateIdentityVisibility()));
 }
 
@@ -69,7 +70,6 @@ void PsiChatDlg::initUi() {
     
     //TODO iss| getDisplayName() doesnt work
     chatInfo.chatName = destNick;
-    qDebug() <<  destNick << account()->nick() << jid().full();
     chatInfo.destinationName = destNick;
     chatInfo.destinationDisplayName = jid().full();
     chatInfo.sourceName = account()->nick();
@@ -77,7 +77,7 @@ void PsiChatDlg::initUi() {
     chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";
     chatInfo.timeOpened = QDateTime::currentDateTime();
     
-    chatView()->init(chatInfo);
+    ui_.log->init(chatInfo, themeManager);
 
     connect(ui_.mle, SIGNAL(textEditCreated(QTextEdit*)), SLOT(chatEditCreated()));
     chatEditCreated();

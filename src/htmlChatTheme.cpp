@@ -1,4 +1,7 @@
 
+#include <string.h>
+
+
 #include "htmlChatTheme.h"
 
 
@@ -12,6 +15,7 @@
 
 
 HTMLChatTheme::HTMLChatTheme() {
+    _isValid = false;
 }
 
 
@@ -31,11 +35,13 @@ QString HTMLChatTheme::readFileContents(QDir dir, QString relativePath) {
 void HTMLChatTheme::readTheme(QDir dir) {
     //    qDebug() << "opening" << path;
 
+    _isValid = false;
+
     if (!dir.cd("Contents/Resources/")) {
-        exit(-9);
+        return; //isValid == false;
     }
-        
-    setBaseHref(dir.path()+"/");
+
+    setBaseHref(dir.path() + "/");
 
     incomingConsecutiveMessageTemplate.setContent(readFileContents(dir, "Incoming/NextContent.html"));
     incomingNextMessageTemplate.setContent(readFileContents(dir, "Incoming/Content.html"));
@@ -82,7 +88,10 @@ void HTMLChatTheme::readTheme(QDir dir) {
     headerTemplate.setContent(readFileContents(dir, "Header.html"));
     footerTemplate.setContent(readFileContents(dir, "Footer.html"));
 
+    _isValid = true;
+
     //read Variants
+    _variants.clear();
 
     if (!dir.cd("Variants/")) {
         qDebug() << "no Variants dir";
@@ -94,8 +103,6 @@ void HTMLChatTheme::readTheme(QDir dir) {
 
     QStringList variantFiles = dir.entryList(filters);
     QString variant;
-
-    _variants.clear();
 
 
     foreach(variant, variantFiles) {
@@ -259,8 +266,8 @@ QString HTMLChatTheme::createSystemEventPart(const SystemChatEvent* event) const
 
     fillPartWithEventKeywords(part, event, event->message());
     part.replaceAndEscapeKeyword("%status%", "system");
-    part.replaceAndEscapeKeyword("%messageClasses%", "system");//TODO
-    
+    part.replaceAndEscapeKeyword("%messageClasses%", "system"); //TODO
+
     return part.toString();
 }
 
@@ -334,3 +341,17 @@ void HTMLChatTheme::setCurrentVariant(QString variant) {
     _currentVariant = variant;
 }
 
+
+bool HTMLChatTheme::isValid() {
+    return _isValid;
+}
+
+
+bool HTMLChatTheme::operator==(const HTMLChatTheme& other) const {
+    return (other.baseHref() == baseHref() && other.currentVariant() == currentVariant());
+}
+
+
+bool HTMLChatTheme::operator!=(const HTMLChatTheme& other) const {
+    return !(*this == other);
+}

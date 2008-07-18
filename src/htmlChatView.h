@@ -28,7 +28,7 @@ public:
     ~HTMLChatView();
     QWebView webView;
 
-    /** Sets theme */
+    /** Sets theme (if needed) */
     void setTheme(HTMLChatTheme theme);
 
     /** Only in dev version; (only for loading JavaScript file); path to theme/ dir */

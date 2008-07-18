@@ -34,6 +34,7 @@
 #include "tabbablewidget.h"
 #include "systemchatevent.h"
 #include "chatView.h"
+#include "htmlthememanager.h"
 
 
 namespace XMPP
@@ -54,11 +55,13 @@ class ChatDlg : public TabbableWidget
 {
 	Q_OBJECT
 protected:
-	ChatDlg(const Jid& jid, PsiAccount* account, TabManager* tabManager);
+	ChatDlg(const Jid& jid, PsiAccount* account, TabManager* tabManager, 
+            HTMLThemeManager* themeManager);
 	virtual void init();
 
 public:
-	static ChatDlg* create(const Jid& jid, PsiAccount* account, TabManager* tabManager);
+	static ChatDlg* create(const Jid& jid, PsiAccount* account, TabManager* tabManager, 
+                           HTMLThemeManager* themeManager);
 	~ChatDlg();
 
 	// reimplemented
@@ -178,6 +181,8 @@ protected:
 
 	virtual ChatView* chatView() const = 0;
 	virtual ChatEdit* chatEdit() const = 0;
+    
+    HTMLThemeManager* themeManager;
 
 private:
 	bool highlightersInstalled_;

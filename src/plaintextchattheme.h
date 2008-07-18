@@ -38,6 +38,9 @@ public:
 
     QString createEmoteEventPart(const EmoteChatEvent* event) const;
     QString createSystemEventPart(const SystemChatEvent* event) const;
+
+    bool isValid();
+    
 private:
     /** Creates time string */
     QString formatTimeStamp(const QDateTime &time) const;

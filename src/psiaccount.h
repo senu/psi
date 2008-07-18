@@ -31,6 +31,7 @@
 #include "xmpp_rosterx.h"
 #include "xmpp_status.h"
 #include "psiactions.h"
+#include "htmlthememanager.h"
 
 namespace XMPP
 {
@@ -91,7 +92,8 @@ class PsiAccount : public QObject
 {
 	Q_OBJECT
 public:
-	PsiAccount(const UserAccount &acc, PsiContactList *parent, CapsRegistry* capsRegistry, TabManager *tabManager);
+	PsiAccount(const UserAccount &acc, PsiContactList *parent, CapsRegistry* capsRegistry,
+               TabManager *tabManager, HTMLThemeManager* themeManager);
 	~PsiAccount();
 
 	bool enabled() const;

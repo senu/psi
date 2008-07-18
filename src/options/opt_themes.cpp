@@ -80,7 +80,6 @@ void OptionsTabThemes::onVariantLoaded(int variantIndex) {
 
     OptThemeUI * d = (OptThemeUI*) w;
     theme->setCurrentVariant(d->variantCB->currentText());
-    //TODO ask kev - currently we load theme every time windows is oppened?
 }
 
 
@@ -95,8 +94,6 @@ void OptionsTabThemes::applyOptions() {
     if (theme) {
         PsiOptions::instance()->setOption("options.ui.themes.themename",
                                           d->themeCB->currentText()); //TODO
-        PsiOptions::instance()->setOption("options.ui.themes.themepath",
-                                          QDir::cleanPath(theme->baseHref() + "/../..")); //TODO
         PsiOptions::instance()->setOption("options.ui.themes.variantname",
                                           theme->currentVariant());
 

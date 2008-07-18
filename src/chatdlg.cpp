@@ -80,16 +80,17 @@
 #include "psichatdlg.h"
 
 
-ChatDlg* ChatDlg::create(const Jid& jid, PsiAccount* account, TabManager* tabManager) {
-    ChatDlg* chat = new PsiChatDlg(jid, account, tabManager);
+ChatDlg* ChatDlg::create(const Jid& jid, PsiAccount* account, TabManager* tabManager,
+                         HTMLThemeManager* themeManager) {
+    ChatDlg* chat = new PsiChatDlg(jid, account, tabManager, themeManager);
     chat->init();
     return chat;
 }
 
 
-ChatDlg::ChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager)
-: TabbableWidget(jid, pa, tabManager)
-, highlightersInstalled_(false) {
+ChatDlg::ChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager, HTMLThemeManager* _themeManager)
+: TabbableWidget(jid, pa, tabManager),
+themeManager(_themeManager), highlightersInstalled_(false) {
     if (PsiOptions::instance()->getOption("options.ui.mac.use-brushed-metal-windows").toBool()) {
         setAttribute(Qt::WA_MacMetalStyle);
     }
@@ -977,7 +978,7 @@ bool ChatDlg::eventFilter(QObject *obj, QEvent *event) {
 
     //TODO wv int
     //if (chatView()->handleCopyEvent(obj, event, chatEdit()))
-      //  return true;
+    //  return true;
 
     return QWidget::eventFilter(obj, event);
 }

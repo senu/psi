@@ -9,8 +9,9 @@ public:
 	//reimplemented
     /** Path to themes/ dir */
 	void readThemes(const QString& themesPath);
-	
-	virtual bool validateTheme(QString themeFolder); 
+
+protected:	
+	bool validateTheme(QString themeFolder); 
 	
 };
 

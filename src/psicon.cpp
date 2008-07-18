@@ -89,6 +89,7 @@
 #include "globalshortcutmanager.h"
 #include "desktoputil.h"
 #include "tabmanager.h"
+#include "htmlthememanager.h"
 
 
 #ifdef Q_WS_MAC
@@ -257,6 +258,7 @@ public:
 	QMenuBar* defaultMenuBar;
 	CapsRegistry* capsRegistry;
 	TabManager *tabManager;
+    HTMLThemeManager * themeManager;
 };
 
 //----------------------------------------------------------------------------
@@ -270,6 +272,8 @@ PsiCon::PsiCon()
 
 	d = new Private(this);
 	d->tabManager = new TabManager(this);
+
+    d->themeManager = new HTMLThemeManager();
 
 	d->mainwin = 0;
 	d->ftwin = 0;
@@ -298,6 +302,7 @@ PsiCon::~PsiCon()
 	delete d->edb;
 	delete d->defaultMenuBar;
 	delete d->tabManager;
+    delete d->themeManager;
 	delete d;
 }
 
@@ -797,7 +802,7 @@ void PsiCon::createAccount(const QString &name, const Jid &j, const QString &pas
 
 PsiAccount *PsiCon::createAccount(const UserAccount& acc)
 {
-	PsiAccount *pa = new PsiAccount(acc, d->contactList, d->capsRegistry, d->tabManager);
+	PsiAccount *pa = new PsiAccount(acc, d->contactList, d->capsRegistry, d->tabManager, d->themeManager);
 	connect(&d->idle, SIGNAL(secondsIdle(int)), pa, SLOT(secondsIdle(int)));
 	connect(pa, SIGNAL(updatedActivity()), SLOT(pa_updatedActivity()));
 	connect(pa, SIGNAL(updatedAccount()), SLOT(pa_updatedAccount()));

@@ -6,13 +6,14 @@
 #include "htmlChatTheme.h"
 
 
-ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid, QWidget * parent, bool * isHTMLChatView) {
-    //TODO dont die if...
+ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,
+                                           QWidget* parent, bool* isHTMLChatView, HTMLThemeManager* themeManager) {
+    
     if (PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool()) {
 
-        QString themePath = PsiOptions::instance()->getOption("options.ui.themes.themepath").toString();
+        QString themeName = PsiOptions::instance()->getOption("options.ui.themes.themename").toString();
 
-        HTMLChatTheme theme(themePath);
+        HTMLChatTheme theme(themeManager->getTheme(themeName));
         theme.setCurrentVariant(PsiOptions::instance()->getOption("options.ui.themes.variantname").toString());
 
         *isHTMLChatView = true;

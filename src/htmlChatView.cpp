@@ -210,8 +210,10 @@ ChatTheme::ChatInfo HTMLChatView::chatInfo() const {
 
 
 void HTMLChatView::setTheme(HTMLChatTheme _theme) {
-    theme = _theme;
-    webView.setHtml(createEmptyDocument(theme.baseHref(), theme.currentVariant()), theme.baseHref());
+    if (_theme != theme) {
+        theme = _theme;
+        webView.setHtml(createEmptyDocument(theme.baseHref(), theme.currentVariant()), theme.baseHref());
+    }
     //rest in onEmptyDocumentLoaded
 }
 

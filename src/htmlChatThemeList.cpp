@@ -21,7 +21,8 @@ void HTMLChatThemeList::readThemes(const QString& _path) {
 	
 	QStringList subdirs = dir.entryList(QDir::NoDotAndDotDot | QDir::AllDirs); 
 	QString subdir;
-	
+
+    themeDict.clear();
 	foreach(subdir, subdirs) {
 //		qDebug() << subdir;
 		if (validateTheme(dir.absoluteFilePath(subdir))) {

@@ -5,6 +5,7 @@
 #include <QLayout>
 
 #include "chatView.h"
+#include "htmlthememanager.h"
 
 
 /** Adapter to change ChatViews in runtime/embed them with qt designer */
@@ -16,12 +17,16 @@ public:
 
     /** Returns encapsulated ChatView widget; you have to call init(ci) after that! */
     ChatView* chatView() const;
+
+    /** Initialize ChatView */
+    void init(const ChatTheme::ChatInfo& chatInfo, HTMLThemeManager* themeManager);
     
 public slots:
 	void optionsChanged();
     
 private:
     ChatView* _chatView;
+    HTMLThemeManager* themeManager;
     QLayout* layout;
 
     /** Is current chatView() instance of HTMLChatView? */
