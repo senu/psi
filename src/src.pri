@@ -240,6 +240,9 @@ HEADERS += \
 	$$PWD/jsNotifier.h\
 	$$PWD/chatviewproxy.h \
 	$$PWD/htmlthememanager.h \
+	$$PWD/defaulthtmltextformatter.h\
+	$$PWD/htmltextformatter.h\
+	$$PWD/nullhtmltextformatter.h\
 
 # Source files
 SOURCES += \
@@ -373,6 +376,7 @@ SOURCES += \
 	$$PWD/statuschatevent.cpp \
 	$$PWD/chatviewproxy.cpp \
 	$$PWD/htmlthememanager.cpp \
+	$$PWD/defaulthtmltextformatter.cpp\
 
 
 whiteboarding {

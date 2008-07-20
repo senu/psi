@@ -4,6 +4,8 @@
 #include "messageValidator.h"
 #include "messagechatevent.h"
 
+#include "nullhtmltextformatter.h"
+
 
 //Elements
 const QString structureElements[] = {
@@ -65,11 +67,12 @@ const QString styleProperties[] = {
 // http://www.w3.org/TR/CSS21/grammar.html
 // CSS is validated in JavaScript code with Webkit 
 
+//TODO static
 
-void MessageValidator::dfs(QDomElement cur, int tabs, bool* modified) {
-    tabs += 3;
 
-//    qDebug() << QString(tabs, ' ') << cur.tagName();
+void MessageValidator::dfs(QDomElement cur, const HTMLTextFormatter* formatter, bool* modified) {
+
+    //    qDebug() << QString(tabs, ' ') << cur.tagName();
 
     QString parentName = cur.tagName();
 
@@ -80,8 +83,8 @@ void MessageValidator::dfs(QDomElement cur, int tabs, bool* modified) {
         QString attrName = cur.attributes().item(i).toAttr().name();
 
         if (!curNI.allowedAttributes.contains(attrName)) {
-       //     qDebug() << "VALIDATIN ERR" << "TA" << attrName  << " in " << parentName;
-         //   qDebug() << "note allowed attributes are:" << curNI.allowedAttributes;
+            //     qDebug() << "VALIDATIN ERR" << "TA" << attrName  << " in " << parentName;
+            //   qDebug() << "note allowed attributes are:" << curNI.allowedAttributes;
 
             cur.attributes().removeNamedItem(attrName);
             *modified = true;
@@ -97,14 +100,12 @@ void MessageValidator::dfs(QDomElement cur, int tabs, bool* modified) {
         if (node.isElement()) {
             QString childName = node.toElement().tagName();
 
-            if(childName == "style") { //this action is not XHTML-IM compliant!
+            if (childName == "style") { //this action is not XHTML-IM compliant!
                 cur.removeChild(node);
                 *modified = true;
                 i--;
             }
-
-            //is subElement valid here?
-            else if (!curNI.allowedTags.contains(childName)) {
+            else if (!curNI.allowedTags.contains(childName)) {//is subElement valid here?
 
                 //qDebug() << "VALIDATIN ERR" << "TS" << childName << " in " << parentName;
                 //qDebug() << "note allowed subElements are:" << curNI.allowedTags;
@@ -120,7 +121,7 @@ void MessageValidator::dfs(QDomElement cur, int tabs, bool* modified) {
                 i--;
             }
             else {
-                dfs(node.toElement(), tabs, modified);
+                dfs(node.toElement(), formatter, modified);
             }
         }
         else if (node.isText()) {
@@ -128,6 +129,12 @@ void MessageValidator::dfs(QDomElement cur, int tabs, bool* modified) {
                 cur.removeChild(node);
                 *modified = true;
                 i--;
+            }
+            else { //format text
+                QString newText = formatter->format(node.toText().data(), parentName);
+                QDomText newElement = cur.ownerDocument().createTextNode(newText);
+
+                QDomNode re = cur.replaceChild(newElement, node);
             }
         }
     }
@@ -152,10 +159,10 @@ void MessageValidator::generateAllowedDict() {
     //TODO check XHTML rfc 
 
     NodeInfo textNI,
-            hypertextNI,
-            imgNI,
-            structNI,
-            listNI;
+        hypertextNI,
+        imgNI,
+        structNI,
+        listNI;
 
 
     appendArrayToList(textElements, sizeof (textElements), structNI.allowedTags);
@@ -167,15 +174,15 @@ void MessageValidator::generateAllowedDict() {
     appendArrayToList(listElements, sizeof (listElements), textNI.allowedTags);
     appendArrayToList(hypertextElements, sizeof (hypertextElements), textNI.allowedTags);
     appendArrayToList(imgElements, sizeof (imgElements), textNI.allowedTags);
-	
+
     appendArrayToList(textElements, sizeof (textElements), hypertextNI.allowedTags);
 
     //attrs
     appendArrayToList(defaultAttributes, sizeof (defaultAttributes), textNI.allowedAttributes);
     appendArrayToList(imgAttributes, sizeof (imgAttributes), imgNI.allowedAttributes);
     appendArrayToList(hypertextAttributes, sizeof (hypertextAttributes), hypertextNI.allowedAttributes);
-	
-	//fill allowed dict
+
+    //fill allowed dict
     for (int i = 0; i< sizeof (textElements) / sizeof (QString); i++) {
         allowed[textElements[i]] = textNI;
     }
@@ -184,27 +191,27 @@ void MessageValidator::generateAllowedDict() {
         allowed[structureElements[i]] = structNI;
     }
 
-	//misc
-	hypertextNI.allowedTags.append("img");
-	
+    //misc
+    hypertextNI.allowedTags.append("img");
+
     allowed["html"].allowedTags.append("body");
-	allowed["html"].allowedTags.append("head");
-    
-	allowed["head"].allowedTags.append("title");
-    
-	allowed["body"].allowedAttributes.append("style");
-	allowed["body"].allowedAttributes.append("class");
-	allowed["body"].allowedAttributes.append("id");
-	allowed["body"].allowedAttributes.append("title");
-	
-	allowed["br"].canHaveText = false;
-	
-	allowed["blockquote"].allowedAttributes.append("cite");
-	allowed["q"].allowedAttributes.append("cite");
-	
+    allowed["html"].allowedTags.append("head");
+
+    allowed["head"].allowedTags.append("title");
+
+    allowed["body"].allowedAttributes.append("style");
+    allowed["body"].allowedAttributes.append("class");
+    allowed["body"].allowedAttributes.append("id");
+    allowed["body"].allowedAttributes.append("title");
+
+    allowed["br"].canHaveText = false;
+
+    allowed["blockquote"].allowedAttributes.append("cite");
+    allowed["q"].allowedAttributes.append("cite");
+
     allowed["img"] = imgNI;
     allowed["a"] = hypertextNI;
-	
+
 
 }
 
@@ -216,7 +223,8 @@ void MessageValidator::appendArrayToList(const QString *array, int arraySize, QS
 }
 
 
-QString MessageValidator::validateMessage(QString message, bool* modified) {
+QString MessageValidator::validateMessage(QString message, bool* modified, const HTMLTextFormatter* formatter) {
+
     QDomDocument doc("document");
 
     QString errorMessage;
@@ -224,13 +232,12 @@ QString MessageValidator::validateMessage(QString message, bool* modified) {
     *modified = false;
 
     if (!doc.setContent(message, false, &errorMessage, &line, &column)) {
-//        qDebug() << errorMessage << " " << line << " " << column;
+        //        qDebug() << errorMessage << " " << line << " " << column;
         *modified = true;
         return "illformed message!!!"; //TODO - display plain message
-        //        exit(2);
     }
 
-    dfs(doc.documentElement(), 0, modified);
+    dfs(doc.documentElement(), formatter, modified);
     return doc.toString(0);
 }
 

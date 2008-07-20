@@ -10,6 +10,7 @@
 #include "htmlChatView.h"
 
 #include "htmlchateditframe.h"
+#include "defaulthtmltextformatter.h"
 
 
 TestForm::~TestForm() {
@@ -105,7 +106,9 @@ void TestForm::onConsecutiveButtonClicked() {
     MessageChatEvent * ce = new MessageChatEvent();
 
     bool modified;
-    ce->setBody(msgVal.validateMessage(frame->toHTML(), &modified));
+	HTMLTextFormatter* formatter = new DefaultHTMLTextFormatter(1,1,1);
+    ce->setBody(msgVal.validateMessage(frame->toHTML(), &modified, formatter));
+	delete formatter;
 
     ce->setTimeStamp(QDateTime::currentDateTime());
     ce->setNick("Pawel Wiejacha");
@@ -124,7 +127,10 @@ void TestForm::onNextButtonClicked() { // copy-paste :D
     MessageChatEvent * ce = new MessageChatEvent();
 
     bool modified;
-    ce->setBody(msgVal.validateMessage(frame->toHTML(), &modified));
+
+	HTMLTextFormatter* formatter = new DefaultHTMLTextFormatter(1,1,1);
+    ce->setBody(msgVal.validateMessage(frame->toHTML(), &modified, formatter));
+	delete formatter;
 
     ce->setTimeStamp(QDateTime::currentDateTime());
     ce->setConsecutive(false);

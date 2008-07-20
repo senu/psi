@@ -1,4 +1,6 @@
 #include "testMessageValidator.h"
+#include "../defaulthtmltextformatter.h"
+
 #include <QtDebug>
 
 
@@ -124,7 +126,11 @@ void TestMessageValidator::scriptInCDATAMessage() {
 
 void TestMessageValidator::genericTest(QString inMessage, QString validMessage) {
     bool modified;
-    QString outMessage = val.validateMessage(inMessage, &modified).replace('\n', "");
+	HTMLTextFormatter* formatter = new DefaultHTMLTextFormatter(1,1,1);
+
+    QString outMessage = val.validateMessage(inMessage, &modified, formatter).replace('\n', "");
+
+	delete formatter;
 
     CPPUNIT_ASSERT_EQUAL(validMessage.toStdString(), outMessage.toStdString());
 

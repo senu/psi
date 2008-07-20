@@ -8,7 +8,7 @@
 
 
 HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, QString _themePath)
-: ChatView(parent), themePath(_themePath), theme(_theme), queuedTheme(0), isReady(false) {
+: ChatView(parent), themePath(_themePath), theme(_theme), isReady(false), queuedTheme(0) {
 
     webView.setParent(this);
 
