@@ -73,6 +73,7 @@
 #include "psicontactlist.h"
 #include "accountlabel.h"
 
+
 #ifdef Q_WS_WIN
 #include <windows.h>
 #endif
@@ -89,8 +90,8 @@ ChatDlg* ChatDlg::create(const Jid& jid, PsiAccount* account, TabManager* tabMan
 
 
 ChatDlg::ChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager, HTMLThemeManager* _themeManager)
-: TabbableWidget(jid, pa, tabManager),
-themeManager(_themeManager), highlightersInstalled_(false) {
+: TabbableWidget(jid, pa, tabManager), themeManager(_themeManager), highlightersInstalled_(false),
+textFormatter_(false, true, false) {
     if (PsiOptions::instance()->getOption("options.ui.mac.use-brushed-metal-windows").toBool()) {
         setAttribute(Qt::WA_MacMetalStyle);
     }
@@ -1061,6 +1062,13 @@ QString ChatDlg::messageText(const XMPP::Message& m) {
             int cmd = txt.indexOf(me_cmd);
             txt = txt.remove(cmd, me_cmd.length());
         }
+
+        bool modified;
+        textFormatter_.setDoEmoticonify(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool());
+        textFormatter_.setDoLegacyFormatting(PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool());
+
+        txt = messageValidator_.validateMessage(txt, &modified, &textFormatter_);
+
         // qWarning("html body:\n%s\n",qPrintable(txt));
     }
     else {
@@ -1071,13 +1079,17 @@ QString ChatDlg::messageText(const XMPP::Message& m) {
 
         txt = TextUtil::plain2rich(txt);
         txt = TextUtil::linkify(txt);
+
         // qWarning("regular body:\n%s\n",qPrintable(txt));
+
+        if (PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool())
+            txt = TextUtil::emoticonify(txt);
+
+
+        if (PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool())
+            txt = TextUtil::legacyFormat(txt);
     }
 
-    if (PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool())
-        txt = TextUtil::emoticonify(txt);
-    if (PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool())
-        txt = TextUtil::legacyFormat(txt);
 
     return txt;
 }
@@ -1087,12 +1099,16 @@ void ChatDlg::chatEditCreated() {
     chatEdit()->setDialog(this);
 
     if (highlightersInstalled_) {
+
+
         connect(chatEdit(), SIGNAL(textChanged()), this, SLOT(setComposing()));
     }
 }
 
 
 TabbableWidget::State ChatDlg::state() const {
+
+
     return contactChatState_ == XMPP::StateComposing ?
         TabbableWidget::StateComposing :
         TabbableWidget::StateNone;

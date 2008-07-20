@@ -377,6 +377,7 @@ SOURCES += \
 	$$PWD/chatviewproxy.cpp \
 	$$PWD/htmlthememanager.cpp \
 	$$PWD/defaulthtmltextformatter.cpp\
+	$$PWD/messageValidator.cpp\
 
 
 whiteboarding {

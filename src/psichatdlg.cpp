@@ -412,7 +412,7 @@ void PsiChatDlg::appendEmoteMessage(SpooledType spooled, const QDateTime& time, 
     ev->setMessage(txt); //TODO escape?
 
     chatView()->appendEvent(ev);
-    updateLastMsgTimeAndOwner(time, local ? Outgoing : Incoming);
+    updateLastMsgTimeAndOwner(time, Other);
 }
 
 

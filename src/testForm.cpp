@@ -10,7 +10,7 @@
 #include "htmlChatView.h"
 
 #include "htmlchateditframe.h"
-#include "defaulthtmltextformatter.h"
+#include "nullhtmltextformatter.h"
 
 
 TestForm::~TestForm() {
@@ -83,10 +83,10 @@ TestForm::TestForm(QWidget *parent)
     variantComboBox->setGeometry(200, 700, 180, 40);
     variantComboBox->show();
 
-    frame = new HTMLChatEditFrame(this, themePathEdit->text()+"/icons/");
-    frame->move(0,750);
+    frame = new HTMLChatEditFrame(this, themePathEdit->text() + "/icons/");
+    frame->move(0, 750);
 
-	
+
     this->setGeometry(0, 0, 920, 950);
 
     this->show();
@@ -106,9 +106,9 @@ void TestForm::onConsecutiveButtonClicked() {
     MessageChatEvent * ce = new MessageChatEvent();
 
     bool modified;
-	HTMLTextFormatter* formatter = new DefaultHTMLTextFormatter(1,1,1);
+    HTMLTextFormatter* formatter = new NullHTMLTextFormatter();
     ce->setBody(msgVal.validateMessage(frame->toHTML(), &modified, formatter));
-	delete formatter;
+    delete formatter;
 
     ce->setTimeStamp(QDateTime::currentDateTime());
     ce->setNick("Pawel Wiejacha");
@@ -128,9 +128,9 @@ void TestForm::onNextButtonClicked() { // copy-paste :D
 
     bool modified;
 
-	HTMLTextFormatter* formatter = new DefaultHTMLTextFormatter(1,1,1);
+    HTMLTextFormatter* formatter = new NullHTMLTextFormatter();
     ce->setBody(msgVal.validateMessage(frame->toHTML(), &modified, formatter));
-	delete formatter;
+    delete formatter;
 
     ce->setTimeStamp(QDateTime::currentDateTime());
     ce->setConsecutive(false);
@@ -202,7 +202,7 @@ void TestForm::onLoadVariant() {
     if (view == NULL) {
         view = new HTMLChatView(this, *theme, themePathEdit->text());
         view->init();
-        view->setGeometry(0, 0, 300, 200);
+        view->setGeometry(0, 0, 600, 600);
         view->show();
 
         connect(this, SIGNAL(messageCreated(const MessageChatEvent*)), view, SLOT(appendMessage(const MessageChatEvent*)));
@@ -220,7 +220,7 @@ void TestForm::onClear() {
 
 
 void TestForm::onRunTests() {
-	QWebView * testsView = new QWebView(0);
-	testsView->show();
-	testsView->load(QUrl(themePathEdit->text()+"/tests/testRunner.html")); //TODO
+    QWebView * testsView = new QWebView(0);
+    testsView->show();
+    testsView->load(QUrl(themePathEdit->text() + "/tests/testRunner.html")); //TODO
 }

@@ -72,7 +72,7 @@ const QString styleProperties[] = {
 
 void MessageValidator::dfs(QDomElement cur, const HTMLTextFormatter* formatter, bool* modified) {
 
-    //    qDebug() << QString(tabs, ' ') << cur.tagName();
+//    qDebug() << QString(4, ' ') << cur.tagName();
 
     QString parentName = cur.tagName();
 
@@ -124,7 +124,7 @@ void MessageValidator::dfs(QDomElement cur, const HTMLTextFormatter* formatter, 
                 dfs(node.toElement(), formatter, modified);
             }
         }
-        else if (node.isText()) {
+        else if (node.isText() && !node.isCDATASection()) {
             if (!curNI.canHaveText) {
                 cur.removeChild(node);
                 *modified = true;

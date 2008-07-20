@@ -33,14 +33,16 @@
 
 #include "tabbablewidget.h"
 #include "systemchatevent.h"
+
 #include "chatView.h"
 #include "htmlthememanager.h"
+#include "defaulthtmltextformatter.h"
+#include "messageValidator.h"
 
 
-namespace XMPP
-{
-class Jid;
-class Message;
+namespace XMPP {
+    class Jid;
+    class Message;
 }
 using namespace XMPP;
 
@@ -51,169 +53,182 @@ class QDragEnterEvent;
 class ChatView;
 class ChatEdit;
 
-class ChatDlg : public TabbableWidget
-{
-	Q_OBJECT
+
+class ChatDlg : public TabbableWidget {
+
+    Q_OBJECT
 protected:
-	ChatDlg(const Jid& jid, PsiAccount* account, TabManager* tabManager, 
+    ChatDlg(const Jid& jid, PsiAccount* account, TabManager* tabManager,
             HTMLThemeManager* themeManager);
-	virtual void init();
+    virtual void init();
 
 public:
-	static ChatDlg* create(const Jid& jid, PsiAccount* account, TabManager* tabManager, 
+    static ChatDlg* create(const Jid& jid, PsiAccount* account, TabManager* tabManager,
                            HTMLThemeManager* themeManager);
-	~ChatDlg();
+    ~ChatDlg();
 
-	// reimplemented
-	void setJid(const Jid &);
-	const QString & getDisplayName();
+    // reimplemented
+    void setJid(const Jid &);
+    const QString & getDisplayName();
 
-	static QSize defaultSize();
+    static QSize defaultSize();
 
-	// reimplemented
-	virtual bool readyToHide();
-	virtual TabbableWidget::State state() const;
-	virtual int unreadMessageCount() const;
-	virtual QString desiredCaption() const;
-	virtual void ensureTabbedCorrectly();
+    // reimplemented
+    virtual bool readyToHide();
+    virtual TabbableWidget::State state() const;
+    virtual int unreadMessageCount() const;
+    virtual QString desiredCaption() const;
+    virtual void ensureTabbedCorrectly();
 
 public:
-	PsiAccount* account() const;
+    PsiAccount* account() const;
 
 signals:
-	void aInfo(const Jid &);
-	void aHistory(const Jid &);
-	void aVoice(const Jid &);
-	void messagesRead(const Jid &);
-	void aSend(const Message &);
-	void aFile(const Jid &);
+    void aInfo(const Jid &);
+    void aHistory(const Jid &);
+    void aVoice(const Jid &);
+    void messagesRead(const Jid &);
+    void aSend(const Message &);
+    void aFile(const Jid &);
 
-	/**
-	 * Signals if user (re)started/stopped composing
-	 */
-	void composing(bool);
-
-protected:
-	virtual void setShortcuts();
-
-	// reimplemented
-	void closeEvent(QCloseEvent *);
-	void resizeEvent(QResizeEvent *);
-	void hideEvent(QHideEvent *);
-	void showEvent(QShowEvent *);
-	void dropEvent(QDropEvent* event);
-	void dragEnterEvent(QDragEnterEvent* event);
-	bool eventFilter(QObject *obj, QEvent *event);
-
-public slots:
-	// reimplemented
-	virtual void deactivated();
-	virtual void activated();
-
-	virtual void optionsUpdate();
-	void updateContact(const Jid &, bool);
-	void incomingMessage(const Message &);
-	virtual void updateAvatar() = 0;
-	void updateAvatar(const Jid&);
-
-protected slots:
-	void scrollUp();
-	void scrollDown();
-	void doInfo();
-	virtual void doHistory();
-	virtual void doClear();
-	void doSend();
-	void doVoice();
-	void doFile();
-
-private slots:
-	void setKeepOpenFalse();
-	void setWarnSendFalse();
-	virtual void updatePGP();
-	virtual void setPGPEnabled(bool enabled);
-	void encryptedMessageSent(int, bool, int, const QString &);
-	void slotScroll();
-	void setChatState(XMPP::ChatState s);
-	void updateIsComposing(bool);
-	void setContactChatState(ChatState s);
-	void logSelectionChanged();
-	void capsChanged(const Jid&);
-	void addEmoticon(QString text);
-	void initComposing();
-	void setComposing();
-
-protected slots:
-	void checkComposing();
+    /**
+     * Signals if user (re)started/stopped composing
+     */
+    void composing(bool);
 
 protected:
-	// reimplemented
-	virtual void invalidateTab();
+    virtual void setShortcuts();
 
-	void resetComposing();
-	void doneSend();
-	virtual void setLooks();
-	void setSelfDestruct(int);
-	void deferredScroll();
-	bool isEmoteMessage(const XMPP::Message& m);
-	QString messageText(const XMPP::Message& m);
-	virtual void chatEditCreated();
+    // reimplemented
+    void closeEvent(QCloseEvent *);
+    void resizeEvent(QResizeEvent *);
+    void hideEvent(QHideEvent *);
+    void showEvent(QShowEvent *);
+    void dropEvent(QDropEvent* event);
+    void dragEnterEvent(QDragEnterEvent* event);
+    bool eventFilter(QObject *obj, QEvent *event);
 
-	enum SpooledType {
-		Spooled_None,
-		Spooled_OfflineStorage
-	};
+    public 
+slots:
+    // reimplemented
+    virtual void deactivated();
+    virtual void activated();
 
-	virtual void initUi() = 0;
-	virtual void capsChanged();
-	virtual void contactUpdated(UserListItem* u, int status, const QString& statusString);
-	virtual QString colorString(bool local, SpooledType spooled) const = 0;
+    virtual void optionsUpdate();
+    void updateContact(const Jid &, bool);
+    void incomingMessage(const Message &);
+    virtual void updateAvatar() = 0;
+    void updateAvatar(const Jid&);
 
-	void appendMessage(const Message &, bool local = false);
-	virtual bool isEncryptionEnabled() const;
-	virtual void appendSysMsg(const QString& txt) = 0;
-	virtual void appendSysMsg(const SystemChatEvent* event) = 0;
-	virtual void appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) = 0;
-	virtual void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) = 0;
-	virtual void appendMessageFields(const Message& m) = 0;
-	virtual void nicksChanged();
+    protected 
+slots:
+    void scrollUp();
+    void scrollDown();
+    void doInfo();
+    virtual void doHistory();
+    virtual void doClear();
+    void doSend();
+    void doVoice();
+    void doFile();
 
-	QString whoNick(bool local) const;
+    private 
+slots:
+    void setKeepOpenFalse();
+    void setWarnSendFalse();
+    virtual void updatePGP();
+    virtual void setPGPEnabled(bool enabled);
+    void encryptedMessageSent(int, bool, int, const QString &);
+    void slotScroll();
+    void setChatState(XMPP::ChatState s);
+    void updateIsComposing(bool);
+    void setContactChatState(ChatState s);
+    void logSelectionChanged();
+    void capsChanged(const Jid&);
+    void addEmoticon(QString text);
+    void initComposing();
+    void setComposing();
 
-	virtual ChatView* chatView() const = 0;
-	virtual ChatEdit* chatEdit() const = 0;
-    
+    protected 
+slots:
+    void checkComposing();
+
+protected:
+    // reimplemented
+    virtual void invalidateTab();
+
+    void resetComposing();
+    void doneSend();
+    virtual void setLooks();
+    void setSelfDestruct(int);
+    void deferredScroll();
+    bool isEmoteMessage(const XMPP::Message& m);
+    QString messageText(const XMPP::Message& m);
+    virtual void chatEditCreated();
+
+
+    enum SpooledType {
+
+        Spooled_None,
+        Spooled_OfflineStorage
+    };
+
+    virtual void initUi() = 0;
+    virtual void capsChanged();
+    virtual void contactUpdated(UserListItem* u, int status, const QString& statusString);
+    virtual QString colorString(bool local, SpooledType spooled) const = 0;
+
+    void appendMessage(const Message &, bool local = false);
+    virtual bool isEncryptionEnabled() const;
+    virtual void appendSysMsg(const QString& txt) = 0;
+    virtual void appendSysMsg(const SystemChatEvent* event) = 0;
+    virtual void appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) = 0;
+    virtual void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) = 0;
+    virtual void appendMessageFields(const Message& m) = 0;
+    virtual void nicksChanged();
+
+    QString whoNick(bool local) const;
+
+    virtual ChatView* chatView() const = 0;
+    virtual ChatEdit* chatEdit() const = 0;
+
     HTMLThemeManager* themeManager;
 
 private:
-	bool highlightersInstalled_;
-	QString dispNick_;
-	int status_;
-	QString statusString_;
+    bool highlightersInstalled_;
+    QString dispNick_;
+    int status_;
+    QString statusString_;
 
-	void initActions();
-	QAction* act_send_;
-	QAction* act_scrollup_;
-	QAction* act_scrolldown_;
-	QAction* act_close_;
+    void initActions();
+    QAction* act_send_;
+    QAction* act_scrollup_;
+    QAction* act_scrolldown_;
+    QAction* act_close_;
 
-	int pending_;
-	bool keepOpen_;
-	bool warnSend_;
+    int pending_;
+    bool keepOpen_;
+    bool warnSend_;
 
-	QTimer* selfDestruct_;
+    QTimer* selfDestruct_;
 
-	QString key_;
-	int transid_;
-	Message m_;
-	bool lastWasEncrypted_;
+    QString key_;
+    int transid_;
+    Message m_;
+    bool lastWasEncrypted_;
 
-	// Message Events & Chat States
-	QTimer* composingTimer_;
-	bool isComposing_;
-	bool sendComposingEvents_;
-	QString eventId_;
-	ChatState contactChatState_;
-	ChatState lastChatState_;
+    // Message Events & Chat States
+    QTimer* composingTimer_;
+    bool isComposing_;
+    bool sendComposingEvents_;
+    QString eventId_;
+    ChatState contactChatState_;
+    ChatState lastChatState_;
+
+    /** Validates XHTML-IM messages */
+    MessageValidator messageValidator_;
+
+    /** Does emoticonify, linkify, etc in XHTML-IM messages */
+    DefaultHTMLTextFormatter textFormatter_;
 };
 
 #endif

@@ -1,8 +1,26 @@
 #include "defaulthtmltextformatter.h"
+#include "textutil.h"
 
 
 QString DefaultHTMLTextFormatter::format(const QString& input, const QString& parentTag) const {
-    return input + "XXX";
+
+    if (!doEmoticonify_ && !doLinkify_ && !doLegacyFormatting_) {
+        return input;
+    }
+
+    QString output(input);
+
+    if (doLinkify_ && parentTag != "a") {
+        output = TextUtil::linkify(output);
+    }
+    if (doEmoticonify_) {
+        output = TextUtil::emoticonify(output); //TODO 
+    }
+    if (doLegacyFormatting_) {
+        output = TextUtil::legacyFormat(output);
+    }
+
+    return output;
 }
 
 

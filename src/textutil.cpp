@@ -500,7 +500,7 @@ QString TextUtil::emoticonify(const QString &in)
 			if ( !closest )
 				break;
 
-			p.putRich( QString("<icon name=\"%1\" text=\"%2\">").arg(TextUtil::escape(closest->name())).arg(TextUtil::escape(str.mid(foundPos, foundLen))) );
+			p.putRich( QString("|icon name=\"%1\" text=\"%2\"|").arg(TextUtil::escape(closest->name())).arg(TextUtil::escape(str.mid(foundPos, foundLen))) );
 			i = foundPos + foundLen;
 		}
 	}
