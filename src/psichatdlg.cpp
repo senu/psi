@@ -67,7 +67,8 @@ void PsiChatDlg::initUi() {
 
     ChatTheme::ChatInfo chatInfo;
 
-    UserListItem *ui = account()->find(jid()); //TODO ask kev (relevant)
+    UserListItem *ui = account()->findFirstRelevant(jid()); //TODO ask kev (relevant)
+    qDebug() << "ui" << ui;
     QString destNick(JIDUtil::nickOrJid(ui->name(), jid().full())); //TODO
 
     //TODO iss| getDisplayName() doesnt work
@@ -521,7 +522,7 @@ void PsiChatDlg::updateLastMsgTimeAndOwner(const QDateTime& t, LastEventOwner ow
 
 
 bool PsiChatDlg::doConsecutiveMessage(const QDateTime& time, bool local) {
-    Q_ASSERT(time >= lastMsgTime);
+    //Q_ASSERT(time >= lastMsgTime); this is not true for offline messages
 
     if (lastMsgTime.secsTo(time) > 3 * 60) { //too old
         return false;
