@@ -7,10 +7,10 @@ QString StatusChatEvent::getRightTemplateAndFillItWithData(const ChatTheme& them
 
 
 QString StatusChatEvent::statusMessage() const {
-    return _statusMessage;
+    return statusMessage_;
 }
 
 
 void StatusChatEvent::setStatusMessage(QString statusMessage) {
-    _statusMessage = statusMessage;
+    statusMessage_ = statusMessage;
 }

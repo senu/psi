@@ -32,6 +32,7 @@
 #include "xmpp_status.h"
 #include "psiactions.h"
 #include "htmlthememanager.h"
+#include "mood.h"
 
 namespace XMPP
 {
@@ -208,6 +209,9 @@ signals:
 	void encryptedMessageSent(int, bool, int, const QString &);
 	void enabledChanged();
 	void startBounce();
+    
+    /** Emited when we receive \param jid 's \param mood change */
+    void moodPublished(const Mood& mood, const Jid& jid);
 
 public slots:
 	void setStatus(const XMPP::Status &, bool withStatus = false);
@@ -379,6 +383,8 @@ private:
 	void stateChanged();
 	void simulateContactOffline(UserListItem *);
 	void simulateRosterOffline();
+
+    /** Updates ContactProfile */
 	void cpUpdate(const UserListItem &, const QString &rname="", bool fromPresence=false);
 	void logEvent(const Jid &, PsiEvent *);
 	void queueEvent(PsiEvent* e, ActivationType activationType);

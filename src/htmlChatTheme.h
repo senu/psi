@@ -13,6 +13,7 @@
 #include "messagechatevent.h"
 #include "emotechatevent.h"
 #include "systemchatevent.h"
+#include "moodchatevent.h"
 
 class ChatTheme;
 class FileTransferChatEvent;
@@ -56,6 +57,7 @@ public:
     QString createStatusEventPart(const StatusChatEvent * event) const;
 
     QString createEmoteEventPart(const EmoteChatEvent * event) const;
+    QString createMoodEventPart(const MoodChatEvent* event) const;
     QString createSystemEventPart(const SystemChatEvent*) const;
 
     /** Fills part (footer/header) with keywords (chatName, timeOpened) */
@@ -92,6 +94,7 @@ private:
 
     HTMLChatTemplate fileTransferEventTemplate;
     HTMLChatTemplate systemEventTemplate;
+    HTMLChatTemplate moodEventTemplate;
 
     HTMLChatEmoteTemplate incomingEmoteEventTemplate;
     HTMLChatEmoteTemplate outgoingEmoteEventTemplate;

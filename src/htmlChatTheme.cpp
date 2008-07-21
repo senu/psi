@@ -12,6 +12,7 @@
 
 #include "htmlChatTheme.h"
 #include "htmlChatView.h"
+#include "moodchatevent.h"
 
 
 HTMLChatTheme::HTMLChatTheme() {
@@ -65,6 +66,7 @@ void HTMLChatTheme::readTheme(QDir dir) {
     // status/event template
     fileTransferEventTemplate.setContent(readFileContents(dir, "Status.html"));
     systemEventTemplate.setContent(readFileContents(dir, "Status.html"));
+    moodEventTemplate.setContent(readFileContents(dir, "Status.html")); //TODO copy ctor
 
 
     // action
@@ -262,6 +264,7 @@ QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const 
 
 
 QString HTMLChatTheme::createSystemEventPart(const SystemChatEvent* event) const {
+
     HTMLChatPart part = systemEventTemplate.createFreshHTMLPart();
 
     fillPartWithEventKeywords(part, event, event->message());
@@ -269,6 +272,25 @@ QString HTMLChatTheme::createSystemEventPart(const SystemChatEvent* event) const
     part.replaceAndEscapeKeyword("%messageClasses%", "system"); //TODO
 
     return part.toString();
+}
+
+
+QString HTMLChatTheme::createMoodEventPart(const MoodChatEvent* event) const {
+
+    HTMLChatPart part = moodEventTemplate.createFreshHTMLPart();
+
+    QString moodText(event->type());
+
+    if (!event->text().isEmpty()) {
+        moodText += ": " + event->text();
+    }
+
+    fillPartWithEventKeywords(part, event, moodText);
+    part.replaceAndEscapeKeyword("%status%", "mood");
+    part.replaceAndEscapeKeyword("%messageClasses%", "mood"); //TODO
+
+    return part.toString();
+
 }
 
 

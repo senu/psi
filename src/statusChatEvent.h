@@ -32,7 +32,7 @@ class StatusChatEvent : public ChatEvent
 	QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const;
 
   private:
-	QString _statusMessage; 
+	QString statusMessage_; 
 };
 
 #endif

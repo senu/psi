@@ -76,3 +76,13 @@ QString PlainTextChatTheme::colorString(bool local, bool isSpooled) const {
 bool PlainTextChatTheme::isValid() {
     return true;
 }
+
+QString PlainTextChatTheme::createMoodEventPart(const MoodChatEvent* event) const {
+    QString moodText(event->type());
+
+    if (!event->text().isEmpty()) {
+        moodText += ": " + event->text();
+    }
+
+    return moodText;
+}

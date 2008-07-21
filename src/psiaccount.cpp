@@ -2777,7 +2777,7 @@ void PsiAccount::itemRetracted(const Jid& j, const QString& n, const PubSubRetra
 	}
 	else if (n == "http://jabber.org/protocol/mood") {
 		foreach(UserListItem* u, findRelevant(j)) {
-			u->setMood(Mood());
+			u->setMood(Mood()); //TODO chatview: log canceled mood?
 			cpUpdate(*u);
 		}
 	}
@@ -2833,6 +2833,8 @@ void PsiAccount::itemPublished(const Jid& j, const QString& n, const PubSubItem&
 			u->setMood(mood);
 			cpUpdate(*u);
 		}
+        qDebug() << "mood published - pa";
+        emit moodPublished(mood, j);
 	}
 	else if (n == "http://jabber.org/protocol/geoloc") {
 		// FIXME: try to find the right resource using JEP-33 'replyto'
@@ -2950,14 +2952,17 @@ ChatDlg *PsiAccount::ensureChatDlg(const Jid &j)
 	if(!c) {
 		// create the chatbox
 		c = ChatDlg::create(j, this, d->tabManager, d->themeManager);
+        
 		connect(c, SIGNAL(aSend(const Message &)), SLOT(dj_sendMessage(const Message &)));
 		connect(c, SIGNAL(messagesRead(const Jid &)), SLOT(chatMessagesRead(const Jid &)));
 		connect(c, SIGNAL(aInfo(const Jid &)), SLOT(actionInfo(const Jid &)));
 		connect(c, SIGNAL(aHistory(const Jid &)), SLOT(actionHistory(const Jid &)));
 		connect(c, SIGNAL(aFile(const Jid &)), SLOT(actionSendFile(const Jid &)));
 		connect(c, SIGNAL(aVoice(const Jid &)), SLOT(actionVoice(const Jid &)));
+        
 		connect(d->psi, SIGNAL(emitOptionsUpdate()), c, SLOT(optionsUpdate()));
 		connect(this, SIGNAL(updateContact(const Jid &, bool)), c, SLOT(updateContact(const Jid &, bool)));
+		connect(this, SIGNAL(moodPublished(const Mood&, const Jid&)), c, SLOT(moodPublished(const Mood&, const Jid&)));
 	}
 	else {
 		// on X11, do a special reparent to open on the right desktop

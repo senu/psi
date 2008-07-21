@@ -12,6 +12,7 @@
 #include "messagechatevent.h"
 #include "emotechatevent.h"
 #include "systemchatevent.h"
+#include "moodchatevent.h"
 
 class ChatTheme;
 class FileTransferChatEvent;
@@ -37,6 +38,7 @@ public:
     QString createStatusEventPart(const StatusChatEvent* event) const;
 
     QString createEmoteEventPart(const EmoteChatEvent* event) const;
+    QString createMoodEventPart(const MoodChatEvent* event) const;
     QString createSystemEventPart(const SystemChatEvent* event) const;
 
     bool isValid();

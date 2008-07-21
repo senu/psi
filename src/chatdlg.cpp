@@ -79,6 +79,7 @@
 #endif
 
 #include "psichatdlg.h"
+#include "moodchatevent.h"
 
 
 ChatDlg* ChatDlg::create(const Jid& jid, PsiAccount* account, TabManager* tabManager,
@@ -1117,4 +1118,13 @@ TabbableWidget::State ChatDlg::state() const {
 
 int ChatDlg::unreadMessageCount() const {
     return pending_;
+}
+
+
+void ChatDlg::moodPublished(const Mood& mood, const Jid& jid_) {
+    qDebug() << "moodPublished" << jid_.full() << mood.typeText();
+    if (jid().compare(jid_, true) && !mood.isNull()) {
+        MoodChatEvent* event = new MoodChatEvent(mood.typeText(), mood.text());
+        chatView()->appendEvent(event);
+    }
 }
