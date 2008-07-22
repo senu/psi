@@ -2806,16 +2806,21 @@ void PsiAccount::itemPublished(const Jid& j, const QString& n, const PubSubItem&
 		// Parse tune
 		QDomElement element = item.payload();
 		QDomElement e;
-		QString tune;
+		QString tuneStr;
+        Tune tune; 
 		bool found;
 
 		e = findSubTag(element, "artist", &found);
-		if (found)
-			tune += e.text() + " - ";
+        if (found) {
+            tune.setArtist(e.text());
+			tuneStr += e.text() + " - ";
+        }
 
 		e = findSubTag(element, "title", &found);
-		if (found)
-			tune += e.text();
+        if (found) {
+            tune.setName(e.text());
+			tuneStr += e.text();
+        }
 
 		foreach(UserListItem* u, findRelevant(j)) {
 			// FIXME: try to find the right resource using JEP-33 'replyto'
@@ -2823,9 +2828,10 @@ void PsiAccount::itemPublished(const Jid& j, const QString& n, const PubSubItem&
 			//bool found = (rit == u->userResourceList().end()) ? false: true;
 			//if(found)
 			//	(*rit).setTune(tune);
-			u->setTune(tune);
+			u->setTune(tuneStr);
 			cpUpdate(*u);
 		}
+        emit tunePublished(tune, j); //TODO only title and artist are set!
 	}
 	else if (n == "http://jabber.org/protocol/mood") {
 		Mood mood(item.payload());
@@ -2833,7 +2839,6 @@ void PsiAccount::itemPublished(const Jid& j, const QString& n, const PubSubItem&
 			u->setMood(mood);
 			cpUpdate(*u);
 		}
-        qDebug() << "mood published - pa";
         emit moodPublished(mood, j);
 	}
 	else if (n == "http://jabber.org/protocol/geoloc") {
@@ -2963,6 +2968,7 @@ ChatDlg *PsiAccount::ensureChatDlg(const Jid &j)
 		connect(d->psi, SIGNAL(emitOptionsUpdate()), c, SLOT(optionsUpdate()));
 		connect(this, SIGNAL(updateContact(const Jid &, bool)), c, SLOT(updateContact(const Jid &, bool)));
 		connect(this, SIGNAL(moodPublished(const Mood&, const Jid&)), c, SLOT(moodPublished(const Mood&, const Jid&)));
+		connect(this, SIGNAL(tunePublished(const Tune&, const Jid&)), c, SLOT(tunePublished(const Tune&, const Jid&)));
 	}
 	else {
 		// on X11, do a special reparent to open on the right desktop

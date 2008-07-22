@@ -12,7 +12,6 @@
 
 #include "htmlChatTheme.h"
 #include "htmlChatView.h"
-#include "moodchatevent.h"
 
 
 HTMLChatTheme::HTMLChatTheme() {
@@ -65,8 +64,9 @@ void HTMLChatTheme::readTheme(QDir dir) {
 
     // status/event template
     fileTransferEventTemplate.setContent(readFileContents(dir, "Status.html"));
-    systemEventTemplate.setContent(readFileContents(dir, "Status.html"));
-    moodEventTemplate.setContent(readFileContents(dir, "Status.html")); //TODO copy ctor
+    systemEventTemplate = HTMLChatTemplate(fileTransferEventTemplate);
+    moodEventTemplate = HTMLChatTemplate(fileTransferEventTemplate);
+    tuneEventTemplate = HTMLChatTemplate(fileTransferEventTemplate);
 
 
     // action
@@ -131,6 +131,7 @@ QString HTMLChatTheme::createIncomingMessagePart(const MessageChatEvent * event)
         part = incomingNextMessageTemplate.createFreshHTMLPart();
     }
 
+    fillPartWithTimeKeywords(part, event);
     fillPartWithUserKeywords(part, event);
     part.replaceMessageBody(event->body());
     part.replaceAndEscapeKeyword("%messageClasses%", "message incoming");
@@ -150,6 +151,7 @@ QString HTMLChatTheme::createOutgoingMessagePart(const MessageChatEvent * event)
         part = outgoingNextMessageTemplate.createFreshHTMLPart();
     }
 
+    fillPartWithTimeKeywords(part, event);
     fillPartWithUserKeywords(part, event);
     part.replaceMessageBody(event->body());
     part.replaceAndEscapeKeyword("%messageClasses%", "message outgoing");
@@ -183,6 +185,8 @@ QString HTMLChatTheme::createFileTransferEventPart(const FileTransferChatEvent *
     }
 
     HTMLChatPart part = fileTransferEventTemplate.createFreshHTMLPart();
+    
+    fillPartWithTimeKeywords(part, event);
     fillPartWithEventKeywords(part, event, eventText);
     part.replaceAndEscapeKeyword("%status%", statusStr);
     part.replaceAndEscapeKeyword("%messageClasses%", "event fileTransfer");
@@ -224,6 +228,7 @@ QString HTMLChatTheme::createStatusEventPart(const StatusChatEvent * event) cons
 
     HTMLChatPart part = fileTransferEventTemplate.createFreshHTMLPart();
 
+    fillPartWithTimeKeywords(part, event);
     fillPartWithEventKeywords(part, event, eventText);
     part.replaceAndEscapeKeyword("%status%", statusStr);
     part.replaceAndEscapeKeyword("%messageClasses%", "status");
@@ -254,6 +259,7 @@ QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const 
         }
     }
 
+    fillPartWithTimeKeywords(part, event);
     fillPartWithUserKeywords(part, event);
     part.replaceAndEscapeKeyword("%message%", eventText); //TODO validate or escape
     part.replaceAndEscapeKeyword("%messageClasses%", "event emote");
@@ -267,6 +273,7 @@ QString HTMLChatTheme::createSystemEventPart(const SystemChatEvent* event) const
 
     HTMLChatPart part = systemEventTemplate.createFreshHTMLPart();
 
+    fillPartWithTimeKeywords(part, event);
     fillPartWithEventKeywords(part, event, event->message());
     part.replaceAndEscapeKeyword("%status%", "system");
     part.replaceAndEscapeKeyword("%messageClasses%", "system"); //TODO
@@ -285,6 +292,7 @@ QString HTMLChatTheme::createMoodEventPart(const MoodChatEvent* event) const {
         moodText += ": " + event->text();
     }
 
+    fillPartWithTimeKeywords(part, event);
     fillPartWithEventKeywords(part, event, moodText);
     part.replaceAndEscapeKeyword("%status%", "mood");
     part.replaceAndEscapeKeyword("%messageClasses%", "mood"); //TODO
@@ -294,12 +302,30 @@ QString HTMLChatTheme::createMoodEventPart(const MoodChatEvent* event) const {
 }
 
 
-void HTMLChatTheme::fillPartWithUserKeywords(HTMLChatPart& part, const UserChatEvent* event) const {
+QString HTMLChatTheme::createTuneEventPart(const TuneChatEvent* event) const {
 
-    part.replaceAndEscapeKeyword("%time%", event->timeStamp().toString());
-    part.replaceTimeKeyword("time", event->timeStamp());
-    part.replaceAndEscapeKeyword("%shortTime%", HTMLChatPart::createShortTime(event->timeStamp()));
+    HTMLChatPart part = tuneEventTemplate.createFreshHTMLPart();
 
+    QString tuneText(event->title());
+
+    if (!event->artist().isEmpty()) {
+        tuneText = event->artist() + " - " + tuneText;
+    }
+
+    tuneText = QObject::tr("%1 is listeing to %2").arg(event->nick(), tuneText);
+
+    fillPartWithTimeKeywords(part, event);
+    fillPartWithUserKeywords(part, event);
+    part.replaceAndEscapeKeyword("%message%", tuneText);
+    part.replaceAndEscapeKeyword("%status%", "tune");
+    part.replaceAndEscapeKeyword("%messageClasses%", "tune"); //TODO
+
+    return part.toString();
+}
+
+
+void HTMLChatTheme::fillPartWithUserKeywords(HTMLChatPart& part, const UserChatData* event) const {
+    
     part.replaceAndEscapeKeyword("%sender%", event->nick());
     part.replaceAndEscapeKeyword("%service%", event->service());
     part.replaceAndEscapeKeyword("%senderScreenName%", event->jid());
@@ -316,6 +342,10 @@ void HTMLChatTheme::fillPartWithUserKeywords(HTMLChatPart& part, const UserChatE
 
 void HTMLChatTheme::fillPartWithEventKeywords(HTMLChatPart& part, const ChatEvent* event, QString eventText) const {
     part.replaceAndEscapeKeyword("%message%", eventText); //TODO validate or escape
+}
+
+
+void HTMLChatTheme::fillPartWithTimeKeywords(HTMLChatPart& part, const AbstractChatEvent* event) const {
     part.replaceAndEscapeKeyword("%time%", event->timeStamp().toString());
     part.replaceTimeKeyword("time", event->timeStamp());
     part.replaceAndEscapeKeyword("%shortTime%", HTMLChatPart::createShortTime(event->timeStamp()));

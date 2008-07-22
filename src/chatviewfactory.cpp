@@ -14,7 +14,7 @@ ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,
         QString themeName(PsiOptions::instance()->getOption("options.ui.themes.themename").toString());
         QString themeVariant(PsiOptions::instance()->getOption("options.ui.themes.variantname").toString());
 
-        HTMLChatTheme theme(themeManager->getTheme(themeName,themeVariant));
+        HTMLChatTheme theme(themeManager->getTheme(themeName, themeVariant));
 
         *isHTMLChatView = true;
         return new HTMLChatView(parent, theme, ApplicationInfo::homeDir());

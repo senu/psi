@@ -2,75 +2,75 @@
 #include "userchatevent.h"
 
 
-void UserChatEvent::setNick(QString nick) {
+void UserChatData::setNick(QString nick) {
     _nick = nick;
 }
 
 
-QString UserChatEvent::nick() const {
+QString UserChatData::nick() const {
     return _nick;
 }
 
 
-void UserChatEvent::setJid(QString jid) {
+void UserChatData::setJid(QString jid) {
     _jid = jid;
 }
 
 
-QString UserChatEvent::jid() const {
+QString UserChatData::jid() const {
     return _jid;
 }
 
 
-QString UserChatEvent::service() const {
+QString UserChatData::service() const {
     return _service;
 }
 
 
-void UserChatEvent::setService(QString service) {
+void UserChatData::setService(QString service) {
     _service = service;
 }
 
 
-void UserChatEvent::setUserIconPath(QString userIconPath) {
+void UserChatData::setUserIconPath(QString userIconPath) {
     _userIconPath = userIconPath;
 }
 
 
-QString UserChatEvent::userIconPath()const {
+QString UserChatData::userIconPath()const {
     return _userIconPath;
 }
 
 
-QString UserChatEvent::userStatusIcon() const {
+QString UserChatData::userStatusIcon() const {
     return _userStatusIcon;
 }
 
 
-void UserChatEvent::setUserStatusIcon(QString userStatusIcon) {
+void UserChatData::setUserStatusIcon(QString userStatusIcon) {
     _userStatusIcon = userStatusIcon;
 }
 
 
-void UserChatEvent::setLocal(bool is) {
+void UserChatData::setLocal(bool is) {
     _isLocal = is;
 }
 
 
-bool UserChatEvent::isLocal() const {
+bool UserChatData::isLocal() const {
     return _isLocal;
 }
 
 
-void UserChatEvent::setSpooled(bool is) {
+void UserChatData::setSpooled(bool is) {
     _isSpooled = is;
 }
 
 
-bool UserChatEvent::isSpooled() const {
+bool UserChatData::isSpooled() const {
     return _isSpooled;
 }
 
-uint UserChatEvent::userHash() const {
+uint UserChatData::userHash() const {
     return qHash(_jid);
 }

@@ -32,8 +32,9 @@ void ChatViewProxy::init(const ChatTheme::ChatInfo& chatInfo, HTMLThemeManager* 
 
 void ChatViewProxy::optionsChanged(const QString& optionName) {
     qDebug() << optionName;
-    if (!_chatView || !optionName.startsWith("options.ui.themes"))
+    if (!_chatView || !optionName.startsWith("options.ui.themes")) {
         return;
+    }
     
     if (PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool() != isHTMLChatView) {
         ChatView * newView = createChatView();
@@ -43,9 +44,14 @@ void ChatViewProxy::optionsChanged(const QString& optionName) {
         delete _chatView;
         _chatView = newView;
     }
+    
+    if (!optionName.startsWith("options.ui.themes.themename") && 
+        !optionName.startsWith("options.ui.themes.variantname")) {
+        return;
+    }
 
     if(isHTMLChatView) { //theme change?
-        qDebug() << "themeChanged?";
+        qDebug() << "themeChanged?" << PsiOptions::instance()->getOption("options.ui.themes.themename").toString();
         dynamic_cast<HTMLChatView *> (_chatView)->setTheme(themeManager->getTheme(
             PsiOptions::instance()->getOption("options.ui.themes.themename").toString(), //TODO pointers
             PsiOptions::instance()->getOption("options.ui.themes.variantname").toString())); 

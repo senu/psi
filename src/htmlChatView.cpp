@@ -80,7 +80,7 @@ void HTMLChatView::onInitDocumentFinished() {
     isReady = true;
 
     if (queuedTheme) {
-        qDebug() << "changing queued theme";
+        qDebug() << "changing queued theme" << queuedTheme->baseHref();
         setTheme(*queuedTheme);
         delete queuedTheme;
         queuedTheme = 0;
@@ -222,10 +222,12 @@ ChatTheme::ChatInfo HTMLChatView::chatInfo() const {
 
 void HTMLChatView::setTheme(HTMLChatTheme _theme) {
 
+    qDebug() << "set theme " << _theme.baseHref();
+    
     if (!isReady) {
         delete queuedTheme;
-        queuedTheme = new HTMLChatTheme(theme);
-        qDebug() << "queued theme change";
+        queuedTheme = new HTMLChatTheme(_theme);
+        qDebug() << "queued theme change" << _theme.baseHref();
         return;
     }
 

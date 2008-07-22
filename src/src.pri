@@ -244,6 +244,7 @@ HEADERS += \
 	$$PWD/htmltextformatter.h\
 	$$PWD/nullhtmltextformatter.h\
 	$$PWD/moodchatevent.h\
+	$$PWD/tunechatevent.h\
 
 
 # Source files
@@ -381,6 +382,7 @@ SOURCES += \
 	$$PWD/defaulthtmltextformatter.cpp\
 	$$PWD/messageValidator.cpp\
 	$$PWD/moodchatevent.cpp\
+	$$PWD/tunechatevent.cpp\
 
 
 whiteboarding {

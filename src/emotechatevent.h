@@ -12,7 +12,7 @@ class AstractChatEvent;
 
 
 /** Emote (/me is reading...) ChatEvent */
-class EmoteChatEvent : public ChatEvent, public UserChatEvent {
+class EmoteChatEvent : public ChatEvent, public UserChatData {
 
 public:
     /** eg 'is reading' */

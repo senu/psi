@@ -15,6 +15,7 @@ public:
 
 	/** Creates HTMLChatTemplate with content as content*/
 	HTMLChatTemplate(const QString content);
+    HTMLChatTemplate(const HTMLChatTemplate& other);
 	
 	HTMLChatTemplate() {};
 
@@ -26,7 +27,7 @@ public:
 
 private:
 	/** Template body */
-	QString _content;
+	QString content_;
 
 };
 

@@ -14,6 +14,7 @@
 #include "emotechatevent.h"
 #include "systemchatevent.h"
 #include "moodchatevent.h"
+#include "tunechatevent.h"
 
 class ChatTheme;
 class FileTransferChatEvent;
@@ -58,6 +59,7 @@ public:
 
     QString createEmoteEventPart(const EmoteChatEvent * event) const;
     QString createMoodEventPart(const MoodChatEvent* event) const;
+    QString createTuneEventPart(const TuneChatEvent* event) const;
     QString createSystemEventPart(const SystemChatEvent*) const;
 
     /** Fills part (footer/header) with keywords (chatName, timeOpened) */
@@ -74,13 +76,17 @@ public:
 private:
 
     /** Fills part with user (eg nick) keywords from event (common for in/out next/cons messages and emote) */
-    void fillPartWithUserKeywords(HTMLChatPart& part, const UserChatEvent* event) const;
+    void fillPartWithUserKeywords(HTMLChatPart& part, const UserChatData* event) const;
 
-    /** Fills part with keywords from event; %message% = eventText (common for eg filetransfer, mood) 
+    /** 
+     * Fills part with keywords from event; %message% = eventText (common for eg filetransfer, mood) 
 	 *  
-	 *  Not for messages nor emote!
+	 * Not for messages nor emote!
 	 */
     void fillPartWithEventKeywords(HTMLChatPart& part, const ChatEvent* event, QString eventText) const;
+
+    /** Replaces %time%, %shortTime%, etc */
+    void fillPartWithTimeKeywords(HTMLChatPart& part, const AbstractChatEvent* event) const;
 	
     /** Returns dir/relativePath (to Contents dir) */
     QString readFileContents(QDir dir, QString relativePath);
@@ -95,6 +101,7 @@ private:
     HTMLChatTemplate fileTransferEventTemplate;
     HTMLChatTemplate systemEventTemplate;
     HTMLChatTemplate moodEventTemplate;
+    HTMLChatTemplate tuneEventTemplate;
 
     HTMLChatEmoteTemplate incomingEmoteEventTemplate;
     HTMLChatEmoteTemplate outgoingEmoteEventTemplate;

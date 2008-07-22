@@ -27,10 +27,10 @@ public:
     virtual ~ChatView() {
     }
 
-    /** Appends message; adds it to the appendedEvents */
+    /** Appends event (filetransfer, mood, etc); adds it to the appendedEvents */
     virtual void appendEvent(const ChatEvent* event, bool alreadyAppended = false);
 
-    /** Appends event (filetransfer, mood, etc); adds it to the appendedEvents */
+    /** Appends message; adds it to the appendedEvents */
     virtual void appendMessage(const MessageChatEvent* event, bool alreadyAppended = false);
 
     /** Clears all messages */

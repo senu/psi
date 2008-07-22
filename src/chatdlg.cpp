@@ -1122,9 +1122,22 @@ int ChatDlg::unreadMessageCount() const {
 
 
 void ChatDlg::moodPublished(const Mood& mood, const Jid& jid_) {
-    qDebug() << "moodPublished" << jid_.full() << mood.typeText();
     if (jid().compare(jid_, true) && !mood.isNull()) {
         MoodChatEvent* event = new MoodChatEvent(mood.typeText(), mood.text());
+        chatView()->appendEvent(event);
+    }
+}
+
+
+void ChatDlg::tunePublished(const Tune& tune, const Jid& jid_) {
+    if (jid().compare(jid_, true)) {
+
+        TuneChatEvent* event = new TuneChatEvent(tune.artist(), tune.name());
+        event->setNick(whoNick(false));
+        event->setTimeStamp(QDateTime::currentDateTime());
+        event->setLocal(false);
+        event->setSpooled(false);
+        event->setService("Jabber");
         chatView()->appendEvent(event);
     }
 }

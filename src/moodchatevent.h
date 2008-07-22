@@ -1,7 +1,6 @@
 #ifndef _MOODCHATEVENT_H
 #define	_MOODCHATEVENT_H
 
-
 #include <Qt>
 #include <QString>
 

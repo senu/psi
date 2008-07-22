@@ -73,16 +73,32 @@ QString PlainTextChatTheme::colorString(bool local, bool isSpooled) const {
     return "#0000FF";
 }
 
+
 bool PlainTextChatTheme::isValid() {
     return true;
 }
+
 
 QString PlainTextChatTheme::createMoodEventPart(const MoodChatEvent* event) const {
     QString moodText(event->type());
 
     if (!event->text().isEmpty()) {
-        moodText += ": " + event->text();
+        moodText += " (" + event->text() + ")";
     }
 
-    return moodText;
+    return QString("<span style=\"color: #00A000\">[%1] *** %2 </span>").arg(formatTimeStamp(event->timeStamp()), moodText);
+}
+
+
+QString PlainTextChatTheme::createTuneEventPart(const TuneChatEvent* event) const {
+    QString tuneText(event->title());
+
+    if (!event->artist().isEmpty()) {
+        tuneText = event->artist() + " - " + tuneText;
+    }
+
+    tuneText = QObject::tr("%1 is listeing to %2").arg(event->nick(), tuneText);
+
+    return QString("<span style=\"color: #00A000\">[%1] *** %2 </span>").arg(formatTimeStamp(event->timeStamp()), tuneText);
+
 }

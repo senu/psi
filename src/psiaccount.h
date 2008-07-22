@@ -213,6 +213,9 @@ signals:
     /** Emited when we receive \param jid 's \param mood change */
     void moodPublished(const Mood& mood, const Jid& jid);
 
+    /** Emited when \param jid publishes \param tune */
+    void tunePublished(const Tune& tune, const Jid& jid);
+
 public slots:
 	void setStatus(const XMPP::Status &, bool withStatus = false);
 

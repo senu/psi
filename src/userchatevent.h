@@ -4,12 +4,14 @@
 #include <QString>
 #include "chatEvent.h"
 
+//TODO rename file
 
-/** Abstract ChatEvent with sender information (nick,jid,icon, ...) 
+/**
+ * Contains ChatEvent sender information (nick,jid,icon, ...) 
  *   
- *  For message and status events  
+ * For message and user-oriented events  
  */
-class UserChatEvent : virtual public AbstractChatEvent {
+class UserChatData  {
  public:
 
     QString jid() const;
@@ -20,15 +22,15 @@ class UserChatEvent : virtual public AbstractChatEvent {
     /** Is it our message? */
     bool isLocal() const;
     
-    /** offline storage */ //TODO enum/ better name
+    /** Offline storage */ //TODO enum/ better name
     bool isSpooled() const;
     
     void setJid(QString);
     void setNick(QString);
     void setUserIconPath(QString);
     void setService(QString);
-    void setLocal(bool); //our message? (outgoing)
-    void setSpooled(bool); // offline storage
+    void setLocal(bool); 
+    void setSpooled(bool); 
 
 
     /** Returns userStatusIcon */

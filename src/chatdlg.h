@@ -39,6 +39,7 @@
 #include "defaulthtmltextformatter.h"
 #include "messageValidator.h"
 #include "mood.h"
+#include "tune.h"
 
 
 namespace XMPP {
@@ -120,6 +121,10 @@ slots:
     
     /** Creates MoodChatEvent for \param jid 's \param mood change (if needed) */
     void moodPublished(const Mood& mood, const Jid& jid);
+
+    /** Creates TuneChatEvent for \param jid (if needed) */
+    void tunePublished(const Tune& mood, const Jid& jid);
+    
     void incomingMessage(const Message &);
     virtual void updateAvatar() = 0;
     void updateAvatar(const Jid&);
