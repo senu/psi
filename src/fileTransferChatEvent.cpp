@@ -1,6 +1,10 @@
 #include "fileTransferChatEvent.h"
 
 
+FileTransferChatEvent::FileTransferChatEvent() 
+    :type(Initiated) {
+    
+}
 QString FileTransferChatEvent::fileName() const {
     return _fileName;
 }

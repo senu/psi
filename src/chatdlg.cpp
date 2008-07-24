@@ -1141,3 +1141,7 @@ void ChatDlg::tunePublished(const Tune& tune, const Jid& jid_) {
         chatView()->appendEvent(event);
     }
 }
+
+void ChatDlg::incomingFileTransfer(const QString& fileName) {
+
+}

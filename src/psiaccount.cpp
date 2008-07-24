@@ -23,6 +23,9 @@
  *
  */
 
+#include "chatdlg.h"
+
+
 #include <QFileDialog>
 #include <qinputdialog.h>
 #include <qtimer.h>
@@ -3800,7 +3803,7 @@ void PsiAccount::handleEvent(PsiEvent* e, ActivationType activationType)
 				}
 				if (c) {
 					c->incomingMessage(m);
-				}
+                }
 			}
 			return;
 		}
@@ -3869,6 +3872,17 @@ void PsiAccount::handleEvent(PsiEvent* e, ActivationType activationType)
 		playSound(PsiOptions::instance()->getOption("options.ui.notifications.sounds.incoming-file-transfer").toString());
 		doPopup = true;
 		popupType = PsiPopup::AlertFile;
+
+        //notify chat dialog 
+        ChatDlg *c = findChatDialog(e->from());
+        
+        if (!c) {
+            c = findChatDialog(e->jid());
+        }
+        if (c) {
+            c->incomingFileTransfer(dynamic_cast<FileEvent*>(e)->takeFileTransfer()->fileName());
+        }
+				
 	}
 	else if(e->type() == PsiEvent::RosterExchange) {
 		RosterExchangeEvent* re = (RosterExchangeEvent*) e;

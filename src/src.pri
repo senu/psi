@@ -245,6 +245,9 @@ HEADERS += \
 	$$PWD/nullhtmltextformatter.h\
 	$$PWD/moodchatevent.h\
 	$$PWD/tunechatevent.h\
+	$$PWD/iconserver.h\
+	$$PWD/iconreply.h\
+	$$PWD/networkaccessmanager.h\
 
 
 # Source files
@@ -383,6 +386,9 @@ SOURCES += \
 	$$PWD/messageValidator.cpp\
 	$$PWD/moodchatevent.cpp\
 	$$PWD/tunechatevent.cpp\
+	$$PWD/iconserver.cpp\
+	$$PWD/iconreply.cpp\
+	$$PWD/networkaccessmanager.cpp\
 
 
 whiteboarding {

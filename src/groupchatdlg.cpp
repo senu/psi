@@ -207,6 +207,7 @@ private:
 public:		
 	void doTrackBar()
 	{
+        /* TODO trackbar
 		trackBar = false;
 
 		// save position, because our manipulations could change it
@@ -224,6 +225,7 @@ public:
 		te_log()->setTextCursor(cursor);
 
 		te_log()->verticalScrollBar()->setValue(scrollbarValue);
+         */
 	}
 
 public:

@@ -125,6 +125,12 @@ slots:
     /** Creates TuneChatEvent for \param jid (if needed) */
     void tunePublished(const Tune& mood, const Jid& jid);
     
+    /**
+     * Creates FileTrasferChatEvent;
+     * \param fileName indicates incoming file name 
+     */
+    void incomingFileTransfer(const QString& fileName);
+    
     void incomingMessage(const Message &);
     virtual void updateAvatar() = 0;
     void updateAvatar(const Jid&);

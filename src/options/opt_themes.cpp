@@ -114,6 +114,7 @@ void OptionsTabThemes::restoreOptions() {
 
     themeList.readThemes(ApplicationInfo::homeDir()); //TODO
 
+    d->themeCB->clear();
     d->themeCB->addItems(themeList.themeNames());
 
     d->themeCB->setCurrentIndex(d->themeCB->findText(PsiOptions::instance()->getOption("options.ui.themes.themename").toString()));

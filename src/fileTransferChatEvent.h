@@ -16,7 +16,7 @@ class FileTransferChatEvent : public ChatEvent {
 
 public:
 
-
+    //TODO aborted, finished! 
     enum FileTransferEventType {
 
         Initiated,
@@ -24,6 +24,9 @@ public:
         Finished,
     };
 
+    FileTransferChatEvent();
+
+    /** Type of FileTransferEvent */
     FileTransferEventType type;
 
     /** Returns fileName */
@@ -31,8 +34,6 @@ public:
 
     /** Sets fileName */
     void setFileName(QString fileName);
-
-
 
 
     QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const {
