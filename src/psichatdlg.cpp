@@ -434,22 +434,23 @@ void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time,
 }
 
 
-void PsiChatDlg::appendSysMsg(const SystemChatEvent* event) {
+void PsiChatDlg::appendChatEvent(const ChatEvent* event, bool alert) {
     chatView()->appendEvent(event);
     updateLastMsgTimeAndOwner(event->timeStamp(), Other);
+    //TODO do alert
 }
 
-
-void PsiChatDlg::appendSysMsg(const QString &str) {
+/*
+void PsiChatDlg::appendSystemMsg(const QString &str) {
     QDateTime time = QDateTime::currentDateTime();
 
     ExtendedSystemChatEvent * ev = new ExtendedSystemChatEvent(str);
     ev->setType(SystemChatEvent::Other);
     ev->setTimeStamp(time);
 
-    appendSysMsg(ev);
+    appendSystemMsg(ev);
 }
-
+*/
 
 void PsiChatDlg::appendMessageFields(const Message& m) {
     //TODO vw rf

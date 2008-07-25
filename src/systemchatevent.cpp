@@ -3,23 +3,23 @@
 
 
 SystemChatEvent::SystemEventType SystemChatEvent::type() const {
-    return _type;
+    return type_;
 }
 
 
 void SystemChatEvent::setType(SystemChatEvent::SystemEventType type) {
-    _type = type;
+    type_ = type;
 }
 
 
 SystemChatEvent::SystemChatEvent(SystemChatEvent::SystemEventType type)
-: _type(type) {
+: type_(type) {
     _timeStamp = QDateTime::currentDateTime();
 }
 
 
 SystemChatEvent::SystemChatEvent()
-: _type(SystemChatEvent::Other) {
+: type_(SystemChatEvent::Other) {
 
     _timeStamp = QDateTime::currentDateTime();
 }
@@ -33,7 +33,7 @@ QString SystemChatEvent::getRightTemplateAndFillItWithData(const ChatTheme& them
 QString SystemChatEvent::message() const {
     QString ret;
 
-    switch (_type) {
+    switch (type_) {
         case SystemChatEvent::EncryptionEnabled :
             return "<icon name=\"psi/cryptoYes\"> " + QObject::tr("Encryption Enabled");
         case SystemChatEvent::EncryptionDisabled :

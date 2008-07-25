@@ -18,6 +18,10 @@
  *
  */
 
+#include "groupchatdlg.h"
+
+
+
 // TODO: Move all the 'logic' of groupchats into MUCManager. See MUCManager
 // for more details.
 
@@ -75,6 +79,8 @@
 #include "psicontactlist.h"
 #include "accountlabel.h"
 #include "gcuserview.h"
+
+#include "esystemchatevent.h"
 
 #ifdef Q_WS_WIN
 #include <windows.h>
@@ -714,7 +720,7 @@ void GCMainDlg::unsetConnecting()
 
 void GCMainDlg::action_error(MUCManager::Action, int, const QString& err) 
 {
-	appendSysMsg(err, false);
+	appendChatEvent(new ExtendedSystemChatEvent(err, SystemChatEvent::Error), false);
 }
 
 void GCMainDlg::chatEdit_returnPressed()
@@ -846,7 +852,7 @@ void GCMainDlg::goDisc()
 	if(d->state != Private::Idle) {
 		d->state = Private::Idle;
 		ui_.pb_topic->setEnabled(false);
-		appendSysMsg(tr("Disconnected."), true);
+		appendChatEvent(new SystemChatEvent(SystemChatEvent::Disconnected), true);
 		chatEdit()->setEnabled(false);
 	}
 }
@@ -855,14 +861,14 @@ void GCMainDlg::goConn()
 {
 	if(d->state == Private::Idle) {
 		d->state = Private::Connecting;
-		appendSysMsg(tr("Reconnecting..."), true);
+		appendChatEvent(new SystemChatEvent(SystemChatEvent::Reconnecting), true);
 
 		QString host = jid().host();
 		QString room = jid().user();
 		QString nick = d->self;
 
 		if(!account()->groupChatJoin(host, room, nick, d->password)) {
-			appendSysMsg(tr("Error: You are in or joining this room already!"), true);
+            appendChatEvent(new SystemChatEvent(SystemChatEvent::AlreadyJoined), true);
 			d->state = Private::Idle;
 		}
 	}
@@ -914,10 +920,16 @@ void GCMainDlg::error(int, const QString &str)
 {
 	ui_.pb_topic->setEnabled(false);
 
-	if(d->state == Private::Connecting)
-		appendSysMsg(tr("Unable to join groupchat.  Reason: %1").arg(str), true);
-	else
-		appendSysMsg(tr("Unexpected groupchat error: %1").arg(str), true);
+    if(d->state == Private::Connecting) {
+        ExtendedSystemChatEvent* event = new ExtendedSystemChatEvent(tr("Unable to join groupchat.  Reason: %1").arg(str));
+        event->setType(SystemChatEvent::Error);
+        appendChatEvent(event, true);
+    }
+    else {
+        ExtendedSystemChatEvent* event = new ExtendedSystemChatEvent(tr("Unexpected groupchat error: %1").arg(str));
+        event->setType(SystemChatEvent::Error);
+        appendChatEvent(event, true);
+    }
 
 	d->state = Private::Idle;
 }
@@ -930,9 +942,10 @@ void GCMainDlg::presence(const QString &nick, const Status &s)
 			message = tr("Please choose a different nickname");
 			d->self = d->prev_self;
 		}
-		else
+        else {
 			message = tr("An error occurred");
-		appendSysMsg(message, false, QDateTime::currentDateTime());
+        }
+		appendChatEvent(new ExtendedSystemChatEvent(message, SystemChatEvent::Error), false);
 		return;
 	}
 
@@ -950,11 +963,13 @@ void GCMainDlg::presence(const QString &nick, const Status &s)
 	if(s.isAvailable()) {
 		// Available
 		if (s.mucStatus() == 201) {
-			appendSysMsg(tr("New room created"), false, QDateTime::currentDateTime());
-			if (options_->getOption("options.muc.accept-defaults").toBool())
+			appendChatEvent(new ExtendedSystemChatEvent(tr("New room created"), SystemChatEvent::Other), false);
+            if (options_->getOption("options.muc.accept-defaults").toBool()) {
 				d->mucManager->setDefaultConfiguration();
-			else if (options_->getOption("options.muc.auto-configure").toBool())
+            }
+            else if (options_->getOption("options.muc.auto-configure").toBool()) {
 				QTimer::singleShot(0, this, SLOT(configureRoom()));
+            }
 		}
 
 		GCUserViewItem* contact = (GCUserViewItem*) ui_.lv_users->findEntry(nick);
@@ -980,7 +995,7 @@ void GCMainDlg::presence(const QString &nick, const Status &s)
 					message = message.arg(QString("%1 (%2)").arg(nick).arg(s.mucItem().jid().full()));
 				else
 					message = message.arg(nick);
-				appendSysMsg(message, false, QDateTime::currentDateTime());
+                appendChatEvent(new ExtendedSystemChatEvent(message, SystemChatEvent::Other), false);
 			}
 		}
 		else {
@@ -999,8 +1014,9 @@ void GCMainDlg::presence(const QString &nick, const Status &s)
 					message += tr("%1 is now %2").arg(nick).arg(MUCManager::affiliationToString(s.mucItem().affiliation(),true));
 				}
 
-				if (!message.isEmpty())
-					appendSysMsg(message, false, QDateTime::currentDateTime());
+                if (!message.isEmpty()) {
+                    appendChatEvent(new ExtendedSystemChatEvent(message, SystemChatEvent::Other), false);
+                }
 			}
 			if ( !d->connecting && options_->getOption("options.muc.show-status-changes").toBool() ) {
 				if (s.status() != contact->s.status() || s.show() != contact->s.show())	{
@@ -1013,7 +1029,7 @@ void GCMainDlg::presence(const QString &nick, const Status &s)
 					message = tr("%1 is now %2").arg(nick).arg(st);
 					if (!s.status().isEmpty())
 						message+=QString(" (%1)").arg(s.status());
-					appendSysMsg(message, false, QDateTime::currentDateTime());
+					appendChatEvent(new ExtendedSystemChatEvent(message, SystemChatEvent::Other), false);
 				}
 			}
 		}
@@ -1125,7 +1141,7 @@ void GCMainDlg::presence(const QString &nick, const Status &s)
 					if (!s.status().isEmpty())
 						message += QString(" (%1)").arg(s.status());
 			}
-			appendSysMsg(message, false, QDateTime::currentDateTime());
+			appendChatEvent(new ExtendedSystemChatEvent(message, SystemChatEvent::Other), false);
 		}
 		ui_.lv_users->removeEntry(nick);
 	}
@@ -1185,10 +1201,12 @@ void GCMainDlg::message(const Message &_m)
 			account()->playSound(PsiOptions::instance()->getOption("options.ui.notifications.sounds.chat-message").toString());
 	}
 
-	if(from.isEmpty())
-		appendSysMsg(m.body(), alert, m.timeStamp());
-	else
+    if(from.isEmpty()) {
+        appendChatEvent(new ExtendedSystemChatEvent(m.body(), SystemChatEvent::Other), alert); //TODO
+    }
+    else {
 		appendMessage(m, alert);
+    }
 }
 
 void GCMainDlg::joined()
@@ -1199,7 +1217,7 @@ void GCMainDlg::joined()
 		ui_.pb_topic->setEnabled(true);
 		chatEdit()->setEnabled(true);
 		setConnecting();
-		appendSysMsg(tr("Connected."), true);
+		appendChatEvent(new SystemChatEvent(SystemChatEvent::Connected), true);
 	}
 }
 
@@ -1213,14 +1231,15 @@ const QString& GCMainDlg::nick() const
 	return d->self;
 }
 
-void GCMainDlg::appendSysMsg(const QString &str, bool alert, const QDateTime &ts)
+#warning TODO!
+/*
+void GCMainDlg::appendSystemMsg(const QString &str, bool alert, const QDateTime &ts)
 {
 	if (d->trackBar)
 	 	d->doTrackBar();
 
 	if (!PsiOptions::instance()->getOption("options.ui.muc.use-highlighting").toBool())
 		alert=false;
-
 	QDateTime time = QDateTime::currentDateTime();
 	if(!ts.isNull())
 		time = ts;
@@ -1232,7 +1251,7 @@ void GCMainDlg::appendSysMsg(const QString &str, bool alert, const QDateTime &ts
 	if(alert)
 		doAlert();
 }
-
+*/
 QString GCMainDlg::getNickColor(QString nick)
 {
 	int sender;
@@ -1260,41 +1279,51 @@ QString GCMainDlg::getNickColor(QString nick)
 		return nickColors[n];
 	}
 }
-
+#warning TODO!
+//TODO warning: void ChatDlg::appendMessage(const Message &m, bool local) {
 void GCMainDlg::appendMessage(const Message &m, bool alert)
 {
-	updateLastMsgTime(m.timeStamp());
-	//QString who, color;
-	if (!PsiOptions::instance()->getOption("options.ui.muc.use-highlighting").toBool())
+//	updateLastMsgTimeAndOwner(m.timeStamp(), Incoming); //TODO
+	
+    if (!PsiOptions::instance()->getOption("options.ui.muc.use-highlighting").toBool()) {
 		alert=false;
-	QString who, textcolor, nickcolor,alerttagso,alerttagsc;
+    }
+    
+	QString who, 
+        textcolor, nickcolor, 
+        alerttagso, alerttagsc; //highlighting: opening and closing tags 
 
+    //TODO in which way do we want highlighting
+    
 	who = m.from().resource();
-	if (d->trackBar&&m.from().resource() != d->self&&!m.spooled())
+    
+    if (d->trackBar && m.from().resource() != d->self && !m.spooled()) {
 	 	d->doTrackBar();
-	/*if(local) {
-		color = "#FF0000";
-	}
-	else {
-		color = "#0000FF";
-	}*/
+    }
+    
 	nickcolor = getNickColor(who);
 	textcolor = ui_.log->palette().active().text().name();
-	if(alert) {
+	
+    if (alert) {
 		textcolor = "#FF0000";
 		alerttagso = "<b>";
 		alerttagsc = "</b>";
 	}
-	if(m.spooled())
-		nickcolor = "#008000"; //color = "#008000";
+    
+    if (m.spooled()) {
+		nickcolor = "#008000";
+    }
 
 	QString timestr = ui_.log->formatTimeStamp(m.timeStamp());
 
 	bool emote = false;
-	if(m.body().left(4) == "/me ")
+    
+    if(m.body().left(4) == "/me ") {
 		emote = true;
+    }
 
-	QString txt;
+    QString txt;
+    
 	if(emote)
 		txt = TextUtil::plain2rich(m.body().mid(4));
 	else

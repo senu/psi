@@ -6,12 +6,13 @@
 
 #include "chatEvent.h"
 #include "chatTheme.h"
+#include "userchatevent.h"
 
 class ChatTheme;
 class AstractChatEvent;
 
 /** Status + status message ChatEvent */
-class StatusChatEvent : public ChatEvent 
+class StatusChatEvent : public ChatEvent, public UserChatData //TODO chatview dont display nicks 
 {
   public:	
 	enum StatusEventType {

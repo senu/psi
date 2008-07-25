@@ -91,6 +91,7 @@ protected:
     void closeEvent(QCloseEvent *);
     void resizeEvent(QResizeEvent*);
     void mucInfoDialog(const QString& title, const QString& message, const Jid& actor, const QString& reason);
+    void appendChatEvent(const ChatEvent* event, bool alert = false);
    
     /** Returns dialog's ChatView */
     ChatView* chatView() const;
@@ -142,7 +143,8 @@ private:
     Ui::GroupChatDlg ui_;
 
     void doAlert();
-    void appendSysMsg(const QString &, bool, const QDateTime &ts = QDateTime());
+    //void appendSystemMsg(const QString &, bool, const QDateTime &ts = QDateTime()); //TODO remove
+    
     void appendMessage(const Message &, bool);
     void setLooks();
 

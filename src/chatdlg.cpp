@@ -80,6 +80,7 @@
 
 #include "psichatdlg.h"
 #include "moodchatevent.h"
+#include "esystemchatevent.h"
 
 
 ChatDlg* ChatDlg::create(const Jid& jid, PsiAccount* account, TabManager* tabManager,
@@ -464,6 +465,8 @@ void ChatDlg::updateContact(const Jid &j, bool fromPresence) {
 
             if (fromPresence && statusChanged) {
                 QString msg = tr("%1 is %2").arg(Qt::escape(dispNick_)).arg(status2txt(status_));
+                StatusChatEvent * event = new StatusChatEvent();
+
                 if (!statusString_.isEmpty()) {
                     QString ss = TextUtil::linkify(TextUtil::plain2rich(statusString_));
                     if (PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool()) {
@@ -474,7 +477,7 @@ void ChatDlg::updateContact(const Jid &j, bool fromPresence) {
                     }
                     msg += QString(" [%1]").arg(ss);
                 }
-                appendSysMsg(msg);
+                appendChatEvent(event);
             }
         }
 
@@ -803,14 +806,14 @@ void ChatDlg::appendMessage(const Message &m, bool local) {
     if (encChanged) {
         if (encEnabled) {
             SystemChatEvent * ev = new SystemChatEvent(SystemChatEvent::EncryptionEnabled); //freed in chatview
-            appendSysMsg(ev);
+            appendChatEvent(ev);
             if (!local) {
                 setPGPEnabled(true);
             }
         }
         else {
             SystemChatEvent * ev = new SystemChatEvent(SystemChatEvent::EncryptionDisabled); //freed in chatview
-            appendSysMsg(ev);
+            appendChatEvent(ev);
             if (!local) {
                 setPGPEnabled(false);
 
@@ -958,7 +961,8 @@ void ChatDlg::setChatState(ChatState state) {
 void ChatDlg::setContactChatState(ChatState state) {
     contactChatState_ = state;
     if (state == XMPP::StateGone) {
-        appendSysMsg(tr("%1 ended the conversation").arg(Qt::escape(dispNick_)));
+        appendChatEvent(new ExtendedSystemChatEvent(tr("%1 ended the conversation").arg(Qt::escape(dispNick_)), 
+                                                    SystemChatEvent::EndedConvesation));
     }
     else {
         // Activate ourselves

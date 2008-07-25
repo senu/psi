@@ -46,8 +46,8 @@ public:
     /** Text of event */
     virtual QString message() const;
 
-private:
-    SystemEventType _type;
+protected:
+    SystemEventType type_;
 };
 
 
