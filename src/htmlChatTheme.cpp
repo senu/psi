@@ -341,6 +341,7 @@ void HTMLChatTheme::fillPartWithUserKeywords(HTMLChatPart& part, const UserChatD
 
 
 void HTMLChatTheme::fillPartWithEventKeywords(HTMLChatPart& part, const ChatEvent* event, QString eventText) const {
+    Q_UNUSED(event);
     part.replaceAndEscapeKeyword("%message%", eventText); //TODO validate or escape
 }
 

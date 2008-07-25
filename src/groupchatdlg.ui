@@ -187,7 +187,7 @@
          <property name="orientation" >
           <enum>Qt::Horizontal</enum>
          </property>
-         <widget class="PlainTextChatView" name="log" >
+         <widget class="ChatViewProxy" name="log" >
           <property name="sizePolicy" >
            <sizepolicy vsizetype="MinimumExpanding" hsizetype="Expanding" >
             <horstretch>0</horstretch>
@@ -196,9 +196,6 @@
           </property>
           <property name="focusPolicy" >
            <enum>Qt::NoFocus</enum>
-          </property>
-          <property name="readOnly" >
-           <bool>true</bool>
           </property>
          </widget>
          <widget class="GCUserView" name="lv_users" >
@@ -289,9 +286,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>PlainTextChatView</class>
+   <class>ChatViewProxy</class>
    <extends>QTextEdit</extends>
-   <header>msgmle.h</header>
+   <header>chatviewproxy.h</header>
   </customwidget>
   <customwidget>
    <class>ChatEditProxy</class>

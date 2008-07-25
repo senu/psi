@@ -57,6 +57,12 @@ public:
      *  Explicit copy constructor
      */
     virtual void restoreDataFrom(const ChatView& other);
+    
+    /** Sets session info */
+    ChatTheme::ChatInfo chatInfo() const;
+    
+    /** Returns session info */
+    void setChatInfo(ChatTheme::ChatInfo chatInfo);
 
 signals:
 
@@ -67,15 +73,17 @@ signals:
 
 
 slots:
-    /**
-     * Scrolls the vertical scroll bar to its maximum position i.e. to the bottom.
-     */
+    /** Scrolls the vertical scroll bar to its maximum position i.e. to the bottom. */
     virtual void scrollToBottom() = 0;
 
-    /**
-     * Scrolls the vertical scroll bar to its minimum position i.e. to the top.
-     */
+    /** Scrolls the vertical scroll bar to its minimum position i.e. to the top. */
     virtual void scrollToTop() = 0;
+
+    /** Scrolls chatView up */
+    virtual void scrollUp() = 0;
+    
+    /** Scrolls chatView down */
+    virtual void scrollDown() = 0;
 
 protected:
     /** Session info */

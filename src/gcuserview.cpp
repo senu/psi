@@ -24,6 +24,7 @@
 #include <Q3Header>
 #include <Q3TextDrag>
 #include <Q3PopupMenu>
+#include <QHelpEvent>
 
 #include "capsmanager.h"
 #include "psitooltip.h"

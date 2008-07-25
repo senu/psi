@@ -14,7 +14,7 @@ QString DefaultHTMLTextFormatter::format(const QString& input, const QString& pa
         output = TextUtil::linkify(output);
     }
     if (doEmoticonify_) {
-        output = TextUtil::emoticonify(output); //TODO 
+        output = TextUtil::emoticonify(output, true);
     }
     if (doLegacyFormatting_) {
         output = TextUtil::legacyFormat(output);

@@ -44,3 +44,13 @@ void ChatView::reappendEvents() {
         }
     }
 }
+
+
+void ChatView::setChatInfo(ChatTheme::ChatInfo chatInfo) {
+    _chatInfo = chatInfo;
+}
+
+
+ChatTheme::ChatInfo ChatView::chatInfo() const {
+    return _chatInfo;
+}

@@ -127,11 +127,17 @@ protected:
 	int  oldTrackBarPosition;
 
 private:
-	ChatEdit* mle() const { return dlg->ui_.mle->chatEdit(); }
-	PlainTextChatView* te_log() const { return dlg->ui_.log; }
+	ChatEdit* chatEdit() const {
+        return dlg->ui_.mle->chatEdit();
+    }
+    
+    /** Returns currently used ChatView */
+	ChatView* chatView() const { 
+        return dlg->ui_.log->chatView(); 
+    }
 
 public slots:
-	void addEmoticon(const PsiIcon *icon) {
+	void addEmoticon(const PsiIcon *icon) { //TODO cv change
 		if ( !dlg->isActiveTab() ) {
 			return;
 		}
@@ -139,7 +145,7 @@ public slots:
 		QString text = icon->defaultText();
 
 		if (!text.isEmpty()) {
-			mle()->insert(text + " ");
+			chatEdit()->insert(text + " ");
 		}
 	}
 
@@ -148,22 +154,23 @@ public slots:
 			return;
 		}
 
-		mle()->insert( text + " " );
+		chatEdit()->insert( text + " " );
 	}
 
 	void deferredScroll() {
 		//QTimer::singleShot(250, this, SLOT(slotScroll()));
-		te_log()->scrollToBottom();
+		chatView()->scrollToBottom();
 	}
 
 protected slots:
 	void slotScroll() {
-		te_log()->scrollToBottom();
+        chatView()->scrollToBottom();
 	}
 
 public:
 	bool internalFind(QString str, bool startFromBeginning = false)
 	{
+        /* TODO cv 
 		if (startFromBeginning) {
 			QTextCursor cursor = te_log()->textCursor();
 			cursor.movePosition(QTextCursor::Start, QTextCursor::KeepAnchor);
@@ -180,6 +187,8 @@ public:
 		}
 
 		return true;
+         */
+        return true; //TODO remove
 	}
 	
 private:
@@ -355,7 +364,7 @@ protected:
 
 public:		
 	void doAutoNickInsertion() {
-		QTextCursor cursor = mle()->textCursor();
+		QTextCursor cursor = chatEdit()->textCursor();
 		
 		// we need to get index from beginning of current block
 		int index = cursor.position();
@@ -403,7 +412,7 @@ public:
 		}
 
 		if ( replaced ) {
-			mle()->setUpdatesEnabled( false );
+			chatEdit()->setUpdatesEnabled( false );
 			int position = cursor.position() + newText.length();
 			
 			cursor.beginEditBlock();
@@ -412,18 +421,18 @@ public:
 			cursor.setPosition(position, QTextCursor::KeepAnchor);
 			cursor.clearSelection();
 			cursor.endEditBlock();
-			mle()->setTextCursor(cursor);
+			chatEdit()->setTextCursor(cursor);
 			
-			mle()->setUpdatesEnabled( true );
-			mle()->viewport()->update();
+			chatEdit()->setUpdatesEnabled( true );
+			chatEdit()->viewport()->update();
 		}
 	}
 
 	bool eventFilter( QObject *obj, QEvent *ev ) {
-		if (te_log()->handleCopyEvent(obj, ev, mle()))
-			return true;
+//		if (chatView()->handleCopyEvent(obj, ev, chatEdit())) //TODO cv
+//			return true;
 	
-		if ( obj == mle() && ev->type() == QEvent::KeyPress ) {
+		if ( obj == chatEdit() && ev->type() == QEvent::KeyPress ) {
 			QKeyEvent *e = (QKeyEvent *)ev;
 
 			if ( e->key() == Qt::Key_Tab ) {
@@ -498,7 +507,7 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager)
 	ui_.tb_emoticons->setIcon(IconsetFactory::icon("psi/smile").icon());
 
 #ifdef Q_WS_MAC
-	connect(ui_.log, SIGNAL(selectionChanged()), SLOT(logSelectionChanged()));
+	connect(chatView(), SIGNAL(selectionChanged()), SLOT(logSelectionChanged()));
 #endif
 
 	ui_.lv_users->setMainDlg(this);
@@ -533,7 +542,7 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager)
 	// Common actions
 	d->act_send = new QAction(this);
 	addAction(d->act_send);
-	connect(d->act_send,SIGNAL(activated()), SLOT(mle_returnPressed()));
+	connect(d->act_send,SIGNAL(activated()), SLOT(chatEdit_returnPressed()));
 	d->act_close = new QAction(this);
 	addAction(d->act_close);
 	connect(d->act_close,SIGNAL(activated()), SLOT(close()));
@@ -564,7 +573,7 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager)
 
 	X11WM_CLASS("groupchat");
 
-	ui_.mle->chatEdit()->setFocus();
+	chatEdit()->setFocus();
 	resize(PsiOptions::instance()->getOption("options.ui.muc.size").toSize());
 
 	// Connect signals from MUC manager
@@ -588,6 +597,14 @@ GCMainDlg::~GCMainDlg()
 	account()->dialogUnregister(this);
 	delete d->mucManager;
 	delete d;
+}
+ChatView* GCMainDlg::chatView() const {
+    return ui_.log->chatView();
+}
+
+
+ChatEdit* GCMainDlg::chatEdit() const {
+    return ui_.mle->chatEdit();
 }
 
 void GCMainDlg::ensureTabbedCorrectly() {
@@ -613,14 +630,6 @@ void GCMainDlg::setShortcuts()
 	}
 	d->act_scrollup->setShortcuts(ShortcutManager::instance()->shortcuts("common.scroll-up"));
 	d->act_scrolldown->setShortcuts(ShortcutManager::instance()->shortcuts("common.scroll-down"));
-}
-
-void GCMainDlg::scrollUp() {
-	ui_.log->verticalScrollBar()->setValue(ui_.log->verticalScrollBar()->value() - ui_.log->verticalScrollBar()->pageStep()/2);
-}
-
-void GCMainDlg::scrollDown() {
-	ui_.log->verticalScrollBar()->setValue(ui_.log->verticalScrollBar()->value() + ui_.log->verticalScrollBar()->pageStep()/2);
 }
 
 void GCMainDlg::closeEvent(QCloseEvent *e)
@@ -651,7 +660,7 @@ void GCMainDlg::activated()
 	}
 	doFlash(false);
 
-	ui_.mle->chatEdit()->setFocus();
+	chatEdit()->setFocus();
 	d->trackBar = false;
 }
 
@@ -674,9 +683,9 @@ void GCMainDlg::logSelectionChanged()
 #ifdef Q_WS_MAC
 	// A hack to only give the message log focus when text is selected
 	if (ui_.log->hasSelectedText()) 
-		ui_.log->setFocus();
+		ui_.log->setFocus(); //TODO cv ctso
 	else 
-		ui_.mle->chatEdit()->setFocus();
+		chatEdit()->setFocus();
 #endif
 }
 
@@ -708,18 +717,18 @@ void GCMainDlg::action_error(MUCManager::Action, int, const QString& err)
 	appendSysMsg(err, false);
 }
 
-void GCMainDlg::mle_returnPressed()
+void GCMainDlg::chatEdit_returnPressed()
 {
-	if(ui_.mle->chatEdit()->text().isEmpty())
+	if(chatEdit()->text().isEmpty())
 		return;
 
-	QString str = ui_.mle->chatEdit()->text();
+	QString str = chatEdit()->text();
 	if(str == "/clear") {
 		doClear();
 
 		d->histAt = 0;
 		d->hist.prepend(str);
-		ui_.mle->chatEdit()->setText("");
+		chatEdit()->setText("");
 		return;
 	}
 
@@ -731,7 +740,7 @@ void GCMainDlg::mle_returnPressed()
 			d->self = norm_nick;
 			account()->groupChatChangeNick(jid().host(), jid().user(), d->self, account()->status());
 		}
-		ui_.mle->chatEdit()->setText("");
+		chatEdit()->setText("");
 		return;
 	}
 
@@ -747,7 +756,7 @@ void GCMainDlg::mle_returnPressed()
 
 	d->histAt = 0;
 	d->hist.prepend(str);
-	ui_.mle->chatEdit()->setText("");
+	chatEdit()->setText("");
 }
 
 /*void GCMainDlg::le_upPressed()
@@ -838,7 +847,7 @@ void GCMainDlg::goDisc()
 		d->state = Private::Idle;
 		ui_.pb_topic->setEnabled(false);
 		appendSysMsg(tr("Disconnected."), true);
-		ui_.mle->chatEdit()->setEnabled(false);
+		chatEdit()->setEnabled(false);
 	}
 }
 
@@ -1188,7 +1197,7 @@ void GCMainDlg::joined()
 		ui_.lv_users->clear();
 		d->state = Private::Connected;
 		ui_.pb_topic->setEnabled(true);
-		ui_.mle->chatEdit()->setEnabled(true);
+		chatEdit()->setEnabled(true);
 		setConnecting();
 		appendSysMsg(tr("Connected."), true);
 	}
@@ -1304,22 +1313,22 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
 	txt = TextUtil::linkify(txt);
 
 	if(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool())
-		txt = TextUtil::emoticonify(txt);
+		txt = TextUtil::emoticonify(txt, false);//TODO
 	if( PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool() )
 		txt = TextUtil::legacyFormat(txt);
 
 	if(emote) {
 		//ui_.log->append(QString("<font color=\"%1\">").arg(color) + QString("[%1]").arg(timestr) + QString(" *%1 ").arg(Qt::escape(who)) + txt + "</font>");
-		ui_.log->appendText(QString("<font color=\"%1\">").arg(nickcolor) + QString("[%1]").arg(timestr) + QString(" *%1 ").arg(Qt::escape(who)) + alerttagso + txt + alerttagsc + "</font>");
+		chatView()->appendText(QString("<font color=\"%1\">").arg(nickcolor) + QString("[%1]").arg(timestr) + QString(" *%1 ").arg(Qt::escape(who)) + alerttagso + txt + alerttagsc + "</font>");
 	}
 	else {
 		if(PsiOptions::instance()->getOption("options.ui.chat.use-chat-says-style").toBool()) {
 			//ui_.log->append(QString("<font color=\"%1\">").arg(color) + QString("[%1] ").arg(timestr) + QString("%1 says:").arg(Qt::escape(who)) + "</font><br>" + txt);
-			ui_.log->appendText(QString("<font color=\"%1\">").arg(nickcolor) + QString("[%1] ").arg(timestr) + QString("%1 says:").arg(Qt::escape(who)) + "</font><br>" + QString("<font color=\"%1\">").arg(textcolor) + alerttagso + txt + alerttagsc + "</font>");
+            chatView()->appendText(QString("<font color=\"%1\">").arg(nickcolor) + QString("[%1] ").arg(timestr) + QString("%1 says:").arg(Qt::escape(who)) + "</font><br>" + QString("<font color=\"%1\">").arg(textcolor) + alerttagso + txt + alerttagsc + "</font>");
 		}
 		else {
 			//ui_.log->append(QString("<font color=\"%1\">").arg(color) + QString("[%1] &lt;").arg(timestr) + Qt::escape(who) + QString("&gt;</font> ") + txt);
-			ui_.log->appendText(QString("<font color=\"%1\">").arg(nickcolor) + QString("[%1] &lt;").arg(timestr) + Qt::escape(who) + QString("&gt;</font> ") + QString("<font color=\"%1\">").arg(textcolor) + alerttagso + txt + alerttagsc +"</font>");
+			chatView()->appendText(QString("<font color=\"%1\">").arg(nickcolor) + QString("[%1] &lt;").arg(timestr) + Qt::escape(who) + QString("&gt;</font> ") + QString("<font color=\"%1\">").arg(textcolor) + alerttagso + txt + alerttagsc +"</font>");
 		}
 	}
 
@@ -1370,13 +1379,13 @@ QString GCMainDlg::desiredCaption() const
 void GCMainDlg::setLooks()
 {
 	ui_.vsplitter->optionsChanged();
-	ui_.mle->optionsChanged();
+	ui_.mle->optionsChanged(); //TODO cv ctso
 
 	// update the fonts
 	QFont f;
 	f.fromString(PsiOptions::instance()->getOption("options.ui.look.font.chat").toString());
-	ui_.log->setFont(f);
-	ui_.mle->chatEdit()->setFont(f);
+	ui_.log->setFont(f); //TODO cv ctso
+	chatEdit()->setFont(f);
 
 	f.fromString(PsiOptions::instance()->getOption("options.ui.look.font.contactlist").toString());
 	ui_.lv_users->Q3ListView::setFont(f);
@@ -1507,10 +1516,10 @@ void GCMainDlg::buildMenu()
 
 void GCMainDlg::chatEditCreated()
 {
-	ui_.log->setDialog(this);
-	ui_.mle->chatEdit()->setDialog(this);
+//	ui_.log->setDialog(this); //TODO cv
+	chatEdit()->setDialog(this);
 
-	ui_.mle->chatEdit()->installEventFilter(d);
+	chatEdit()->installEventFilter(d);
 }
 
 TabbableWidget::State GCMainDlg::state() const

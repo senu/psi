@@ -68,7 +68,10 @@ private:
     /** Updates information about last ChatEvent; called after appending an event */
 	void updateLastMsgTimeAndOwner(const QDateTime& t, LastEventOwner owner);
     
+    /** Returns dialog's ChatView */
 	ChatView* chatView() const;
+    
+    /** Returns dialog's ChatEdit */
 	ChatEdit* chatEdit() const;
 
 private:

@@ -1867,7 +1867,7 @@ void EventDlg::updateEvent(PsiEvent *e)
 
 		if (!xhtml) {
 			if(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool())
-				txt = TextUtil::emoticonify(txt);
+				txt = TextUtil::emoticonify(txt, false);//TODO cv
 			if( PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool() )
 				txt = TextUtil::legacyFormat(txt);
 			txt = TextUtil::linkify(txt);

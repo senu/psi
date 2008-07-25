@@ -209,8 +209,7 @@ void ChatDlg::setShortcuts() {
 
 
 void ChatDlg::scrollUp() {
-    //TODO webview doesnt have scrollbar
-    //	chatView()->verticalScrollBar()->setValue(chatView()->verticalScrollBar()->value() - chatView()->verticalScrollBar()->pageStep() / 2);
+    chatView()->scrollUp(); //verticalScrollBar()->setValue(chatView()->verticalScrollBar()->value() - chatView()->verticalScrollBar()->pageStep() / 2);
 }
 
 
@@ -468,7 +467,7 @@ void ChatDlg::updateContact(const Jid &j, bool fromPresence) {
                 if (!statusString_.isEmpty()) {
                     QString ss = TextUtil::linkify(TextUtil::plain2rich(statusString_));
                     if (PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool()) {
-                        ss = TextUtil::emoticonify(ss);
+                        ss = TextUtil::emoticonify(ss, false); //TODO
                     }
                     if (PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool()) {
                         ss = TextUtil::legacyFormat(ss);
@@ -1084,7 +1083,7 @@ QString ChatDlg::messageText(const XMPP::Message& m) {
         // qWarning("regular body:\n%s\n",qPrintable(txt));
 
         if (PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool())
-            txt = TextUtil::emoticonify(txt);
+            txt = TextUtil::emoticonify(txt, true); //TODO? move up? ! false
 
 
         if (PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool())

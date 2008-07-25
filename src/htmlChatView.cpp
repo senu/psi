@@ -20,7 +20,12 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, QString _them
 
     setLayout(layout);
 
+    networkManager = new NetworkAccessManager();
     webView.page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+
+
+    webView.page()->setNetworkAccessManager(networkManager);
+
     webView.setContextMenuPolicy(Qt::NoContextMenu);
 
     connect(webView.page(), SIGNAL(linkClicked(const QUrl&)), this, SLOT(onLinkClicked(const QUrl&)));
@@ -183,6 +188,7 @@ void HTMLChatView::importJSChatFunctions() {
 HTMLChatView::~HTMLChatView() {
     qDebug() << dumpContent();
     delete queuedTheme;
+    delete networkManager;
 }
 
 
@@ -210,20 +216,10 @@ void HTMLChatView::setVisible(bool visible) {
 }
 
 
-void HTMLChatView::setChatInfo(ChatTheme::ChatInfo chatInfo) {
-    _chatInfo = chatInfo;
-}
-
-
-ChatTheme::ChatInfo HTMLChatView::chatInfo() const {
-    return _chatInfo;
-}
-
-
 void HTMLChatView::setTheme(HTMLChatTheme _theme) {
 
     qDebug() << "set theme " << _theme.baseHref();
-    
+
     if (!isReady) {
         delete queuedTheme;
         queuedTheme = new HTMLChatTheme(_theme);

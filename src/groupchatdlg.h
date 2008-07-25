@@ -43,130 +43,139 @@ class QPainter;
 class QColorGroup;
 class Q3DragObject;
 namespace XMPP {
-	class Message;
+    class Message;
 }
+
 
 /*class GCLineEdit : public QLineEdit
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	GCLineEdit(QWidget *parent=0, const char *name=0);
+    GCLineEdit(QWidget *parent=0, const char *name=0);
 
 signals:
-	void upPressed();
-	void downPressed();
+    void upPressed();
+    void downPressed();
 
 protected:
-	void keyPressEvent(QKeyEvent *);
+    void keyPressEvent(QKeyEvent *);
 };*/
 
-class GCMainDlg : public TabbableWidget
-{
-	Q_OBJECT
+class GCMainDlg : public TabbableWidget {
+
+    Q_OBJECT
 public:
-	GCMainDlg(PsiAccount *, const Jid &, TabManager *tabManager);
-	~GCMainDlg();
+    GCMainDlg(PsiAccount *, const Jid &, TabManager *tabManager);
+    ~GCMainDlg();
 
-	PsiAccount* account() const;
+    PsiAccount* account() const;
 
-	void error(int, const QString &);
-	void presence(const QString &, const Status &);
-	void message(const Message &);
-	void joined();
-	void setPassword(const QString&);
-	const QString& nick() const;
+    void error(int, const QString &);
+    void presence(const QString &, const Status &);
+    void message(const Message &);
+    void joined();
+    void setPassword(const QString&);
+    const QString& nick() const;
 
-	// reimplemented
-	virtual TabbableWidget::State state() const;
-	virtual int unreadMessageCount() const;
-	virtual QString desiredCaption() const;
+    // reimplemented
+    virtual TabbableWidget::State state() const;
+    virtual int unreadMessageCount() const;
+    virtual QString desiredCaption() const;
 
 protected:
-	void setShortcuts();
+    void setShortcuts();
 
-	// reimplemented
-	void dragEnterEvent(QDragEnterEvent *);
-	void dropEvent(QDropEvent *);
-	void closeEvent(QCloseEvent *);
-	void resizeEvent(QResizeEvent*);
-	void mucInfoDialog(const QString& title, const QString& message, const Jid& actor, const QString& reason);
+    // reimplemented
+    void dragEnterEvent(QDragEnterEvent *);
+    void dropEvent(QDropEvent *);
+    void closeEvent(QCloseEvent *);
+    void resizeEvent(QResizeEvent*);
+    void mucInfoDialog(const QString& title, const QString& message, const Jid& actor, const QString& reason);
+   
+    /** Returns dialog's ChatView */
+    ChatView* chatView() const;
+    
+    /** Returns dialog's ChatEdit */
+    ChatEdit* chatEdit() const;
 
 signals:
-	void aSend(const Message &);
+    void aSend(const Message &);
 
-public slots:
-	// reimplemented
-	virtual void deactivated();
-	virtual void activated();
-	virtual void ensureTabbedCorrectly();
+    public 
+slots:
+    // reimplemented
+    virtual void deactivated();
+    virtual void activated();
+    virtual void ensureTabbedCorrectly();
 
-	void optionsUpdate();
-	
-private slots:
-	void scrollUp();
-	void scrollDown();
-	void mle_returnPressed();
-	void doTopic();
-	void openFind();
-	void configureRoom();
-	void doFind(const QString &);
-	void pa_updatedActivity();
-	void goDisc();
-	void goConn();
-	void lv_action(const QString &, const Status &, int);
-	void doClear();
-	void doClearButton();
-	void buildMenu();
-	void logSelectionChanged();
-	void setConnecting();
-	void unsetConnecting();
-	void action_error(MUCManager::Action, int, const QString&);
-	void updateIdentityVisibility();
+    void optionsUpdate();
+
+    private 
+slots:
+    void chatEdit_returnPressed();
+    void doTopic();
+    void openFind();
+    void configureRoom();
+    void doFind(const QString &);
+    void pa_updatedActivity();
+    void goDisc();
+    void goConn();
+    void lv_action(const QString &, const Status &, int);
+    void doClear();
+    void doClearButton();
+    void buildMenu();
+    void logSelectionChanged();
+    void setConnecting();
+    void unsetConnecting();
+    void action_error(MUCManager::Action, int, const QString&);
+    void updateIdentityVisibility();
 #ifdef WHITEBOARDING
-	void openWhiteboard();
+    void openWhiteboard();
 #endif
-	void chatEditCreated();
+    void chatEditCreated();
 
 public:
-	class Private;
-	friend class Private;
+    class Private;
+    friend class Private;
 private:
-	Private *d;
-	Ui::GroupChatDlg ui_;
+    Private *d;
+    Ui::GroupChatDlg ui_;
 
-	void doAlert();
-	void appendSysMsg(const QString &, bool, const QDateTime &ts=QDateTime());
-	void appendMessage(const Message &, bool);
-	void updateLastMsgTime(QDateTime t);
-	void setLooks();
+    void doAlert();
+    void appendSysMsg(const QString &, bool, const QDateTime &ts = QDateTime());
+    void appendMessage(const Message &, bool);
+    void updateLastMsgTime(QDateTime t);
+    void setLooks();
 
-	void contextMenuEvent(QContextMenuEvent *);
+    void contextMenuEvent(QContextMenuEvent *);
 
-	QString getNickColor(QString);
-	QMap<QString,int> nicks;
-	int nicknumber;
-	PsiOptions* options_;
-	QDateTime lastMsgTime_;
+    QString getNickColor(QString);
+    QMap<QString, int> nicks;
+    int nicknumber;
+    PsiOptions* options_;
+    QDateTime lastMsgTime_;
 };
 
-class GCFindDlg : public QDialog
-{
-	Q_OBJECT
-public:
-	GCFindDlg(const QString &, QWidget *parent=0, const char *name=0);
-	~GCFindDlg();
 
-	void found();
-	void error(const QString &);
+class GCFindDlg : public QDialog {
+
+    Q_OBJECT
+public:
+    GCFindDlg(const QString &, QWidget *parent = 0, const char *name = 0);
+    ~GCFindDlg();
+
+    void found();
+    void error(const QString &);
 
 signals:
-	void find(const QString &);
+    void find(const QString &);
 
-private slots:
-	void doFind();
+    private 
+slots:
+    void doFind();
 
 private:
-	QLineEdit *le_input;
+    QLineEdit *le_input;
 };
 
 #endif

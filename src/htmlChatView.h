@@ -12,6 +12,7 @@
 #include "chatView.h"
 #include "htmlChatTheme.h"
 #include "jsnotifier.h"
+#include "networkaccessmanager.h"
 
 class ChatView;
 class HTMLChatTheme;
@@ -55,12 +56,11 @@ slots:
      */
     void scrollToTop();
 
+    /** Evaluates JavaScript code in Webkit */
     void evaluateJS(QString scriptSource);
 
     /** Reads JavaScript code (function definitions) from file and evaluates it in webkit */
     void importJSChatFunctions();
-
-    void clear();
 
     /** Appends message */
     void appendMessage(const MessageChatEvent *msg, bool alreadyAppended = false);
@@ -73,8 +73,9 @@ slots:
 
     //reimplemented
     void setVisible(bool visible);
-    void setChatInfo(ChatTheme::ChatInfo chatInfo);
-    ChatTheme::ChatInfo chatInfo() const;
+    void clear();
+    void scrollUp();
+    void scrollDown();
 
 signals:
     void appendFinished();
@@ -114,6 +115,9 @@ private:
 
     /** JavaScript - C++ bridge */
     JSNotifier jsNotifier;
+
+    /** Handles icon:// URLs and disallwos network requests */
+    NetworkAccessManager * networkManager;
 
     /** ChatView is ready to: change theme, append events (after onInitDouemtet finished) */
     bool isReady;

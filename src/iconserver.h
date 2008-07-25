@@ -21,6 +21,8 @@
  * You have to registerIcon() before webkit could use it
  *
  * You have to delete this object afer all Webkit (ChatDialogs) instances deletion
+ * 
+ * dataMutex is mutable
  *
  */
 class IconServer {
@@ -32,8 +34,8 @@ public:
      */
     void registerIcon(const QString& name, QByteArray data);
 
-    /** Returns image data or empty QByteArray if \param name was't registered */
-    QByteArray getIcon(const QString& name);
+    /** Returns image data or empty QByteArray if \param name was't registered; dataMutex is modified */
+    QByteArray getIcon(const QString& name) const;
 
     /** Converts QPixmap to QByteArray using PNG format */
     static QByteArray pixmapToPng(const QPixmap& pixmap);
@@ -44,7 +46,7 @@ protected:
     QHash<QString, QByteArray> dict;
 
     /** Webkit runs in separate thread, so we need synchronize get/register icon */
-    QMutex dataMutex; 
+    mutable QMutex dataMutex; 
 };
 
 

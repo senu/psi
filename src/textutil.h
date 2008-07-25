@@ -14,7 +14,8 @@ namespace TextUtil
 	QString resolveEntities(const QString &);
 	QString linkify(const QString &);
 	QString legacyFormat(const QString &);
-	QString emoticonify(const QString &in);
+    /** Replaces text to emoticons: <icon> or <img src="icon://"> if useImgTag is true*/
+	QString emoticonify(const QString &in, bool useImgTag);
 };
 
 #endif

@@ -430,7 +430,7 @@ QString TextUtil::linkify(const QString &in)
 }
 
 // sickening
-QString TextUtil::emoticonify(const QString &in)
+QString TextUtil::emoticonify(const QString &in, bool useImgTag)
 {
 	RTParse p(in);
 	while ( !p.atEnd() ) {
@@ -500,7 +500,15 @@ QString TextUtil::emoticonify(const QString &in)
 			if ( !closest )
 				break;
 
-			p.putRich( QString("|icon name=\"%1\" text=\"%2\"|").arg(TextUtil::escape(closest->name())).arg(TextUtil::escape(str.mid(foundPos, foundLen))) );
+            QString iconString;
+            if(useImgTag) {
+                iconString = "<img src=\"icon://%1\" alt=\"%2\"/>";
+            }
+            else {
+                iconString = "<icon name=\"%1\" text=\"%2\">";
+            }
+            iconString = iconString.arg(TextUtil::escape(closest->name())).arg(TextUtil::escape(str.mid(foundPos, foundLen))); 
+			p.putRich(iconString);
 			i = foundPos + foundLen;
 		}
 	}

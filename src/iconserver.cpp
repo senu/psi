@@ -5,15 +5,17 @@
 void IconServer::registerIcon(const QString& name, QByteArray data) {
     dataMutex.lock();
 
+    qDebug() << "registerIcon()" << name << data.size();
     dict.insert(name, data);
 
     dataMutex.unlock();
 }
 
 
-QByteArray IconServer::getIcon(const QString& name) {
+QByteArray IconServer::getIcon(const QString& name) const {
     dataMutex.lock();
 
+    qDebug() << "getIcon()" << name;
     QByteArray data = dict[name];
 
     dataMutex.unlock();
