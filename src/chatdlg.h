@@ -168,6 +168,13 @@ slots:
     void checkComposing();
 
 protected:
+    /** Indicates if next message should be consecutive */
+    enum LastEventOwner {
+        Incoming,
+        Outgoing,
+        Other /** first message or ChatEvent */
+    };
+    
     // reimplemented
     virtual void invalidateTab();
 
@@ -203,10 +210,19 @@ protected:
 
     QString whoNick(bool local) const;
 
+    /** Updates information about last ChatEvent; called after appending an event */
+	void updateLastMsgTimeAndOwner(const QDateTime& t, LastEventOwner owner);
+
     virtual ChatView* chatView() const = 0;
     virtual ChatEdit* chatEdit() const = 0;
 
     HTMLThemeManager* themeManager;
+    
+    /** Indicates if next message should be consecutive */
+    LastEventOwner lastEventOwner;
+    
+    /** Timestamp of last chat event */
+	QDateTime lastMsgTime;
 
 private:
     bool highlightersInstalled_;

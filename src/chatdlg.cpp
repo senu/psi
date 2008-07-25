@@ -1144,3 +1144,17 @@ void ChatDlg::tunePublished(const Tune& tune, const Jid& jid_) {
 void ChatDlg::incomingFileTransfer(const QString& fileName) {
 
 }
+
+void ChatDlg::updateLastMsgTimeAndOwner(const QDateTime& t, LastEventOwner owner) {
+    lastMsgTime = t;
+    lastEventOwner = owner;
+
+    //TODO wv remove
+    /*
+    bool doInsert = t.date() != lastMsgTime_.date();
+    if (doInsert) {
+        QString color = "#00A000";
+    chatView()->appendText(QString("<font color=\"%1\">*** %2</font>").arg(color).arg(t.date().toString(Qt::ISODate)));
+    }
+     */
+}

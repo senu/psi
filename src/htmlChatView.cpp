@@ -255,3 +255,14 @@ void HTMLChatView::scrollToTop() {
     webView.page()->mainFrame()->setScrollBarValue(Qt::Vertical, 0);
 }
 
+
+void HTMLChatView::scrollUp() {
+    QWebFrame * frame = webView.page()->mainFrame(); 
+    frame->setScrollBarValue(Qt::Vertical, frame->scrollBarValue(Qt::Vertical) - 42); //TODO 42
+}
+
+
+void HTMLChatView::scrollDown() {
+    QWebFrame * frame = webView.page()->mainFrame(); 
+    frame->setScrollBarValue(Qt::Vertical, frame->scrollBarValue(Qt::Vertical) + 42); //TODO 42
+}

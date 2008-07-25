@@ -26,13 +26,8 @@ public:
     void appendEvent(const ChatEvent* event, bool alreadyAppended = false);
     void appendMessage(const MessageChatEvent* event, bool alreadyAppended = false);
 
-    void clear();
 
     void init();
-
-
-    void setReadOnly(bool readOnly);
-
 
     __PlainTextChatView(QWidget *parent);
 
@@ -64,25 +59,14 @@ public:
     }
 
 
-    void appendText(const QString &text) {
-        bool doScrollToBottom = atBottom();
+    void appendText(const QString &text);
 
-        // prevent scrolling back to selected text when 
-        // restoring selection
-        int scrollbarValue = verticalScrollBar()->value();
 
-        textview.appendText(text);
+    /** Used for scrollToTop/Bottom/Up/Down */
+    QScrollBar * verticalScrollBar() const;
 
-        if (doScrollToBottom)
-            scrollToBottom();
-        else
-            verticalScrollBar()->setValue(scrollbarValue);
-    }
 
     //reimplemented
-
-    /** Used for scrollToTop/Bottom */
-    QScrollBar * verticalScrollBar() const;
 
 
     QSize sizeHint() const { //TODO
@@ -95,7 +79,10 @@ public:
      * at its maximum position.
      */
     bool atBottom() const;
+    void scrollUp();
+    void scrollDown();
 
+    void clear();
     public
 
 

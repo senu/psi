@@ -71,6 +71,27 @@ QScrollBar * __PlainTextChatView::verticalScrollBar() const {
 }
 
 
-void __PlainTextChatView::setReadOnly(bool readOnly) {
-    textview.setReadOnly(readOnly);
+void __PlainTextChatView::scrollUp() {
+    verticalScrollBar()->setValue(verticalScrollBar()->value() - verticalScrollBar()->pageStep() / 2);
+}
+
+
+void __PlainTextChatView::scrollDown() {
+    verticalScrollBar()->setValue(verticalScrollBar()->value() + verticalScrollBar()->pageStep() / 2);
+}
+
+
+void __PlainTextChatView::appendText(const QString &text) {
+    bool doScrollToBottom = atBottom();
+
+    // prevent scrolling back to selected text when 
+    // restoring selection
+    int scrollbarValue = verticalScrollBar()->value();
+
+    textview.appendText(text);
+
+    if (doScrollToBottom)
+        scrollToBottom();
+    else
+        verticalScrollBar()->setValue(scrollbarValue);
 }

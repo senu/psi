@@ -37,12 +37,6 @@ private slots:
 
 private:
 
-    /** Indicates if next message should be consecutive */
-    enum LastEventOwner {
-        Incoming,
-        Outgoing,
-        Other //first message or ChatEvent
-    };
 	void initToolBar();
 	void initToolButtons();
 
@@ -65,9 +59,6 @@ private:
 	void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
 	void appendMessageFields(const Message& m);
 
-    /** Updates information about last ChatEvent; called after appending an event */
-	void updateLastMsgTimeAndOwner(const QDateTime& t, LastEventOwner owner);
-    
     /** Returns dialog's ChatView */
 	ChatView* chatView() const;
     
@@ -91,10 +82,6 @@ private:
 	IconAction* act_voice_;
 
 	bool smallChat_;
-	QDateTime lastMsgTime;
-
-    /** Indicates if next message should be consecutive */
-    LastEventOwner lastEventOwner;
 };
 
 #endif

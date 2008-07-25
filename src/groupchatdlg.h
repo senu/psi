@@ -144,7 +144,6 @@ private:
     void doAlert();
     void appendSysMsg(const QString &, bool, const QDateTime &ts = QDateTime());
     void appendMessage(const Message &, bool);
-    void updateLastMsgTime(QDateTime t);
     void setLooks();
 
     void contextMenuEvent(QContextMenuEvent *);

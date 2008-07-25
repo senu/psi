@@ -797,7 +797,7 @@ void GCMainDlg::doTopic()
 
 void GCMainDlg::doClear()
 {
-	ui_.log->setText("");
+	chatView()->clear();
 }
 
 void GCMainDlg::doClearButton()
@@ -1211,16 +1211,6 @@ void GCMainDlg::setPassword(const QString& p)
 const QString& GCMainDlg::nick() const
 {
 	return d->self;
-}
-
-void GCMainDlg::updateLastMsgTime(QDateTime t)
-{
-	bool doInsert = t.date() != lastMsgTime_.date();
-	lastMsgTime_ = t;
-	if (doInsert) {
-		QString color = "#00A000";
-		ui_.log->appendText(QString("<font color=\"%1\">*** %2</font>").arg(color).arg(t.date().toString(Qt::ISODate)));
-	}
 }
 
 void GCMainDlg::appendSysMsg(const QString &str, bool alert, const QDateTime &ts)
