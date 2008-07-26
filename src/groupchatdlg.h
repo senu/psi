@@ -91,6 +91,8 @@ protected:
     void closeEvent(QCloseEvent *);
     void resizeEvent(QResizeEvent*);
     void mucInfoDialog(const QString& title, const QString& message, const Jid& actor, const QString& reason);
+    
+    bool doConsecutiveMessage(const QDateTime& time, bool local);
    
     /** Returns dialog's ChatView */
     ChatView* chatView() const;

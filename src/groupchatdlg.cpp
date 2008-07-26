@@ -1361,7 +1361,7 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
         
         qDebug() << "gcd TODO CTSO" << m.from().resource();
         
-//        msg->setConsecutive(doConsecutiveMessage(time, local)); //TODO
+        msg->setConsecutive(false); //TODO
         msg->setSpooled(m.spooled());
         msg->setService("Jabber");
         msg->setBody(txt); //TODO escape?

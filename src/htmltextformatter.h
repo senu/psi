@@ -2,6 +2,7 @@
 #define	_HTMLTEXTFORMATTER_H
 
 #include <QString>
+#include <QDomNode>
 
 
 /**
@@ -12,8 +13,11 @@ class HTMLTextFormatter {
 public:
 
 
-    /** Return formatted string for \paraminput whose partent is \param ParentTag */
-    virtual QString format(const QString& input, const QString& parentTag) const = 0;
+    /**
+     * Formats xhtml-im text node and return it as a QDomNode
+     *
+     * formats \param input a text child of \param ParentTag */
+    virtual QDomNode format(const QString& input, const QDomNode& parentElement) const = 0;
 
 
     virtual ~HTMLTextFormatter() {

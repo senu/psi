@@ -131,10 +131,11 @@ void MessageValidator::dfs(QDomElement cur, const HTMLTextFormatter* formatter, 
                 i--;
             }
             else { //format text
-                QString newText = formatter->format(node.toText().data(), parentName);
-                QDomText newElement = cur.ownerDocument().createTextNode(newText);
-
-                QDomNode re = cur.replaceChild(newElement, node);
+                QDomNode newElement = formatter->format(node.toText().data(), cur);
+                QDomNode node2 = cur.replaceChild(newElement, node);
+                qDebug() << node2.nodeName() << node2.nodeValue() << newElement.nodeName() << newElement.nodeValue();
+                
+                
             }
         }
     }
@@ -232,7 +233,7 @@ QString MessageValidator::validateMessage(QString message, bool* modified, const
     *modified = false;
 
     if (!doc.setContent(message, false, &errorMessage, &line, &column)) {
-        //        qDebug() << errorMessage << " " << line << " " << column;
+        qDebug() << errorMessage << " " << line << " " << column << message;
         *modified = true;
         return "illformed message!!!"; //TODO - display plain message
     }

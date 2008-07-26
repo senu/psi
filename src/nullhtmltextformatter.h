@@ -2,6 +2,7 @@
 #define	_NULLHTMLTEXTFORMATTER_H
 
 #include "htmltextformatter.h"
+#include <QDomText> 
 
 
 /** HTMLTextFormatter that outputs input */
@@ -9,14 +10,10 @@ class NullHTMLTextFormatter : public HTMLTextFormatter {
 
 public:
 
-
-
-    /** Returns \param input */
-    QString format(const QString& input, const QString& parentTag) const {
-        return input;
+    QDomNode format(const QString& input, const QDomNode& parentElement) const {
+        QDomText node;
+        node.setData(input);
     }
-
-
 };
 
 #endif

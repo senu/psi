@@ -21,7 +21,10 @@ protected:
 private:
 	void setContactToolTip(QString text);
     
-    /** Returns true if next message should be consecutive [our message => local == true] */
+    /** 
+     * Returns true if next message should be consecutive
+     * \param local indicates if it's our message 
+     */
     bool doConsecutiveMessage(const QDateTime& time, bool local);
 
 private slots:

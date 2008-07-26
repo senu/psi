@@ -828,7 +828,7 @@ void ChatDlg::appendMessage(const Message &m, bool local) {
     ChatDlg::SpooledType spooledType = m.spooled() ?
         ChatDlg::Spooled_OfflineStorage :
         ChatDlg::Spooled_None;
-    
+
     if (isEmoteMessage(m)) {
         appendEmoteMessage(spooledType, m.timeStamp(), local, txt);
     }
@@ -963,7 +963,7 @@ void ChatDlg::setChatState(ChatState state) {
 void ChatDlg::setContactChatState(ChatState state) {
     contactChatState_ = state;
     if (state == XMPP::StateGone) {
-        appendChatEvent(new ExtendedSystemChatEvent(tr("%1 ended the conversation").arg(Qt::escape(dispNick_)), 
+        appendChatEvent(new ExtendedSystemChatEvent(tr("%1 ended the conversation").arg(Qt::escape(dispNick_)),
                                                     SystemChatEvent::EndedConvesation));
     }
     else {
@@ -1063,39 +1063,20 @@ QString ChatDlg::messageText(const XMPP::Message& m) {
 
     if (m.containsHTML() && PsiOptions::instance()->getOption("options.html.chat.render").toBool() && !m.html().text().isEmpty()) {
         txt = m.html().toString("span");
-
-        if (emote) {
-            int cmd = txt.indexOf(me_cmd);
-            txt = txt.remove(cmd, me_cmd.length());
-        }
-
-        bool modified;
-        textFormatter_.setDoEmoticonify(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool());
-        textFormatter_.setDoLegacyFormatting(PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool());
-
-        txt = messageValidator_.validateMessage(txt, &modified, &textFormatter_);
-
-        // qWarning("html body:\n%s\n",qPrintable(txt));
     }
     else {
-        txt = m.body();
-
-        if (emote)
-            txt = txt.mid(me_cmd.length());
-
-        txt = TextUtil::plain2rich(txt);
-        txt = TextUtil::linkify(txt);
-
-        // qWarning("regular body:\n%s\n",qPrintable(txt));
-
-        if (PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool())
-            txt = TextUtil::emoticonify(txt, true); //TODO? move up? ! false
-
-
-        if (PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool())
-            txt = TextUtil::legacyFormat(txt);
+        txt = "<span>" + m.body() + "</span>";
     }
+    
+    if (emote) {
+        txt = txt.mid(me_cmd.length());
+    }
+    
+    bool modified;
+    textFormatter_.setDoEmoticonify(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool());
+    textFormatter_.setDoLegacyFormatting(PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool());
 
+    txt = messageValidator_.validateMessage(txt, &modified, &textFormatter_);
 
     return txt;
 }
@@ -1147,9 +1128,11 @@ void ChatDlg::tunePublished(const Tune& tune, const Jid& jid_) {
     }
 }
 
+
 void ChatDlg::incomingFileTransfer(const QString& fileName) {
 
 }
+
 
 void ChatDlg::updateLastMsgTimeAndOwner(const QDateTime& t, LastEventOwner owner) {
     lastMsgTime = t;

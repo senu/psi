@@ -1,16 +1,13 @@
 #include "defaulthtmltextformatter.h"
 #include "textutil.h"
+#include  <QDebug>
 
 
-QString DefaultHTMLTextFormatter::format(const QString& input, const QString& parentTag) const {
-
-    if (!doEmoticonify_ && !doLinkify_ && !doLegacyFormatting_) {
-        return input;
-    }
+QDomNode DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& parentElement) const {
 
     QString output(input);
 
-    if (doLinkify_ && parentTag != "a") {
+    if (doLinkify_ && parentElement.nodeName() != "a") {
         output = TextUtil::linkify(output);
     }
     if (doEmoticonify_) {
@@ -20,7 +17,18 @@ QString DefaultHTMLTextFormatter::format(const QString& input, const QString& pa
         output = TextUtil::legacyFormat(output);
     }
 
-    return output;
+    //TODO it would be nice to have html template that handles highlighting
+    if (doHighlighting_) {
+        output = "<strong>" + output + "</strong>";
+    }
+
+
+    QDomDocument node;
+    node.setContent(output);
+    
+    qDebug() << output;
+
+    return node;
 }
 
 
@@ -51,4 +59,14 @@ bool DefaultHTMLTextFormatter::doLinkify() const {
 
 void DefaultHTMLTextFormatter::setDoLinkify(bool doLinkify) {
     doLinkify_ = doLinkify;
+}
+
+
+bool DefaultHTMLTextFormatter::doHighlighting() const {
+    return doHighlighting_;
+}
+
+
+void DefaultHTMLTextFormatter::setDoHighlighting(bool doHighlighting) {
+    doHighlighting_ = doHighlighting;
 }
