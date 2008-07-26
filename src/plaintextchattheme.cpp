@@ -1,5 +1,5 @@
 #include "plaintextchattheme.h"
-
+#include <QDebug> 
 
 PlainTextChatTheme::PlainTextChatTheme() {
 
@@ -44,7 +44,44 @@ QString PlainTextChatTheme::createFileTransferEventPart(const FileTransferChatEv
 
 
 QString PlainTextChatTheme::createStatusEventPart(const StatusChatEvent * event) const {
+    
+    StatusChatEvent::StatusEventType type = event->type;
+    QString statusStr; 
 
+    switch (type) {
+        case StatusChatEvent::Online :
+                statusStr = "online";
+            break;
+        case StatusChatEvent::Offline :
+                statusStr = "offline";
+            break;
+        case StatusChatEvent::Away :
+                statusStr = "idle"; //TODO ask Kev (adium compatibility)
+            break;
+        case StatusChatEvent::Xa :
+                statusStr = "away";
+            break;
+        case StatusChatEvent::Dnd :
+                statusStr = "away";
+            break;
+        case StatusChatEvent::Chat :
+                statusStr = "online";
+            break;
+        case StatusChatEvent::Invisible : //TODO - ?!?
+                statusStr = "offline";
+            break;
+    }
+
+    QString eventText(event->statusMessage());
+    QString color("#00A000");
+
+    if(!eventText.isEmpty()) {
+        eventText = " (" + eventText + ")";
+    }
+   
+    qDebug() << "status event" << statusStr;
+    return QString("<span style=\"color: %1\">[%2] ").arg(color,formatTimeStamp(event->timeStamp()))
+        + QObject::tr("*** %2 is %3 </span>").arg(event->nick(), eventText);
 }
 
 

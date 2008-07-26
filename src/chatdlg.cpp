@@ -18,6 +18,9 @@
  *
  */
 
+#include "userchatevent.h"
+
+
 #include "chatdlg.h"
 
 #include <QLabel>
@@ -440,10 +443,13 @@ void ChatDlg::updateContact(const Jid &j, bool fromPresence) {
     }
 
     if (jid().compare(j, false)) {
+        
         QList<UserListItem*> ul = account()->findRelevant(j);
         UserStatus userStatus = userStatusFor(jid(), ul, false);
-        if (userStatus.statusType == XMPP::Status::Offline)
+        
+        if (userStatus.statusType == XMPP::Status::Offline) {
             contactChatState_ = XMPP::StateNone;
+        }
 
         bool statusChanged = false;
         if (status_ != userStatus.statusType || statusString_ != userStatus.status) {
@@ -463,18 +469,25 @@ void ChatDlg::updateContact(const Jid &j, bool fromPresence) {
             updatePGP();
 
             if (fromPresence && statusChanged) {
-                QString msg = tr("%1 is %2").arg(Qt::escape(dispNick_)).arg(status2txt(status_));
                 StatusChatEvent * event = new StatusChatEvent();
+                event->setNick(dispNick_);
+                event->setJid(userStatus.userListItem->jid().full());
+                event->setService("Jabber");
+                event->type = statusToChatViewStatus(status_);
+                //TODO escape?
+                //TODO status icon, avatar
+
+                
 
                 if (!statusString_.isEmpty()) {
                     QString ss = TextUtil::linkify(TextUtil::plain2rich(statusString_));
                     if (PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool()) {
-                        ss = TextUtil::emoticonify(ss, false); //TODO
+                        ss = TextUtil::emoticonify(ss, true); 
                     }
                     if (PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool()) {
                         ss = TextUtil::legacyFormat(ss);
                     }
-                    msg += QString(" [%1]").arg(ss);
+                    event->setStatusMessage(ss);
                 }
                 appendChatEvent(event);
             }
@@ -575,7 +588,7 @@ void ChatDlg::doHistory() {
 
 
 void ChatDlg::doFile() {
-    aFile(jid());
+    emit aFile(jid());
 }
 
 
@@ -705,7 +718,7 @@ void ChatDlg::doSend() {
         }
     }
     else {
-        aSend(m);
+        emit aSend(m);
         doneSend();
     }
 
@@ -1147,3 +1160,20 @@ void ChatDlg::updateLastMsgTimeAndOwner(const QDateTime& t, LastEventOwner owner
     }
      */
 }
+
+StatusChatEvent::StatusEventType ChatDlg::statusToChatViewStatus(int status) const {
+    
+	switch(status) {
+		case STATUS_OFFLINE:    return StatusChatEvent::Offline;
+        case STATUS_AWAY:       return StatusChatEvent::Away;
+		case STATUS_XA:         return StatusChatEvent::Xa;
+		case STATUS_DND:        return StatusChatEvent::Dnd;
+		case STATUS_CHAT:       return StatusChatEvent::Chat;
+		case STATUS_INVISIBLE:  return StatusChatEvent::Invisible;
+
+		case STATUS_ONLINE:
+		default:                return StatusChatEvent::Online;
+	}
+}
+
+    

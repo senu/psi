@@ -132,10 +132,7 @@ void MessageValidator::dfs(QDomElement cur, const HTMLTextFormatter* formatter, 
             }
             else { //format text
                 QDomNode newElement = formatter->format(node.toText().data(), cur);
-                QDomNode node2 = cur.replaceChild(newElement, node);
-                qDebug() << node2.nodeName() << node2.nodeValue() << newElement.nodeName() << newElement.nodeValue();
-                
-                
+                QDomNode node2 = cur.replaceChild(newElement, node); //TODO remove node2
             }
         }
     }

@@ -13,8 +13,8 @@
 //TODO caching/slot clear() on when IconsetFactory changed
 
 /**
- * Conains icons for Webkit.
- * It has similar to IconFactory+AvatarFactory.
+ * Conains icons and avatars for Webkit use.
+ * It has similar to IconsetFactory+AvatarFactory functionality.
  * When webkit encounter for example \<img src="icon://smile.png"\> it will call * 
  * IconServer::getIcon("smile.png") 
  *

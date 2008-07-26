@@ -185,7 +185,7 @@ QString HTMLChatTheme::createFileTransferEventPart(const FileTransferChatEvent *
     }
 
     HTMLChatPart part = fileTransferEventTemplate.createFreshHTMLPart();
-    
+
     fillPartWithTimeKeywords(part, event);
     fillPartWithEventKeywords(part, event, eventText);
     part.replaceAndEscapeKeyword("%status%", statusStr);
@@ -220,11 +220,16 @@ QString HTMLChatTheme::createStatusEventPart(const StatusChatEvent * event) cons
                 statusStr = "online";
             break;
         case StatusChatEvent::Invisible : //TODO - ?!?
-                statusStr = "offline";
+        default:
+            statusStr = "offline";
             break;
     }
 
-    QString eventText = event->statusMessage();
+    QString eventText = QObject::tr("%1 is %2").arg(event->nick(), statusStr);
+
+    if (!event->statusMessage().isEmpty()) {
+        eventText += " (" + event->statusMessage() + ")";
+    }
 
     HTMLChatPart part = fileTransferEventTemplate.createFreshHTMLPart();
 
@@ -325,7 +330,7 @@ QString HTMLChatTheme::createTuneEventPart(const TuneChatEvent* event) const {
 
 
 void HTMLChatTheme::fillPartWithUserKeywords(HTMLChatPart& part, const UserChatData* event) const {
-    
+
     part.replaceAndEscapeKeyword("%sender%", event->nick());
     part.replaceAndEscapeKeyword("%service%", event->service());
     part.replaceAndEscapeKeyword("%senderScreenName%", event->jid());

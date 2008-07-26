@@ -13,16 +13,16 @@ class NetworkAccessManager : public QNetworkAccessManager {
 public:
     NetworkAccessManager(QObject *parent = 0);
 
-    private 
+    private
 slots:
     /** Called by QNetworkReply::finish(); reemits finish(reply) */
     void callFinished();
 
 protected:
-    QNetworkReply * createRequest(Operation op, const QNetworkRequest & req, QIODevice * outgoingData);
+    QNetworkReply* createRequest(Operation op, const QNetworkRequest & req, QIODevice * outgoingData);
 
     /** For icon::// serving */
-    IconServer *iconServer;
+    IconServer* iconServer;
 };
 
 #endif

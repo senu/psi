@@ -219,6 +219,10 @@ protected:
     virtual ChatView* chatView() const = 0;
     virtual ChatEdit* chatEdit() const = 0;
 
+    /** It must be translated because we don't want Iris in ChatView */
+    StatusChatEvent::StatusEventType statusToChatViewStatus(int status) const;
+
+    
     HTMLThemeManager* themeManager;
     
     /** Indicates if next message should be consecutive */

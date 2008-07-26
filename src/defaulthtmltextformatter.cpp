@@ -24,11 +24,11 @@ QDomNode DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& 
 
 
     QDomDocument node;
-    node.setContent(output);
+    node.setContent("<span>"+output+"</span>");
     
     qDebug() << output;
 
-    return node;
+    return node.firstChild();
 }
 
 

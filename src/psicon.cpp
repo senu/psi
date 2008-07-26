@@ -258,7 +258,11 @@ public:
 	QMenuBar* defaultMenuBar;
 	CapsRegistry* capsRegistry;
 	TabManager *tabManager;
-    HTMLThemeManager * themeManager;
+    
+    /** ThemeManager is created and deleted here */
+    HTMLThemeManager* themeManager;
+    /** IconServer is created and deleted here */
+    IconServer* iconServer;
 };
 
 //----------------------------------------------------------------------------
@@ -274,6 +278,7 @@ PsiCon::PsiCon()
 	d->tabManager = new TabManager(this);
 
     d->themeManager = new HTMLThemeManager();
+    d->iconServer = new IconServer();
 
 	d->mainwin = 0;
 	d->ftwin = 0;

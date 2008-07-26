@@ -5,16 +5,21 @@
 #include <QDebug>
 
 #include "iconreply.h"
+#include "iconset.h"
 
 NetworkAccessManager::NetworkAccessManager(QObject *parent)
     : QNetworkAccessManager(parent)
 {
-    QPixmap p(QSize(60,60));
-    p.fill(QColor("red"));
     
     iconServer = new IconServer();
-    iconServer->registerIcon("smile.png", IconServer::pixmapToPng(p)); 
-    iconServer->registerIcon("icon_0114", IconServer::pixmapToPng(p)); 
+    
+    
+    foreach(QString iconName, IconsetFactory::icons()) { //TODO
+        if(!iconName.isEmpty()) {
+            iconServer->registerIcon(iconName, IconServer::pixmapToPng(IconsetFactory::iconPixmap(iconName))); 
+        }
+    }
+    //iconServer->registerIcon("icon_0114", IconServer::pixmapToPng(p)); 
 }
 
 QNetworkReply * NetworkAccessManager::createRequest ( Operation op, const QNetworkRequest & req, QIODevice * outgoingData = 0 ) {
