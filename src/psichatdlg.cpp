@@ -89,7 +89,7 @@ void PsiChatDlg::initUi() {
     chatEditCreated();
 
 #ifdef Q_WS_MAC
-    connect(chatView(), SIGNAL(selectionChanged()), SLOT(logSelectionChanged()));
+    connect(chatView(), SIGNAL(selectionChanged()), SLOT(logSelectionChanged())); //TODO
 #endif
 
     initToolButtons();
@@ -434,10 +434,9 @@ void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time,
 }
 
 
-void PsiChatDlg::appendChatEvent(const ChatEvent* event, bool alert) {
+void PsiChatDlg::appendChatEvent(const ChatEvent* event) {
     chatView()->appendEvent(event);
     updateLastMsgTimeAndOwner(event->timeStamp(), Other);
-    //TODO do alert
 }
 
 /*

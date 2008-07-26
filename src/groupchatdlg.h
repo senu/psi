@@ -91,7 +91,6 @@ protected:
     void closeEvent(QCloseEvent *);
     void resizeEvent(QResizeEvent*);
     void mucInfoDialog(const QString& title, const QString& message, const Jid& actor, const QString& reason);
-    void appendChatEvent(const ChatEvent* event, bool alert = false);
    
     /** Returns dialog's ChatView */
     ChatView* chatView() const;
@@ -130,6 +129,13 @@ slots:
     void unsetConnecting();
     void action_error(MUCManager::Action, int, const QString&);
     void updateIdentityVisibility();
+    
+    /** Scrolls ChatView up */
+    void scrollUp();
+    
+    /** Scrolls ChatView down */
+    void scrollDown();
+    
 #ifdef WHITEBOARDING
     void openWhiteboard();
 #endif
@@ -145,7 +151,8 @@ private:
     void doAlert();
     //void appendSystemMsg(const QString &, bool, const QDateTime &ts = QDateTime()); //TODO remove
     
-    void appendMessage(const Message &, bool);
+    void appendMessage(const Message &, bool alert);
+    void appendChatEvent(const ChatEvent* event, bool alert = false);
     void setLooks();
 
     void contextMenuEvent(QContextMenuEvent *);

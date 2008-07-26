@@ -210,13 +210,12 @@ void ChatDlg::setShortcuts() {
 
 
 void ChatDlg::scrollUp() {
-    chatView()->scrollUp(); //verticalScrollBar()->setValue(chatView()->verticalScrollBar()->value() - chatView()->verticalScrollBar()->pageStep() / 2);
+    chatView()->scrollUp();
 }
 
 
 void ChatDlg::scrollDown() {
-    //TODO webview doesnt have scrollbar
-    //	chatView()->verticalScrollBar()->setValue(chatView()->verticalScrollBar()->value() + chatView()->verticalScrollBar()->pageStep() / 2);
+    chatView()->scrollDown();
 }
 
 
@@ -829,10 +828,13 @@ void ChatDlg::appendMessage(const Message &m, bool local) {
     ChatDlg::SpooledType spooledType = m.spooled() ?
         ChatDlg::Spooled_OfflineStorage :
         ChatDlg::Spooled_None;
-    if (isEmoteMessage(m))
+    
+    if (isEmoteMessage(m)) {
         appendEmoteMessage(spooledType, m.timeStamp(), local, txt);
-    else
+    }
+    else {
         appendNormalMessage(spooledType, m.timeStamp(), local, txt);
+    }
 
     appendMessageFields(m);
 

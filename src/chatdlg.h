@@ -201,13 +201,11 @@ protected:
 
     void appendMessage(const Message &, bool local = false);
     virtual bool isEncryptionEnabled() const;
-//    virtual void appendSystemMsg(const QString& txt) = 0; TODO cv remove
+    
     /** 
      * Appends chat event (not message nor emote event)
-     * If \param alert and opt.ui.*.use-highlighting are true doAlert() will be called
      */
-    virtual void appendChatEvent(const ChatEvent* event, bool alert = false);
-    //TODO doAlert()!
+    virtual void appendChatEvent(const ChatEvent* event) = 0;
     virtual void appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) = 0;
     virtual void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) = 0;
     virtual void appendMessageFields(const Message& m) = 0;

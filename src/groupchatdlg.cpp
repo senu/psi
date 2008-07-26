@@ -81,6 +81,7 @@
 #include "gcuserview.h"
 
 #include "esystemchatevent.h"
+#include "htmlthememanager.h"
 
 #ifdef Q_WS_WIN
 #include <windows.h>
@@ -499,6 +500,13 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager)
 	ui_.setupUi(this);
 	ui_.lb_ident->setAccount(account());
 	ui_.lb_ident->setShowJid(false);
+
+#warning move it to the right place
+
+    ChatTheme::ChatInfo chatInfo;
+
+    ui_.log->init(chatInfo, new HTMLThemeManager());
+    
 
 	connect(ui_.pb_topic, SIGNAL(clicked()), SLOT(doTopic()));
 	PsiToolTip::install(ui_.le_topic);
@@ -1231,27 +1239,26 @@ const QString& GCMainDlg::nick() const
 	return d->self;
 }
 
-#warning TODO!
-/*
-void GCMainDlg::appendSystemMsg(const QString &str, bool alert, const QDateTime &ts)
-{
-	if (d->trackBar)
+//TODO
+void GCMainDlg::appendChatEvent(const ChatEvent* event, bool alert) {
+    if (d->trackBar) {
 	 	d->doTrackBar();
+    }
 
-	if (!PsiOptions::instance()->getOption("options.ui.muc.use-highlighting").toBool())
+    if (!PsiOptions::instance()->getOption("options.ui.muc.use-highlighting").toBool()) {
 		alert=false;
-	QDateTime time = QDateTime::currentDateTime();
-	if(!ts.isNull())
-		time = ts;
+    }
+    
 
-	updateLastMsgTime(time);
-	QString timestr = ui_.log->formatTimeStamp(time);
-	ui_.log->appendText(QString("<font color=\"#00A000\">[%1]").arg(timestr) + QString(" *** %1</font>").arg(Qt::escape(str)));
+//	updateLastMsgTime(time); //TODO
+    
+	chatView()->appendEvent(event);
 
-	if(alert)
+    if(alert) {
 		doAlert();
+    }
 }
-*/
+
 QString GCMainDlg::getNickColor(QString nick)
 {
 	int sender;
@@ -1314,7 +1321,7 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
 		nickcolor = "#008000";
     }
 
-	QString timestr = ui_.log->formatTimeStamp(m.timeStamp());
+//	QString timestr = ui_.log->formatTimeStamp(m.timeStamp()); //TODO cv
 
 	bool emote = false;
     
@@ -1324,37 +1331,59 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
 
     QString txt;
     
-	if(emote)
+    if (emote) {
 		txt = TextUtil::plain2rich(m.body().mid(4));
-	else
+    }
+    else {
 		txt = TextUtil::plain2rich(m.body());
+    }
 
 	txt = TextUtil::linkify(txt);
 
-	if(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool())
+    if(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool()) {
 		txt = TextUtil::emoticonify(txt, false);//TODO
-	if( PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool() )
+    }
+    if( PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool() ) {
 		txt = TextUtil::legacyFormat(txt);
+    }
 
-	if(emote) {
-		//ui_.log->append(QString("<font color=\"%1\">").arg(color) + QString("[%1]").arg(timestr) + QString(" *%1 ").arg(Qt::escape(who)) + txt + "</font>");
-		chatView()->appendText(QString("<font color=\"%1\">").arg(nickcolor) + QString("[%1]").arg(timestr) + QString(" *%1 ").arg(Qt::escape(who)) + alerttagso + txt + alerttagsc + "</font>");
+	if (emote) {
+        //TODO cv
+//		chatView()->appendText(QString("<font color=\"%1\">").arg(nickcolor) + QString("[%1]").arg(timestr) + QString(" *%1 ").arg(Qt::escape(who)) + alerttagso + txt + alerttagsc + "</font>");
 	}
 	else {
+
+        MessageChatEvent * msg = new MessageChatEvent(); //will be created in another place, of course
+
+        msg->setNick(Qt::escape(who));
+        msg->setTimeStamp(m.timeStamp());
+        msg->setLocal(m.from().resource() == d->self);
+        
+        qDebug() << "gcd TODO CTSO" << m.from().resource();
+        
+//        msg->setConsecutive(doConsecutiveMessage(time, local)); //TODO
+        msg->setSpooled(m.spooled());
+        msg->setService("Jabber");
+        msg->setBody(txt); //TODO escape?
+
+        chatView()->appendMessage(msg);
+//        updateLastMsgTimeAndOwner(time, local ? Outgoing : Incoming); //TODO
+/*
+TODO        
 		if(PsiOptions::instance()->getOption("options.ui.chat.use-chat-says-style").toBool()) {
-			//ui_.log->append(QString("<font color=\"%1\">").arg(color) + QString("[%1] ").arg(timestr) + QString("%1 says:").arg(Qt::escape(who)) + "</font><br>" + txt);
             chatView()->appendText(QString("<font color=\"%1\">").arg(nickcolor) + QString("[%1] ").arg(timestr) + QString("%1 says:").arg(Qt::escape(who)) + "</font><br>" + QString("<font color=\"%1\">").arg(textcolor) + alerttagso + txt + alerttagsc + "</font>");
 		}
 		else {
-			//ui_.log->append(QString("<font color=\"%1\">").arg(color) + QString("[%1] &lt;").arg(timestr) + Qt::escape(who) + QString("&gt;</font> ") + txt);
 			chatView()->appendText(QString("<font color=\"%1\">").arg(nickcolor) + QString("[%1] &lt;").arg(timestr) + Qt::escape(who) + QString("&gt;</font> ") + QString("<font color=\"%1\">").arg(textcolor) + alerttagso + txt + alerttagsc +"</font>");
 		}
+ */
 	}
 
-	//if(local)
-	if(m.from().resource() == d->self)
-		d->deferredScroll();
-
+    //if scroll down if it's our message
+    if(m.from().resource() == d->self) {
+        d->deferredScroll();
+    }
+    
 	// if we're not active, notify the user by changing the title
 	if(!isActiveTab()) {
 		++d->pending;
@@ -1362,8 +1391,9 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
 	}
 
 	//if someone directed their comments to us, notify the user
-	if(alert)
+    if(alert) {
 		doAlert();
+    }
 
 	//if the message spoke to us, alert the user before closing this window
 	//except that keepopen doesn't seem to be implemented for this class yet.
@@ -1375,9 +1405,9 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
 
 void GCMainDlg::doAlert()
 {
-	if(!isActiveTab())
-		if (PsiOptions::instance()->getOption("options.ui.flash-windows").toBool())
-			doFlash(true);
+    if(!isActiveTab() && PsiOptions::instance()->getOption("options.ui.flash-windows").toBool()) {
+		doFlash(true);
+    }
 }
 
 QString GCMainDlg::desiredCaption() const
@@ -1551,6 +1581,15 @@ int GCMainDlg::unreadMessageCount() const
 	return d->pending;
 }
 
+void GCMainDlg::scrollUp() {
+    chatView()->scrollUp();
+}
+
+
+void GCMainDlg::scrollDown() {
+    chatView()->scrollDown();
+}
+
 //----------------------------------------------------------------------------
 // GCFindDlg
 //----------------------------------------------------------------------------
@@ -1609,5 +1648,6 @@ void GCFindDlg::doFind()
 {
 	emit find(le_input->text());
 }
+
 
 #include "groupchatdlg.moc"
