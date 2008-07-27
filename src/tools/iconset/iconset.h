@@ -229,14 +229,56 @@ private:
 	Private *d;
 };
 
-class IconsetFactory
+/**
+ * \class IconsetFactory
+ * \brief Class for easy application-wide PsiIcon searching
+ *
+ * You can add several Iconsets to IconsetFactory to use multiple Icons
+ * application-wide with ease.
+ *
+ * You can reference Icons by their name from any place from your application.
+ */
+
+class IconsetFactory : public QObject
 {
+    Q_OBJECT
+private:
+	IconsetFactory();
+
+	~IconsetFactory();
+
+	static IconsetFactory* instance_;
+	QList<Iconset*>* iconsets_;
+	mutable QPixmap* emptyPixmap_;
+
+signals: 
+
+    /**
+     * Emitted when after we unregister a iconset 
+     * \param iconNames contains unregistered icon names
+     */
+	void iconsetUnregistered(const QStringList& iconNames); 
+
+    /**
+     * Emitted when after we register a iconset 
+     * \param names contains registered icon names
+     * \param icons their pixmaps (qt moc issue)
+     */
+	void iconsetRegistered(QStringList names, const QList<const QPixmap*>& icons); //TODO qt moc cannot handle const list<pair>& 
+
 public:
+	const QPixmap& emptyPixmap() const;
+	const QStringList icons_() const; //TODO
+	void registerIconset(const Iconset *);
+	void unregisterIconset(const Iconset *);
+
+	static IconsetFactory* instance();
 	static PsiIcon icon(const QString &name);
 	static const QPixmap &iconPixmap(const QString &name);
 
 	static const PsiIcon *iconPtr(const QString &name);
 	static const QStringList icons();
+    
 };
 
 #endif

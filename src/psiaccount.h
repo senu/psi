@@ -94,7 +94,7 @@ class PsiAccount : public QObject
 	Q_OBJECT
 public:
 	PsiAccount(const UserAccount &acc, PsiContactList *parent, CapsRegistry* capsRegistry,
-               TabManager *tabManager, HTMLThemeManager* themeManager);
+               TabManager *tabManager, HTMLThemeManager* themeManager, IconServer* iconServer);
 	~PsiAccount();
 
 	bool enabled() const;

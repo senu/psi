@@ -273,6 +273,7 @@ public:
 		, voiceCaller(0)
 		, tabManager(0)
 		, themeManager(0)
+		, iconServer(0)
 #ifdef GOOGLE_FT
 		, googleFTManager(0)
 #endif
@@ -336,6 +337,7 @@ public:
 	
 	TabManager *tabManager;
 	HTMLThemeManager *themeManager;
+	IconServer *iconServer;
 
 #ifdef GOOGLE_FT
 	// Google file transfer manager
@@ -600,13 +602,15 @@ private:
 };
 
 PsiAccount::PsiAccount(const UserAccount &acc, PsiContactList *parent, 
-                       CapsRegistry* capsRegistry, TabManager *tabManager, HTMLThemeManager* themeManager)
+                       CapsRegistry* capsRegistry, TabManager *tabManager,
+                       HTMLThemeManager* themeManager, IconServer* iconServer)
 :QObject(parent)
 {
 	d = new Private( this );
 	d->contactList = parent;
 	d->tabManager = tabManager;
 	d->themeManager = themeManager;
+	d->iconServer = iconServer;
 	d->psi = parent->psi();
 	d->options = PsiOptions::instance();
 	d->client = 0;
@@ -2959,7 +2963,7 @@ ChatDlg *PsiAccount::ensureChatDlg(const Jid &j)
 	ChatDlg *c = findChatDialog(j);
 	if(!c) {
 		// create the chatbox
-		c = ChatDlg::create(j, this, d->tabManager, d->themeManager);
+		c = ChatDlg::create(j, this, d->tabManager, d->themeManager, d->iconServer);
         
 		connect(c, SIGNAL(aSend(const Message &)), SLOT(dj_sendMessage(const Message &)));
 		connect(c, SIGNAL(messagesRead(const Jid &)), SLOT(chatMessagesRead(const Jid &)));

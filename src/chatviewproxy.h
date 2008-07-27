@@ -13,6 +13,7 @@ class ChatViewProxy : public QWidget {
 
     Q_OBJECT
 public:
+    /** Constructor; you have to call init() to use ChatViewProxy */
     ChatViewProxy(QWidget* parent);
 
     /** Returns encapsulated ChatView widget; you have to call init(ci) after that! */

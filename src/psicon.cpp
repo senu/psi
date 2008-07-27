@@ -90,11 +90,14 @@
 #include "desktoputil.h"
 #include "tabmanager.h"
 #include "htmlthememanager.h"
+#include "iconserver.h"
 
 
 #ifdef Q_WS_MAC
 #include "mac_dock.h"
 #endif
+
+class IconServer;
 
 //----------------------------------------------------------------------------
 // PsiConObject
@@ -260,9 +263,9 @@ public:
 	TabManager *tabManager;
     
     /** ThemeManager is created and deleted here */
-    HTMLThemeManager* themeManager;
+    HTMLThemeManager* themeManager; 
     /** IconServer is created and deleted here */
-    IconServer* iconServer;
+    IconServer* iconServer; 
 };
 
 //----------------------------------------------------------------------------
@@ -279,6 +282,14 @@ PsiCon::PsiCon()
 
     d->themeManager = new HTMLThemeManager();
     d->iconServer = new IconServer();
+
+    //keep IconServer up to date
+    qDebug() << "connect to iconserver";
+    connect(IconsetFactory::instance(), SIGNAL(iconsetUnregistered(const QStringList&)), 
+            d->iconServer, SLOT(unregisterAll(const QStringList&)));
+    
+    connect(IconsetFactory::instance(), SIGNAL(iconsetRegistered(QStringList, const QList<const QPixmap*>&)),
+            d->iconServer, SLOT(registerAll(QStringList, const QList<const QPixmap*>&)));
 
 	d->mainwin = 0;
 	d->ftwin = 0;

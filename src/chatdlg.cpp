@@ -514,7 +514,7 @@ void ChatDlg::contactUpdated(UserListItem* u, int status, const QString& statusS
 
 
 void ChatDlg::doVoice() {
-    aVoice(jid());
+    emit aVoice(jid());
 }
 
 
@@ -578,12 +578,12 @@ void ChatDlg::updatePGP() {
 
 
 void ChatDlg::doInfo() {
-    aInfo(jid());
+    emit aInfo(jid());
 }
 
 
 void ChatDlg::doHistory() {
-    aHistory(jid());
+    emit aHistory(jid());
 }
 
 
