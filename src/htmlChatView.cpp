@@ -18,7 +18,14 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* i
 
     layout->addWidget(&webView);
 
+    webView.setMinimumSize(100,100);
+    setMinimumSize(100,100);
+
+    qDebug() << webView.minimumSize() << webView.minimumSizeHint() << webView.size() << webView.sizeHint();
+        
     setLayout(layout);
+    setFocusPolicy(Qt::NoFocus);
+    webView.setFocusPolicy(Qt::NoFocus);
 
     networkManager = new NetworkAccessManager(0, iconServer);
     webView.page()->setNetworkAccessManager(networkManager);

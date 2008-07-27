@@ -68,7 +68,8 @@ namespace XMPP
 		void accept(qlonglong offset=0, qlonglong length=0);
 
 		// both
-		void close(); // reject, or stop sending/receiving
+        /** Reject, or stop sending/receiving */
+		void close(); 
 		S5BConnection *s5bConnection() const; // active link
 
 	signals:
@@ -115,6 +116,12 @@ namespace XMPP
 
 	signals:
 		void incomingReady();
+        
+        /** Emitted when user reject incoming file transfer from \param jid */
+        void transferRejected(const QString& fileName, const Jid& jid);
+        
+        /** Emitted when file transfer is finished (successfully) */
+        void transferFinished(const QString& fileName, const Jid& jid); //TODO cv
 
 	private slots:
 		void pft_incoming(const FTRequest &req);

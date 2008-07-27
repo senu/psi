@@ -474,11 +474,15 @@ void FileEvent::setFrom(const Jid &j)
 	v_from = j;
 }
 
-FileTransfer *FileEvent::takeFileTransfer()
+FileTransfer* FileEvent::takeFileTransfer()
 {
 	FileTransfer *_ft = ft;
 	ft = 0;
 	return _ft;
+}
+
+const XMPP::FileTransfer* FileEvent::peekFileTransfer() {
+	return ft;
 }
 
 QString FileEvent::description() const

@@ -239,14 +239,18 @@ void FileTransfer::ft_finished()
 	JT_FT *ft = d->ft;
 	d->ft = 0;
 
-	if(ft->success()) {
+	if (ft->success()) {
 		d->state = Connecting;
 		d->rangeOffset = ft->rangeOffset();
 		d->length = ft->rangeLength();
-		if(d->length == 0)
+        
+        if(d->length == 0) {
 			d->length = d->size - d->rangeOffset;
-		d->streamType = ft->streamType();
+        }
+		
+        d->streamType = ft->streamType();
 		d->c = d->m->client()->s5bManager()->createConnection();
+        
 		connect(d->c, SIGNAL(connected()), SLOT(s5b_connected()));
 		connect(d->c, SIGNAL(connectionClosed()), SLOT(s5b_connectionClosed()));
 		connect(d->c, SIGNAL(bytesWritten(int)), SLOT(s5b_bytesWritten(int)));
@@ -259,10 +263,12 @@ void FileTransfer::ft_finished()
 	}
 	else {
 		reset();
-		if(ft->statusCode() == 403)
+        if(ft->statusCode() == 403) {
 			error(ErrReject);
-		else
+        }
+        else {
 			error(ErrNeg);
+        }
 	}
 }
 
@@ -418,7 +424,8 @@ void FileTransferManager::pft_incoming(const FTRequest &req)
 	FileTransfer *ft = new FileTransfer(this);
 	ft->man_waitForAccept(req);
 	d->incoming.append(ft);
-	incomingReady();
+    
+	emit incomingReady();
 }
 
 void FileTransferManager::s5b_incomingReady(S5BConnection *c)
@@ -451,9 +458,10 @@ void FileTransferManager::con_accept(FileTransfer *ft)
 	d->pft->respondSuccess(ft->d->peer, ft->d->iq_id, ft->d->rangeOffset, ft->d->rangeLength, ft->d->streamType);
 }
 
-void FileTransferManager::con_reject(FileTransfer *ft)
-{
+void FileTransferManager::con_reject(FileTransfer *ft){
+    
 	d->pft->respondError(ft->d->peer, ft->d->iq_id, 403, "Declined");
+    emit transferRejected(ft->fileName(), ft->peer());
 }
 
 void FileTransferManager::unlink(FileTransfer *ft)

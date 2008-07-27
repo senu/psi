@@ -189,7 +189,11 @@ public:
 	int type() const { return File; }
 	XMPP::Jid from() const;
 	void setFrom(const XMPP::Jid &);
-	XMPP::FileTransfer *takeFileTransfer();
+	XMPP::FileTransfer* takeFileTransfer();
+    
+    /** Returns FileTransfer assciated with this event without 'taking' it */
+	const XMPP::FileTransfer *peekFileTransfer();
+    
 
 	virtual int priority() const;
 

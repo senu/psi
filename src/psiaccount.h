@@ -329,6 +329,9 @@ private slots:
 	void incomingGoogleFileTransfer(GoogleFileTransfer* ft);
 #endif
 	void client_incomingFileTransfer();
+    
+    /** ChatDialog will create FileTransferChatEvent that we rejected incoming file transfer */
+    void client_rejectedFileTransfer(const QString& fileName, const Jid& jid);
 	void sessionStart_finished();
 
 	void serverFeaturesChanged();

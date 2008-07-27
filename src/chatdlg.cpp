@@ -84,6 +84,8 @@
 #include "psichatdlg.h"
 #include "moodchatevent.h"
 #include "esystemchatevent.h"
+#include "fileTransferChatEvent.h"
+#include "ui_about.h"
 
 
 ChatDlg* ChatDlg::create(const Jid& jid, PsiAccount* account, TabManager* tabManager,
@@ -154,7 +156,6 @@ void ChatDlg::init() {
     connect(account(), SIGNAL(encryptedMessageSent(int, bool, int, const QString &)), SLOT(encryptedMessageSent(int, bool, int, const QString &)));
     account()->dialogRegister(this, jid());
 
-    chatView()->setFocusPolicy(Qt::NoFocus);
     chatEdit()->setFocus();
 
     // TODO: port to restoreSavedSize() (and adapt it from restoreSavedGeometry())
@@ -1129,7 +1130,7 @@ int ChatDlg::unreadMessageCount() const {
 void ChatDlg::moodPublished(const Mood& mood, const Jid& jid_) {
     if (jid().compare(jid_, true) && !mood.isNull()) {
         MoodChatEvent* event = new MoodChatEvent(mood.typeText(), mood.text());
-        chatView()->appendEvent(event);
+        appendChatEvent(event);
     }
 }
 
@@ -1143,13 +1144,27 @@ void ChatDlg::tunePublished(const Tune& tune, const Jid& jid_) {
         event->setLocal(false);
         event->setSpooled(false);
         event->setService("Jabber");
-        chatView()->appendEvent(event);
+        appendChatEvent(event);
     }
 }
 
 
 void ChatDlg::incomingFileTransfer(const QString& fileName) {
+    
+    FileTransferChatEvent * event = new FileTransferChatEvent();
+    
+    event->setFileName(fileName);
+    event->type = FileTransferChatEvent::Initiated;
+    appendChatEvent(event);
+}
 
+void ChatDlg::rejectedFileTransfer(const QString& fileName) {
+
+    FileTransferChatEvent * event = new FileTransferChatEvent();
+    
+    event->setFileName(fileName);
+    event->type = FileTransferChatEvent::Aborted;
+    appendChatEvent(event);
 }
 
 

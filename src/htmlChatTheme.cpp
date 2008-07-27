@@ -164,22 +164,20 @@ QString HTMLChatTheme::createFileTransferEventPart(const FileTransferChatEvent *
 
     FileTransferChatEvent::FileTransferEventType type = event->type;
 
-    QString eventText, //TODO translate
-        statusStr; //%status%
-
+    QString eventText, statusStr; //adium %status%
 
     switch (type) {
         case FileTransferChatEvent::Finished :
 
-                eventText = "Finished downloading " + event->fileName() + ".";
+                eventText = QObject::tr("Finished downloading %1.").arg(event->fileName());
             statusStr = "fileTransferComplete";
             break;
         case FileTransferChatEvent::Initiated :
-                eventText = "Incoming file transfer" + event->fileName() + ".";
+                eventText = QObject::tr("Incoming file transfer: %1.").arg(event->fileName());
             statusStr = "fileTransferBegan";
             break;
         case FileTransferChatEvent::Aborted :
-                eventText = "Aborted downloading " + event->fileName() + ".";
+                eventText = QObject::tr("Aborted downloading %1.").arg(event->fileName());
             statusStr = "fileTransferAborted"; //TODO not in adium!
             break;
     }
@@ -191,6 +189,7 @@ QString HTMLChatTheme::createFileTransferEventPart(const FileTransferChatEvent *
     part.replaceAndEscapeKeyword("%status%", statusStr);
     part.replaceAndEscapeKeyword("%messageClasses%", "event fileTransfer");
 
+    qDebug() << "theme::FT event" << eventText;
     return part.toString();
 }
 
@@ -266,7 +265,7 @@ QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const 
 
     fillPartWithTimeKeywords(part, event);
     fillPartWithUserKeywords(part, event);
-    part.replaceAndEscapeKeyword("%message%", eventText); //TODO validate or escape
+    part.replaceAndEscapeKeyword("%message%", eventText); 
     part.replaceAndEscapeKeyword("%messageClasses%", "event emote");
 
     return part.toString();
@@ -347,7 +346,7 @@ void HTMLChatTheme::fillPartWithUserKeywords(HTMLChatPart& part, const UserChatD
 
 void HTMLChatTheme::fillPartWithEventKeywords(HTMLChatPart& part, const ChatEvent* event, QString eventText) const {
     Q_UNUSED(event);
-    part.replaceAndEscapeKeyword("%message%", eventText); //TODO validate or escape
+    part.replaceAndEscapeKeyword("%message%", eventText); 
 }
 
 

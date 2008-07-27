@@ -505,6 +505,7 @@ public:
 	QWidget* findDialog(const QMetaObject& mo, const Jid& jid, bool compareResource) const
 	{
 		foreach(item_dialog2* i, dialogList) {
+            qDebug() << "findDialog" <<  i->jid.full() << jid.full();
 			if (mo.cast(i->widget) && compareJids(i->jid, jid, compareResource))
 				return i->widget;
 		}
@@ -687,18 +688,24 @@ PsiAccount::PsiAccount(const UserAccount &acc, PsiContactList *parent,
 	connect(d->client, SIGNAL(rosterItemAdded(const RosterItem &)), SLOT(client_rosterItemUpdated(const RosterItem &)));
 	connect(d->client, SIGNAL(rosterItemUpdated(const RosterItem &)), SLOT(client_rosterItemUpdated(const RosterItem &)));
 	connect(d->client, SIGNAL(rosterItemRemoved(const RosterItem &)), SLOT(client_rosterItemRemoved(const RosterItem &)));
-	connect(d->client, SIGNAL(resourceAvailable(const Jid &, const Resource &)), SLOT(client_resourceAvailable(const Jid &, const Resource &)));
+
+    connect(d->client, SIGNAL(resourceAvailable(const Jid &, const Resource &)), SLOT(client_resourceAvailable(const Jid &, const Resource &)));
 	connect(d->client, SIGNAL(resourceUnavailable(const Jid &, const Resource &)), SLOT(client_resourceUnavailable(const Jid &, const Resource &)));
-	connect(d->client, SIGNAL(presenceError(const Jid &, int, const QString &)), SLOT(client_presenceError(const Jid &, int, const QString &)));
+	
+    connect(d->client, SIGNAL(presenceError(const Jid &, int, const QString &)), SLOT(client_presenceError(const Jid &, int, const QString &)));
 	connect(d->client, SIGNAL(messageReceived(const Message &)), SLOT(client_messageReceived(const Message &)));
 	connect(d->client, SIGNAL(subscription(const Jid &, const QString &, const QString&)), SLOT(client_subscription(const Jid &, const QString &, const QString&)));
 	connect(d->client, SIGNAL(debugText(const QString &)), SLOT(client_debugText(const QString &)));
-	connect(d->client, SIGNAL(groupChatJoined(const Jid &)), SLOT(client_groupChatJoined(const Jid &)));
+	
+    connect(d->client, SIGNAL(groupChatJoined(const Jid &)), SLOT(client_groupChatJoined(const Jid &)));
 	connect(d->client, SIGNAL(groupChatLeft(const Jid &)), SLOT(client_groupChatLeft(const Jid &)));
 	connect(d->client, SIGNAL(groupChatPresence(const Jid &, const Status &)), SLOT(client_groupChatPresence(const Jid &, const Status &)));
 	connect(d->client, SIGNAL(groupChatError(const Jid &, int, const QString &)), SLOT(client_groupChatError(const Jid &, int, const QString &)));
+    
 	connect(d->client->fileTransferManager(), SIGNAL(incomingReady()), SLOT(client_incomingFileTransfer()));
-	connect(d->client, SIGNAL(xmlIncoming(const QString &)), d, SLOT(client_xmlIncoming(const QString &)));
+	connect(d->client->fileTransferManager(), SIGNAL(transferRejected(const QString&, const Jid&)), SLOT(client_rejectedFileTransfer(const QString&, const Jid&)));
+	
+    connect(d->client, SIGNAL(xmlIncoming(const QString &)), d, SLOT(client_xmlIncoming(const QString &)));
 	connect(d->client, SIGNAL(xmlOutgoing(const QString &)), d, SLOT(client_xmlOutgoing(const QString &)));
 
 	// Privacy manager
@@ -807,8 +814,9 @@ PsiAccount::PsiAccount(const UserAccount &acc, PsiContactList *parent,
 		d->client->addExtension("html",Features("http://jabber.org/protocol/xhtml-im"));
 
 	// restore cached roster
-	for(Roster::ConstIterator it = acc.roster.begin(); it != acc.roster.end(); ++it)
+    for(Roster::ConstIterator it = acc.roster.begin(); it != acc.roster.end(); ++it) {
 		client_rosterItemUpdated(*it);
+    }
 
 	// restore pgp key bindings
 	for(VarList::ConstIterator kit = acc.keybind.begin(); kit != acc.keybind.end(); ++kit) {
@@ -2240,6 +2248,17 @@ void PsiAccount::client_incomingFileTransfer()
 	FileEvent *fe = new FileEvent(ft->peer().full(), ft, this);
 	fe->setTimeStamp(QDateTime::currentDateTime());
 	handleEvent(fe, IncomingStanza);
+
+    //TODO i could notify chat dialogs here not in handle event
+}
+
+void PsiAccount::client_rejectedFileTransfer(const QString& fileName, const Jid& jid) {
+    ChatDlg* chatDlg = findChatDialog(jid);
+
+    qDebug() << "rejected !" << chatDlg << jid.full();
+    if (chatDlg) {
+        chatDlg->rejectedFileTransfer(fileName);
+    }
 }
 
 void PsiAccount::reconnect()
@@ -3815,11 +3834,13 @@ void PsiAccount::handleEvent(PsiEvent* e, ActivationType activationType)
 		// pass chat messages directly to a chat window if possible (and deal with sound)
 		if(m.type() == "chat") {
 			ChatDlg *c = findChatDialog(e->from());
-			if(!c)
+            if (!c) {
 				c = findChatDialog(e->jid());
+            }
 
-			if(c)
-				c->setJid(e->from());
+           if (c ) {
+                c->setJid(e->from());
+            }
 
 			//if the chat exists, and is either open in a tab,
 			//or in a window
@@ -3877,16 +3898,15 @@ void PsiAccount::handleEvent(PsiEvent* e, ActivationType activationType)
 		doPopup = true;
 		popupType = PsiPopup::AlertFile;
 
-        //notify chat dialog 
+        //notify chat dialog  
         ChatDlg *c = findChatDialog(e->from());
         
         if (!c) {
             c = findChatDialog(e->jid());
         }
         if (c) {
-            c->incomingFileTransfer(dynamic_cast<FileEvent*>(e)->takeFileTransfer()->fileName());
+            c->incomingFileTransfer(dynamic_cast<FileEvent*>(e)->peekFileTransfer()->fileName());
         }
-				
 	}
 	else if(e->type() == PsiEvent::RosterExchange) {
 		RosterExchangeEvent* re = (RosterExchangeEvent*) e;
@@ -4195,8 +4215,9 @@ void PsiAccount::processChats(const Jid &j)
 			const Message &m = me->message();
 
 			// process the message
-			if(!me->sentToChatWindow())
+            if(!me->sentToChatWindow()) {
 				c->incomingMessage(m);
+            }
 		}
 
 		while (!chatList.isEmpty())

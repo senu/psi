@@ -40,6 +40,7 @@ QString PlainTextChatTheme::createOutgoingMessagePart(const MessageChatEvent * e
 
 
 QString PlainTextChatTheme::createFileTransferEventPart(const FileTransferChatEvent * event) const {
+    //TODO
 }
 
 

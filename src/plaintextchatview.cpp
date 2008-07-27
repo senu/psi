@@ -8,6 +8,9 @@ __PlainTextChatView::__PlainTextChatView(QWidget *parent) : ChatView(parent), te
     layout->setSpacing(0);
 
     layout->addWidget(&textview);
+    
+    setFocusPolicy(Qt::NoFocus);
+    textview.setFocusPolicy(Qt::NoFocus);
 
     setLayout(layout);
 }

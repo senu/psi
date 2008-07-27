@@ -216,12 +216,6 @@
        </item>
        <item>
         <widget class="ChatViewProxy" name="log" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="focusPolicy" >
           <enum>Qt::NoFocus</enum>
          </property>

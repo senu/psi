@@ -907,8 +907,9 @@ void FileRequestDlg::ft_error(int x, int fx, const QString &)
 	}
 
 	QString str;
-	if(x == FileTransferHandler::ErrReject)
-		str = tr("File was rejected by remote user.");
+    if(x == FileTransferHandler::ErrReject) {
+        str = tr("File was rejected by remote user.");
+    }
 	else if(x == FileTransferHandler::ErrTransfer) {
 		if(fx == FileTransfer::ErrNeg)
 			str = tr(
@@ -935,8 +936,9 @@ void FileRequestDlg::ft_error(int x, int fx, const QString &)
 		str = tr("File I/O error");
 	QMessageBox::information(this, tr("Error"), str);
 
-	if(!d->sending || x == FileTransferHandler::ErrReject)
+    if(!d->sending || x == FileTransferHandler::ErrReject) {
 		close();
+    }
 }
 
 void FileRequestDlg::t_timeout()

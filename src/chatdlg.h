@@ -127,10 +127,16 @@ slots:
     void tunePublished(const Tune& mood, const Jid& jid);
     
     /**
-     * Creates FileTrasferChatEvent;
+     * Creates FileTrasferChatEvent::incoming
      * \param fileName indicates incoming file name 
      */
     void incomingFileTransfer(const QString& fileName);
+    
+    /**
+     * Creates FileTrasferChatEvent::rejected
+     * \param fileName indicates rejected file name 
+     */
+    void rejectedFileTransfer(const QString& fileName);
     
     void incomingMessage(const Message &);
     virtual void updateAvatar() = 0;
