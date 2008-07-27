@@ -13,6 +13,7 @@
 #include "htmlChatTheme.h"
 #include "jsnotifier.h"
 #include "networkaccessmanager.h"
+#include "iconserver.h"
 
 class ChatView;
 class HTMLChatTheme;
@@ -24,10 +25,15 @@ class HTMLChatView : public ChatView {
     Q_OBJECT
 
 public:
-    HTMLChatView(QWidget * parent, HTMLChatTheme theme, QString themePath);
+    /** 
+     * Constructor 
+     *
+     * \param iconServer will be passed to NetworkAccessManager
+     * \param theme_ will be used as a ChatView theme
+     */
+    HTMLChatView(QWidget * parent, HTMLChatTheme theme_, IconServer* iconServer, QString _themePath);
 
     ~HTMLChatView();
-    QWebView webView;
 
     /** Sets theme (if needed) */
     void setTheme(HTMLChatTheme theme);
@@ -104,6 +110,7 @@ slots:
 
 
 private:
+    
     /** Escapes " and \n  (for JS evaluation) */
     void escapeString(QString& str);
 
@@ -122,12 +129,11 @@ private:
     /** ChatView is ready to: change theme, append events (after onInitDouemtet finished) */
     bool isReady;
 
-    //queued actions (things we got while webkit was initializatin empty chat)
+    //TODO queued actions (things we got while webkit was initializatin empty chat)
     /** Theme changed */
     HTMLChatTheme* queuedTheme;
 
-  
-    
+    QWebView webView;
     
     QVBoxLayout * layout;
 

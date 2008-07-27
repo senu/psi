@@ -818,7 +818,9 @@ void PsiCon::createAccount(const QString &name, const Jid &j, const QString &pas
 
 PsiAccount *PsiCon::createAccount(const UserAccount& acc)
 {
-	PsiAccount *pa = new PsiAccount(acc, d->contactList, d->capsRegistry, d->tabManager, d->themeManager);
+	PsiAccount *pa = new PsiAccount(acc, d->contactList, d->capsRegistry, 
+                                    d->tabManager, d->themeManager, d->iconServer);
+
 	connect(&d->idle, SIGNAL(secondsIdle(int)), pa, SLOT(secondsIdle(int)));
 	connect(pa, SIGNAL(updatedActivity()), SLOT(pa_updatedActivity()));
 	connect(pa, SIGNAL(updatedAccount()), SLOT(pa_updatedAccount()));

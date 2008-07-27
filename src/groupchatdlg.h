@@ -30,6 +30,8 @@
 
 #include "ui_groupchatdlg.h"
 #include "mucmanager.h"
+#include "htmlthememanager.h"
+#include "iconserver.h"
 #include "advwidget.h"
 
 using namespace XMPP;
@@ -65,7 +67,9 @@ class GCMainDlg : public TabbableWidget {
 
     Q_OBJECT
 public:
-    GCMainDlg(PsiAccount *, const Jid &, TabManager *tabManager);
+    GCMainDlg(PsiAccount *, const Jid &, TabManager *tabManager, 
+              HTMLThemeManager* themeManager, IconServer* iconServer);
+
     ~GCMainDlg();
 
     PsiAccount* account() const;
@@ -163,6 +167,9 @@ private:
     QMap<QString, int> nicks;
     int nicknumber;
     PsiOptions* options_;
+    HTMLThemeManager* themeManager;
+    IconServer* iconServer;
+    
     QDateTime lastMsgTime_;
 };
 

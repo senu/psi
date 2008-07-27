@@ -36,6 +36,7 @@
 
 #include "chatView.h"
 #include "htmlthememanager.h"
+#include "iconserver.h"
 #include "defaulthtmltextformatter.h"
 #include "messageValidator.h"
 #include "mood.h"
@@ -61,12 +62,12 @@ class ChatDlg : public TabbableWidget {
     Q_OBJECT
 protected:
     ChatDlg(const Jid& jid, PsiAccount* account, TabManager* tabManager,
-            HTMLThemeManager* themeManager);
+            HTMLThemeManager* themeManager, IconServer* iconServer);
     virtual void init();
 
 public:
     static ChatDlg* create(const Jid& jid, PsiAccount* account, TabManager* tabManager,
-                           HTMLThemeManager* themeManager);
+                           HTMLThemeManager* themeManager, IconServer* iconServer);
     ~ChatDlg();
 
     // reimplemented
@@ -222,8 +223,11 @@ protected:
     /** It must be translated because we don't want Iris in ChatView */
     StatusChatEvent::StatusEventType statusToChatViewStatus(int status) const;
 
-    
+    /** We pass it to MUC/Chat dialog constructor */
     HTMLThemeManager* themeManager;
+    
+    /** We pass it to MUC/Chat dialog constructor */
+    IconServer* iconServer;
     
     /** Indicates if next message should be consecutive */
     LastEventOwner lastEventOwner;

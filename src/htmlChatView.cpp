@@ -7,7 +7,7 @@
 #include "htmlChatView.h"
 
 
-HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, QString _themePath)
+HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* iconServer, QString _themePath)
 : ChatView(parent), themePath(_themePath), theme(_theme), isReady(false), queuedTheme(0) {
 
     webView.setParent(this);
@@ -20,12 +20,10 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, QString _them
 
     setLayout(layout);
 
-    networkManager = new NetworkAccessManager();
-    webView.page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-
-
+    networkManager = new NetworkAccessManager(0, iconServer);
     webView.page()->setNetworkAccessManager(networkManager);
-
+    
+    webView.page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     webView.setContextMenuPolicy(Qt::NoContextMenu);
 
     connect(webView.page(), SIGNAL(linkClicked(const QUrl&)), this, SLOT(onLinkClicked(const QUrl&)));
@@ -263,6 +261,6 @@ void HTMLChatView::scrollUp() {
 
 
 void HTMLChatView::scrollDown() {
-    QWebFrame * frame = webView.page()->mainFrame(); 
+    QWebFrame * frame = webView.page()->mainFrame();
     frame->setScrollBarValue(Qt::Vertical, frame->scrollBarValue(Qt::Vertical) + 42); //TODO 42
 }

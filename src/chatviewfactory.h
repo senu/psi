@@ -20,9 +20,11 @@ public:
      * \param parent will be passed to created ChatView
      * \param isHTMLChatView will be true <=> crated ChatView is a HTMLChatView
      * \param themeManager is needed because Kev didnt want it as singleton
+     * \param iconServer will be used in HTMLChatView for serving icons purporses
      */
     static ChatView * createChatView(bool isGroupChat, QString jid, QWidget * parent,
-                                     bool * isHTMLChatView, HTMLThemeManager* themeManager);
+                                     bool * isHTMLChatView, HTMLThemeManager* themeManager,
+                                     IconServer* iconServer);
 
 };
 

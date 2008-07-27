@@ -467,12 +467,18 @@ public:
 	}
 };
 
-GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager)
-	: TabbableWidget(j.userHost(), pa, tabManager)
+GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager, 
+                     HTMLThemeManager* themeManager_, IconServer* iconServer_)
+	: TabbableWidget(j.userHost(), pa, tabManager), 
+        themeManager(themeManager_), 
+        iconServer(iconServer_)
 {
 	setAttribute(Qt::WA_DeleteOnClose);
-  	if ( PsiOptions::instance()->getOption("options.ui.mac.use-brushed-metal-windows").toBool() )
+    
+    if ( PsiOptions::instance()->getOption("options.ui.mac.use-brushed-metal-windows").toBool() ) {
 		setAttribute(Qt::WA_MacMetalStyle);
+    }
+    
 	nicknumber=0;
 	d = new Private(this);
 	d->self = d->prev_self = j.resource();
@@ -505,7 +511,7 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager)
 
     ChatTheme::ChatInfo chatInfo;
 
-    ui_.log->init(chatInfo, new HTMLThemeManager());
+    ui_.log->init(chatInfo, themeManager, iconServer);
     
 
 	connect(ui_.pb_topic, SIGNAL(clicked()), SLOT(doTopic()));
@@ -1358,9 +1364,6 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
         msg->setNick(Qt::escape(who));
         msg->setTimeStamp(m.timeStamp());
         msg->setLocal(m.from().resource() == d->self);
-        
-        qDebug() << "gcd TODO CTSO" << m.from().resource();
-        
         msg->setConsecutive(false); //TODO
         msg->setSpooled(m.spooled());
         msg->setService("Jabber");

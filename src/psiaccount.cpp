@@ -4256,7 +4256,7 @@ void PsiAccount::openGroupChat(const Jid &j, ActivationType activationType)
 	if(!found)
 		d->groupchats += str;
 
-	GCMainDlg *w = new GCMainDlg(this, j, d->tabManager);
+	GCMainDlg *w = new GCMainDlg(this, j, d->tabManager, d->themeManager, d->iconServer);
 	w->setPassword(d->client->groupChatPassword(j.user(),j.host()));
 	connect(w, SIGNAL(aSend(const Message &)), SLOT(dj_sendMessage(const Message &)));
 	connect(d->psi, SIGNAL(emitOptionsUpdate()), w, SLOT(optionsUpdate()));

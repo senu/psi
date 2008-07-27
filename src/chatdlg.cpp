@@ -87,16 +87,22 @@
 
 
 ChatDlg* ChatDlg::create(const Jid& jid, PsiAccount* account, TabManager* tabManager,
-                         HTMLThemeManager* themeManager) {
-    ChatDlg* chat = new PsiChatDlg(jid, account, tabManager, themeManager);
+                         HTMLThemeManager* themeManager, IconServer* iconServer) {
+    ChatDlg* chat = new PsiChatDlg(jid, account, tabManager, themeManager, iconServer);
     chat->init();
     return chat;
 }
 
 
-ChatDlg::ChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager, HTMLThemeManager* _themeManager)
-: TabbableWidget(jid, pa, tabManager), themeManager(_themeManager), highlightersInstalled_(false),
-textFormatter_(false, true, false) {
+ChatDlg::ChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager, 
+                 HTMLThemeManager* themeManager_, IconServer* iconServer_)
+: TabbableWidget(jid, pa, tabManager), 
+    themeManager(themeManager_), 
+    iconServer(iconServer_), 
+    highlightersInstalled_(false),
+    textFormatter_(false, true, false) 
+{
+    
     if (PsiOptions::instance()->getOption("options.ui.mac.use-brushed-metal-windows").toBool()) {
         setAttribute(Qt::WA_MacMetalStyle);
     }

@@ -7,13 +7,9 @@
 #include "iconreply.h"
 #include "iconset.h"
 
-NetworkAccessManager::NetworkAccessManager(QObject *parent)
-    : QNetworkAccessManager(parent)
+NetworkAccessManager::NetworkAccessManager(QObject *parent, IconServer* iconServer_)
+    : QNetworkAccessManager(parent), iconServer(iconServer_)
 {
-    
-    iconServer = new IconServer();
-    
-    
     foreach(QString iconName, IconsetFactory::icons()) { //TODO
         if(!iconName.isEmpty()) {
             iconServer->registerIcon(iconName, IconServer::pixmapToPng(IconsetFactory::iconPixmap(iconName))); 

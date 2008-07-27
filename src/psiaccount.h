@@ -32,6 +32,7 @@
 #include "xmpp_status.h"
 #include "psiactions.h"
 #include "htmlthememanager.h"
+#include "iconserver.h"
 #include "mood.h"
 
 namespace XMPP

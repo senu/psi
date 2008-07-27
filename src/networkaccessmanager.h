@@ -11,7 +11,11 @@ class NetworkAccessManager : public QNetworkAccessManager {
     Q_OBJECT
 
 public:
-    NetworkAccessManager(QObject *parent = 0);
+    /** 
+     * Constructor. 
+     * \param iconServer will be used to serve icon:// urls 
+     */
+    NetworkAccessManager(QObject *parent, IconServer* iconServer);
 
     private
 slots:

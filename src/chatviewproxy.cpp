@@ -4,7 +4,7 @@
 
 
 ChatViewProxy::ChatViewProxy(QWidget* parent)
-: QWidget(parent), _chatView(0), themeManager(0) {
+: QWidget(parent), _chatView(0), themeManager(0), iconServer(0) {
 
     layout = new QVBoxLayout(this);
     layout->setMargin(0);
@@ -21,9 +21,10 @@ ChatView* ChatViewProxy::chatView() const {
 }
 
 
-void ChatViewProxy::init(const ChatTheme::ChatInfo& chatInfo, HTMLThemeManager* _themeManager) {
+void ChatViewProxy::init(const ChatTheme::ChatInfo& chatInfo, HTMLThemeManager* themeManager_, IconServer* iconServer_) {
 
-    themeManager = _themeManager;
+    themeManager = themeManager_;
+    iconServer = iconServer_;
     
     _chatView = createChatView();
     _chatView->init(chatInfo);
@@ -60,7 +61,8 @@ void ChatViewProxy::optionsChanged(const QString& optionName) {
 
 
 ChatView * ChatViewProxy::createChatView() {
-    ChatView * newView = ChatViewFactory::createChatView(false, "TODO@jabber.org", this, &isHTMLChatView, themeManager);
+    ChatView * newView = ChatViewFactory::createChatView(false, "TODO@jabber.org", this, &isHTMLChatView, 
+                                                         themeManager, iconServer);
     layout->addWidget(newView);
     return newView;
 }

@@ -7,7 +7,9 @@
 
 
 ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,
-                                           QWidget* parent, bool* isHTMLChatView, HTMLThemeManager* themeManager) {
+                                           QWidget* parent, bool* isHTMLChatView, 
+                                           HTMLThemeManager* themeManager, 
+                                           IconServer* iconServer) {
     //TODO fallback 
     if (PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool()) {
 
@@ -17,7 +19,7 @@ ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,
         HTMLChatTheme theme(themeManager->getTheme(themeName, themeVariant));
 
         *isHTMLChatView = true;
-        return new HTMLChatView(parent, theme, ApplicationInfo::homeDir());
+        return new HTMLChatView(parent, theme, iconServer, ApplicationInfo::homeDir());
     }
     *isHTMLChatView = false;
     return new __PlainTextChatView(parent);

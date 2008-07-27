@@ -48,9 +48,10 @@
 #include "esystemchatevent.h"
 
 
-PsiChatDlg::PsiChatDlg(const Jid& jid, PsiAccount* pa,
-                       TabManager* tabManager, HTMLThemeManager* themeManager)
-: ChatDlg(jid, pa, tabManager, themeManager) {
+PsiChatDlg::PsiChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager, 
+                       HTMLThemeManager* themeManager, IconServer* iconServer)
+: ChatDlg(jid, pa, tabManager, themeManager, iconServer) 
+{
     connect(account()->psi(), SIGNAL(accountCountChanged()), this, SLOT(updateIdentityVisibility()));
 }
 
@@ -83,7 +84,7 @@ void PsiChatDlg::initUi() {
     lastMsgTime = QDateTime::currentDateTime();
     lastEventOwner = Other;
     
-    ui_.log->init(chatInfo, themeManager);
+    ui_.log->init(chatInfo, themeManager, iconServer);
 
     connect(ui_.mle, SIGNAL(textEditCreated(QTextEdit*)), SLOT(chatEditCreated()));
     chatEditCreated();
