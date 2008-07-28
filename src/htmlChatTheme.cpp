@@ -290,7 +290,7 @@ QString HTMLChatTheme::createMoodEventPart(const MoodChatEvent* event) const {
 
     HTMLChatPart part = moodEventTemplate.createFreshHTMLPart();
 
-    QString moodText(event->type());
+    QString moodText = QObject::tr("%1 is %2").arg(event->nick(), event->type());
 
     if (!event->text().isEmpty()) {
         moodText += ": " + event->text();
@@ -302,7 +302,6 @@ QString HTMLChatTheme::createMoodEventPart(const MoodChatEvent* event) const {
     part.replaceAndEscapeKeyword("%messageClasses%", "mood"); //TODO
 
     return part.toString();
-
 }
 
 

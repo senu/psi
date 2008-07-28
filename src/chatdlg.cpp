@@ -1130,6 +1130,7 @@ int ChatDlg::unreadMessageCount() const {
 void ChatDlg::moodPublished(const Mood& mood, const Jid& jid_) {
     if (jid().compare(jid_, true) && !mood.isNull()) {
         MoodChatEvent* event = new MoodChatEvent(mood.typeText(), mood.text());
+        event->setNick(whoNick(false)); //TODO
         appendChatEvent(event);
     }
 }

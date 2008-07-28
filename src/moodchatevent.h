@@ -6,13 +6,14 @@
 
 #include "chatEvent.h"
 #include "chatTheme.h"
+#include "userchatevent.h"
 
 class ChatTheme;
 class AstractChatEvent;
 
 
 /** Mood [XEP-0107] ChatEvent */
-class MoodChatEvent : public ChatEvent {
+class MoodChatEvent : public ChatEvent, public UserChatData {
 
 public:
 
