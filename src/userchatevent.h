@@ -1,36 +1,39 @@
-#ifndef _USEREVENT_H
-#define	_USEREVENT_H
+#ifndef USEREVENT_H_
+#define	USEREVENT_H_
 
 #include <QString>
+#include <QColor>
 #include "chatEvent.h"
 
 //TODO rename file
+
 
 /**
  * Contains ChatEvent sender information (nick,jid,icon, ...) 
  *   
  * For message and user-oriented events  
  */
-class UserChatData  {
- public:
+class UserChatData {
+
+public:
 
     QString jid() const;
     QString nick() const;
     QString userIconPath() const;
     QString service() const;
-    
+
     /** Is it our message? */
     bool isLocal() const;
-    
+
     /** Offline storage */ //TODO enum/ better name
     bool isSpooled() const;
-    
+
     void setJid(QString);
     void setNick(QString);
     void setUserIconPath(QString);
     void setService(QString);
-    void setLocal(bool); 
-    void setSpooled(bool); 
+    void setLocal(bool);
+    void setSpooled(bool);
 
 
     /** Returns userStatusIcon */
@@ -39,19 +42,29 @@ class UserChatData  {
     /** Sets userStatusIcon */
     void setUserStatusIcon(QString userStatusIcon);
 
-    /** Returns userHash */
-    virtual uint userHash() const;
+
+    /**
+     * Returns userColor.
+     * 
+     * It's used for MUC nick coloring.
+     */
+    QColor userColor() const;
+
+    /** Sets userColor */
+    void setUserColor(const QColor& userColor);
 
 
 private:
-    QString _nick;
-    QString _jid;
-    QString _service;
-    QString _userIconPath;
-    QString _userStatusIcon;
+    QString nick_;
+    QString jid_;
+    QString service_;
+    QString userIconPath_;
+    QString userStatusIcon_;
 
-    bool _isSpooled;
-    bool _isLocal;
+    bool isSpooled_;
+    bool isLocal_;
+
+    QColor userColor_;
 
 };
 

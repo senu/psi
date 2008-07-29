@@ -58,6 +58,17 @@ private:
 	void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
 	void appendMessageFields(const Message& m);
 
+    /** Returns (null() if absent) avatar pixmap for \param j*/
+    QPixmap getAvatarForJid(const Jid& j);
+
+    /** 
+     * Fills User ChatEvent with corresponding data (nick, jid, icons, etc) 
+     *
+     * \param userInfo will be filled 
+     * \param j is jid of user owner/sender
+     */
+    virtual void fillEventWithUserInfo(UserChatData * userInfo, const Jid& j);
+    
     //redirected
     QString messageText(const XMPP::Message& m);
     bool isEmoteMessage(const XMPP::Message& m);

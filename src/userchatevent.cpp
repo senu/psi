@@ -3,74 +3,83 @@
 
 
 void UserChatData::setNick(QString nick) {
-    _nick = nick;
+    nick_ = nick;
 }
 
 
 QString UserChatData::nick() const {
-    return _nick;
+    return nick_;
 }
 
 
 void UserChatData::setJid(QString jid) {
-    _jid = jid;
+    jid_ = jid;
 }
 
 
 QString UserChatData::jid() const {
-    return _jid;
+    return jid_;
 }
 
 
 QString UserChatData::service() const {
-    return _service;
+    return service_;
 }
 
 
 void UserChatData::setService(QString service) {
-    _service = service;
+    service_ = service;
 }
 
 
 void UserChatData::setUserIconPath(QString userIconPath) {
-    _userIconPath = userIconPath;
+    userIconPath_ = userIconPath;
 }
 
 
 QString UserChatData::userIconPath()const {
-    return _userIconPath;
+    return userIconPath_;
 }
 
 
 QString UserChatData::userStatusIcon() const {
-    return _userStatusIcon;
+    return userStatusIcon_;
 }
 
 
 void UserChatData::setUserStatusIcon(QString userStatusIcon) {
-    _userStatusIcon = userStatusIcon;
+    userStatusIcon_ = userStatusIcon;
 }
 
 
 void UserChatData::setLocal(bool is) {
-    _isLocal = is;
+    isLocal_ = is;
 }
 
 
 bool UserChatData::isLocal() const {
-    return _isLocal;
+    return isLocal_;
 }
 
 
 void UserChatData::setSpooled(bool is) {
-    _isSpooled = is;
+    isSpooled_ = is;
 }
 
 
 bool UserChatData::isSpooled() const {
-    return _isSpooled;
+    return isSpooled_;
 }
 
-uint UserChatData::userHash() const {
-    return qHash(_jid);
+QColor UserChatData::userColor() const {
+    if(userColor_.isValid()) {
+        return userColor_;
+    }
+    else {
+        return QColor("pink");
+    }
+}
+
+void UserChatData::setUserColor(const QColor& color) {
+    userColor_ = color;
 }

@@ -1262,13 +1262,11 @@ void GCMainDlg::appendChatEvent(const ChatEvent* event, bool alert) {
     if (!PsiOptions::instance()->getOption("options.ui.muc.use-highlighting").toBool()) {
 		alert=false;
     }
-    
+ 
+    chatView()->appendEvent(event);
+    updateLastMsgTimeAndOwner(event->timeStamp(), Other);
 
-//	updateLastMsgTime(time); //TODO
-    
-	chatView()->appendEvent(event);
-
-    if(alert) {
+    if (alert) {
 		doAlert();
     }
 }
@@ -1276,28 +1274,25 @@ void GCMainDlg::appendChatEvent(const ChatEvent* event, bool alert) {
 QString GCMainDlg::getNickColor(QString nick)
 {
 	int sender;
-	if(nick == d->self||nick.isEmpty())
+    if (nick == d->self || nick.isEmpty()) {
 		sender = -1;
+    }
 	else {
 		if (!nicks.contains(nick)) {
 			//not found in map
-			nicks.insert(nick,nicknumber);
-			nicknumber++;
+			nicks.insert(nick, nicknumber++);
 		}
 		sender=nicks[nick];
 	}
 	
 	QStringList nickColors = PsiOptions::instance()->getOption("options.ui.look.colors.muc.nick-colors").toStringList();
 	
-	if(!PsiOptions::instance()->getOption("options.ui.muc.use-nick-coloring").toBool() || nickColors.empty()) {
+	if (!PsiOptions::instance()->getOption("options.ui.muc.use-nick-coloring").toBool() || nickColors.empty()) {
 		return "#000000";
 	}
-	else if(sender == -1 || nickColors.size() == 1) {
-		return nickColors[nickColors.size()-1];
-	}
 	else {
-		int n = sender % (nickColors.size()-1);
-		return nickColors[n];
+		return nickColors[(sender + nickColors.size()) % nickColors.size()]; 
+        // -1%n == -1; (n-1)%n == n-1; (n+k)%n == k%n
 	}
 }
 #warning TODO!

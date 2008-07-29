@@ -46,7 +46,8 @@ void HTMLChatPart::replaceTimeKeyword(QString keyword, QDateTime time) {
 // [it's Kopete color list]
 
 
-void HTMLChatPart::replaceSenderColorKeyword(uint userHash) {
+void HTMLChatPart::replaceSenderColorKeyword(const QColor& userColor) {
+    /* TODO -> move this to default options 
     static const char* const colorList[] = {
         "red", "blue", "gray", "magenta", "violet", "#808000", "yellowgreen",
         "darkred", "darkgreen", "darksalmon", "darkcyan", "#B07D2B", "mediumpurple",
@@ -54,12 +55,10 @@ void HTMLChatPart::replaceSenderColorKeyword(uint userHash) {
         "goldenrod", "orangered", "tomato", "#1E90FF", "steelblue", "deeppink",
         "saddlebrown", "coral", "royalblue"
     };
-
-    static const int colorListLen = sizeof (colorList) / sizeof (colorList[0]);
-
-    QString colorString = colorList[userHash % colorListLen];
+   */
 
     QRegExp colorPattern("%senderColor(?:\\{([^}]*)\\})?%");
+    QString colorString;
 
     for (int pos = 0; (pos = colorPattern.indexIn(content, pos)) != -1;) {
         bool doLight = colorPattern.numCaptures() > 0;
@@ -67,7 +66,7 @@ void HTMLChatPart::replaceSenderColorKeyword(uint userHash) {
             int factor = colorPattern.cap(1).toUInt(&doLight);
 
             if (doLight) {
-                colorString = QColor(colorString).lighter(factor).name();
+                colorString = userColor.lighter(factor).name();
             }
         }
 

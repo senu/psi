@@ -4,6 +4,7 @@
 #include <QString>
 #include <QtDebug>
 #include <QDateTime> 
+#include <QColor> 
 
 
 /** Part (string) of HTMLChat document (eg. newly created message/event)
@@ -37,7 +38,7 @@ public:
     void replaceTimeKeyword(QString keyword, QDateTime time);
 
     /** Replaces time keyword %senderColor% with color computed using userHash */
-    void replaceSenderColorKeyword(uint userHash);
+    void replaceSenderColorKeyword(const QColor& userColor);
 
     /** Escapes string */
     static QString escapeString(QString string); //TODO unused

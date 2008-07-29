@@ -48,10 +48,9 @@
 #include "esystemchatevent.h"
 
 
-PsiChatDlg::PsiChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager, 
+PsiChatDlg::PsiChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager,
                        HTMLThemeManager* themeManager, IconServer* iconServer)
-: ChatDlg(jid, pa, tabManager, themeManager, iconServer) 
-{
+: ChatDlg(jid, pa, tabManager, themeManager, iconServer) {
     connect(account()->psi(), SIGNAL(accountCountChanged()), this, SLOT(updateIdentityVisibility()));
 }
 
@@ -63,7 +62,6 @@ void PsiChatDlg::initUi() {
 
     PsiToolTip::install(ui_.lb_status);
     ui_.lb_status->setPsiIcon(IconsetFactory::iconPtr("status/noauth"));
-
     ui_.tb_emoticons->setIcon(IconsetFactory::icon("psi/smile").icon());
 
     ChatTheme::ChatInfo chatInfo;
@@ -76,13 +74,27 @@ void PsiChatDlg::initUi() {
     chatInfo.destinationName = destNick;
     chatInfo.destinationDisplayName = jid().full();
     chatInfo.sourceName = account()->nick();
-    chatInfo.incomingIconPath = "icon://avatars/"+jid().full()+".png"; //TODO
-    chatInfo.outgoingIconPath = "icon://avatars/"+account()->jid().full()+".png";
+
+    //avatar or default icon
+    if (getAvatarForJid(jid()).isNull()) {
+        chatInfo.incomingIconPath = "incoming_icon.png";
+    }
+    else {
+        chatInfo.incomingIconPath = "icon://avatars/" + jid().full() + ".png";
+    }
+
+    if (getAvatarForJid(account()->jid()).isNull()) {
+        chatInfo.outgoingIconPath = "outgoing_icon.png";
+    }
+    else {
+        chatInfo.outgoingIconPath = "icon://avatars/" + account()->jid().full() + ".png";
+    }
+
     chatInfo.timeOpened = QDateTime::currentDateTime();
 
     lastMsgTime = QDateTime::currentDateTime();
     lastEventOwner = Other;
-    
+
     ui_.log->init(chatInfo, themeManager, iconServer);
 
     connect(ui_.mle, SIGNAL(textEditCreated(QTextEdit*)), SLOT(chatEditCreated()));
@@ -308,43 +320,34 @@ void PsiChatDlg::contactUpdated(UserListItem* u, int status, const QString& stat
 
 
 void PsiChatDlg::updateAvatar(const Jid& j) {
-  
-    qDebug() << "updateAvatar" << j.full();
+
+    //TODO wrong avatar label - ask kev if we still want it
+
     //ignore avatars other than our or destination avatars
     if (!j.compare(jid(), false) && !j.compare(account()->jid(), false)) {
         return;
     }
-    qDebug() << "updateAvatar" << j.full();
+
     
-    QString res;
-    QString client;
 
-    if (!PsiOptions::instance()->getOption("options.ui.chat.avatars.show").toBool()) {
-        ui_.avatar->hide();
-        return;
-    }
-//TODO AAAA
-    UserListItem *ul = account()->findFirstRelevant(j);
-    if (ul && !ul->userResourceList().isEmpty()) {
-        UserResourceList::Iterator it = ul->userResourceList().find(j.resource());
-        if (it == ul->userResourceList().end())
-            it = ul->userResourceList().priority();
+    QPixmap p(getAvatarForJid(j));
 
-        res = (*it).name();
-        client = (*it).clientName();
-    }
-    //QPixmap p = account()->avatarFactory()->getAvatar(jid().withResource(res),client);
-    QPixmap p = account()->avatarFactory()->getAvatar(j.withResource(res));
     if (p.isNull()) {
         ui_.avatar->hide();
     }
     else {
         int size = PsiOptions::instance()->getOption("options.ui.chat.avatars.size").toInt();
-        ui_.avatar->setPixmap(p.scaled(QSize(size, size), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        ui_.avatar->show();
+
+        if (PsiOptions::instance()->getOption("options.ui.chat.avatars.show").toBool()) {
+            ui_.avatar->setPixmap(p.scaled(QSize(size, size), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            ui_.avatar->show();
+        }
+        else {
+            ui_.avatar->hide();
+        }
 
         //update avatar in IconServer (webkit chats)
-        iconServer->registerIcon("avatars/"+j.full()+".png", IconServer::pixmapToPng(p));
+        iconServer->registerIcon("avatars/" + j.full() + ".png", IconServer::pixmapToPng(p));
     }
 }
 
@@ -451,6 +454,7 @@ void PsiChatDlg::appendChatEvent(const ChatEvent* event) {
     updateLastMsgTimeAndOwner(event->timeStamp(), Other);
 }
 
+
 /*
 void PsiChatDlg::appendSystemMsg(const QString &str) {
     QDateTime time = QDateTime::currentDateTime();
@@ -461,7 +465,7 @@ void PsiChatDlg::appendSystemMsg(const QString &str) {
 
     appendSystemMsg(ev);
 }
-*/
+ */
 
 void PsiChatDlg::appendMessageFields(const Message& m) {
     //TODO vw rf
@@ -517,13 +521,40 @@ void PsiChatDlg::chatEditCreated() {
     chatEdit()->installEventFilter(this);
 }
 
+
+QPixmap PsiChatDlg::getAvatarForJid(const Jid& j) {
+    QString res;
+    QString client;
+
+    UserListItem *ul = account()->findFirstRelevant(j);
+    if (ul && !ul->userResourceList().isEmpty()) {
+        UserResourceList::Iterator it = ul->userResourceList().find(j.resource());
+        if (it == ul->userResourceList().end()) {
+            it = ul->userResourceList().priority();
+        }
+
+        res = (*it).name();
+        client = (*it).clientName();
+    }
+    //QPixmap p = account()->avatarFactory()->getAvatar(jid().withResource(res),client);
+    QPixmap p = account()->avatarFactory()->getAvatar(j.withResource(res));
+
+    return p;
+}
+
+void PsiChatDlg::fillEventWithUserInfo(UserChatData * userInfo, const Jid& j) {
+    
+}
+
 QString PsiChatDlg::messageText(const XMPP::Message& m) {
     return GenericChatDialog::messageTextGC(m);
 }
 
+
 bool PsiChatDlg::isEmoteMessage(const XMPP::Message& m) {
     return GenericChatDialog::isEmoteMessageGC(m);
 }
+
 
 StatusChatEvent::StatusEventType PsiChatDlg::statusToChatViewStatus(int status) const {
     return GenericChatDialog::statusToChatViewStatus(status);

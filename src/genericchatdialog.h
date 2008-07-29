@@ -59,7 +59,7 @@ protected:
     
     /** Returns dialog's ChatEdit */
 	virtual ChatEdit* chatEdit() const = 0;
-    
+
     //defined in ChatDlg
     QString messageTextGC(const XMPP::Message& m);
     bool isEmoteMessageGC(const XMPP::Message& m);
