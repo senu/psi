@@ -510,6 +510,14 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager,
 #warning move it to the right place
 
     ChatTheme::ChatInfo chatInfo;
+    
+    chatInfo.chatName = jid().bare();
+    chatInfo.destinationName = jid().bare();
+    chatInfo.destinationDisplayName = jid().full();
+    chatInfo.sourceName = account()->nick();
+    chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg"; //TODO images for channels?
+    chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";
+    chatInfo.timeOpened = QDateTime::currentDateTime();
 
     ui_.log->init(chatInfo, themeManager, iconServer);
     
@@ -1296,64 +1304,38 @@ QString GCMainDlg::getNickColor(QString nick)
 //TODO warning: void ChatDlg::appendMessage(const Message &m, bool local) {
 void GCMainDlg::appendMessage(const Message &m, bool alert)
 {
-//	updateLastMsgTimeAndOwner(m.timeStamp(), Incoming); //TODO
-	
+   
+    bool local = m.from().resource() == d->self; //is it our message?
+    
     if (!PsiOptions::instance()->getOption("options.ui.muc.use-highlighting").toBool()) {
 		alert=false;
     }
     
-	QString who, 
-        textcolor, nickcolor, 
-        alerttagso, alerttagsc; //highlighting: opening and closing tags 
+	QString who;
+//        textcolor, nickcolor,  //TODO
 
     //TODO in which way do we want highlighting
     
-	who = m.from().resource();
+	who = m.from().resource(); 
     
     if (d->trackBar && m.from().resource() != d->self && !m.spooled()) {
 	 	d->doTrackBar();
     }
+  
+    //TODO
+//	nickcolor = getNickColor(who);
+//	textcolor = ui_.log->palette().active().text().name();
+   
+    //TODO
+//    if (m.spooled()) {
+//		nickcolor = "#008000";
+//  }
+
     
-	nickcolor = getNickColor(who);
-	textcolor = ui_.log->palette().active().text().name();
-	
-    if (alert) {
-		textcolor = "#FF0000";
-		alerttagso = "<b>";
-		alerttagsc = "</b>";
-	}
-    
-    if (m.spooled()) {
-		nickcolor = "#008000";
-    }
+    textFormatter_.setDoHighlighting(alert);
+    QString txt = messageTextGC(m);
 
-//	QString timestr = ui_.log->formatTimeStamp(m.timeStamp()); //TODO cv
-
-	bool emote = false;
-    
-    if(m.body().left(4) == "/me ") {
-		emote = true;
-    }
-
-    QString txt;
-    
-    if (emote) {
-		txt = TextUtil::plain2rich(m.body().mid(4));
-    }
-    else {
-		txt = TextUtil::plain2rich(m.body());
-    }
-
-	txt = TextUtil::linkify(txt);
-
-    if(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool()) {
-		txt = TextUtil::emoticonify(txt, false);//TODO
-    }
-    if( PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool() ) {
-		txt = TextUtil::legacyFormat(txt);
-    }
-
-	if (emote) {
+	if (isEmoteMessageGC(m)) {
         //TODO cv
 //		chatView()->appendText(QString("<font color=\"%1\">").arg(nickcolor) + QString("[%1]").arg(timestr) + QString(" *%1 ").arg(Qt::escape(who)) + alerttagso + txt + alerttagsc + "</font>");
 	}
@@ -1370,7 +1352,7 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
         msg->setBody(txt); //TODO escape?
 
         chatView()->appendMessage(msg);
-//        updateLastMsgTimeAndOwner(time, local ? Outgoing : Incoming); //TODO
+        updateLastMsgTimeAndOwner(m.timeStamp(), local ? Outgoing : Incoming); 
 /*
 TODO        
 		if(PsiOptions::instance()->getOption("options.ui.chat.use-chat-says-style").toBool()) {
@@ -1383,7 +1365,7 @@ TODO
 	}
 
     //if scroll down if it's our message
-    if(m.from().resource() == d->self) {
+    if(local) {
         d->deferredScroll();
     }
     

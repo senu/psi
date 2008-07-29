@@ -219,7 +219,7 @@ protected:
 
     QString whoNick(bool local) const;
 
-    virtual ChatView* chatView() const = 0;
+    virtual ChatView* chatView() const = 0; //TODO warning! also virtual in GenericCD
     virtual ChatEdit* chatEdit() const = 0;
 
     virtual StatusChatEvent::StatusEventType statusToChatViewStatus(int status) const = 0;

@@ -33,6 +33,7 @@
 #include "htmlthememanager.h"
 #include "iconserver.h"
 #include "advwidget.h"
+#include "genericchatdialog.h"
 
 using namespace XMPP;
 
@@ -63,7 +64,7 @@ protected:
     void keyPressEvent(QKeyEvent *);
 };*/
 
-class GCMainDlg : public TabbableWidget {
+class GCMainDlg : public TabbableWidget, public GenericChatDialog {
 
     Q_OBJECT
 public:

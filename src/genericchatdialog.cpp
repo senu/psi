@@ -13,8 +13,10 @@ GenericChatDialog::GenericChatDialog()
 static const QString me_cmd = "/me ";
 
 QString GenericChatDialog::messageTextGC(const XMPP::Message& m) {
-    qDebug() << "call to isEmote()";
-    bool emote = isEmoteMessageGC(m);
+    
+    bool emote = isEmoteMessageGC(m),
+        modified;
+    
     QString txt;
 
     if (m.containsHTML() && PsiOptions::instance()->getOption("options.html.chat.render").toBool() && !m.html().text().isEmpty()) {
@@ -24,12 +26,10 @@ QString GenericChatDialog::messageTextGC(const XMPP::Message& m) {
         txt = "<span>" + m.body() + "</span>";
     }
 
-    qDebug() << "emote" << emote;
     if (emote) {
         txt = txt.mid(me_cmd.length());
     }
 
-    bool modified;
     textFormatter_.setDoEmoticonify(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool());
     textFormatter_.setDoLegacyFormatting(PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool());
 
@@ -41,7 +41,6 @@ QString GenericChatDialog::messageTextGC(const XMPP::Message& m) {
 
 
 bool GenericChatDialog::isEmoteMessageGC(const XMPP::Message& m) {
-    qDebug() << "isEmote" << m.body() << m.body().startsWith(me_cmd) << m.html().text().trimmed().startsWith(me_cmd); 
     if (m.body().startsWith(me_cmd) || m.html().text().trimmed().startsWith(me_cmd)) {
         qDebug() << m.body().startsWith(me_cmd) << m.html().text().trimmed().startsWith(me_cmd);
         return true;
