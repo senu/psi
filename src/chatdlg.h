@@ -138,8 +138,9 @@ slots:
     void rejectedFileTransfer(const QString& fileName);
 
     void incomingMessage(const Message &);
-    virtual void updateAvatar() = 0;
-    void updateAvatar(const Jid&);
+    
+    /** Updates avatar label and IconServer with \param j's avatar */
+    virtual void updateAvatar(const Jid& j) = 0;
 
     protected
 slots:

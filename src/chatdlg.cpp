@@ -524,12 +524,6 @@ void ChatDlg::doVoice() {
 }
 
 
-void ChatDlg::updateAvatar(const Jid& j) {
-    if (j.compare(jid(), false))
-        updateAvatar();
-}
-
-
 void ChatDlg::setLooks() {
     // update the font
     QFont f;

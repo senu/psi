@@ -69,7 +69,6 @@ void PsiChatDlg::initUi() {
     ChatTheme::ChatInfo chatInfo;
 
     UserListItem *ui = account()->findFirstRelevant(jid()); //TODO ask kev (relevant)
-    qDebug() << "ui" << ui;
     QString destNick(JIDUtil::nickOrJid(ui->name(), jid().full())); //TODO
 
     //TODO iss| getDisplayName() doesnt work
@@ -77,8 +76,8 @@ void PsiChatDlg::initUi() {
     chatInfo.destinationName = destNick;
     chatInfo.destinationDisplayName = jid().full();
     chatInfo.sourceName = account()->nick();
-    chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg"; //TODO
-    chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";
+    chatInfo.incomingIconPath = "icon://avatars/"+jid().full()+".png"; //TODO
+    chatInfo.outgoingIconPath = "icon://avatars/"+account()->jid().full()+".png";
     chatInfo.timeOpened = QDateTime::currentDateTime();
 
     lastMsgTime = QDateTime::currentDateTime();
@@ -95,7 +94,8 @@ void PsiChatDlg::initUi() {
 
     initToolButtons();
     initToolBar();
-    updateAvatar();
+    updateAvatar(jid());
+    updateAvatar(account()->jid());
 
     PsiToolTip::install(ui_.avatar);
 
@@ -307,7 +307,15 @@ void PsiChatDlg::contactUpdated(UserListItem* u, int status, const QString& stat
 }
 
 
-void PsiChatDlg::updateAvatar() {
+void PsiChatDlg::updateAvatar(const Jid& j) {
+  
+    qDebug() << "updateAvatar" << j.full();
+    //ignore avatars other than our or destination avatars
+    if (!j.compare(jid(), false) && !j.compare(account()->jid(), false)) {
+        return;
+    }
+    qDebug() << "updateAvatar" << j.full();
+    
     QString res;
     QString client;
 
@@ -315,10 +323,10 @@ void PsiChatDlg::updateAvatar() {
         ui_.avatar->hide();
         return;
     }
-
-    UserListItem *ul = account()->findFirstRelevant(jid());
+//TODO AAAA
+    UserListItem *ul = account()->findFirstRelevant(j);
     if (ul && !ul->userResourceList().isEmpty()) {
-        UserResourceList::Iterator it = ul->userResourceList().find(jid().resource());
+        UserResourceList::Iterator it = ul->userResourceList().find(j.resource());
         if (it == ul->userResourceList().end())
             it = ul->userResourceList().priority();
 
@@ -326,7 +334,7 @@ void PsiChatDlg::updateAvatar() {
         client = (*it).clientName();
     }
     //QPixmap p = account()->avatarFactory()->getAvatar(jid().withResource(res),client);
-    QPixmap p = account()->avatarFactory()->getAvatar(jid().withResource(res));
+    QPixmap p = account()->avatarFactory()->getAvatar(j.withResource(res));
     if (p.isNull()) {
         ui_.avatar->hide();
     }
@@ -334,6 +342,9 @@ void PsiChatDlg::updateAvatar() {
         int size = PsiOptions::instance()->getOption("options.ui.chat.avatars.size").toInt();
         ui_.avatar->setPixmap(p.scaled(QSize(size, size), Qt::KeepAspectRatio, Qt::SmoothTransformation));
         ui_.avatar->show();
+
+        //update avatar in IconServer (webkit chats)
+        iconServer->registerIcon("avatars/"+j.full()+".png", IconServer::pixmapToPng(p));
     }
 }
 
@@ -453,7 +464,6 @@ void PsiChatDlg::appendSystemMsg(const QString &str) {
 */
 
 void PsiChatDlg::appendMessageFields(const Message& m) {
-    qDebug() << "test inh"  << isEmoteMessage(m);
     //TODO vw rf
 
     /*

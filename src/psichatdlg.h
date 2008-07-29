@@ -44,7 +44,7 @@ private:
 	void capsChanged();
 	bool isEncryptionEnabled() const;
 	void contactUpdated(UserListItem* u, int status, const QString& statusString);
-	void updateAvatar();
+    void updateAvatar(const Jid& j);
 	void optionsUpdate();
 	void updatePGP();
 	void setPGPEnabled(bool enabled);
