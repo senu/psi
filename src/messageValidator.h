@@ -14,7 +14,11 @@
 #include "htmltextformatter.h"
 
 
-/** Performs XHTML-IM message validation (and cuts off bad elements/attributes) */
+/** 
+ * Performs XHTML-IM message validation (and cuts off bad elements/attributes). 
+ *
+ * It also can modify message (e.g emoticonify, linkify) - see HTMLTextFormatter
+ */
 class MessageValidator {
 
 public:

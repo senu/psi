@@ -4,10 +4,11 @@
 #include "chatdlg.h"
 
 #include "ui_chatdlg.h"
+#include "genericchatdialog.h"
 
 class IconAction;
 
-class PsiChatDlg : public ChatDlg
+class PsiChatDlg : public ChatDlg, public GenericChatDialog
 {
 	Q_OBJECT
 public:
@@ -21,11 +22,6 @@ protected:
 private:
 	void setContactToolTip(QString text);
     
-    /** 
-     * Returns true if next message should be consecutive
-     * \param local indicates if it's our message 
-     */
-    bool doConsecutiveMessage(const QDateTime& time, bool local);
 
 private slots:
 	void toggleSmallChat();
@@ -61,6 +57,13 @@ private:
 	void appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
 	void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
 	void appendMessageFields(const Message& m);
+
+    //redirected
+    QString messageText(const XMPP::Message& m);
+    bool isEmoteMessage(const XMPP::Message& m);
+    StatusChatEvent::StatusEventType statusToChatViewStatus(int status) const;
+   
+    //implemented
 
     /** Returns dialog's ChatView */
 	ChatView* chatView() const;

@@ -453,6 +453,7 @@ void PsiChatDlg::appendSystemMsg(const QString &str) {
 */
 
 void PsiChatDlg::appendMessageFields(const Message& m) {
+    qDebug() << "test inh"  << isEmoteMessage(m);
     //TODO vw rf
 
     /*
@@ -506,17 +507,14 @@ void PsiChatDlg::chatEditCreated() {
     chatEdit()->installEventFilter(this);
 }
 
-bool PsiChatDlg::doConsecutiveMessage(const QDateTime& time, bool local) {
-    //Q_ASSERT(time >= lastMsgTime); this is not true for offline messages
+QString PsiChatDlg::messageText(const XMPP::Message& m) {
+    return GenericChatDialog::messageTextGC(m);
+}
 
-    if (lastMsgTime.secsTo(time) > 3 * 60) { //too old
-        return false;
-    }
-    
-    if ((local && lastEventOwner == Outgoing) || (!local && lastEventOwner == Incoming)) { //from the same user
-        qDebug() << local << lastEventOwner;
-        return true;
-    }
+bool PsiChatDlg::isEmoteMessage(const XMPP::Message& m) {
+    return GenericChatDialog::isEmoteMessageGC(m);
+}
 
-    return false;
+StatusChatEvent::StatusEventType PsiChatDlg::statusToChatViewStatus(int status) const {
+    return GenericChatDialog::statusToChatViewStatus(status);
 }

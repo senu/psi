@@ -37,10 +37,9 @@
 #include "chatView.h"
 #include "htmlthememanager.h"
 #include "iconserver.h"
-#include "defaulthtmltextformatter.h"
-#include "messageValidator.h"
 #include "mood.h"
 #include "tune.h"
+#include "genericchatdialog.h"
 
 
 namespace XMPP {
@@ -111,7 +110,7 @@ protected:
     void dragEnterEvent(QDragEnterEvent* event);
     bool eventFilter(QObject *obj, QEvent *event);
 
-    public 
+    public
 slots:
     // reimplemented
     virtual void deactivated();
@@ -119,30 +118,30 @@ slots:
 
     virtual void optionsUpdate();
     void updateContact(const Jid &, bool);
-    
+
     /** Creates MoodChatEvent for \param jid 's \param mood change (if needed) */
     void moodPublished(const Mood& mood, const Jid& jid);
 
     /** Creates TuneChatEvent for \param jid (if needed) */
     void tunePublished(const Tune& mood, const Jid& jid);
-    
+
     /**
      * Creates FileTrasferChatEvent::incoming
      * \param fileName indicates incoming file name 
      */
     void incomingFileTransfer(const QString& fileName);
-    
+
     /**
      * Creates FileTrasferChatEvent::rejected
      * \param fileName indicates rejected file name 
      */
     void rejectedFileTransfer(const QString& fileName);
-    
+
     void incomingMessage(const Message &);
     virtual void updateAvatar() = 0;
     void updateAvatar(const Jid&);
 
-    protected 
+    protected
 slots:
     void scrollUp();
     void scrollDown();
@@ -153,7 +152,7 @@ slots:
     void doVoice();
     void doFile();
 
-    private 
+    private
 slots:
     void setKeepOpenFalse();
     void setWarnSendFalse();
@@ -170,19 +169,14 @@ slots:
     void initComposing();
     void setComposing();
 
-    protected 
+    protected
 slots:
     void checkComposing();
 
 protected:
-    /** Indicates if next message should be consecutive */
-    enum LastEventOwner {
-        Incoming,
-        Outgoing,
-        Other /** first message or ChatEvent */
-    };
-    
-    // reimplemented
+
+
+        // reimplemented
     virtual void invalidateTab();
 
     void resetComposing();
@@ -190,8 +184,13 @@ protected:
     virtual void setLooks();
     void setSelfDestruct(int);
     void deferredScroll();
-    bool isEmoteMessage(const XMPP::Message& m);
-    QString messageText(const XMPP::Message& m);
+    
+    /** Returns true if m is a emote (/me) message */
+    virtual bool isEmoteMessage(const XMPP::Message& m) = 0;
+    
+    /** Returns formatted message body */
+    virtual QString messageText(const XMPP::Message& m) = 0;
+    
     virtual void chatEditCreated();
 
 
@@ -208,7 +207,7 @@ protected:
 
     void appendMessage(const Message &, bool local = false);
     virtual bool isEncryptionEnabled() const;
-    
+
     /** 
      * Appends chat event (not message nor emote event)
      */
@@ -220,26 +219,16 @@ protected:
 
     QString whoNick(bool local) const;
 
-    /** Updates information about last ChatEvent; called after appending an event */
-	void updateLastMsgTimeAndOwner(const QDateTime& t, LastEventOwner owner);
-
     virtual ChatView* chatView() const = 0;
     virtual ChatEdit* chatEdit() const = 0;
 
-    /** It must be translated because we don't want Iris in ChatView */
-    StatusChatEvent::StatusEventType statusToChatViewStatus(int status) const;
+    virtual StatusChatEvent::StatusEventType statusToChatViewStatus(int status) const = 0;
 
     /** We pass it to MUC/Chat dialog constructor */
     HTMLThemeManager* themeManager;
-    
+
     /** We pass it to MUC/Chat dialog constructor */
     IconServer* iconServer;
-    
-    /** Indicates if next message should be consecutive */
-    LastEventOwner lastEventOwner;
-    
-    /** Timestamp of last chat event */
-	QDateTime lastMsgTime;
 
 private:
     bool highlightersInstalled_;
@@ -271,12 +260,6 @@ private:
     QString eventId_;
     ChatState contactChatState_;
     ChatState lastChatState_;
-
-    /** Validates XHTML-IM messages */
-    MessageValidator messageValidator_;
-
-    /** Does emoticonify, linkify, etc in XHTML-IM messages */
-    DefaultHTMLTextFormatter textFormatter_;
 };
 
 #endif

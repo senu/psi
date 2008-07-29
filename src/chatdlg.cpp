@@ -101,8 +101,7 @@ ChatDlg::ChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager,
 : TabbableWidget(jid, pa, tabManager), 
     themeManager(themeManager_), 
     iconServer(iconServer_), 
-    highlightersInstalled_(false),
-    textFormatter_(false, true, false) 
+    highlightersInstalled_(false)
 {
     
     if (PsiOptions::instance()->getOption("options.ui.mac.use-brushed-metal-windows").toBool()) {
@@ -1066,42 +1065,6 @@ void ChatDlg::nicksChanged() {
     // this function is intended to be reimplemented in subclasses
 }
 
-static const QString me_cmd = "/me ";
-
-
-bool ChatDlg::isEmoteMessage(const XMPP::Message& m) {
-    if (m.body().startsWith(me_cmd) || m.html().text().trimmed().startsWith(me_cmd))
-        return true;
-
-    return false;
-}
-
-
-QString ChatDlg::messageText(const XMPP::Message& m) {
-    bool emote = isEmoteMessage(m);
-    QString txt;
-
-    if (m.containsHTML() && PsiOptions::instance()->getOption("options.html.chat.render").toBool() && !m.html().text().isEmpty()) {
-        txt = m.html().toString("span");
-    }
-    else {
-        txt = "<span>" + m.body() + "</span>";
-    }
-    
-    if (emote) {
-        txt = txt.mid(me_cmd.length());
-    }
-    
-    bool modified;
-    textFormatter_.setDoEmoticonify(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool());
-    textFormatter_.setDoLegacyFormatting(PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool());
-
-    txt = messageValidator_.validateMessage(txt, &modified, &textFormatter_);
-
-    return txt;
-}
-
-
 void ChatDlg::chatEditCreated() {
     chatEdit()->setDialog(this);
 
@@ -1168,34 +1131,5 @@ void ChatDlg::rejectedFileTransfer(const QString& fileName) {
     appendChatEvent(event);
 }
 
-
-void ChatDlg::updateLastMsgTimeAndOwner(const QDateTime& t, LastEventOwner owner) {
-    lastMsgTime = t;
-    lastEventOwner = owner;
-
-    //TODO wv remove
-    /*
-    bool doInsert = t.date() != lastMsgTime_.date();
-    if (doInsert) {
-        QString color = "#00A000";
-    chatView()->appendText(QString("<font color=\"%1\">*** %2</font>").arg(color).arg(t.date().toString(Qt::ISODate)));
-    }
-     */
-}
-
-StatusChatEvent::StatusEventType ChatDlg::statusToChatViewStatus(int status) const {
-    
-	switch(status) {
-		case STATUS_OFFLINE:    return StatusChatEvent::Offline;
-        case STATUS_AWAY:       return StatusChatEvent::Away;
-		case STATUS_XA:         return StatusChatEvent::Xa;
-		case STATUS_DND:        return StatusChatEvent::Dnd;
-		case STATUS_CHAT:       return StatusChatEvent::Chat;
-		case STATUS_INVISIBLE:  return StatusChatEvent::Invisible;
-
-		case STATUS_ONLINE:
-		default:                return StatusChatEvent::Online;
-	}
-}
 
     
