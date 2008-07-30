@@ -21,6 +21,9 @@
 #include "userchatevent.h"
 
 
+#include "userchatevent.h"
+
+
 #include "chatdlg.h"
 
 #include <QLabel>
@@ -395,21 +398,7 @@ QSize ChatDlg::defaultSize() {
 }
 
 
-struct UserStatus {
-
-
-    UserStatus()
-        : userListItem(0)
-        , statusType(XMPP::Status::Offline) {
-    }
-    UserListItem* userListItem;
-    XMPP::Status::Type statusType;
-    QString status;
-    QString publicKeyID;
-};
-
-
-UserStatus userStatusFor(const Jid& jid, QList<UserListItem*> ul, bool forceEmptyResource) {
+ChatDlg::UserStatus ChatDlg::userStatusFor(const Jid& jid, QList<UserListItem*> ul, bool forceEmptyResource) {
     if (ul.isEmpty())
         return UserStatus();
 
@@ -475,15 +464,11 @@ void ChatDlg::updateContact(const Jid &j, bool fromPresence) {
             updatePGP();
 
             if (fromPresence && statusChanged) {
-                StatusChatEvent * event = new StatusChatEvent();
-                event->setNick(dispNick_);
-                event->setJid(userStatus.userListItem->jid().full());
-                event->setService("Jabber");
+                StatusChatEvent * event = new StatusChatEvent(); //TODO timestamp in ctor
+                fillEventWithUserInfo(event,userStatus.userListItem->jid().full());
+                event->setSpooled(false);
                 event->type = statusToChatViewStatus(status_);
                 //TODO escape?
-                //TODO status icon, avatar
-
-                
 
                 if (!statusString_.isEmpty()) {
                     QString ss = TextUtil::linkify(TextUtil::plain2rich(statusString_));
@@ -1087,7 +1072,9 @@ int ChatDlg::unreadMessageCount() const {
 void ChatDlg::moodPublished(const Mood& mood, const Jid& jid_) {
     if (jid().compare(jid_, true) && !mood.isNull()) {
         MoodChatEvent* event = new MoodChatEvent(mood.typeText(), mood.text());
-        event->setNick(whoNick(false)); //TODO
+        fillEventWithUserInfo(event, jid_);
+        event->setTimeStamp(QDateTime::currentDateTime());
+        event->setSpooled(false);
         appendChatEvent(event);
     }
 }
@@ -1097,11 +1084,9 @@ void ChatDlg::tunePublished(const Tune& tune, const Jid& jid_) {
     if (jid().compare(jid_, true)) {
 
         TuneChatEvent* event = new TuneChatEvent(tune.artist(), tune.name());
-        event->setNick(whoNick(false));
+        fillEventWithUserInfo(event, jid_);
         event->setTimeStamp(QDateTime::currentDateTime());
-        event->setLocal(false);
         event->setSpooled(false);
-        event->setService("Jabber");
         appendChatEvent(event);
     }
 }

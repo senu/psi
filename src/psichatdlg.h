@@ -62,7 +62,8 @@ private:
     QPixmap getAvatarForJid(const Jid& j);
 
     /** 
-     * Fills User ChatEvent with corresponding data (nick, jid, icons, etc) 
+     * Fills User ChatEvent with corresponding data.
+     * Fields nick, jid, icons (status and avatar), isLocal and service are updated;
      *
      * \param userInfo will be filled 
      * \param j is jid of user owner/sender

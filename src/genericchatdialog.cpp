@@ -20,15 +20,17 @@ QString GenericChatDialog::messageTextGC(const XMPP::Message& m) {
     QString txt;
 
     if (m.containsHTML() && PsiOptions::instance()->getOption("options.html.chat.render").toBool() && !m.html().text().isEmpty()) {
-        txt = m.html().toString("span");
+        txt = m.html().toString("span"); //TODO remove /me if emote
     }
     else {
-        txt = "<span>" + m.body() + "</span>";
+        if (emote) {
+            txt = "<span>" + m.body().mid(me_cmd.length()) + "</span>";
+        }
+        else {
+            txt = "<span>" + m.body() + "</span>";
+        }
     }
 
-    if (emote) {
-        txt = txt.mid(me_cmd.length());
-    }
 
     textFormatter_.setDoEmoticonify(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool());
     textFormatter_.setDoLegacyFormatting(PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool());
@@ -42,7 +44,6 @@ QString GenericChatDialog::messageTextGC(const XMPP::Message& m) {
 
 bool GenericChatDialog::isEmoteMessageGC(const XMPP::Message& m) {
     if (m.body().startsWith(me_cmd) || m.html().text().trimmed().startsWith(me_cmd)) {
-        qDebug() << m.body().startsWith(me_cmd) << m.html().text().trimmed().startsWith(me_cmd);
         return true;
     }
 

@@ -138,7 +138,7 @@ slots:
     void rejectedFileTransfer(const QString& fileName);
 
     void incomingMessage(const Message &);
-    
+
     /** Updates avatar label and IconServer with \param j's avatar */
     virtual void updateAvatar(const Jid& j) = 0;
 
@@ -177,7 +177,7 @@ slots:
 protected:
 
 
-        // reimplemented
+    // reimplemented
     virtual void invalidateTab();
 
     void resetComposing();
@@ -185,14 +185,35 @@ protected:
     virtual void setLooks();
     void setSelfDestruct(int);
     void deferredScroll();
-    
+
     /** Returns true if m is a emote (/me) message */
     virtual bool isEmoteMessage(const XMPP::Message& m) = 0;
-    
+
     /** Returns formatted message body */
     virtual QString messageText(const XMPP::Message& m) = 0;
-    
+
+    /** 
+     * Fills User ChatEvent with corresponding data.
+     * Fields nick, jid, icons (status and avatar), isLocal and service are updated;
+     *
+     * \param userInfo will be filled 
+     * \param j is jid of user owner/sender
+     */
+    virtual void fillEventWithUserInfo(UserChatData * userInfo, const Jid& j) = 0;
+
     virtual void chatEditCreated();
+
+
+    struct UserStatus {
+        UserStatus() : userListItem(0), statusType(XMPP::Status::Offline) {}
+        
+        UserListItem* userListItem;
+        XMPP::Status::Type statusType;
+        QString status;
+        QString publicKeyID;
+    };
+    
+    UserStatus userStatusFor(const Jid& jid, QList<UserListItem*> ul, bool forceEmptyResource);
 
 
     enum SpooledType {

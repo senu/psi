@@ -1,4 +1,7 @@
 
+#include "iconserver.h"
+
+
 #include "abstractChatEvent.h"
 
 #include "psichatdlg.h"
@@ -286,7 +289,7 @@ void PsiChatDlg::contactUpdated(UserListItem* u, int status, const QString& stat
     Q_UNUSED(statusString);
 
     if (status == -1 || !u) {
-        ui_.lb_status->setPsiIcon(IconsetFactory::iconPtr("status/noauth"));
+        ui_.lb_status->setPsiIcon(IconsetFactory::iconPtr("status/noauth")); //senu: i think 
     }
     else {
         ui_.lb_status->setPsiIcon(PsiIconset::instance()->statusPtr(jid(), status));
@@ -328,7 +331,7 @@ void PsiChatDlg::updateAvatar(const Jid& j) {
         return;
     }
 
-    
+
 
     QPixmap p(getAvatarForJid(j));
 
@@ -418,16 +421,14 @@ void PsiChatDlg::updateCounter() {
 
 void PsiChatDlg::appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) {
 
-    EmoteChatEvent * ev = new EmoteChatEvent(); //ev will be freed in ChatView
-    //    ev->setJid(whoNick(local)); //TODO
-    ev->setNick(whoNick(local));
-    ev->setTimeStamp(time);
-    ev->setLocal(local);
-    ev->setSpooled(spooled);
-    ev->setService("Jabber");
-    ev->setMessage(txt); //TODO escape?
+    EmoteChatEvent * event = new EmoteChatEvent(); //ev will be freed in ChatView
 
-    chatView()->appendEvent(ev);
+    fillEventWithUserInfo(event, local ? account()->jid() : jid());
+    event->setTimeStamp(time);
+    event->setSpooled(spooled);
+    event->setMessage(txt); //TODO escape?
+
+    chatView()->appendEvent(event);
     updateLastMsgTimeAndOwner(time, Other);
 }
 
@@ -436,12 +437,10 @@ void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time,
 
     MessageChatEvent * msg = new MessageChatEvent(); //will be created in another place, of course
 
-    msg->setNick(whoNick(local));
+    fillEventWithUserInfo(msg, local ? account()->jid() : jid());
     msg->setTimeStamp(time);
-    msg->setLocal(local);
     msg->setConsecutive(doConsecutiveMessage(time, local));
     msg->setSpooled(spooled);
-    msg->setService("Jabber");
     msg->setBody(txt); //TODO escape?
 
     chatView()->appendMessage(msg);
@@ -542,16 +541,59 @@ QPixmap PsiChatDlg::getAvatarForJid(const Jid& j) {
     return p;
 }
 
-void PsiChatDlg::fillEventWithUserInfo(UserChatData * userInfo, const Jid& j) {
+
+void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
+
+    bool local;
     
+    if (j.compare(jid(), false)) { //TODO true?
+        //remote user
+        local = false;
+        userInfo->setNick(whoNick(false));
+        userInfo->setLocal(false);
+        userInfo->setUserStatusIcon("icon://" + ui_.lb_status->psiIconName());
+    }
+    else {
+        //local user
+        local = true;
+        userInfo->setNick(whoNick(true));
+        userInfo->setLocal(true);
+
+        //status icon
+        QList<UserListItem*> ul = account()->findRelevant(j);
+        XMPP::Status::Type statusType = userStatusFor(jid(), ul, false).statusType;
+        userInfo->setUserStatusIcon("icon://" + PsiIconset::instance()->statusPtr(j, statusType)->name());
+    }
+
+
+    userInfo->setJid(j.full());
+
+    if (getAvatarForJid(j).isNull()) { //default avatar
+        if (local) {
+           userInfo->setUserIconPath("Outgoing/buddy_icon.png");
+        }
+        else {
+           userInfo->setUserIconPath("Incoming/buddy_icon.png"); //TODO outgoing icon when no incoming folder
+        }
+    }
+    else {
+        userInfo->setUserIconPath("icon://avatars/" + j.full() + ".png");
+    }
+
+    userInfo->setService("Jabber");
 }
 
+
 QString PsiChatDlg::messageText(const XMPP::Message& m) {
+
+
     return GenericChatDialog::messageTextGC(m);
 }
 
 
 bool PsiChatDlg::isEmoteMessage(const XMPP::Message& m) {
+
+
     return GenericChatDialog::isEmoteMessageGC(m);
 }
 
