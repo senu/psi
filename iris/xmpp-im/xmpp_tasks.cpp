@@ -822,9 +822,7 @@ JT_Message::~JT_Message()
 
 void JT_Message::onGo()
 {
-    qDebug() << "dj_send: rich content m0" << m.html().toString("notb2.5 1 __ 0 __ 0"); //last good
 	Stanza s = m.toStanza(&(client()->stream()));
-    qDebug() << "dj_send: rich content m0" << m.html().toString("notb2.5 1 __ 0 __ 1"); //last good
 	QDomElement e = oldStyleNS(s.element());
 	send(e);
 	setSuccess();

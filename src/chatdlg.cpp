@@ -18,19 +18,6 @@
  *
  */
 
-#include "xmpp_htmlelement.h"
-
-
-#include "xmpp_message.h"
-
-
-#include "userchatevent.h"
-
-
-#include "userchatevent.h"
-
-
-#include "chatdlg.h"
 
 #include <QLabel>
 #include <QCursor>
@@ -94,7 +81,9 @@
 #include "moodchatevent.h"
 #include "esystemchatevent.h"
 #include "fileTransferChatEvent.h"
+#include "userchatevent.h"
 #include "ui_about.h"
+#include "chatdlg.h"
 
 
 ChatDlg* ChatDlg::create(const Jid& jid, PsiAccount* account, TabManager* tabManager,

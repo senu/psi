@@ -18,11 +18,6 @@
  *
  */
 
-#include "xmpp_stanza.h"
-
-
-#include "xmpp_stanza.h"
-
 
 #include "im.h"
 #include "xmpp_features.h"
