@@ -249,6 +249,7 @@ HEADERS += \
 	$$PWD/iconreply.h\
 	$$PWD/networkaccessmanager.h\
 	$$PWD/genericchatdialog.h\
+	$$PWD/htmlchatedit.h\
 
 
 # Source files
@@ -391,6 +392,7 @@ SOURCES += \
 	$$PWD/iconreply.cpp\
 	$$PWD/networkaccessmanager.cpp\
 	$$PWD/genericchatdialog.cpp\
+	$$PWD/htmlchatedit.cpp\
 
 
 whiteboarding {

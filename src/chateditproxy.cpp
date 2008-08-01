@@ -24,12 +24,14 @@
 
 #include "msgmle.h"
 #include "psioptions.h"
+#include "htmlchatedit.h"
 
 ChatEditProxy::ChatEditProxy(QWidget* parent)
 	: QWidget(parent)
 	, lineEditEnabled_(false)
 	, textEdit_(0)
-	, layout_(0)
+	, layout_(0) 
+    , formatToolBar(0)
 {
 	layout_ = new QVBoxLayout(this);
 	layout_->setMargin(0);
@@ -38,8 +40,9 @@ ChatEditProxy::ChatEditProxy(QWidget* parent)
 	connect(PsiOptions::instance(), SIGNAL(optionChanged(const QString&)), SLOT(optionsChanged()));
 	optionsChanged();
 
-	if (!textEdit_)
+    if (!textEdit_) {
 		updateLayout();
+    }
 }
 
 /**
@@ -60,9 +63,11 @@ void ChatEditProxy::setLineEditEnabled(bool enable)
  */
 ChatEdit* ChatEditProxy::createTextEdit()
 {
-	if (lineEditEnabled())
+    if (lineEditEnabled()) {
 		return new LineEdit(this);
-	return new ChatEdit(this);
+    }
+
+	return new HTMLChatEdit(this); 
 }
 
 /**
@@ -105,6 +110,8 @@ void ChatEditProxy::updateLayout()
 
 	delete textEdit_;
 	textEdit_ = newEdit;
+    formatToolBar = newEdit->toolBar();
+    layout_->addWidget(formatToolBar); //TODO ctso deleting toolbar
 	layout_->addWidget(textEdit_);
 	emit textEditCreated(textEdit_);
 }

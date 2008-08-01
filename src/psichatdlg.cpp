@@ -577,7 +577,7 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
         }
     }
     else {
-        userInfo->setUserIconPath("icon://avatars/" + j.full() + ".png");
+        userInfo->setUserIconPath("icon://avatars/" + j.bare() + ".png"); //TODO full() is not full in acc()/jid()
     }
 
     userInfo->setService("Jabber");

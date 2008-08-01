@@ -16,19 +16,21 @@
 #include <QColorDialog>
 #include <QFontDatabase>
 #include <QTextBlock>
+#include "msgmle.h"
 
 
 /** XHTML-IM message composer */
-class HTMLChatEdit : public QTextEdit {
+class HTMLChatEdit : public ChatEdit {
 
     Q_OBJECT
 public:
-    /** ToolBar is a QToolBar where actions/widgets are placed; iconPath is a path to icons/ dir */
-    HTMLChatEdit(QWidget* parent, QToolBar* toolBar, const QString& iconPath);
+    /** 
+     * Constructor. 
+     *
+     * \param toolBar is a QToolBar where edit actions/widgets will be placed 
+     */
+    HTMLChatEdit(QWidget* parent);
     ~HTMLChatEdit();
-
-    /** Returns XHTML-IM (validated) message */
-    QString message();
 
     public
 slots:
@@ -51,9 +53,13 @@ slots:
 
     /** Show current text style */
     void changeTextButtons(const QTextCharFormat& format);
+    
+    //reimplemented
+    QString messageBody(bool xhtml);
+    QToolBar* toolBar() const;
+    
 
-
-private:
+protected:
     void mergeFormat(const QTextCharFormat &format);
 
     /*Creates and connects QActions */
@@ -66,8 +72,10 @@ private:
     
     /** Creates \<span\> (text fragment) style attribute value */
     QString createFragmentStyle(const QTextCharFormat& fragmentFormat);
+    
+    /** Returns XHTML-IM (validated) message wrapped with \<body\>\<\/body\>*/
+    QString xhtmlMessage();
 
-    QToolBar * toolBar;
     QComboBox * sizeCombo;
     QFontComboBox * fontCombo;
 
@@ -84,7 +92,33 @@ private:
     QActionGroup * alignActions;
 
     QString iconPath; //TODO we need icons we can use in Psi!
+    
+    /** Formating toolbar */
+    QToolBar* formatToolBar;
+
 };
+
+class LineEdit : public HTMLChatEdit { //TODO
+
+    Q_OBJECT
+public:
+    LineEdit(QWidget* parent);
+    ~LineEdit();
+
+    // reimplemented
+    QSize minimumSizeHint() const;
+    QSize sizeHint() const;
+
+protected:
+    // reimplemented
+    void resizeEvent(QResizeEvent*);
+
+    private
+slots:
+    void recalculateSize();
+    void updateScrollBar();
+};
+
 
 #endif
 

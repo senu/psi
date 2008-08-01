@@ -22,6 +22,7 @@
 #define CHATEDITPROXY_H
 
 #include <QWidget>
+#include <QToolBar>
 
 class QTextEdit;
 class QLayout;
@@ -63,6 +64,9 @@ private:
 	bool lineEditEnabled_;
 	ChatEdit* textEdit_;
 	QLayout* layout_;
+    
+    /** XHTML-IM fromatting toolbar */
+    QToolBar* formatToolBar;
 };
 
 #endif

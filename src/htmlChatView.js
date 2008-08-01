@@ -37,11 +37,6 @@ function psi_appendNextMessage(messagePart, messageBody) {
 function psi_appendConsecutiveMessage(messagePart, messageBody) {
     try {	
         insertDiv = document.getElementById('insert');
-    }
-    catch(e) {
-        alert('1 ' + e);
-    }
-    try {
         parentNode = insertDiv.parentNode;
         newNode = document.createElement('span'); //TODO 
         newNode.innerHTML=psi_setMessageBody(messagePart, messageBody);

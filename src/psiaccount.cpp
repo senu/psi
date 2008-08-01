@@ -3517,8 +3517,9 @@ void PsiAccount::dj_sendMessage(const Message &m, bool log)
 {
 	UserListItem *u = findFirstRelevant(m.to());
 	Message nm = m;
+    qDebug() << "dj_send: rich content m0" << m.html().toString("notb2.5 0 ");
 
-	if(PsiOptions::instance()->getOption("options.messages.force-incoming-message-type").toString() == "current-open") {
+	if (PsiOptions::instance()->getOption("options.messages.force-incoming-message-type").toString() == "current-open") {
 		if(u) {
 			switch(u->lastMessageType()) {
 				case 0: nm.setType(""); break;
@@ -3534,7 +3535,9 @@ void PsiAccount::dj_sendMessage(const Message &m, bool log)
 		}
 	}
 
+    qDebug() << "dj_send: rich content m0" << m.html().toString("notb2.5 1 "); //last good
 	d->client->sendMessage(nm);
+    qDebug() << "dj_send: rich content m0" << m.html().toString("notb2.5 2 ");
 
 	// only toggle if not an invite or body is not empty
 	if(m.invite().isEmpty() && !m.body().isEmpty())
@@ -3551,6 +3554,7 @@ void PsiAccount::dj_sendMessage(const Message &m, bool log)
 		}
 	}
 
+    qDebug() << "dj_send: rich content m0" << m.html().toString("notb2.5 3 ");
 	// don't sound when sending groupchat messages or message events
 	if(m.type() != "groupchat" && !m.body().isEmpty())
 		playSound(PsiOptions::instance()->getOption("options.ui.notifications.sounds.outgoing-chat").toString());
@@ -3564,6 +3568,8 @@ void PsiAccount::dj_sendMessage(const Message &m, bool log)
 				e->closeAfterReply();
 		}
 	}
+
+    qDebug() << "dj_send: rich content m0" << m.html().toString("notb2.5 4 ");
 }
 
 void PsiAccount::dj_composeMessage(const Jid &jid, const QString &body, const QString &subject, const QString &thread)

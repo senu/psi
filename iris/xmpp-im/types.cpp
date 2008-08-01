@@ -18,6 +18,12 @@
  *
  */
 
+#include "xmpp_stanza.h"
+
+
+#include "xmpp_stanza.h"
+
+
 #include "im.h"
 #include "xmpp_features.h"
 
@@ -858,12 +864,20 @@ const QDomElement& HTMLElement::body() const
  * root tag can be modified using a parameter.
  *
  * \param rootTagName the tagname of the root element to use.
+ * 
+ * TODO senu was here
+ * WARNING calling toString() if you didnt setHTML() will crash Psi
  */
 QString HTMLElement::toString(const QString &rootTagName) const
 {
+    if (body_.isNull())  {
+        return ""; //iris crash workaround
+    }
+    
 	// create a copy of the body_ node,
 	// get rid of the xmlns attribute and
 	// change the root node name
+        
 	QDomElement e = body_.cloneNode().toElement();
 	e.setTagName(rootTagName);
 
@@ -913,7 +927,7 @@ public:
 	HttpAuthRequest httpAuthRequest;
 	XData xdata;
 	QMap<QString,HTMLElement> htmlElements;
- 	QDomElement sxe;
+ 	QDomElement sxe; 
 	
 	int mucStatus;
 	QList<MUCInvite> mucInvites;
@@ -958,7 +972,7 @@ Message::Message(const Message &from)
 //! \brief Required for internel use.
 Message & Message::operator=(const Message &from)
 {
-	*d = *from.d;
+	*d = *from.d; //TODO ctso
 	return *this;
 }
 
@@ -1436,6 +1450,32 @@ Stanza Message::toStanza(Stream *stream) const
 		}
 	}
 
+    //xhtml-im
+    if(containsHTML()) {
+        QDomElement htmlElement = s.createElement("http://jabber.org/protocol/xhtml-im", "html");
+        
+        for(QMap<QString, XMPP::HTMLElement>::const_iterator it = d->htmlElements.begin(); it != d->htmlElements.end(); ++it) {
+            QDomNode htmlContents = it.data().body().cloneNode();
+            QDomElement e = s.createElement("http://jabber.org/protocol/xhtml-im", "body");
+            
+            QDomNodeList list = htmlContents.childNodes();
+            for(int i=0; i<list.length(); i++) { //append all body children
+                qDebug() << "app xhtml-im node:" << list.item(i).nodeType();
+                e.appendChild(list.item(i));
+            }
+            
+            if(!it.key().isEmpty()) {
+                e.setAttributeNS(NS_XML, "xml:lang", it.key());
+            }
+            
+            htmlElement.appendChild(e);
+        }
+        
+        s.appendChild(htmlElement);
+    }
+
+    
+
 	if(d->type == "error")
 		s.setError(d->error);
 
@@ -1676,7 +1716,7 @@ bool Message::fromStanza(const Stanza &s, int timeZoneOffset)
 		nl = nl.item(0).childNodes();
 		for(n = 0; n < nl.count(); ++n) {
 			QDomElement e = nl.item(n).toElement();
-			if (e.tagName() == "body" && e.namespaceURI() == "http://www.w3.org/1999/xhtml") {
+			if (e.tagName() == "body" && e.namespaceURI() == "http://jabber.org/protocol/xhtml-im") {
 				QString lang = e.attributeNS(NS_XML, "lang", "");
 				d->htmlElements[lang] = e;
 			}

@@ -2,10 +2,12 @@
 #include "messageValidator.h"
 
 
-HTMLChatEdit::HTMLChatEdit(QWidget* parent, QToolBar * _toolBar, const QString& _iconPath)
-: QTextEdit(parent), iconPath(_iconPath) {
 
-    toolBar = _toolBar;
+HTMLChatEdit::HTMLChatEdit(QWidget* parent)
+: ChatEdit(parent) {
+
+    formatToolBar = new QToolBar(this);
+    formatToolBar->setIconSize(QSize(16, 16));
 
     initActions();
 
@@ -164,6 +166,7 @@ void HTMLChatEdit::mergeFormat(const QTextCharFormat& format) {
 void HTMLChatEdit::initActions() {
 
     //font style
+    QString iconPath("/home/senu/dev/psi/gsoc/psi-fork/src/icons/"); //TODO iconServer
     actionTextBold = new QAction(QIcon(iconPath + "textbold.png"), tr("&Bold"), this);
     actionTextBold->setShortcut(Qt::CTRL + Qt::Key_B);
     actionTextBold->setCheckable(true);
@@ -209,7 +212,7 @@ void HTMLChatEdit::initActions() {
 
 
     //font size
-    sizeCombo = new QComboBox(toolBar);
+    sizeCombo = new QComboBox(0);
     sizeCombo->setEditable(true);
 
     QFontDatabase fontDB;
@@ -222,30 +225,30 @@ void HTMLChatEdit::initActions() {
     sizeCombo->setCurrentIndex(sizeCombo->findText(QString::number(font().pointSize()))); //TODO ?(fontPointSize())));
 
     //font family
-    fontCombo = new QFontComboBox(toolBar);
+    fontCombo = new QFontComboBox(0);
 
 
     //append to toolbar
-    toolBar->addWidget(fontCombo);
-    toolBar->addWidget(sizeCombo);
+    formatToolBar->addWidget(fontCombo);
+    formatToolBar->addWidget(sizeCombo);
 
-    toolBar->addSeparator();
+    formatToolBar->addSeparator();
 
-    toolBar->addAction(actionTextBold);
-    toolBar->addAction(actionTextItalic);
-    toolBar->addAction(actionTextUnderline);
+    formatToolBar->addAction(actionTextBold);
+    formatToolBar->addAction(actionTextItalic);
+    formatToolBar->addAction(actionTextUnderline);
 
-    toolBar->addSeparator();
+    formatToolBar->addSeparator();
 
-    toolBar->addAction(actionAlignLeft);
-    toolBar->addAction(actionAlignCenter);
-    toolBar->addAction(actionAlignRight);
-    toolBar->addAction(actionAlignJustify);
+    formatToolBar->addAction(actionAlignLeft);
+    formatToolBar->addAction(actionAlignCenter);
+    formatToolBar->addAction(actionAlignRight);
+    formatToolBar->addAction(actionAlignJustify);
 
-    toolBar->addSeparator();
+    formatToolBar->addSeparator();
 
-    toolBar->addAction(actionForegroundColor);
-    toolBar->addAction(actionBackgroundColor);
+    formatToolBar->addAction(actionForegroundColor);
+    formatToolBar->addAction(actionBackgroundColor);
 
 
     //connect actions
@@ -264,7 +267,8 @@ void HTMLChatEdit::initActions() {
 
 
 HTMLChatEdit::~HTMLChatEdit() {
-    qDebug() << message();
+    delete formatToolBar;
+    qDebug() << xhtmlMessage();
 }
 
 
@@ -346,7 +350,7 @@ QString HTMLChatEdit::createFragmentStyle(const QTextCharFormat& fragmentFormat)
 }
 
 
-QString HTMLChatEdit::message() { //TODO escape
+QString HTMLChatEdit::xhtmlMessage() { //TODO escape
 
     QString msg; //new message [ QTextDocument -> xhtml-im ];
 
@@ -388,9 +392,20 @@ QString HTMLChatEdit::message() { //TODO escape
     }
 
 
-    return "<html><body><div>" + msg + "</div></body></html>";
+    return "<body><div>" + msg + "</div></body>";
 }
 
+QString HTMLChatEdit::messageBody(bool xhtml) {
+    if(xhtml) { 
+        return xhtmlMessage();
+    }
+    else {
+        return toPlainText();
+    }
+}
 
+QToolBar* HTMLChatEdit::toolBar() const {
+    return formatToolBar;
+}
 
 

@@ -18,6 +18,12 @@
  *
  */
 
+#include "xmpp_htmlelement.h"
+
+
+#include "xmpp_message.h"
+
+
 #include "userchatevent.h"
 
 
@@ -99,14 +105,13 @@ ChatDlg* ChatDlg::create(const Jid& jid, PsiAccount* account, TabManager* tabMan
 }
 
 
-ChatDlg::ChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager, 
+ChatDlg::ChatDlg(const Jid& jid, PsiAccount* pa, TabManager* tabManager,
                  HTMLThemeManager* themeManager_, IconServer* iconServer_)
-: TabbableWidget(jid, pa, tabManager), 
-    themeManager(themeManager_), 
-    iconServer(iconServer_), 
-    highlightersInstalled_(false)
-{
-    
+: TabbableWidget(jid, pa, tabManager),
+themeManager(themeManager_),
+iconServer(iconServer_),
+highlightersInstalled_(false) {
+
     if (PsiOptions::instance()->getOption("options.ui.mac.use-brushed-metal-windows").toBool()) {
         setAttribute(Qt::WA_MacMetalStyle);
     }
@@ -134,6 +139,9 @@ void ChatDlg::init() {
     initUi();
     initActions();
     setShortcuts();
+
+//    Message m(jid()); //TODO segfaulting code
+//  qDebug() << m.html().toString(); 
 
     // TODO: this have to be moved to chatEditCreated()
     chatEdit()->setDialog(this);
@@ -438,10 +446,10 @@ void ChatDlg::updateContact(const Jid &j, bool fromPresence) {
     }
 
     if (jid().compare(j, false)) {
-        
+
         QList<UserListItem*> ul = account()->findRelevant(j);
         UserStatus userStatus = userStatusFor(jid(), ul, false);
-        
+
         if (userStatus.statusType == XMPP::Status::Offline) {
             contactChatState_ = XMPP::StateNone;
         }
@@ -465,7 +473,7 @@ void ChatDlg::updateContact(const Jid &j, bool fromPresence) {
 
             if (fromPresence && statusChanged) {
                 StatusChatEvent * event = new StatusChatEvent(); //TODO timestamp in ctor
-                fillEventWithUserInfo(event,userStatus.userListItem->jid().full());
+                fillEventWithUserInfo(event, userStatus.userListItem->jid().full());
                 event->setSpooled(false);
                 event->type = statusToChatViewStatus(status_);
                 //TODO escape?
@@ -473,7 +481,7 @@ void ChatDlg::updateContact(const Jid &j, bool fromPresence) {
                 if (!statusString_.isEmpty()) {
                     QString ss = TextUtil::linkify(TextUtil::plain2rich(statusString_));
                     if (PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool()) {
-                        ss = TextUtil::emoticonify(ss, true); 
+                        ss = TextUtil::emoticonify(ss, true);
                     }
                     if (PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool()) {
                         ss = TextUtil::legacyFormat(ss);
@@ -663,22 +671,36 @@ void ChatDlg::doSend() {
 
     if (warnSend_) {
         warnSend_ = false;
-        int n = QMessageBox::information(this, tr("Warning"), tr(
-                                                                 "<p>Encryption was recently disabled by the remote contact.  "
-                                                                 "Are you sure you want to send this message without encryption?</p>"
-                                                                 ), tr("&Yes"), tr("&No"));
+        int n = QMessageBox::information(this,
+                                         tr("Warning"),
+                                         tr(
+                                            "<p>Encryption was recently disabled by the remote contact.  "
+                                            "Are you sure you want to send this message without encryption?</p>"
+                                            ), tr("&Yes"), tr("&No"));
         if (n != 0) {
             return;
         }
     }
 
     Message m(jid());
+    
     m.setType("chat");
-    m.setBody(chatEdit()->text());
-    m.setTimeStamp(QDateTime::currentDateTime());
-    if (isEncryptionEnabled()) {
-        m.setWasEncrypted(true);
+    m.setBody(chatEdit()->messageBody(false)); //TODO body and html
+    
+    QString richBody(chatEdit()->messageBody(true)); //xhtml-im 
+    if(!richBody.isNull()) {
+        QDomDocument richDoc;
+        richDoc.setContent(richBody);
+        m.setHTML(HTMLElement(richDoc.firstChild().toElement())); //TODO body and html
+        qDebug() << "do send: rich content" << richBody << "m:" << m.containsHTML() << m.html().toString("notb");
     }
+    
+    m.setTimeStamp(QDateTime::currentDateTime());
+    
+    if (isEncryptionEnabled()) {
+        m.setWasEncrypted(true); //TODO xhtml-im encryption ctso
+    }
+    
     m_ = m;
 
     // Request events
@@ -794,9 +816,11 @@ void ChatDlg::appendMessage(const Message &m, bool local) {
     // figure out the encryption state
     bool encChanged = false;
     bool encEnabled = false;
+    
     if (lastWasEncrypted_ != m.wasEncrypted()) {
         encChanged = true;
     }
+    
     lastWasEncrypted_ = m.wasEncrypted();
     encEnabled = lastWasEncrypted_;
 
@@ -1044,6 +1068,7 @@ void ChatDlg::nicksChanged() {
     // this function is intended to be reimplemented in subclasses
 }
 
+
 void ChatDlg::chatEditCreated() {
     chatEdit()->setDialog(this);
 
@@ -1093,22 +1118,22 @@ void ChatDlg::tunePublished(const Tune& tune, const Jid& jid_) {
 
 
 void ChatDlg::incomingFileTransfer(const QString& fileName) {
-    
+
     FileTransferChatEvent * event = new FileTransferChatEvent();
-    
+
     event->setFileName(fileName);
     event->type = FileTransferChatEvent::Initiated;
     appendChatEvent(event);
 }
 
+
 void ChatDlg::rejectedFileTransfer(const QString& fileName) {
 
     FileTransferChatEvent * event = new FileTransferChatEvent();
-    
+
     event->setFileName(fileName);
     event->type = FileTransferChatEvent::Aborted;
     appendChatEvent(event);
 }
 
 
-    

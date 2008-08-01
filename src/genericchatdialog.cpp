@@ -19,6 +19,8 @@ QString GenericChatDialog::messageTextGC(const XMPP::Message& m) {
     
     QString txt;
 
+    qDebug() << "message text containsHTML" << m.containsHTML() << m.body() << m.html().toString("notb3") << "EOF";
+
     if (m.containsHTML() && PsiOptions::instance()->getOption("options.html.chat.render").toBool() && !m.html().text().isEmpty()) {
         txt = m.html().toString("span"); //TODO remove /me if emote
     }
@@ -37,7 +39,7 @@ QString GenericChatDialog::messageTextGC(const XMPP::Message& m) {
 
     txt = messageValidator_.validateMessage(txt, &modified, &textFormatter_);
 
-    qDebug() << txt;
+    qDebug() << "messageText2" << txt;
     return txt;
 }
 
@@ -58,7 +60,6 @@ bool GenericChatDialog::doConsecutiveMessage(const QDateTime& time, bool local) 
     }
     
     if ((local && lastEventOwner == Outgoing) || (!local && lastEventOwner == Incoming)) { //from the same user
-        qDebug() << local << lastEventOwner;
         return true;
     }
 

@@ -18,8 +18,6 @@
  *
  */
 
-#include "msgmle.h"
-
 #include <QAbstractTextDocumentLayout>
 #include <QAction>
 #include <QApplication>
@@ -36,8 +34,11 @@
 #include <QDateTime>
 
 #include <QDebug>
+
 #include "shortcutmanager.h"
 #include "psioptions.h"
+#include "msgmle.h"
+#include "htmlchatedit.h"
 
 
 //----------------------------------------------------------------------------
@@ -374,11 +375,24 @@ void ChatEdit::optionsChanged()
 	setCheckSpelling(checkSpellingGloballyEnabled());
 }
 
+QString ChatEdit::messageBody(bool xhtml) {
+    if(xhtml) { //we cannot create XHTML-IM messages
+        return QString();
+    }
+    else {
+        return toPlainText();
+    }
+}
+
+QToolBar* ChatEdit::toolBar() const {
+    return 0;
+} 
+
 //----------------------------------------------------------------------------
 // LineEdit
 //----------------------------------------------------------------------------
-LineEdit::LineEdit( QWidget *parent)
-	: ChatEdit(parent)
+LineEdit::LineEdit(QWidget *parent)
+	: HTMLChatEdit(parent)
 {
 	setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere); // no need for horizontal scrollbar with this
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
