@@ -46,6 +46,8 @@ slots:
     void textBackgroundColor();
 
     void insertImage();
+    
+    /** Pop-ups 'Add Hyperlink' dialog and inserts <a> element*/
     void insertAnchor();
 
     /** Show current text align */
@@ -87,7 +89,8 @@ protected:
     *actionAlignLeft,
     *actionAlignCenter,
     *actionAlignRight,
-    *actionAlignJustify;
+    *actionAlignJustify,
+    *actionInsertHyperlink;
 
     QActionGroup * alignActions;
 

@@ -26,9 +26,9 @@
 
 #include "xmpp_url.h"
 #include "xmpp_rosterx.h"
-#include "ui_addurl.h"
 #include "advwidget.h"
 #include "userlist.h"
+#include "addurldlg.h"
 
 class QDateTime;
 class QStringList;
@@ -98,13 +98,6 @@ private:
 	void goURL(const QString &);
 };
 
-class AddUrlDlg : public QDialog, public Ui::AddUrl
-{
-	Q_OBJECT
-public:
-	AddUrlDlg(QWidget *parent=0);
-	~AddUrlDlg();
-};
 
 class EventDlg : public AdvancedWidget<QWidget>
 {

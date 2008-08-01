@@ -250,6 +250,7 @@ HEADERS += \
 	$$PWD/networkaccessmanager.h\
 	$$PWD/genericchatdialog.h\
 	$$PWD/htmlchatedit.h\
+	$$PWD/addurldlg.h\
 
 
 # Source files
@@ -393,6 +394,7 @@ SOURCES += \
 	$$PWD/networkaccessmanager.cpp\
 	$$PWD/genericchatdialog.cpp\
 	$$PWD/htmlchatedit.cpp\
+	$$PWD/addurldlg.cpp\
 
 
 whiteboarding {
