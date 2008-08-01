@@ -114,7 +114,7 @@ void HTMLChatView::onDoScrolling() {
 
 
 void HTMLChatView::onLinkClicked(const QUrl& url) {
-    QMessageBox::about(this, "open url", url.toString());
+    emit openURL(url.toString());
 }
 
 
@@ -172,12 +172,8 @@ void HTMLChatView::appendEvent(const ChatEvent* event, bool alreadyAppended) {
 
 
 void HTMLChatView::evaluateJS(QString scriptSource) {
-    for(int i=0; i<scriptSource.length(); ++i) {
-        qDebug() << scriptSource.at(i) << scriptSource.at(i).unicode() <<QChar('a').unicode();
-    
-    }
     webView.page()->mainFrame()->evaluateJavaScript(scriptSource);
-    qDebug() << "HTMLChatView::evaluateJS(" << scriptSource << ")\n";
+    //qDebug() << "HTMLChatView::evaluateJS(" << scriptSource << ")\n";
 }
 
 
@@ -209,6 +205,7 @@ QString HTMLChatView::dumpContent() {
 void HTMLChatView::escapeString(QString& str) {
     str.replace("\"", "\\\"");
     str.replace("\n", "\\\n");
+    str.replace(QChar(8232), "\\\n"); //ctrl+enter
 }
 
 

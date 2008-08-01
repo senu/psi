@@ -2,6 +2,7 @@
 #include "msgmle.h"
 #include "psioptions.h"
 #include "applicationinfo.h"
+#include "urlobject.h"
 
 #include "htmlChatTheme.h"
 
@@ -19,7 +20,11 @@ ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,
         HTMLChatTheme theme(themeManager->getTheme(themeName, themeVariant));
 
         *isHTMLChatView = true;
-        return new HTMLChatView(parent, theme, iconServer, ApplicationInfo::homeDir());
+        HTMLChatView * view = new HTMLChatView(parent, theme, iconServer, ApplicationInfo::homeDir());\
+            
+        QObject::connect(view, SIGNAL(openURL(QString)), URLObject::getInstance(), SIGNAL(openURL(QString)));
+        
+        return view;
     }
     *isHTMLChatView = false;
     return new __PlainTextChatView(parent);
