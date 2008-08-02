@@ -2955,7 +2955,7 @@ void PsiAccount::cpUpdate(const UserListItem &u, const QString &rname, bool from
 	d->psi->updateContactGlobal(this, j);
 }
 
-EventDlg *PsiAccount::ensureEventDlg(const Jid &j)
+EventDlg *PsiAccount::ensureEventDlg(const Jid &j) //qwer ctso
 {
 	EventDlg *w = findDialog<EventDlg*>(j);
 	if(!w) {
@@ -3262,7 +3262,7 @@ void PsiAccount::actionHistory(const Jid &j)
 
 void PsiAccount::actionHistoryBox(PsiEvent *e)
 {
-	EventDlg *w = new EventDlg(e->from(), this, false);
+	EventDlg *w = new EventDlg(e->from(), this, false); //qwer ctso
 	connect(w, SIGNAL(aChat(const Jid &)), SLOT(actionOpenChat(const Jid&)));
 	connect(w, SIGNAL(aReply(const Jid &, const QString &, const QString &, const QString &)), SLOT(dj_composeMessage(const Jid &, const QString &, const QString &, const QString &)));
 	connect(w, SIGNAL(aAuth(const Jid &)), SLOT(dj_addAuth(const Jid &)));
@@ -3564,8 +3564,9 @@ void PsiAccount::dj_sendMessage(const Message &m, bool log)
 		UserListItem *u = findFirstRelevant(m.to());
 		if(u) {
 			EventDlg *e = findDialog<EventDlg*>(u->jid());
-			if(e)
+            if(e) {
 				e->closeAfterReply();
+            }
 		}
 	}
 
@@ -3575,16 +3576,21 @@ void PsiAccount::dj_sendMessage(const Message &m, bool log)
 void PsiAccount::dj_composeMessage(const Jid &jid, const QString &body, const QString &subject, const QString &thread)
 {
 	EventDlg *w = d->psi->createEventDlg(jid.full(), this);
-	if(!body.isEmpty())
-		w->setHtml(TextUtil::plain2rich(TextUtil::quote(body)));
+    
+    if(!body.isEmpty()) {
+		w->setEditedText(TextUtil::plain2rich(TextUtil::quote(body))); //qwer 5
+    }
 
-	if(!subject.isEmpty() && subject.left(3) != "Re:")
-		w->setSubject("Re: " + subject);
-	else if (subject.left(3) == "Re:")
+    if(!subject.isEmpty() && subject.left(3) != "Re:") {
+        w->setSubject("Re: " + subject);
+    }
+    else if (subject.left(3) == "Re:") {
 		w->setSubject(subject);
+    }
 
-	if(!thread.isEmpty())
+    if(!thread.isEmpty()) {
 		w->setThread(thread);
+    }
 
 	w->show();
 }
@@ -4143,12 +4149,15 @@ void PsiAccount::updateReadNext(const Jid &j)
 {
 	// update eventdlg's read-next
 	EventDlg *w = findDialog<EventDlg*>(j);
-	if(w) {
+	if (w) {
 		PsiIcon *nextAnim = 0;
 		int nextAmount = d->eventQueue->count(j);
-		if(nextAmount > 0)
+        
+        if(nextAmount > 0) {
 			nextAnim = PsiIconset::instance()->event2icon(d->eventQueue->peek(j));
-		w->updateReadNext(nextAnim, nextAmount);
+        }
+		
+        w->updateReadNext(nextAnim, nextAmount);
 	}
 
 	queueChanged();
@@ -4165,7 +4174,7 @@ void PsiAccount::processReadNext(const UserListItem &u)
 {
 	EventDlg *w = findDialog<EventDlg*>(u.jid());
 	if(!w) {
-		// this should NEVER happen
+        Q_ASSERT(0);
 		return;
 	}
 

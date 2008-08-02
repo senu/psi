@@ -29,6 +29,7 @@
 #include "advwidget.h"
 #include "userlist.h"
 #include "addurldlg.h"
+#include "htmlchatedit.h"
 
 class QDateTime;
 class QStringList;
@@ -109,11 +110,17 @@ public:
 	EventDlg(const Jid &, PsiAccount *, bool unique);
 	~EventDlg();
 
-	QString text() const;
-	void setHtml(const QString &);
 	void setSubject(const QString &);
 	void setThread(const QString &);
 	void setUrlOnShow();
+
+    /** 
+     * Clears editor() contents and put \param into editor(). 
+     * 
+     * used in quote/reply
+     * \param text can be XHTML/rich text, so it has to be escaped
+     */
+    void setEditedText(const QString& text);
 
 	PsiAccount *psiAccount();
 
@@ -137,6 +144,22 @@ protected:
 	void resizeEvent(QResizeEvent *);
 	void keyPressEvent(QKeyEvent *);
 	void closeEvent(QCloseEvent *);
+    
+    /** Returns pointer to event editor (if in composing mode), NULL otherwise */
+    ChatEdit* editor() const;
+
+    /** Returns editor() if in composing mode, view() otherwise */
+    QWidget* editorOrView() const;
+    
+    /** 
+     * Displays \param text (text string can be RichText or XHTML) in the view().
+     *
+     * \param text must be html-escaped.
+     * 
+     * It will be display in Webkit view() or in QTextEdit view().
+     * You should only message content. For example: <p>txt</p> instead of <html><body>...</body></html>
+     */
+    void displayText(const QString &text); //qwer !
 
 public slots:
 	void optionsUpdate();

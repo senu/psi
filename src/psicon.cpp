@@ -738,7 +738,7 @@ void PsiCon::doNewBlankMessage()
 EventDlg *PsiCon::createEventDlg(const QString &to, PsiAccount *pa)
 {
 	EventDlg *w = new EventDlg(to, this, pa);
-	connect(this, SIGNAL(emitOptionsUpdate()), w, SLOT(optionsUpdate()));
+	connect(this, SIGNAL(emitOptionsUpdate()), w, SLOT(optionsUpdate())); //qwer 5
 	return w;
 }
 
@@ -748,8 +748,9 @@ void PsiCon::updateContactGlobal(PsiAccount *pa, const Jid &j)
 	foreach(item_dialog* i, d->dialogList) {
 		if(i->className == "EventDlg") {
 			EventDlg *e = (EventDlg *)i->widget;
-			if(e->psiAccount() == pa)
+            if(e->psiAccount() == pa) {
 				e->updateContact(j);
+            }
 		}
 	}
 }

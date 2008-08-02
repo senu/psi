@@ -75,6 +75,8 @@
 #include "xdata_widget.h"
 #include "desktoputil.h"
 
+#include "htmlchatedit.h"
+
 static QString findJid(const QString &s, int x, int *p1, int *p2)
 {
 	// scan backward for the beginning of a Jid
@@ -455,7 +457,9 @@ class EventDlg::Private : public QObject
 {
 	Q_OBJECT
 public:
-	Private(EventDlg *d) {
+	Private(EventDlg *d) 
+    : mle(0)
+    , editor(0) {
 		dlg = d;
 		nextAnim_ = 0;
 	}
@@ -508,7 +512,9 @@ public:
 	IconButton *pb_close, *pb_quote, *pb_deny, *pb_send, *pb_reply, *pb_chat, *pb_auth, *pb_http_confirm, *pb_http_deny;
 	IconButton *pb_form_submit, *pb_form_cancel;
     
-	PlainTextChatView *mle; //qwer
+	PlainTextChatView* mle; //qwer
+    HTMLChatEdit* editor;
+
     
     /** List of invites, urls,  */
 	AttachView *attachView;
@@ -521,6 +527,8 @@ public:
     /** To: lineEdit has JID completion */
 	QStringList completionList;
 	PsiIcon *anim;
+
+    /** Number of pending events */
 	int nextAmount;
 	
     QWidget *w_http_id;
@@ -545,10 +553,12 @@ private:
 
 private slots:
 	void ensureEditPosition() {
+        /*
 		QTextCursor cursor = mle->textCursor(); //qwer ?
 		cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
 		cursor.clearSelection();
 		mle->setTextCursor(cursor);
+         */
 	}
 
 public slots:
@@ -559,7 +569,7 @@ public slots:
 		QString text = icon->defaultText();
 
 		if ( !text.isEmpty() ) { //qwer
-			mle->insert( text + " " );
+			editor->insert( text + " " );
 		}
 	}
 
@@ -567,11 +577,11 @@ public slots:
 		if ( !dlg->isActiveWindow() )
 		     return;
 
-		mle->insert( text + " " );
+		editor->insertPlainText( text + " " );
 	}
 
 	void updateCounter() { //qwer
-		lb_count->setNum(mle->text().length());
+		lb_count->setNum(editor->text().length());
 	}
 };
 
@@ -579,8 +589,11 @@ EventDlg::EventDlg(const QString &to, PsiCon *psi, PsiAccount *pa) //compose
 	: AdvancedWidget<QWidget>(0)
 {
 	setAttribute(Qt::WA_DeleteOnClose);
-  	if ( PsiOptions::instance()->getOption("options.ui.mac.use-brushed-metal-windows").toBool() )
+    
+    if ( PsiOptions::instance()->getOption("options.ui.mac.use-brushed-metal-windows").toBool() ) {
 		setAttribute(Qt::WA_MacMetalStyle);	
+    }
+    
 	d = new Private(this);
 	d->composing = true;
 	d->psi = psi;
@@ -628,13 +641,14 @@ EventDlg::EventDlg(const QString &to, PsiCon *psi, PsiAccount *pa) //compose
 		d->le_to->setFocus();
     }
     else {
-		d->mle->setFocus(); //qwer
+		editor()->setFocus(); //qwer
     }
 
 	if(d->tb_pgp) {
 		UserListItem *u = d->pa->findFirstRelevant(d->jid);
-		if(u && u->isSecure(d->jid.resource()))
+        if(u && u->isSecure(d->jid.resource())) {
 			d->tb_pgp->setChecked(true);
+        }
 	}
 }
 
@@ -846,22 +860,30 @@ void EventDlg::init()
 	}
 
 	// text area
-	d->mle = new PlainTextChatView(this); //qwer
-	d->mle->setDialog(this);
-	d->mle->setReadOnly(false);
-	d->mle->setUndoRedoEnabled(true);
-	d->mle->setMinimumHeight(50);
-	vb1->addWidget(d->mle);
+    if (d->composing) {
+        d->editor = new HTMLChatEdit(this); //qwer TODO
+    
+        editor()->setDialog(this);
 
-	connect(d->mle, SIGNAL(textChanged()), d, SLOT(updateCounter())); //qwer
-
-	if (d->composing) {
-		d->mle->setAcceptRichText(false); //qwer
-	}
-	else {
-		d->mle->setReadOnly(true);
+        //formatting toolbar
+        if (editor()->toolBar()) {
+            vb1->addWidget(editor()->toolBar());
+        }
+    }
+    else {
+    	d->mle = new PlainTextChatView(this); //qwer
+        
+        d->mle->setDialog(this);
+        d->mle->setReadOnly(true);
 		d->mle->setUndoRedoEnabled(false);
-	}
+    }
+    
+    editorOrView()->setMinimumHeight(50);
+	vb1->addWidget(editorOrView());
+
+    if (editor()) {
+    	connect(editor(), SIGNAL(textChanged()), d, SLOT(updateCounter()));
+    }
 
 	// attachment view
 	d->attachView = new AttachView(this);
@@ -1042,15 +1064,10 @@ void EventDlg::accountUpdatedActivity()
 	// TODO: act on account activity change
 }
 
-QString EventDlg::text() const
+void EventDlg::displayText(const QString &text) //qwer !
 {
-	return d->mle->text(); //qwer unused
-}
-
-void EventDlg::setHtml(const QString &s) //qwer !
-{
-	d->mle->clear();
-	d->mle->appendText(s);
+	d->mle->clear(); //qwer TODO !
+	d->mle->appendText("<qt style=\"background-color:red\">" + text + "</qt>");
 }
 
 void EventDlg::setSubject(const QString &s)
@@ -1347,9 +1364,11 @@ UserResourceList EventDlg::getResources(const QString &s) const
 void EventDlg::optionsUpdate()
 {
 	// update the font
+    /*
 	QFont f;
 	f.fromString(PsiOptions::instance()->getOption("options.ui.look.font.message").toString());
 	d->mle->setFont(f); //qwer only in plain ver
+     */ //qwer 4
 
 	// update status icon
 	doWhois(true);
@@ -1432,10 +1451,10 @@ void EventDlg::keyPressEvent(QKeyEvent *e)
 void EventDlg::closeEvent(QCloseEvent *e)
 {
 	// really lame way of checking if we are encrypting
-    if(!d->mle->isEnabled()) { //qwer !!! TODO
+    if(editor() && !editor()->isEnabled()) { //qwer !!! TODO 1
 		return;
     }
-
+    
 	e->accept();
 }
 
@@ -1450,7 +1469,7 @@ void EventDlg::doSend()
 	if(!d->pa->checkConnected(this))
 		return;
 
-	if(d->mle->text().isEmpty() && d->attachView->childCount() == 0) { //qwer 
+	if(editor()->toHtml().isEmpty() && d->attachView->childCount() == 0) { //qwer TODO c non html
 		QMessageBox::information(this, tr("Warning"), tr("Please type in a message first."));
 		return;
 	}
@@ -1462,24 +1481,39 @@ void EventDlg::doSend()
 	}
 
 	Message m;
-	if(d->cb_type->currentItem() == 0)
+    if(d->cb_type->currentItem() == 0) {
 		m.setType("");
-	else
-		m.setType("chat");
+    }
+    else {
+        m.setType("chat");
+    }
 
-	m.setBody(d->mle->text()); //qwer like in chatdlg
+    //qwer 
+    m.setBody(editor()->messageBody(false)); 
+    
+    QString richBody(editor()->messageBody(true)); //xhtml-im 
+    if(!richBody.isNull()) {
+        QDomDocument richDoc;
+        richDoc.setContent(richBody);
+        m.setHTML(HTMLElement(richDoc.firstChild().toElement())); //first element is always <body>
+        qDebug() << "do send: rich content" << richBody << "m:" << m.containsHTML() << m.html().toString("notb");
+    }
+
 	m.setSubject(d->le_subj->text());
 	m.setUrlList(d->attachView->urlList());
 	m.setTimeStamp(QDateTime::currentDateTime());
 	m.setThread(d->thread);
-	if(d->tb_pgp->isChecked())
+    
+    if (d->tb_pgp->isChecked()) {
 		m.setWasEncrypted(true);
+    }
+    
 	d->m = m;
-
 	d->enc = false;
+    
 	if(d->tb_pgp->isChecked()) {
 		d->le_to->setEnabled(false);
-		d->mle->setEnabled(false); //qwer enc TODO1
+		editor()->setEnabled(false); //qwer enc TODO1
 		d->enc = true;
 		d->sendLeft = list;
 
@@ -1487,11 +1521,11 @@ void EventDlg::doSend()
 	}
 	else {
 		if (list.count() > 1 && !d->pa->serverInfoManager()->multicastService().isEmpty() && PsiOptions::instance()->getOption("options.enable-multicast").toBool()) {
-				m.setTo(d->pa->serverInfoManager()->multicastService());
-				foreach(QString recipient, list) {
-					m.addAddress(Address(XMPP::Address::To, Jid(recipient)));
-				}
-				d->pa->dj_sendMessage(m);
+            m.setTo(d->pa->serverInfoManager()->multicastService());
+            foreach(QString recipient, list) {
+                m.addAddress(Address(XMPP::Address::To, Jid(recipient)));
+            }
+            d->pa->dj_sendMessage(m);
 		}
 		else {
 			for(QStringList::ConstIterator it = list.begin(); it != list.end(); ++it) {
@@ -1550,7 +1584,8 @@ void EventDlg::doQuote()
 	
     Jid j(list[0]);
 
-	QString body = TextUtil::rich2plain(d->mle->getHtml()); //qwer 3
+    //qwer psitextedit - getHtml()
+	QString body = TextUtil::rich2plain(d->mle->getHtml()); //qwer 3 TODO 
 	emit aReply(j, body, d->le_subj->text(), d->thread); //qwer TODO currently quote == inserting '>'
 }
 
@@ -1705,8 +1740,9 @@ void EventDlg::doInfo()
 
 void EventDlg::closeAfterReply()
 {
-	if(d->nextAmount == 0)
+    if(d->nextAmount == 0) {
 		close();
+    }
 }
 
 void EventDlg::addUrl()
@@ -1897,7 +1933,8 @@ void EventDlg::updateEvent(PsiEvent *e)
 			txt = "<big>[HTTP Request Confirmation]</big><br>" + txt;
         }
 
-		setHtml("<qt>" + txt + "</qt>"); //qwer 2
+        //qwer 2 - TODO p-u
+		displayText(txt); //qwer 2
 
 		d->le_subj->setText(m.subject());
 		d->le_subj->setCursorPosition(0);
@@ -1923,6 +1960,7 @@ void EventDlg::updateEvent(PsiEvent *e)
 				setWindowTitle( form.title() );
 			
 			//show data form
+            
 			d->xdata->setFields( form.fields() );
 			d->xdata_form->show();
 			
@@ -1951,7 +1989,7 @@ void EventDlg::updateEvent(PsiEvent *e)
 		d->le_subj->setText("");
 		if(type == "subscribe") {
 			QString body(tr("<big>[System Message]</big><br>This user wants to subscribe to your presence.  Click the button labelled \"Add/Auth\" to authorize the subscription.  This will also add the person to your contact list if it is not already there."));
-			setHtml("<qt>" + body + "</qt>"); //qwer 2
+			displayText(body); //qwer 2
 
 			d->pb_chat->show();
 			d->pb_reply->hide();
@@ -1965,22 +2003,16 @@ void EventDlg::updateEvent(PsiEvent *e)
 			d->pb_http_deny->hide();
 
 		}
-		else if(type == "subscribed") {
-			QString body(tr("<big>[System Message]</big><br>You are now authorized."));
-			setHtml("<qt>" + body + "</qt>"); //qwer 2
-
-			d->pb_auth->hide();
-			d->pb_deny->hide();
-			d->pb_chat->show();
-			d->pb_reply->show();
-			d->pb_quote->show();
-			d->pb_http_confirm->hide();
-			d->pb_http_deny->hide();
-		}
-		else if(type == "unsubscribed") {
-			QString body(tr("<big>[System Message]</big><br>Your authorization has been removed!"));
-			setHtml("<qt>" + body + "</qt>"); //qwer 2
-
+        else if(type == "subscribed" || type == "unsubscribed") {
+            QString body;
+            if(type == "subscribed") {
+                body = tr("<big>[System Message]</big><br>You are now authorized.");
+            }
+            else {
+                body = tr("<big>[System Message]</big><br>Your authorization has been removed!");
+            }
+            
+			displayText(body); //qwer 2
 
 			d->pb_auth->hide();
 			d->pb_deny->hide();
@@ -2032,9 +2064,11 @@ void EventDlg::updateEvent(PsiEvent *e)
 		}
 		
 		d->le_subj->setText("");
+        
 		QString body = QString(tr("<big>[System Message]</big><br>This user wants to modify your roster (%1). Click the button labelled \"Add/Auth\" to authorize the modification.")).arg(action);
-		setHtml("<qt>" + body + "</qt>"); //qwer 2
-		d->rosterExchangeItems = re->rosterExchangeItems();
+		displayText(body); //qwer 2
+		
+        d->rosterExchangeItems = re->rosterExchangeItems();
 
 		d->pb_chat->show();
 		d->pb_reply->hide();
@@ -2045,7 +2079,8 @@ void EventDlg::updateEvent(PsiEvent *e)
 		d->pb_deny->show();
 	}
 
-	d->mle->scrollToTop(); //qwer :/
+    //TODO
+//	d->mle->scrollToTop(); //qwer :/
 
 	if(d->lb_pgp)
 		d->lb_pgp->setPsiIcon( IconsetFactory::iconPtr(d->enc ? "psi/cryptoYes" : "psi/cryptoNo") );
@@ -2121,8 +2156,8 @@ void EventDlg::trySendEncryptedNext()
 	d->transid = d->pa->sendMessageEncrypted(m);
 	if(d->transid == -1) {
 		d->le_to->setEnabled(true);
-		d->mle->setEnabled(true); //qwer enc TODO1
-		d->mle->setFocus();
+		editor()->setEnabled(true); //qwer enc TODO1
+		editor()->setFocus();
 		return;
 	}
 }
@@ -2144,7 +2179,7 @@ void EventDlg::encryptedMessageSent(int x, bool b, int e, const QString &dtext)
 
 		if(d->sendLeft.isEmpty()) {
 			d->le_to->setEnabled(true);
-			d->mle->setEnabled(true); //qwer enc TODO1 
+			editor()->setEnabled(true); //qwer enc TODO1 
 			doneSend();
 		}
 		else {
@@ -2157,8 +2192,26 @@ void EventDlg::encryptedMessageSent(int x, bool b, int e, const QString &dtext)
 	}
 
 	d->le_to->setEnabled(true);
-	d->mle->setEnabled(true); //qwer enc TODO1
-	d->mle->setFocus();
+	editor()->setEnabled(true); //qwer enc TODO1
+	editor()->setFocus();
+}
+
+ChatEdit* EventDlg::editor() const {
+    return d->editor;
+}
+
+QWidget* EventDlg::editorOrView() const {
+    if (d->composing) {
+        return editor();
+    }
+    
+    return d->mle; //qwer TODO
+}
+
+void EventDlg::setEditedText(const QString& text) {
+    editor()->clear();
+    editor()->setHtml(text);
+    
 }
 
 #include "eventdlg.moc"
