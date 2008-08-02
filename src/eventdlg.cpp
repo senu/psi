@@ -53,7 +53,6 @@
 #include "psiiconset.h"
 #include "jidutil.h"
 #include "psioptions.h"
-#include "msgmle.h"
 #include "accountscombobox.h"
 #include "common.h"
 #include "pgputil.h"
@@ -76,6 +75,9 @@
 #include "desktoputil.h"
 
 #include "htmlchatedit.h"
+
+
+//TODO message validation
 
 static QString findJid(const QString &s, int x, int *p1, int *p2)
 {
@@ -458,7 +460,7 @@ class EventDlg::Private : public QObject
 	Q_OBJECT
 public:
 	Private(EventDlg *d) 
-    : mle(0)
+    : view(0)
     , editor(0) {
 		dlg = d;
 		nextAnim_ = 0;
@@ -512,7 +514,7 @@ public:
 	IconButton *pb_close, *pb_quote, *pb_deny, *pb_send, *pb_reply, *pb_chat, *pb_auth, *pb_http_confirm, *pb_http_deny;
 	IconButton *pb_form_submit, *pb_form_cancel;
     
-	PlainTextChatView* mle; //qwer
+	EventView* view; //qwer
     HTMLChatEdit* editor;
 
     
@@ -862,8 +864,6 @@ void EventDlg::init()
 	// text area
     if (d->composing) {
         d->editor = new HTMLChatEdit(this); //qwer TODO
-    
-        editor()->setDialog(this);
 
         //formatting toolbar
         if (editor()->toolBar()) {
@@ -871,11 +871,10 @@ void EventDlg::init()
         }
     }
     else {
-    	d->mle = new PlainTextChatView(this); //qwer
+    	d->view = new EventView(this); //qwer
         
-        d->mle->setDialog(this);
-        d->mle->setReadOnly(true);
-		d->mle->setUndoRedoEnabled(false);
+//        d->mle->setReadOnly(true); //qwer plain only
+//		d->mle->setUndoRedoEnabled(false);
     }
     
     editorOrView()->setMinimumHeight(50);
@@ -1004,11 +1003,12 @@ void EventDlg::init()
 	d->pb_form_cancel->setMinimumWidth(96);
 	hb4->addWidget(d->pb_form_cancel);
 
-	if (d->composing)
+    if (d->composing) 
 		setTabOrder(d->le_to, d->le_subj);
 	else
 		setTabOrder(d->le_from, d->le_subj);
-	setTabOrder(d->le_subj, d->mle);
+
+	setTabOrder(d->le_subj, d->view);
 
 	updatePGP();
 	connect(d->pa, SIGNAL(pgpKeyChanged()), SLOT(updatePGP()));
@@ -1066,8 +1066,8 @@ void EventDlg::accountUpdatedActivity()
 
 void EventDlg::displayText(const QString &text) //qwer !
 {
-	d->mle->clear(); //qwer TODO !
-	d->mle->appendText("<qt style=\"background-color:red\">" + text + "</qt>");
+    //clear();
+	view()->displayText(text); //qwer TODO
 }
 
 void EventDlg::setSubject(const QString &s)
@@ -1585,7 +1585,7 @@ void EventDlg::doQuote()
     Jid j(list[0]);
 
     //qwer psitextedit - getHtml()
-	QString body = TextUtil::rich2plain(d->mle->getHtml()); //qwer 3 TODO 
+	QString body = TextUtil::rich2plain(view()->getHtml()); //qwer 3 TODO 
 	emit aReply(j, body, d->le_subj->text(), d->thread); //qwer TODO currently quote == inserting '>'
 }
 
@@ -1833,7 +1833,7 @@ void EventDlg::updateEvent(PsiEvent *e)
 	d->pb_reply->show();
 	d->pb_quote->show();
 	d->pb_close->show();
-	d->mle->show();
+	view()->show();
 	d->pb_auth->hide();
 	d->pb_deny->hide();
 	d->pb_form_submit->hide();
@@ -1947,7 +1947,7 @@ void EventDlg::updateEvent(PsiEvent *e)
 			d->pb_reply->hide();
 			d->pb_quote->hide();
 			d->pb_close->hide();
-			d->mle->hide();
+			view()->hide();
 
 			//show/enable controls we want
 			d->pb_form_submit->show();
@@ -2200,12 +2200,16 @@ ChatEdit* EventDlg::editor() const {
     return d->editor;
 }
 
+EventView* EventDlg::view() const {
+    return d->view;
+}
+
 QWidget* EventDlg::editorOrView() const {
     if (d->composing) {
         return editor();
     }
     
-    return d->mle; //qwer TODO
+    return view(); //qwer TODO
 }
 
 void EventDlg::setEditedText(const QString& text) {

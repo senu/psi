@@ -30,6 +30,7 @@
 #include "userlist.h"
 #include "addurldlg.h"
 #include "htmlchatedit.h"
+#include "eventview.h"
 
 class QDateTime;
 class QStringList;
@@ -147,6 +148,9 @@ protected:
     
     /** Returns pointer to event editor (if in composing mode), NULL otherwise */
     ChatEdit* editor() const;
+    
+    /** Returns pointer to event viewer (if in viewing mode), NULL otherwise */
+    EventView* view() const;
 
     /** Returns editor() if in composing mode, view() otherwise */
     QWidget* editorOrView() const;

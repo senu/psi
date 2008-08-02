@@ -251,6 +251,7 @@ HEADERS += \
 	$$PWD/genericchatdialog.h\
 	$$PWD/htmlchatedit.h\
 	$$PWD/addurldlg.h\
+	$$PWD/eventview.h\
 
 
 # Source files
@@ -395,6 +396,7 @@ SOURCES += \
 	$$PWD/genericchatdialog.cpp\
 	$$PWD/htmlchatedit.cpp\
 	$$PWD/addurldlg.cpp\
+	$$PWD/eventview.cpp\
 
 
 whiteboarding {
