@@ -149,6 +149,8 @@ public slots:
 private slots:
 	void to_textChanged(const QString &);
 	void to_changeResource(const QString &);
+    
+    /** To: lineEdit has JID completion */
 	void to_tryComplete();
 	void updateIdentity(PsiAccount *);
 	void updateIdentityVisibility();
@@ -182,9 +184,13 @@ private:
 	void doneSend();
 
 	void init();
+    
+    /** Comma separated strings */
 	QStringList stringToList(const QString &, bool enc=true) const;
 	QString findJidInString(const QString &) const;
 	QString expandAddresses(const QString &, bool enc=true) const;
+
+    /** To: lineEdit has JID completion */
 	void buildCompletionList();
 	void setAccount(PsiAccount *);
 	void setTime(const QDateTime &, bool late=false);
