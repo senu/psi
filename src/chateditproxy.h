@@ -46,13 +46,6 @@ signals:
 	 */
 	void textEditCreated(QTextEdit* textEdit);
 
-protected:
-	/**
-	 * Returns true if line edit mode is enabled.
-	 */
-	bool lineEditEnabled() const { return lineEditEnabled_; }
-	void setLineEditEnabled(bool enable);
-
 public slots:
 	void optionsChanged();
 
@@ -61,7 +54,12 @@ private:
 	void moveData(QTextEdit* newTextEdit, QTextEdit* oldTextEdit) const;
 	void updateLayout();
 
-	bool lineEditEnabled_;
+    /** True if auto-resizing (line) composer is enabled */
+	bool lineEditEnabled;
+    
+    /** True if xhtml-im composer is enabled */
+	bool htmlEditEnabled;
+    
 	ChatEdit* textEdit_;
 	QLayout* layout_;
     

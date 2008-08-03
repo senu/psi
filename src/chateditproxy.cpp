@@ -29,7 +29,8 @@
 
 ChatEditProxy::ChatEditProxy(QWidget* parent)
 	: QWidget(parent)
-	, lineEditEnabled_(false)
+    , lineEditEnabled(false)
+    , htmlEditEnabled(false)
 	, textEdit_(0)
 	, layout_(0) 
     , formatToolBar(0)
@@ -47,28 +48,22 @@ ChatEditProxy::ChatEditProxy(QWidget* parent)
 }
 
 /**
- * If \a enable is true, then the LineEdit is used as internal
- * QTextEdit. Updates internal layout if necessary.
- */
-void ChatEditProxy::setLineEditEnabled(bool enable)
-{
-	if (lineEditEnabled_ == enable)
-		return;
-
-	lineEditEnabled_ = enable;
-	updateLayout();
-}
-
-/**
- * Creates new QTextEdit basing on ChatEditProxy's properties.
+ * Creates new ChatEdit basing on ChatEditProxy's properties.
  */
 ChatEdit* ChatEditProxy::createTextEdit()
 {
-    if (lineEditEnabled()) {
-		return new PlainLineEdit(this); //TODO
+    if (lineEditEnabled) {
+        if (htmlEditEnabled) {
+    		return new HTMLLineEdit(this); 
+        }
+   		return new LineEdit(this); 
     }
-
-	return new HTMLChatEdit(this); 
+    
+    if (htmlEditEnabled) {
+        return new HTMLChatEdit(this); 
+    }
+    
+    return new ChatEdit(this);
 }
 
 /**
@@ -107,8 +102,9 @@ void ChatEditProxy::updateLayout()
 		moveData(newEdit, textEdit_);
 
 		newEdit->setCheckSpelling(ChatEdit::checkSpellingGloballyEnabled());
+        //TODO set text format to default in xhtml->plain
 	}
-
+    
 	delete textEdit_;
 	textEdit_ = newEdit;
     formatToolBar = newEdit->toolBar();
@@ -126,5 +122,17 @@ void ChatEditProxy::updateLayout()
  */
 void ChatEditProxy::optionsChanged()
 {
-	setLineEditEnabled(PsiOptions::instance()->getOption("options.ui.chat.use-expanding-line-edit").toBool());
+    bool wasLineEdit = lineEditEnabled,
+        wasHTMLEdit = htmlEditEnabled;
+    
+	lineEditEnabled = PsiOptions::instance()->getOption("options.ui.chat.use-expanding-line-edit").toBool();
+	htmlEditEnabled = PsiOptions::instance()->getOption("options.ui.chat.use-xhtml-composer").toBool();
+    //TODO ? I would like to have PsiOptions::transactionCommited(QStringList optionsChanged) - 
+    //if user changes two options, it will create one redundant ChatEdit
+
+    if (wasLineEdit == lineEditEnabled && wasHTMLEdit == htmlEditEnabled) { //unchanged
+        return;
+    }
+
+    updateLayout();
 }

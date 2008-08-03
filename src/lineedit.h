@@ -4,13 +4,13 @@
 #include "genericlineedit.h"
 
 
-/** AutoResizing HTMLChatEdit */
-class LineEdit : public GenericLineEdit<HTMLChatEdit> { //TODO name
+/** Auto-resizing HTMLChatEdit */
+class HTMLLineEdit : public GenericLineEdit<HTMLChatEdit> { //TODO name
 
     Q_OBJECT
 
 public:
-    LineEdit(QWidget* parent);
+    HTMLLineEdit(QWidget* parent);
 
     private
 slots:
@@ -19,13 +19,13 @@ slots:
 
 };
 
-/** AutoResizing HTMLChatEdit */
-class PlainLineEdit : public GenericLineEdit<ChatEdit> { 
+/** Auto-resizing  Text ChatEdit */
+class LineEdit : public GenericLineEdit<ChatEdit> { 
 
     Q_OBJECT
 
 public:
-    PlainLineEdit(QWidget* parent);
+    LineEdit(QWidget* parent);
 
     private
 slots:
