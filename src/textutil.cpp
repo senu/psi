@@ -103,7 +103,7 @@ QString TextUtil::plain2rich(const QString &plain)
 			++i;	// Qt/Win sees \r\n as two new line chars
 #endif
 		if(plain[i] == '\n') {
-			rich += "<br>";
+			rich += "<br/>";
 			col = 0;
 		}
 		else if(plain[i] == '<')

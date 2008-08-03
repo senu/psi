@@ -588,7 +588,7 @@ public slots:
 };
 
 EventDlg::EventDlg(const QString &to, PsiCon *psi, PsiAccount *pa) //compose
-	: AdvancedWidget<QWidget>(0)
+	: AdvancedWidget<QWidget>(0), textFormatter(false, true, false)
 {
 	setAttribute(Qt::WA_DeleteOnClose);
     
@@ -655,7 +655,7 @@ EventDlg::EventDlg(const QString &to, PsiCon *psi, PsiAccount *pa) //compose
 }
 
 EventDlg::EventDlg(const Jid &j, PsiAccount *pa, bool unique) //read
-	: AdvancedWidget<QWidget>(0)
+	: AdvancedWidget<QWidget>(0), textFormatter(false, true, false)
 {
 	setAttribute(Qt::WA_DeleteOnClose);
 	d = new Private(this);
@@ -871,7 +871,7 @@ void EventDlg::init()
         }
     }
     else {
-    	d->view = new EventView(this); //qwer
+    	d->view = new EventView(this, d->pa->iconServer()); //qwer
         
 //        d->mle->setReadOnly(true); //qwer plain only
 //		d->mle->setUndoRedoEnabled(false);
@@ -1914,24 +1914,35 @@ void EventDlg::updateEvent(PsiEvent *e)
 			d->pb_http_deny->show();
 		}
 
-		bool xhtml = m.containsHTML() && PsiOptions::instance()->getOption("options.html.chat.render").toBool() && !m.html().text().isEmpty();
-		QString txt = xhtml ? m.html().toString("div") : TextUtil::plain2rich(m.body());
-
+       
+        bool modified; //qwer
+        QString txt;
+        
+        if (m.containsHTML() && PsiOptions::instance()->getOption("options.html.chat.render").toBool() && !m.html().text().isEmpty()) {
+            txt = m.html().toString("span"); //TODO remove /me if emote
+        }
+        else {
+            txt = "<span>" + TextUtil::plain2rich(m.body()) + "</span>"; //TODO remove span
+        }
+        
 		// show subject line if the incoming message has one
-		if(m.subject() != "" && !PsiOptions::instance()->getOption("options.ui.message.show-subjects").toBool())
-			txt = "<p><font color=\"red\"><b>" + tr("Subject:") + " " + TextUtil::plain2rich(m.subject()) + "</b></font></p>" + (xhtml? "" : "<br>") + txt;
-
-		if (!xhtml) {
-			if(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool())
-				txt = TextUtil::emoticonify(txt, false);//TODO cv
-			if( PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool() )
-				txt = TextUtil::legacyFormat(txt);
-			txt = TextUtil::linkify(txt);
-		}
+        if(m.subject() != "" && !PsiOptions::instance()->getOption("options.ui.message.show-subjects").toBool()) {
+			txt = txt.insert(5,"<p><font color=\"red\"><b>" //<span>
+                + tr("Subject:") 
+                + " " 
+                + TextUtil::plain2rich(m.subject()) + "</b></font></p>"); 
+        }
+        
+        textFormatter.setDoEmoticonify(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool());
+        textFormatter.setDoLegacyFormatting(PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool());
+        
+        txt = messageValidator.validateMessage(txt, &modified, &textFormatter);
 
         if ( e->type() == PsiEvent::HttpAuth ) {
 			txt = "<big>[HTTP Request Confirmation]</big><br>" + txt;
         }
+
+        qDebug() << "event txt" << txt;
 
         //qwer 2 - TODO p-u
 		displayText(txt); //qwer 2

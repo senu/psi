@@ -2,6 +2,7 @@
 #include "xmpp_htmlelement.h"
 #include "psioptions.h"
 #include "common.h"
+#include "textutil.h"
 
 class GenericChatDialog;
 
@@ -29,7 +30,7 @@ QString GenericChatDialog::messageTextGC(const XMPP::Message& m) {
             txt = "<span>" + m.body().mid(me_cmd.length()) + "</span>";
         }
         else {
-            txt = "<span>" + m.body() + "</span>";
+            txt = "<span>" + TextUtil::plain2rich(m.body()) + "</span>"; //TODO remove span
         }
     }
 

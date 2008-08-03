@@ -31,6 +31,8 @@
 #include "addurldlg.h"
 #include "htmlchatedit.h"
 #include "eventview.h"
+#include "messageValidator.h"
+#include "defaulthtmltextformatter.h"
 
 class QDateTime;
 class QStringList;
@@ -209,7 +211,6 @@ private:
 	Private *d;
 
 	void doneSend();
-
 	void init();
     
     /** Comma separated strings */
@@ -225,6 +226,9 @@ private:
 	friend class ELineEdit;
 	UserResourceList getResources(const QString &) const;
 	QString jidToString(const Jid &, const QString &r="") const;
+
+    DefaultHTMLTextFormatter textFormatter;
+    MessageValidator messageValidator;
 };
 
 #endif

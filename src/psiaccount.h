@@ -117,6 +117,7 @@ public:
 	EDB *edb() const;
 	PsiCon *psi() const;
 	AvatarFactory *avatarFactory() const;
+	IconServer *iconServer() const;
 	PrivacyManager* privacyManager() const;
 	CapsManager* capsManager() const;
 	VoiceCaller* voiceCaller() const;

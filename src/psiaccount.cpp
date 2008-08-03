@@ -604,14 +604,14 @@ private:
 
 PsiAccount::PsiAccount(const UserAccount &acc, PsiContactList *parent, 
                        CapsRegistry* capsRegistry, TabManager *tabManager,
-                       HTMLThemeManager* themeManager, IconServer* iconServer)
+                       HTMLThemeManager* themeManager, IconServer* iconServer_)
 :QObject(parent)
 {
 	d = new Private( this );
 	d->contactList = parent;
 	d->tabManager = tabManager;
 	d->themeManager = themeManager;
-	d->iconServer = iconServer;
+	d->iconServer = iconServer_;
 	d->psi = parent->psi();
 	d->options = PsiOptions::instance();
 	d->client = 0;
@@ -1044,6 +1044,11 @@ PsiCon *PsiAccount::psi() const
 AvatarFactory *PsiAccount::avatarFactory() const
 {
 	return d->avatarFactory;
+}
+
+IconServer *PsiAccount::iconServer() const
+{
+	return d->iconServer;
 }
 
 VoiceCaller* PsiAccount::voiceCaller() const
