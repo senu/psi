@@ -3,7 +3,6 @@
 #include "addurldlg.h"
 
 
-
 HTMLChatEdit::HTMLChatEdit(QWidget* parent)
 : ChatEdit(parent) {
 
@@ -12,7 +11,7 @@ HTMLChatEdit::HTMLChatEdit(QWidget* parent)
 
     initActions();
 
-//    setText("Lorem ipsum costam costam i jeszcze cos tam costam."); //TODO remove
+    //    setText("Lorem ipsum costam costam i jeszcze cos tam costam."); //TODO remove
 
     connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(changeAlignButtons()));
     connect(this, SIGNAL(currentCharFormatChanged(const QTextCharFormat&)),
@@ -108,17 +107,17 @@ void HTMLChatEdit::insertImage() { //TODO
 
 void HTMLChatEdit::insertAnchor() { //TODO
 
-	AddUrlDlg *w = new AddUrlDlg(this);
+    AddUrlDlg *w = new AddUrlDlg(this);
     w->setWindowTitle(tr("Insert hyperlink"));
-    
-	if(w->exec() != QDialog::Accepted) {
-		delete w;
-		return;
-	}
 
-	QString href = w->le_url->text();
-	QString desc = w->le_desc->text();
-	delete w;
+    if (w->exec() != QDialog::Accepted) {
+        delete w;
+        return;
+    }
+
+    QString href = w->le_url->text();
+    QString desc = w->le_desc->text();
+    delete w;
 
     textCursor().insertHtml(QString("<a href=\"%1\">%2</a>").arg(href, desc)); //TODO escape
 }
@@ -212,7 +211,7 @@ void HTMLChatEdit::initActions() {
     actionAlignJustify->setShortcut(Qt::CTRL + Qt::Key_J);
     actionAlignJustify->setProperty("align", Qt::AlignJustify);
     actionAlignJustify->setCheckable(true);
-    
+
 
     //colors
     QPixmap pixmap(14, 14); //TODO fore and background color icon
@@ -239,10 +238,10 @@ void HTMLChatEdit::initActions() {
     //font family
     fontCombo = new QFontComboBox(0);
 
-    
+
     //add hyperling, add image
     actionInsertHyperlink = new QAction(QIcon(iconPath + "textjustify.png"), tr("Insert &hyperlink"), alignActions); //TODO icon
-//    actionAlignJustify->setShortcut(Qt::CTRL + Qt::Key_J); //TODO?
+    //    actionAlignJustify->setShortcut(Qt::CTRL + Qt::Key_J); //TODO?
 
     //append to toolbar
     formatToolBar->addWidget(fontCombo);
@@ -265,9 +264,9 @@ void HTMLChatEdit::initActions() {
 
     formatToolBar->addAction(actionForegroundColor);
     formatToolBar->addAction(actionBackgroundColor);
-    
+
     formatToolBar->addSeparator();
-    
+
     formatToolBar->addAction(actionInsertHyperlink);
 
 
@@ -283,7 +282,7 @@ void HTMLChatEdit::initActions() {
 
     connect(actionForegroundColor, SIGNAL(triggered()), this, SLOT(textForegroundColor()));
     connect(actionBackgroundColor, SIGNAL(triggered()), this, SLOT(textBackgroundColor()));
-    
+
     connect(actionInsertHyperlink, SIGNAL(triggered()), this, SLOT(insertAnchor()));
 }
 
@@ -299,16 +298,16 @@ QString HTMLChatEdit::createBlockStyle(const QTextBlockFormat& blockFormat) {
 
     switch (blockFormat.alignment()) {
         case Qt::AlignLeft :
-                    style += "left";
+                style += "left";
             break;
         case Qt::AlignRight :
-                    style += "right";
+                style += "right";
             break;
         case Qt::AlignCenter :
-                    style += "center";
+                style += "center";
             break;
         case Qt::AlignJustify :
-                    style += "justify";
+                style += "justify";
             break;
     }
 
@@ -402,13 +401,18 @@ QString HTMLChatEdit::xhtmlMessage() { //TODO escape
                 }
                 else {
                     block += "<span style=\"" + createFragmentStyle(curTCF) + "\">"
-                            + currentFragment.text() + "</span>\n";
+                        + currentFragment.text() + "</span>\n";
                 }
 
             }
         }
 
-        msg += "<p style=\"" + createBlockStyle(curTBF) + "\">" + block + "</p>\n";
+        if (document()->blockCount() == 1) { //we dont need extra new lines for ordinary messages
+            msg += block;
+        }
+        else {
+            msg += "<p style=\"" + createBlockStyle(curTBF) + "\">" + block + "</p>\n";
+        }
 
         currentBlock = currentBlock.next();
     }
@@ -417,14 +421,16 @@ QString HTMLChatEdit::xhtmlMessage() { //TODO escape
     return "<body><div>" + msg + "</div></body>";
 }
 
+
 QString HTMLChatEdit::messageBody(bool xhtml) {
-    if(xhtml) { 
+    if (xhtml) {
         return xhtmlMessage();
     }
     else {
         return toPlainText();
     }
 }
+
 
 QToolBar* HTMLChatEdit::toolBar() const {
     return formatToolBar;

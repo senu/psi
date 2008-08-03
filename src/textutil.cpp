@@ -121,7 +121,7 @@ QString TextUtil::plain2rich(const QString &plain)
 		++col;
 	}
 
-	return "<span style='white-space: pre-wrap'>" + rich + "</span>";
+	return "<span>" + rich + "</span>"; //TODO
 }
 
 QString TextUtil::rich2plain(const QString &in)

@@ -30,7 +30,7 @@ QString GenericChatDialog::messageTextGC(const XMPP::Message& m) {
             txt = "<span>" + m.body().mid(me_cmd.length()) + "</span>";
         }
         else {
-            txt = "<span>" + TextUtil::plain2rich(m.body()) + "</span>"; //TODO remove span
+            txt = TextUtil::plain2rich(m.body()); //plain2rich returns everything wrapped with <span/>
         }
     }
 

@@ -519,7 +519,7 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager,
     chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";
     chatInfo.timeOpened = QDateTime::currentDateTime();
 
-    ui_.log->init(chatInfo, themeManager, iconServer);
+    ui_.log->init(chatInfo, true, themeManager, iconServer);
     
 
 	connect(ui_.pb_topic, SIGNAL(clicked()), SLOT(doTopic()));

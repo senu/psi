@@ -21,12 +21,14 @@ ChatView* ChatViewProxy::chatView() const {
 }
 
 
-void ChatViewProxy::init(const ChatTheme::ChatInfo& chatInfo, HTMLThemeManager* themeManager_, IconServer* iconServer_) {
+void ChatViewProxy::init(const ChatTheme::ChatInfo& chatInfo, bool inGroupChat_, HTMLThemeManager* themeManager_, IconServer* iconServer_) {
 
     themeManager = themeManager_;
     iconServer = iconServer_;
+    inGroupChat = inGroupChat_;
+    jid = chatInfo.destinationDisplayName;
     
-    _chatView = createChatView();
+    _chatView = createChatView(inGroupChat, jid);
     _chatView->init(chatInfo);
 }
 
@@ -38,7 +40,7 @@ void ChatViewProxy::optionsChanged(const QString& optionName) {
     }
     
     if (PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool() != isHTMLChatView) {
-        ChatView * newView = createChatView();
+        ChatView * newView = createChatView(inGroupChat, jid);
         newView->restoreDataFrom(*_chatView);
         newView->init();
 
@@ -51,6 +53,7 @@ void ChatViewProxy::optionsChanged(const QString& optionName) {
         return;
     }
 
+    //TODO ? muc/chat/per group/per regexp settings
     if(isHTMLChatView) { //theme change?
         qDebug() << "themeChanged?" << PsiOptions::instance()->getOption("options.ui.themes.themename").toString();
         dynamic_cast<HTMLChatView *> (_chatView)->setTheme(themeManager->getTheme(
@@ -60,8 +63,8 @@ void ChatViewProxy::optionsChanged(const QString& optionName) {
 }
 
 
-ChatView * ChatViewProxy::createChatView() {
-    ChatView * newView = ChatViewFactory::createChatView(false, "TODO@jabber.org", this, &isHTMLChatView, 
+ChatView * ChatViewProxy::createChatView(bool inGroupChat, const QString& jid) {
+    ChatView * newView = ChatViewFactory::createChatView(inGroupChat, jid, this, &isHTMLChatView, 
                                                          themeManager, iconServer);
     layout->addWidget(newView);
     return newView;

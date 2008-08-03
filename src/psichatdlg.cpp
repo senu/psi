@@ -98,7 +98,7 @@ void PsiChatDlg::initUi() {
     lastMsgTime = QDateTime::currentDateTime();
     lastEventOwner = Other;
 
-    ui_.log->init(chatInfo, themeManager, iconServer);
+    ui_.log->init(chatInfo, false, themeManager, iconServer);
 
     connect(ui_.mle, SIGNAL(textEditCreated(QTextEdit*)), SLOT(chatEditCreated()));
     chatEditCreated();

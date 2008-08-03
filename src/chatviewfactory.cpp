@@ -12,7 +12,14 @@ ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,
                                            HTMLThemeManager* themeManager, 
                                            IconServer* iconServer) {
     //TODO fallback 
-    if (PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool()) {
+    
+    bool useHTMLView = PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool();
+    
+    if (isGroupChat) {
+        useHTMLView = PsiOptions::instance()->getOption("options.ui.themes.htmlviewinmuc").toBool();
+    }
+    
+    if (useHTMLView) {
 
         QString themeName(PsiOptions::instance()->getOption("options.ui.themes.themename").toString());
         QString themeVariant(PsiOptions::instance()->getOption("options.ui.themes.variantname").toString());

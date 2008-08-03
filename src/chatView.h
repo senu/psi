@@ -44,12 +44,14 @@ public:
     /** Clears all messages */
     virtual void clear() = 0;
 
-    /** Initialize ChatView 
+    /** 
+     * Initialize ChatView 
      * \param chatInfo contains conversation info (to who, time stared, etc. )*/
     virtual void init(const ChatTheme::ChatInfo& chatInfo);
 
-    /** Initialize ChatView; current chatInfo will be used.
-     *  Events from appendedEvents will be reappended.
+    /** 
+     * (Re)Initialize ChatView; current chatInfo will be used.
+     * Events from appendedEvents will be reappended.
      */
     virtual void init() = 0;
 
@@ -60,9 +62,10 @@ public:
      */
     virtual bool atBottom() const = 0;
 
-    /** Restore chat data (chatInfo, chatEvents) from the other ChatView.
-     *  (to switch between PlainText and HTML widgets)
-     *  Explicit copy constructor
+    /** 
+     * Restore chat data (chatInfo, chatEvents) from the other ChatView.
+     * (to switch between PlainText and HTML widgets)
+     * Explicit copy constructor
      */
     virtual void restoreDataFrom(const ChatView& other);
     
