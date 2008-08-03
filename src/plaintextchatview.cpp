@@ -8,7 +8,7 @@ __PlainTextChatView::__PlainTextChatView(QWidget *parent) : ChatView(parent), te
     layout->setSpacing(0);
 
     layout->addWidget(&textview);
-    
+
     setFocusPolicy(Qt::NoFocus);
     textview.setFocusPolicy(Qt::NoFocus);
 
@@ -97,4 +97,9 @@ void __PlainTextChatView::appendText(const QString &text) {
         scrollToBottom();
     else
         verticalScrollBar()->setValue(scrollbarValue);
+}
+
+
+QSize __PlainTextChatView::sizeHint() const {
+    return minimumSizeHint();
 }

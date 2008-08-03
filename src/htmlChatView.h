@@ -79,6 +79,7 @@ slots:
 
     //reimplemented
     void setVisible(bool visible);
+    QSize sizeHint() const;
     void clear();
     void scrollUp();
     void scrollDown();
@@ -110,7 +111,6 @@ slots:
 
     /** Creates html document with base href tag somewhere; themeVariant is without css suffix */ //TODO avoid creating document
     QString createEmptyDocument(QString baseHref, QString themeVariant);
-
 
 private:
     

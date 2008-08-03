@@ -67,12 +67,7 @@ public:
 
 
     //reimplemented
-
-
-    QSize sizeHint() const { //TODO
-        qDebug() << "sizeHint" << minimumSizeHint() << textview.minimumSizeHint();
-        return minimumSizeHint();
-    }
+    QSize sizeHint() const;
 
     /**
      * This function returns true if vertical scroll bar is 

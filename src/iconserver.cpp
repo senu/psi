@@ -7,7 +7,7 @@ class IconServer;
 void IconServer::registerIcon(const QString& name, QByteArray data) {
     dataMutex.lock();
 
-    qDebug() << "registerIcon()" << name << data.size();
+//    qDebug() << "registerIcon()" << name << data.size(); //TODO cv open r all
     dict.insert(name, data);
 
     dataMutex.unlock();

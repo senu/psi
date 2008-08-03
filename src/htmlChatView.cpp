@@ -18,20 +18,18 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* i
 
     layout->addWidget(&webView);
 
-    webView.setMinimumSize(100,100);
-    setMinimumSize(100,100);
-
-    qDebug() << webView.minimumSize() << webView.minimumSizeHint() << webView.size() << webView.sizeHint();
-        
     setLayout(layout);
     setFocusPolicy(Qt::NoFocus);
     webView.setFocusPolicy(Qt::NoFocus);
 
     networkManager = new NetworkAccessManager(0, iconServer);
     webView.page()->setNetworkAccessManager(networkManager);
-    
+
     webView.page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     webView.setContextMenuPolicy(Qt::NoContextMenu);
+
+    webView.setMinimumSize(100, 100);
+    setMinimumSize(100, 100);
 
     connect(webView.page(), SIGNAL(linkClicked(const QUrl&)), this, SLOT(onLinkClicked(const QUrl&)));
 
@@ -264,7 +262,7 @@ void HTMLChatView::scrollToTop() {
 
 
 void HTMLChatView::scrollUp() {
-    QWebFrame * frame = webView.page()->mainFrame(); 
+    QWebFrame * frame = webView.page()->mainFrame();
     frame->setScrollBarValue(Qt::Vertical, frame->scrollBarValue(Qt::Vertical) - 42); //TODO 42
 }
 
@@ -272,4 +270,9 @@ void HTMLChatView::scrollUp() {
 void HTMLChatView::scrollDown() {
     QWebFrame * frame = webView.page()->mainFrame();
     frame->setScrollBarValue(Qt::Vertical, frame->scrollBarValue(Qt::Vertical) + 42); //TODO 42
+}
+
+
+QSize HTMLChatView::sizeHint() const {
+    return minimumSizeHint();
 }
