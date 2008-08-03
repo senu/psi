@@ -78,6 +78,11 @@ QWidget *OptionsTabChat::widget()
 		tr("Makes Psi open chat windows in compact mode."));
 	QWhatsThis::add(d->ck_tabChats,
 		tr("Makes Psi open chats in a tabbed window."));
+	QWhatsThis::add(d->ck_autoResize, 
+		tr("Makes Psi resize message composer if needed."));
+	QWhatsThis::add(d->ck_useXHTMLComposer, 
+		tr("Makes Psi use XHTML-IM composer to create messages."));
+    
 	QString s = tr("<P>Controls how long the chat log will be kept in memory after the"
 		" chat window is closed.</P>");
 	QWhatsThis::add(d->rb_delChatsClose, s +
@@ -88,6 +93,7 @@ QWidget *OptionsTabChat::widget()
 		tr("<P>This option keeps the chat log for 1 day before deleting it.</P>"));
 	QWhatsThis::add(d->rb_delChatsNever, s +
 		tr("<P>This options keeps the chat log forever.</P>"));
+    
 
 	return w;
 }
@@ -146,6 +152,7 @@ void OptionsTabChat::applyOptions()
 	}
 	
 	PsiOptions::instance()->setOption("options.ui.chat.use-expanding-line-edit", d->ck_autoResize->isChecked());
+	PsiOptions::instance()->setOption("options.ui.chat.use-xhtml-composer", d->ck_useXHTMLComposer->isChecked());
 	
 	// Soft return.
 	// Only update this if the value actually changed, or else custom presets
@@ -176,7 +183,8 @@ void OptionsTabChat::restoreOptions()
 	d->ck_smallChats->setChecked( PsiOptions::instance()->getOption("options.ui.chat.use-small-chats").toBool() );
 	d->ck_tabChats->setChecked( PsiOptions::instance()->getOption("options.ui.tabs.use-tabs").toBool() );
 	QString tabGrouping = PsiOptions::instance()->getOption("options.ui.tabs.grouping").toString();
-	bool custom = false;
+
+    bool custom = false;
 	if (tabGrouping == "C") {
 		d->cb_tabGrouping->setCurrentIndex(0);
 	} else if (tabGrouping == "M") {
@@ -193,11 +201,15 @@ void OptionsTabChat::restoreOptions()
 		}
 		custom = true;
 	}
-	if (!custom && d->cb_tabGrouping->count() == 5) {
+	
+    if (!custom && d->cb_tabGrouping->count() == 5) {
 		d->cb_tabGrouping->removeItem(4);
 	}
+    
 	d->ck_autoResize->setChecked( PsiOptions::instance()->getOption("options.ui.chat.use-expanding-line-edit").toBool() );
-	QString delafter = PsiOptions::instance()->getOption("options.ui.chat.delete-contents-after").toString();
+	d->ck_useXHTMLComposer->setChecked( PsiOptions::instance()->getOption("options.ui.chat.use-xhtml-composer").toBool() );
+	
+    QString delafter = PsiOptions::instance()->getOption("options.ui.chat.delete-contents-after").toString();
 	if (delafter == "instant") {
 		d->rb_delChatsClose->setChecked(true);
 	} else if (delafter == "hour") {
@@ -207,5 +219,6 @@ void OptionsTabChat::restoreOptions()
 	} else if (delafter == "never") {
 		d->rb_delChatsNever->setChecked(true);
 	}
-	d->ck_chatSoftReturn->setChecked(ShortcutManager::instance()->shortcuts("chat.send").contains(QKeySequence(Qt::Key_Return)));
+
+    d->ck_chatSoftReturn->setChecked(ShortcutManager::instance()->shortcuts("chat.send").contains(QKeySequence(Qt::Key_Return)));
 }

@@ -12,7 +12,7 @@ HTMLChatEdit::HTMLChatEdit(QWidget* parent)
 
     initActions();
 
-    setText("Lorem ipsum costam costam i jeszcze cos tam costam.");
+//    setText("Lorem ipsum costam costam i jeszcze cos tam costam."); //TODO remove
 
     connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(changeAlignButtons()));
     connect(this, SIGNAL(currentCharFormatChanged(const QTextCharFormat&)),

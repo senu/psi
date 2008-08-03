@@ -5,19 +5,28 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>346</width>
-    <height>421</height>
+    <width>432</width>
+    <height>459</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>OptChatUI</string>
   </property>
   <layout class="QVBoxLayout" >
-   <property name="margin" >
-    <number>9</number>
-   </property>
    <property name="spacing" >
     <number>6</number>
+   </property>
+   <property name="leftMargin" >
+    <number>9</number>
+   </property>
+   <property name="topMargin" >
+    <number>9</number>
+   </property>
+   <property name="rightMargin" >
+    <number>9</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>9</number>
    </property>
    <item>
     <widget class="QCheckBox" name="ck_chatSoftReturn" >
@@ -49,18 +58,25 @@
    </item>
    <item>
     <layout class="QHBoxLayout" >
-     <property name="margin" >
-      <number>0</number>
-     </property>
      <property name="spacing" >
       <number>6</number>
+     </property>
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
      </property>
      <item>
       <widget class="QCheckBox" name="ck_tabChats" >
        <property name="sizePolicy" >
-        <sizepolicy>
-         <hsizetype>0</hsizetype>
-         <vsizetype>0</vsizetype>
+        <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -122,16 +138,32 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="ck_useXHTMLComposer" >
+     <property name="text" >
+      <string>Use Rich Text message composer</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="groupBox18" >
      <property name="title" >
       <string>Default Action</string>
      </property>
      <layout class="QHBoxLayout" >
-      <property name="margin" >
-       <number>9</number>
-      </property>
       <property name="spacing" >
        <number>6</number>
+      </property>
+      <property name="leftMargin" >
+       <number>9</number>
+      </property>
+      <property name="topMargin" >
+       <number>9</number>
+      </property>
+      <property name="rightMargin" >
+       <number>9</number>
+      </property>
+      <property name="bottomMargin" >
+       <number>9</number>
       </property>
       <item>
        <widget class="QRadioButton" name="rb_defActMsg" >
@@ -156,11 +188,20 @@
       <string>Delete chat window contents</string>
      </property>
      <layout class="QVBoxLayout" >
-      <property name="margin" >
-       <number>10</number>
-      </property>
       <property name="spacing" >
        <number>6</number>
+      </property>
+      <property name="leftMargin" >
+       <number>10</number>
+      </property>
+      <property name="topMargin" >
+       <number>10</number>
+      </property>
+      <property name="rightMargin" >
+       <number>10</number>
+      </property>
+      <property name="bottomMargin" >
+       <number>10</number>
       </property>
       <item>
        <widget class="QRadioButton" name="rb_delChatsClose" >

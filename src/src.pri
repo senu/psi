@@ -252,6 +252,8 @@ HEADERS += \
 	$$PWD/htmlchatedit.h\
 	$$PWD/addurldlg.h\
 	$$PWD/eventview.h\
+	$$PWD/lineedit.h\
+	$$PWD/genericlineedit.h\
 
 
 # Source files
@@ -397,6 +399,8 @@ SOURCES += \
 	$$PWD/htmlchatedit.cpp\
 	$$PWD/addurldlg.cpp\
 	$$PWD/eventview.cpp\
+	$$PWD/lineedit.cpp\
+	$$PWD/genericlineedit.cpp\
 
 
 whiteboarding {

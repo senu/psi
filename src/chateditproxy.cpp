@@ -25,6 +25,7 @@
 #include "msgmle.h"
 #include "psioptions.h"
 #include "htmlchatedit.h"
+#include "lineedit.h"
 
 ChatEditProxy::ChatEditProxy(QWidget* parent)
 	: QWidget(parent)
@@ -64,7 +65,7 @@ void ChatEditProxy::setLineEditEnabled(bool enable)
 ChatEdit* ChatEditProxy::createTextEdit()
 {
     if (lineEditEnabled()) {
-		return new LineEdit(this);
+		return new PlainLineEdit(this); //TODO
     }
 
 	return new HTMLChatEdit(this); 
@@ -111,7 +112,9 @@ void ChatEditProxy::updateLayout()
 	delete textEdit_;
 	textEdit_ = newEdit;
     formatToolBar = newEdit->toolBar();
-    layout_->addWidget(formatToolBar); //TODO ctso deleting toolbar
+    if(formatToolBar) {
+        layout_->addWidget(formatToolBar); //TODO ctso deleting toolbar
+    }
 	layout_->addWidget(textEdit_);
 	emit textEditCreated(textEdit_);
 }

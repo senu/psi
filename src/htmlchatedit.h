@@ -101,27 +101,5 @@ protected:
 
 };
 
-class LineEdit : public HTMLChatEdit { //TODO
-
-    Q_OBJECT
-public:
-    LineEdit(QWidget* parent);
-    ~LineEdit();
-
-    // reimplemented
-    QSize minimumSizeHint() const;
-    QSize sizeHint() const;
-
-protected:
-    // reimplemented
-    void resizeEvent(QResizeEvent*);
-
-    private
-slots:
-    void recalculateSize();
-    void updateScrollBar();
-};
-
-
 #endif
 
