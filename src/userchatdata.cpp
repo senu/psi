@@ -1,5 +1,5 @@
 #include <QHash>
-#include "userchatevent.h"
+#include "userchatdata.h"
 
 
 void UserChatData::setNick(QString nick) {

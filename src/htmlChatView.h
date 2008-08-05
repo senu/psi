@@ -36,7 +36,7 @@ public:
     ~HTMLChatView();
 
     /** Sets theme (if needed) */
-    void setTheme(HTMLChatTheme theme);
+    void setTheme(const HTMLChatTheme& theme);
 
     /** Only in dev version; (only for loading JavaScript file); path to theme/ dir */
     QString themePath;

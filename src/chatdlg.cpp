@@ -81,7 +81,7 @@
 #include "moodchatevent.h"
 #include "esystemchatevent.h"
 #include "fileTransferChatEvent.h"
-#include "userchatevent.h"
+#include "userchatdata.h"
 #include "ui_about.h"
 #include "chatdlg.h"
 

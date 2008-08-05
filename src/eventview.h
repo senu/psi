@@ -30,6 +30,10 @@ public:
      * Used in quote-reply 
      */
     QString getHtml(); //TODO 21 return only <body/>
+
+    /** Scrolls to top of the view */
+    void scrollToTop();
+    
     
 protected:    
     NetworkAccessManager *networkManager;

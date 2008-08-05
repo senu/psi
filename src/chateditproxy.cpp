@@ -70,6 +70,8 @@ ChatEdit* ChatEditProxy::createTextEdit()
  * Moves the QTextDocument and QTextCursor data from \a oldTextEdit
  * to \a newTextEdit.
  *
+ * Resets text format if newEdit is an instance of PlainTextChatEdit.
+ *
  * NB: Make sure that all QSyntaxHighlighters are detached prior to calling
  * this function.
  */
@@ -83,6 +85,14 @@ void ChatEditProxy::moveData(QTextEdit* newTextEdit, QTextEdit* oldTextEdit) con
 
 	newTextEdit->setDocument(doc);
 	newTextEdit->setTextCursor(cursor);
+
+    if (!htmlEditEnabled) { //reset text formattings in plain mode
+        cursor = newTextEdit->textCursor();
+        
+        cursor.select(QTextCursor::Document);
+        cursor.setCharFormat(QTextCharFormat());
+        cursor.setBlockFormat(QTextBlockFormat());
+    }
 }
 
 /**
@@ -102,7 +112,6 @@ void ChatEditProxy::updateLayout()
 		moveData(newEdit, textEdit_);
 
 		newEdit->setCheckSpelling(ChatEdit::checkSpellingGloballyEnabled());
-        //TODO 7 set text format to default in xhtml->plain
 	}
     
 	delete textEdit_;

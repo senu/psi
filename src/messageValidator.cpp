@@ -1,4 +1,3 @@
-
 #include <QtXml>
 
 #include "messageValidator.h"

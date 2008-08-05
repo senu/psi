@@ -26,3 +26,7 @@ void EventView::displayText(const QString& xhtmlText) {
 QString EventView::getHtml() {
     return page()->mainFrame()->toHtml();
 }
+
+void EventView::scrollToTop() {
+    page()->mainFrame()->setScrollBarValue(Qt::Vertical, page()->mainFrame()->scrollBarMinimum(Qt::Vertical));
+}

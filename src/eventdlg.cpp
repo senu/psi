@@ -2088,8 +2088,7 @@ void EventDlg::updateEvent(PsiEvent *e)
 		d->pb_deny->show();
 	}
 
-    //TODO 19
-//	d->mle->scrollToTop(); //qwer :/
+	view()->scrollToTop(); //qwer :/
 
 	if(d->lb_pgp)
 		d->lb_pgp->setPsiIcon( IconsetFactory::iconPtr(d->enc ? "psi/cryptoYes" : "psi/cryptoNo") );

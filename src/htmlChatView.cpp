@@ -220,20 +220,20 @@ void HTMLChatView::setVisible(bool visible) {
 }
 
 
-void HTMLChatView::setTheme(HTMLChatTheme _theme) { //TODO 13 const&
+void HTMLChatView::setTheme(const HTMLChatTheme& theme_) {
 
-    qDebug() << "set theme " << _theme.baseHref();
+    qDebug() << "set theme " << theme_.baseHref();
 
     if (!isReady) {
         delete queuedTheme;
-        queuedTheme = new HTMLChatTheme(_theme);
-        qDebug() << "queued theme change" << _theme.baseHref();
+        queuedTheme = new HTMLChatTheme(theme_);
+        qDebug() << "queued theme change" << theme_.baseHref();
         return;
     }
 
-    if (_theme != theme) {
-        qDebug() << theme.baseHref() << _theme.baseHref() << theme.currentVariant() << _theme.currentVariant();
-        theme = _theme;
+    if (theme_ != theme) {
+        qDebug() << theme.baseHref() << theme_.baseHref() << theme.currentVariant() << theme_.currentVariant();
+        theme = theme_;
         isReady = false;
         webView.setHtml(createEmptyDocument(theme.baseHref(), theme.currentVariant()), theme.baseHref());
     }

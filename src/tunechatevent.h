@@ -4,7 +4,7 @@
 #include <Qt>
 #include <QString>
 
-#include "userchatevent.h"
+#include "userchatdata.h"
 #include "chatTheme.h"
 
 class ChatTheme;

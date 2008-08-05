@@ -1,15 +1,9 @@
-
-#include <string.h>
-
-
-#include "htmlChatTheme.h"
-
-
-#include "htmlChatPart.h"
-
+#include <cstring>
 #include <ctime>
 #include <QDir>
 
+#include "htmlChatTheme.h"
+#include "htmlChatPart.h"
 #include "htmlChatTheme.h"
 #include "htmlChatView.h"
 

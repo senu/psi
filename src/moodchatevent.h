@@ -6,7 +6,7 @@
 
 #include "chatEvent.h"
 #include "chatTheme.h"
-#include "userchatevent.h"
+#include "userchatdata.h"
 
 class ChatTheme;
 class AstractChatEvent;

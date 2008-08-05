@@ -5,8 +5,6 @@
 #include <QColor>
 #include "chatEvent.h"
 
-//TODO 91 rename file
-
 /**
  * Contains ChatEvent sender information (nick,jid,icon, ...) 
  *   
