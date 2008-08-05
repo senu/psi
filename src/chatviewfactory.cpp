@@ -27,7 +27,7 @@ ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,
         HTMLChatTheme theme(themeManager->getTheme(themeName, themeVariant));
 
         *isHTMLChatView = true;
-        HTMLChatView * view = new HTMLChatView(parent, theme, iconServer, ApplicationInfo::homeDir());\
+        HTMLChatView * view = new HTMLChatView(parent, theme, iconServer, ApplicationInfo::homeDir());
             
         QObject::connect(view, SIGNAL(openURL(QString)), URLObject::getInstance(), SIGNAL(openURL(QString)));
         

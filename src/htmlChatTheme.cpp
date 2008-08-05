@@ -37,8 +37,14 @@ void HTMLChatTheme::readTheme(QDir dir) {
 
     setBaseHref(dir.path() + "/");
 
-    incomingConsecutiveMessageTemplate.setContent(readFileContents(dir, "Incoming/NextContent.html"));
     incomingNextMessageTemplate.setContent(readFileContents(dir, "Incoming/Content.html"));
+
+    if (dir.exists("Incoming/NextContent.html")) {
+        incomingConsecutiveMessageTemplate.setContent(readFileContents(dir, "Incoming/NextContent.html"));
+    }
+    else {
+        incomingConsecutiveMessageTemplate.setContent(incomingNextMessageTemplate.content());
+    }
 
     // outgoing messages
     if (dir.exists("Outgoing/NextContent.html")) {

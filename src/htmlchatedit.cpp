@@ -417,7 +417,7 @@ QString HTMLChatEdit::xhtmlMessage() { //TODO 45 escape
     }
 
 
-    return "<body><div>" + msg + "</div></body>";
+    return "<body><span>" + msg + "</span></body>";
 }
 
 

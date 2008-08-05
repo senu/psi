@@ -4,6 +4,7 @@
 #include <QWebView>
 #include "networkaccessmanager.h"
 
+
 /**
  * Webkit-based event viewer (used in EventDlg).
  * 
@@ -12,11 +13,12 @@
  * It also has icon:// URL support
  */
 class EventView : public QWebView {
+    Q_OBJECT
 
 public:
     /** IconServer will be used to display icons:// */
     EventView(QWidget* parent, IconServer* iconServer);
-    
+
     /** 
      * Displays xhtmlText.
      *
@@ -27,15 +29,25 @@ public:
     /**
      * Returns XHTML source of displayed event.
      *
-     * Used in quote-reply 
+     * Used in quote-reply.
+     * Returns underlaying document (<html>...</html>)
      */
-    QString getHtml(); //TODO 21 return only <body/>
+    QString getHtml();
 
     /** Scrolls to top of the view */
     void scrollToTop();
+
+signals:
+
+    /** Emitted when user click on URL */
+    void openURL(QString);
+
+private slots:
     
-    
-protected:    
+    /** Emits openURL() */
+    void onLinkClicked(const QUrl& url);
+
+protected:
     NetworkAccessManager *networkManager;
 
 };

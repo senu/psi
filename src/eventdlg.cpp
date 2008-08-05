@@ -74,8 +74,9 @@
 #include "xdata_widget.h"
 #include "desktoputil.h"
 #include "htmlchatedit.h"
+#include "urlobject.h"
 
-//TODO 16 plain even view
+//TODO 16 plain event view
 //TODO 17 html escaping ctso
 
 static QString findJid(const QString &s, int x, int *p1, int *p2)
@@ -862,7 +863,7 @@ void EventDlg::init()
 
 	// text area
     if (d->composing) {
-        d->editor = new HTMLChatEdit(this); //qwer TODO
+        d->editor = new HTMLChatEdit(this); //qwer 
 
         //formatting toolbar
         if (editor()->toolBar()) {
@@ -871,6 +872,8 @@ void EventDlg::init()
     }
     else {
     	d->view = new EventView(this, d->pa->iconServer()); //qwer
+        
+        connect(view(), SIGNAL(openURL(QString)), URLObject::getInstance(), SIGNAL(openURL(QString)));
         
 //        d->mle->setReadOnly(true); //qwer plain only
 //		d->mle->setUndoRedoEnabled(false);

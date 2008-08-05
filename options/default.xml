@@ -318,6 +318,12 @@
 				<group-state comment="Saved state data of the tabsets defined by options.ui.tabs.grouping"/>
 				<tab-singles type="QString" comment="Tab types that would have been untabbed are given their own tabset. 'C' for chat and 'M' for mucs"/>
 			</tabs>
+			<themes>
+				<htmlviewinchats comment="Use HTMLChatView in ChatDlg" type="bool" >true</htmlviewinchats>
+				<htmlviewinmuc comment="Use HTMLChatView in GCMainDlg" type="bool" >true</htmlviewinmuc>
+				<themename comment="Currently used theme name" type="QString" >Simples</themename>
+				<variantname comment="Currently used theme variant name" type="QString" >Simples</variantname>
+			</themes>
 		</ui>
 		<shortcuts comment="Shortcuts">
 			<chat comment="Shortcuts in the chat dialog">

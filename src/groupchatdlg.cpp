@@ -18,6 +18,9 @@
  *
  */
 
+#include "chatView.h"
+
+
 #include "groupchatdlg.h"
 
 
@@ -86,6 +89,8 @@
 #ifdef Q_WS_WIN
 #include <windows.h>
 #endif
+
+class GenericChatDialog;
 
 //----------------------------------------------------------------------------
 // GCMainDlg
@@ -1310,7 +1315,7 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
 
 	who = m.from().resource(); 
     
-    if (d->trackBar && m.from().resource() != d->self && !m.spooled()) {
+    if (d->trackBar && !local && !m.spooled()) {
 	 	d->doTrackBar();
     }
   
@@ -1326,8 +1331,17 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
     QString txt = messageTextGC(m);
 
 	if (isEmoteMessageGC(m)) {
-        //TODO 33 emote
-//		chatView()->appendText(QString("<font color=\"%1\">").arg(nickcolor) + QString("[%1]").arg(timestr) + QString(" *%1 ").arg(Qt::escape(who)) + alerttagso + txt + alerttagsc + "</font>");
+        EmoteChatEvent * event = new EmoteChatEvent();
+
+        event->setNick(Qt::escape(who));
+        event->setTimeStamp(m.timeStamp());
+        event->setLocal(local);
+        event->setSpooled(m.spooled());
+        event->setService("Jabber");
+        event->setMessage(txt); //TODO 35 escape 2x
+        
+        chatView()->appendEvent(event);
+        updateLastMsgTimeAndOwner(m.timeStamp(), Other); 
 	}
 	else {
 
@@ -1335,12 +1349,11 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
 
         msg->setNick(Qt::escape(who));
         msg->setTimeStamp(m.timeStamp());
-        msg->setLocal(m.from().resource() == d->self);
-        msg->setConsecutive(false); //TODO 34
+        msg->setLocal(local);
+        msg->setConsecutive(doConsecutiveMessage(m.timeStamp(), local));
         msg->setSpooled(m.spooled());
         msg->setService("Jabber");
         msg->setBody(txt); //TODO 35 escape
-
 
         //TODO 36 images and icons
 
