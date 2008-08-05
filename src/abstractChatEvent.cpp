@@ -1,13 +1,17 @@
 #include "abstractChatEvent.h"
 
 
+AbstractChatEvent::AbstractChatEvent() : timeStamp_(QDateTime::currentDateTime()) {
+}
+
+
 QDateTime AbstractChatEvent::timeStamp() const {
-    return _timeStamp;
+    return timeStamp_;
 }
 
 
 void AbstractChatEvent::setTimeStamp(QDateTime timeStamp) {
-    _timeStamp = timeStamp;
+    timeStamp_ = timeStamp;
 }
 
 

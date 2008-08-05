@@ -23,7 +23,7 @@ QString GenericChatDialog::messageTextGC(const XMPP::Message& m) {
     qDebug() << "message text containsHTML" << m.containsHTML() << m.body() << m.html().toString("notb3") << "EOF";
 
     if (m.containsHTML() && PsiOptions::instance()->getOption("options.html.chat.render").toBool() && !m.html().text().isEmpty()) {
-        txt = m.html().toString("span"); //TODO remove /me if emote
+        txt = m.html().toString("span"); //TODO + 23 remove /me if emote
     }
     else {
         if (emote) {
@@ -71,7 +71,7 @@ void GenericChatDialog::updateLastMsgTimeAndOwner(const QDateTime& t, LastEventO
     lastMsgTime = t;
     lastEventOwner = owner;
 
-    //TODO wv remove
+    //TODO 24 system chat evene - date changed
     /*
     bool doInsert = t.date() != lastMsgTime_.date();
     if (doInsert) {

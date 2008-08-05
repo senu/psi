@@ -29,7 +29,7 @@ public:
      *
      * Used in quote-reply 
      */
-    QString getHtml(); //TODO return only <body/>
+    QString getHtml(); //TODO 21 return only <body/>
     
 protected:    
     NetworkAccessManager *networkManager;

@@ -53,11 +53,11 @@ void ChatViewProxy::optionsChanged(const QString& optionName) {
         return;
     }
 
-    //TODO ? muc/chat/per group/per regexp settings
+    //TODO + 12 muc/chat/per group/per regexp settings
     if(isHTMLChatView) { //theme change?
         qDebug() << "themeChanged?" << PsiOptions::instance()->getOption("options.ui.themes.themename").toString();
         dynamic_cast<HTMLChatView *> (_chatView)->setTheme(themeManager->getTheme(
-            PsiOptions::instance()->getOption("options.ui.themes.themename").toString(), //TODO pointers
+            PsiOptions::instance()->getOption("options.ui.themes.themename").toString(), 
             PsiOptions::instance()->getOption("options.ui.themes.variantname").toString())); 
     }
 }

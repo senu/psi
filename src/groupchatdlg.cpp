@@ -144,7 +144,7 @@ private:
     }
 
 public slots:
-	void addEmoticon(const PsiIcon *icon) { //TODO cv change
+	void addEmoticon(const PsiIcon *icon) {
 		if ( !dlg->isActiveTab() ) {
 			return;
 		}
@@ -175,9 +175,10 @@ protected slots:
 	}
 
 public:
+    //TODO 25 move to generic chat dialog
 	bool internalFind(QString str, bool startFromBeginning = false)
 	{
-        /* TODO cv 
+        /* TODO 26 webkit implement - delegate 
 		if (startFromBeginning) {
 			QTextCursor cursor = te_log()->textCursor();
 			cursor.movePosition(QTextCursor::Start, QTextCursor::KeepAnchor);
@@ -195,7 +196,7 @@ public:
 
 		return true;
          */
-        return true; //TODO remove
+        return true;
 	}
 	
 private:
@@ -223,7 +224,7 @@ private:
 public:		
 	void doTrackBar()
 	{
-        /* TODO trackbar
+        /* TODO ? 27 trackbar
 		trackBar = false;
 
 		// save position, because our manipulations could change it
@@ -436,7 +437,7 @@ public:
 	}
 
 	bool eventFilter( QObject *obj, QEvent *ev ) {
-//		if (chatView()->handleCopyEvent(obj, ev, chatEdit())) //TODO cv
+//		if (chatView()->handleCopyEvent(obj, ev, chatEdit())) //TODO 28 cv
 //			return true;
 	
 		if ( obj == chatEdit() && ev->type() == QEvent::KeyPress ) {
@@ -515,7 +516,7 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager,
     chatInfo.destinationName = jid().bare();
     chatInfo.destinationDisplayName = jid().full();
     chatInfo.sourceName = account()->nick();
-    chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg"; //TODO images for channels?
+    chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg"; //TODO + 29 images for channels?
     chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";
     chatInfo.timeOpened = QDateTime::currentDateTime();
 
@@ -711,7 +712,7 @@ void GCMainDlg::logSelectionChanged()
 #ifdef Q_WS_MAC
 	// A hack to only give the message log focus when text is selected
 	if (ui_.log->hasSelectedText()) 
-		ui_.log->setFocus(); //TODO cv ctso
+		ui_.log->setFocus(); //TODO 30 and move it to gecd
 	else 
 		chatEdit()->setFocus();
 #endif
@@ -1224,7 +1225,7 @@ void GCMainDlg::message(const Message &_m)
 	}
 
     if(from.isEmpty()) {
-        appendChatEvent(new ExtendedSystemChatEvent(m.body(), SystemChatEvent::Other), alert); //TODO
+        appendChatEvent(new ExtendedSystemChatEvent(m.body()), alert); //TODO + 31 from is empty
     }
     else {
 		appendMessage(m, alert);
@@ -1253,7 +1254,6 @@ const QString& GCMainDlg::nick() const
 	return d->self;
 }
 
-//TODO
 void GCMainDlg::appendChatEvent(const ChatEvent* event, bool alert) {
     if (d->trackBar) {
 	 	d->doTrackBar();
@@ -1295,8 +1295,7 @@ QString GCMainDlg::getNickColor(QString nick)
         // -1%n == -1; (n-1)%n == n-1; (n+k)%n == k%n
 	}
 }
-#warning TODO!
-//TODO warning: void ChatDlg::appendMessage(const Message &m, bool local) {
+
 void GCMainDlg::appendMessage(const Message &m, bool alert)
 {
    
@@ -1307,21 +1306,17 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
     }
     
 	QString who;
-//        textcolor, nickcolor,  //TODO
+//        textcolor, nickcolor,  //TODO 32 nick coloring
 
-    //TODO in which way do we want highlighting
-    
 	who = m.from().resource(); 
     
     if (d->trackBar && m.from().resource() != d->self && !m.spooled()) {
 	 	d->doTrackBar();
     }
   
-    //TODO
 //	nickcolor = getNickColor(who);
 //	textcolor = ui_.log->palette().active().text().name();
    
-    //TODO
 //    if (m.spooled()) {
 //		nickcolor = "#008000";
 //  }
@@ -1331,7 +1326,7 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
     QString txt = messageTextGC(m);
 
 	if (isEmoteMessageGC(m)) {
-        //TODO cv
+        //TODO 33 emote
 //		chatView()->appendText(QString("<font color=\"%1\">").arg(nickcolor) + QString("[%1]").arg(timestr) + QString(" *%1 ").arg(Qt::escape(who)) + alerttagso + txt + alerttagsc + "</font>");
 	}
 	else {
@@ -1341,22 +1336,16 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
         msg->setNick(Qt::escape(who));
         msg->setTimeStamp(m.timeStamp());
         msg->setLocal(m.from().resource() == d->self);
-        msg->setConsecutive(false); //TODO
+        msg->setConsecutive(false); //TODO 34
         msg->setSpooled(m.spooled());
         msg->setService("Jabber");
-        msg->setBody(txt); //TODO escape?
+        msg->setBody(txt); //TODO 35 escape
+
+
+        //TODO 36 images and icons
 
         chatView()->appendMessage(msg);
         updateLastMsgTimeAndOwner(m.timeStamp(), local ? Outgoing : Incoming); 
-/*
-TODO        
-		if(PsiOptions::instance()->getOption("options.ui.chat.use-chat-says-style").toBool()) {
-            chatView()->appendText(QString("<font color=\"%1\">").arg(nickcolor) + QString("[%1] ").arg(timestr) + QString("%1 says:").arg(Qt::escape(who)) + "</font><br>" + QString("<font color=\"%1\">").arg(textcolor) + alerttagso + txt + alerttagsc + "</font>");
-		}
-		else {
-			chatView()->appendText(QString("<font color=\"%1\">").arg(nickcolor) + QString("[%1] &lt;").arg(timestr) + Qt::escape(who) + QString("&gt;</font> ") + QString("<font color=\"%1\">").arg(textcolor) + alerttagso + txt + alerttagsc +"</font>");
-		}
- */
 	}
 
     //if scroll down if it's our message
@@ -1408,12 +1397,12 @@ QString GCMainDlg::desiredCaption() const
 void GCMainDlg::setLooks()
 {
 	ui_.vsplitter->optionsChanged();
-	ui_.mle->optionsChanged(); //TODO cv ctso
+	ui_.mle->optionsChanged();
 
 	// update the fonts
 	QFont f;
 	f.fromString(PsiOptions::instance()->getOption("options.ui.look.font.chat").toString());
-	ui_.log->setFont(f); //TODO cv ctso
+	ui_.log->setFont(f); //TODO 37 plain theme
 	chatEdit()->setFont(f);
 
 	f.fromString(PsiOptions::instance()->getOption("options.ui.look.font.contactlist").toString());
@@ -1543,11 +1532,9 @@ void GCMainDlg::buildMenu()
 	d->act_icon->addTo( d->pm_settings );
 }
 
-void GCMainDlg::chatEditCreated()
+void GCMainDlg::chatEditCreated() //TODO 38 move to gecd
 {
-//	ui_.log->setDialog(this); //TODO cv
 	chatEdit()->setDialog(this);
-
 	chatEdit()->installEventFilter(d);
 }
 

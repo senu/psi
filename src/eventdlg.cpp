@@ -73,11 +73,10 @@
 #include "accountlabel.h"
 #include "xdata_widget.h"
 #include "desktoputil.h"
-
 #include "htmlchatedit.h"
 
-
-//TODO message validation
+//TODO 16 plain even view
+//TODO 17 html escaping ctso
 
 static QString findJid(const QString &s, int x, int *p1, int *p2)
 {
@@ -1067,7 +1066,7 @@ void EventDlg::accountUpdatedActivity()
 void EventDlg::displayText(const QString &text) //qwer !
 {
     //clear();
-	view()->displayText(text); //qwer TODO
+	view()->displayText(text); //qwer
 }
 
 void EventDlg::setSubject(const QString &s)
@@ -1451,7 +1450,7 @@ void EventDlg::keyPressEvent(QKeyEvent *e)
 void EventDlg::closeEvent(QCloseEvent *e)
 {
 	// really lame way of checking if we are encrypting
-    if(editor() && !editor()->isEnabled()) { //qwer !!! TODO 1
+    if(editor() && !editor()->isEnabled()) { //qwer !!!
 		return;
     }
     
@@ -1460,16 +1459,16 @@ void EventDlg::closeEvent(QCloseEvent *e)
 
 void EventDlg::doSend()
 {
-	if(!d->composing)
+	if (!d->composing)
 		return;
 
-	if(!d->pb_send->isEnabled())
+	if (!d->pb_send->isEnabled())
 		return;
 
-	if(!d->pa->checkConnected(this))
+	if (!d->pa->checkConnected(this))
 		return;
 
-	if(editor()->toHtml().isEmpty() && d->attachView->childCount() == 0) { //qwer TODO c non html
+	if (editor()->toHtml().isEmpty() && d->attachView->childCount() == 0) { //TODO 18 non html editor
 		QMessageBox::information(this, tr("Warning"), tr("Please type in a message first."));
 		return;
 	}
@@ -1513,7 +1512,7 @@ void EventDlg::doSend()
     
 	if(d->tb_pgp->isChecked()) {
 		d->le_to->setEnabled(false);
-		editor()->setEnabled(false); //qwer enc TODO1
+		editor()->setEnabled(false); //qwer enc
 		d->enc = true;
 		d->sendLeft = list;
 
@@ -1585,8 +1584,8 @@ void EventDlg::doQuote()
     Jid j(list[0]);
 
     //qwer psitextedit - getHtml()
-	QString body = TextUtil::rich2plain(view()->getHtml()); //qwer 3 TODO 
-	emit aReply(j, body, d->le_subj->text(), d->thread); //qwer TODO currently quote == inserting '>'
+	QString body = TextUtil::rich2plain(view()->getHtml()); //qwer 3 
+	emit aReply(j, body, d->le_subj->text(), d->thread); //qwer
 }
 
 void EventDlg::doDeny()
@@ -1919,10 +1918,10 @@ void EventDlg::updateEvent(PsiEvent *e)
         QString txt;
         
         if (m.containsHTML() && PsiOptions::instance()->getOption("options.html.chat.render").toBool() && !m.html().text().isEmpty()) {
-            txt = m.html().toString("span"); //TODO remove /me if emote
+            txt = m.html().toString("span"); 
         }
         else {
-            txt = "<span>" + TextUtil::plain2rich(m.body()) + "</span>"; //TODO remove span
+            txt = TextUtil::plain2rich(m.body()); //it's wrapped in <span>
         }
         
 		// show subject line if the incoming message has one
@@ -1944,7 +1943,6 @@ void EventDlg::updateEvent(PsiEvent *e)
 
         qDebug() << "event txt" << txt;
 
-        //qwer 2 - TODO p-u
 		displayText(txt); //qwer 2
 
 		d->le_subj->setText(m.subject());
@@ -2090,7 +2088,7 @@ void EventDlg::updateEvent(PsiEvent *e)
 		d->pb_deny->show();
 	}
 
-    //TODO
+    //TODO 19
 //	d->mle->scrollToTop(); //qwer :/
 
 	if(d->lb_pgp)
@@ -2167,7 +2165,7 @@ void EventDlg::trySendEncryptedNext()
 	d->transid = d->pa->sendMessageEncrypted(m);
 	if(d->transid == -1) {
 		d->le_to->setEnabled(true);
-		editor()->setEnabled(true); //qwer enc TODO1
+		editor()->setEnabled(true); //qwer enc 
 		editor()->setFocus();
 		return;
 	}
@@ -2190,7 +2188,7 @@ void EventDlg::encryptedMessageSent(int x, bool b, int e, const QString &dtext)
 
 		if(d->sendLeft.isEmpty()) {
 			d->le_to->setEnabled(true);
-			editor()->setEnabled(true); //qwer enc TODO1 
+			editor()->setEnabled(true); //qwer enc
 			doneSend();
 		}
 		else {
@@ -2203,7 +2201,7 @@ void EventDlg::encryptedMessageSent(int x, bool b, int e, const QString &dtext)
 	}
 
 	d->le_to->setEnabled(true);
-	editor()->setEnabled(true); //qwer enc TODO1
+	editor()->setEnabled(true); //qwer enc
 	editor()->setFocus();
 }
 
@@ -2220,7 +2218,7 @@ QWidget* EventDlg::editorOrView() const {
         return editor();
     }
     
-    return view(); //qwer TODO
+    return view(); //qwer
 }
 
 void EventDlg::setEditedText(const QString& text) {

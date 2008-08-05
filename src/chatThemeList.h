@@ -16,7 +16,7 @@ public:
 	
 protected:
 	/** Checks if themeFolder contains valid theme */
-	virtual bool validateTheme(QString themeFolder); //TODO implement it
+	virtual bool validateTheme(QString themeFolder);
 	
 	/** Generates theme name for theme in themeFolder */
 	virtual QString generateThemeName(QString themePath);

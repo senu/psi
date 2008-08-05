@@ -11,7 +11,7 @@ ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,
                                            QWidget* parent, bool* isHTMLChatView, 
                                            HTMLThemeManager* themeManager, 
                                            IconServer* iconServer) {
-    //TODO fallback 
+    //TODO 10 fallback 
     
     bool useHTMLView = PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool();
     

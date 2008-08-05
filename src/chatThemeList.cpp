@@ -24,7 +24,7 @@ QString ChatThemeList::generateThemeName(QString themeFolder) {
     if (!themeDict.contains(themeFolder))
         return themeFolder;
 
-    for (int i = 2; i <= 1 << 30; i++) { //TODO ask kev
+    for (int i = 2; i <= 1 << 30; i++) {
         if (!themeDict.contains(themeFolder + QString::number(i)))
             return themeFolder + QString::number(i);
     }

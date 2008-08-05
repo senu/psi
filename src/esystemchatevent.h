@@ -16,7 +16,7 @@ public:
      * type = Other
      */
     ExtendedSystemChatEvent(QString message);
-    
+
     /** 
      * Constructor that sets event text to message; 
      * timestamp = current date 
@@ -24,8 +24,13 @@ public:
      */
     ExtendedSystemChatEvent(QString message, SystemEventType type);
 
-    ExtendedSystemChatEvent()
-        : SystemChatEvent() {};//TODO cto
+    /** 
+     * Constructor.
+     * message - unset
+     * timestamp = current date 
+     * type = Other
+     */
+    ExtendedSystemChatEvent();
 
     /** Reimplemented */
     QString message() const;

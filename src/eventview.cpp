@@ -14,12 +14,12 @@ EventView::EventView(QWidget* parent, IconServer* iconServer) : QWebView(parent)
     
     page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     setContextMenuPolicy(Qt::NoContextMenu);
-    //TODO link clicked
+    //TODO 20 link clicked
     
 }
 
 void EventView::displayText(const QString& xhtmlText) {
-    QString xhtml("<html><body style=\"background-color:green\">%1</body></html>");
+    QString xhtml("<html><body style=\"background-color:green\">%1</body></html>"); //TODO 15 make it pretty
     setHtml(xhtml.arg(xhtmlText));
 }
 

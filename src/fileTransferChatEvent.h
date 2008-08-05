@@ -16,7 +16,7 @@ class FileTransferChatEvent : public ChatEvent {
 
 public:
 
-    //TODO aborted, finished! 
+    //TODO 22 finished! not implemented in psi
     enum FileTransferEventType {
 
         Initiated,

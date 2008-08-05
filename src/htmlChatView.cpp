@@ -6,7 +6,7 @@
 
 #include "htmlChatView.h"
 
-
+//TODO + 11 webkit sync/busy - queing appending messages
 HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* iconServer, QString _themePath)
 : ChatView(parent), themePath(_themePath), theme(_theme), isReady(false), queuedTheme(0) {
 
@@ -221,7 +221,7 @@ void HTMLChatView::setVisible(bool visible) {
 }
 
 
-void HTMLChatView::setTheme(HTMLChatTheme _theme) {
+void HTMLChatView::setTheme(HTMLChatTheme _theme) { //TODO 13 const&
 
     qDebug() << "set theme " << _theme.baseHref();
 

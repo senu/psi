@@ -13,6 +13,9 @@ class ChatTheme;
 class AbstractChatEvent {
 
 public:
+    /** Default constructor sets timeStamp to currentDate */
+    AbstractChatEvent(); 
+    
     /** Returns true if it's MessageChatEvent */
     virtual bool isMessageChatEvent() const;
 
@@ -24,7 +27,7 @@ public:
 
 protected:
 
-    QDateTime _timeStamp;
+    QDateTime timeStamp_;
 
 };
 

@@ -17,7 +17,7 @@ QDomNode DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& 
         output = TextUtil::legacyFormat(output);
     }
 
-    //TODO it would be nice to have html template that handles highlighting
+    //TODO ? 14 it would be nice to have html template that handles highlighting
     if (doHighlighting_) {
         output = "<strong>" + output + "</strong>";
     }

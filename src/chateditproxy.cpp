@@ -102,16 +102,18 @@ void ChatEditProxy::updateLayout()
 		moveData(newEdit, textEdit_);
 
 		newEdit->setCheckSpelling(ChatEdit::checkSpellingGloballyEnabled());
-        //TODO set text format to default in xhtml->plain
+        //TODO 7 set text format to default in xhtml->plain
 	}
     
 	delete textEdit_;
 	textEdit_ = newEdit;
     formatToolBar = newEdit->toolBar();
+    
     if(formatToolBar) {
-        layout_->addWidget(formatToolBar); //TODO ctso deleting toolbar
+        layout_->addWidget(formatToolBar);
     }
-	layout_->addWidget(textEdit_);
+	
+    layout_->addWidget(textEdit_);
 	emit textEditCreated(textEdit_);
 }
 
@@ -127,7 +129,7 @@ void ChatEditProxy::optionsChanged()
     
 	lineEditEnabled = PsiOptions::instance()->getOption("options.ui.chat.use-expanding-line-edit").toBool();
 	htmlEditEnabled = PsiOptions::instance()->getOption("options.ui.chat.use-xhtml-composer").toBool();
-    //TODO ? I would like to have PsiOptions::transactionCommited(QStringList optionsChanged) - 
+    //TODO ? 8 I would like to have PsiOptions::transactionCommited(QStringList optionsChanged) - 
     //if user changes two options, it will create one redundant ChatEdit
 
     if (wasLineEdit == lineEditEnabled && wasHTMLEdit == htmlEditEnabled) { //unchanged

@@ -10,9 +10,6 @@
 
 class ChatEvent;
 
-//TODO chatView.isReady()/signal
-
-
 /** Abstract ChatView widget */
 class ChatView : public QWidget {
 

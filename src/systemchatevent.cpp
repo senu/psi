@@ -14,14 +14,12 @@ void SystemChatEvent::setType(SystemChatEvent::SystemEventType type) {
 
 SystemChatEvent::SystemChatEvent(SystemChatEvent::SystemEventType type)
 : type_(type) {
-    _timeStamp = QDateTime::currentDateTime();
 }
 
 
 SystemChatEvent::SystemChatEvent()
 : type_(SystemChatEvent::Other) {
 
-    _timeStamp = QDateTime::currentDateTime();
 }
 
 

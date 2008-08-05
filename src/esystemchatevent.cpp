@@ -14,6 +14,10 @@ ExtendedSystemChatEvent::ExtendedSystemChatEvent(QString message, SystemEventTyp
 }
 
 
+ExtendedSystemChatEvent::ExtendedSystemChatEvent() : SystemChatEvent() {
+};
+
+
 QString ExtendedSystemChatEvent::message() const {
     return message_;
 }

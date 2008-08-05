@@ -129,15 +129,6 @@ void ChatDlg::init() {
     initActions();
     setShortcuts();
 
-//    Message m(jid()); //TODO segfaulting code
-//  qDebug() << m.html().toString(); 
-
-    // TODO: this have to be moved to chatEditCreated()
-    chatEdit()->setDialog(this);
-
-    chatEdit()->installEventFilter(this);
-    connect(chatView(), SIGNAL(selectionChanged()), SLOT(logSelectionChanged()));
-
     // SyntaxHighlighters modify the QTextEdit in a QTimer::singleShot(0, ...) call
     // so we need to install our hooks after it fired for the first time
     QTimer::singleShot(10, this, SLOT(initComposing()));
@@ -328,7 +319,7 @@ void ChatDlg::showEvent(QShowEvent *) {
 
 void ChatDlg::logSelectionChanged() {
 #ifdef Q_WS_MAC
-    //TODO wv
+    //TODO 1
     /*
     // A hack to only give the message log focus when text is selected
     if (chatView()->hasSelectedText()) {
@@ -461,11 +452,10 @@ void ChatDlg::updateContact(const Jid &j, bool fromPresence) {
             updatePGP();
 
             if (fromPresence && statusChanged) {
-                StatusChatEvent * event = new StatusChatEvent(); //TODO timestamp in ctor
+                StatusChatEvent * event = new StatusChatEvent(); 
                 fillEventWithUserInfo(event, userStatus.userListItem->jid().full());
                 event->setSpooled(false);
                 event->type = statusToChatViewStatus(status_);
-                //TODO escape?
 
                 if (!statusString_.isEmpty()) {
                     QString ss = TextUtil::linkify(TextUtil::plain2rich(statusString_));
@@ -475,7 +465,7 @@ void ChatDlg::updateContact(const Jid &j, bool fromPresence) {
                     if (PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool()) {
                         ss = TextUtil::legacyFormat(ss);
                     }
-                    event->setStatusMessage(ss);
+                    event->setStatusMessage(ss); //TODO 2 escape
                 }
                 appendChatEvent(event);
             }
@@ -674,20 +664,20 @@ void ChatDlg::doSend() {
     Message m(jid());
     
     m.setType("chat");
-    m.setBody(chatEdit()->messageBody(false)); //TODO body and html
+    m.setBody(chatEdit()->messageBody(false)); //TODO 3 inspect escaping 
     
     QString richBody(chatEdit()->messageBody(true)); //xhtml-im 
     if(!richBody.isNull()) {
         QDomDocument richDoc;
         richDoc.setContent(richBody);
-        m.setHTML(HTMLElement(richDoc.firstChild().toElement())); //TODO body and html
-        qDebug() << "do send: rich content" << richBody << "m:" << m.containsHTML() << m.html().toString("notb");
+        m.setHTML(HTMLElement(richDoc.firstChild().toElement()));
+//        qDebug() << "do send: rich content" << richBody << "m:" << m.containsHTML() << m.html().toString("notb"); //TODO 0
     }
     
     m.setTimeStamp(QDateTime::currentDateTime());
     
     if (isEncryptionEnabled()) {
-        m.setWasEncrypted(true); //TODO xhtml-im encryption ctso
+        m.setWasEncrypted(true); //TODO 4 xhtml-im encryption ctso
     }
     
     m_ = m;
@@ -994,7 +984,7 @@ bool ChatDlg::eventFilter(QObject *obj, QEvent *event) {
             return true;
     }
 
-    //TODO wv int
+    //TODO 5 
     //if (chatView()->handleCopyEvent(obj, event, chatEdit()))
     //  return true;
 
@@ -1059,11 +1049,13 @@ void ChatDlg::nicksChanged() {
 
 
 void ChatDlg::chatEditCreated() {
+    
     chatEdit()->setDialog(this);
+    chatEdit()->installEventFilter(this);
+    
+    connect(chatView(), SIGNAL(selectionChanged()), SLOT(logSelectionChanged()));
 
     if (highlightersInstalled_) {
-
-
         connect(chatEdit(), SIGNAL(textChanged()), this, SLOT(setComposing()));
     }
 }
