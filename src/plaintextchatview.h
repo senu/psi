@@ -19,7 +19,7 @@ class ChatEdit;
 
 
 /** used only in chatdlg */
-class __PlainTextChatView : public ChatView {
+class __PlainTextChatView : public ChatView { //TODO 75 rename
 
     Q_OBJECT
 public:
@@ -31,10 +31,6 @@ public:
 
     __PlainTextChatView(QWidget *parent);
 
-
-    //TODO remove/change this
-
-
     /**
      * Handle KeyPress events that happen in ChatEdit widget. This is used
      * to 'fix' the copy shortcut.
@@ -42,7 +38,7 @@ public:
      * \param event received event
      * \param chatEdit pointer to the dialog's ChatEdit widget that receives user input
      */
-    bool handleCopyEvent(QObject *object, QEvent *event, ChatEdit *chatEdit) {
+    bool handleCopyEvent(QObject *object, QEvent *event, ChatEdit *chatEdit) { //TODO 76 
         if (object == chatEdit && event->type() == QEvent::KeyPress) {
             QKeyEvent *e = (QKeyEvent *) event;
             if ((e->key() == Qt::Key_C && (e->modifiers() & Qt::ControlModifier)) ||

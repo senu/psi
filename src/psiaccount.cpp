@@ -2254,7 +2254,7 @@ void PsiAccount::client_incomingFileTransfer()
 	fe->setTimeStamp(QDateTime::currentDateTime());
 	handleEvent(fe, IncomingStanza);
 
-    //TODO i could notify chat dialogs here not in handle event
+    //TODO + 77 i could notify chat dialogs here not in handle event
 }
 
 void PsiAccount::client_rejectedFileTransfer(const QString& fileName, const Jid& jid) {
@@ -2808,7 +2808,7 @@ void PsiAccount::itemRetracted(const Jid& j, const QString& n, const PubSubRetra
 	}
 	else if (n == "http://jabber.org/protocol/mood") {
 		foreach(UserListItem* u, findRelevant(j)) {
-			u->setMood(Mood()); //TODO chatview: log canceled mood?
+			u->setMood(Mood()); //TODO ? 78 chatview: log canceled mood?
 			cpUpdate(*u);
 		}
 	}
@@ -2862,7 +2862,7 @@ void PsiAccount::itemPublished(const Jid& j, const QString& n, const PubSubItem&
 			u->setTune(tuneStr);
 			cpUpdate(*u);
 		}
-        emit tunePublished(tune, j); //TODO only title and artist are set!
+        emit tunePublished(tune, j); //TODO ? 79 only title and artist are set!
 	}
 	else if (n == "http://jabber.org/protocol/mood") {
 		Mood mood(item.payload());

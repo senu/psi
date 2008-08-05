@@ -12,7 +12,7 @@ class ChatTheme;
 class AstractChatEvent;
 
 /** Status + status message ChatEvent */
-class StatusChatEvent : public ChatEvent, public UserChatData //TODO chatview dont display nicks 
+class StatusChatEvent : public ChatEvent, public UserChatData
 {
   public:	
 	enum StatusEventType {

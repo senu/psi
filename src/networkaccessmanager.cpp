@@ -12,7 +12,7 @@ NetworkAccessManager::NetworkAccessManager(QObject *parent, IconServer* iconServ
 : QNetworkAccessManager(parent), iconServer(iconServer_) {
 
 
-    foreach(QString iconName, IconsetFactory::icons()) { //TODO
+    foreach(QString iconName, IconsetFactory::icons()) { //TODO 68
         if (!iconName.isEmpty()) {
             iconServer->registerIcon(iconName, IconServer::pixmapToPng(IconsetFactory::iconPixmap(iconName)));
         }
@@ -42,9 +42,9 @@ QNetworkReply * NetworkAccessManager::createRequest(Operation op, const QNetwork
 
     QNetworkReply * reply = QNetworkAccessManager::createRequest(op, req2, outgoingData);
     connect(reply, SIGNAL(finished()), SLOT(callFinished()));
-//    reply->setError(QNetworkReply::ContentAccessDenied, "Access denied"); //TODO
+//    reply->setError(QNetworkReply::ContentAccessDenied, "Access denied"); //TODO 69
     
-    return reply; //TODO ctso
+    return reply;
 }
 
 

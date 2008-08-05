@@ -41,7 +41,7 @@ public:
     void replaceSenderColorKeyword(const QColor& userColor);
 
     /** Escapes string */
-    static QString escapeString(QString string); //TODO unused
+    static QString escapeString(QString string); //TODO 47 unused
 
     /** Creates "short time" string (%shortTime%) */
     static QString createShortTime(const QDateTime& time);
@@ -56,7 +56,7 @@ private:
     /** Part body */
     QString content;
 
-    /** Message body (%message%) */ //TODO create new class (footer/header/event and message)
+    /** Message body (%message%) */ 
     QString _messageBody;
 
     /** Returns formated time, eg for %timeOpened{X}% */

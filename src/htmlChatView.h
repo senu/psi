@@ -109,7 +109,7 @@ slots:
     /** Emits openURL() */
     void onLinkClicked(const QUrl& url);
 
-    /** Creates html document with base href tag somewhere; themeVariant is without css suffix */ //TODO avoid creating document
+    /** Creates html document with base href tag somewhere; themeVariant is without css suffix */ 
     QString createEmptyDocument(QString baseHref, QString themeVariant);
 
 private:
@@ -132,7 +132,6 @@ private:
     /** ChatView is ready to: change theme, append events (after onInitDouemtet finished) */
     bool isReady;
 
-    //TODO queued actions (things we got while webkit was initializatin empty chat)
     /** Theme changed */
     HTMLChatTheme* queuedTheme;
 

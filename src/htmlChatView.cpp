@@ -37,8 +37,7 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* i
 
 
 void HTMLChatView::clear() {
-    //clears Chat div
-    //TODO wait
+    //TODO 58 wait
     appendedEvents.clear();
     evaluateJS("psi_clearMessages()");
 }
@@ -56,13 +55,13 @@ void HTMLChatView::init() {
 
 
 void HTMLChatView::onEmptyDocumentLoaded(bool ok) {
-    if (!ok) { //TODO CTRM eg. when we delete this object
+    if (!ok) { //TODO 59 CTRM eg. when we delete this object
         qDebug() << "ERROR 3";
-        exit(1); //TODO
+        exit(1);
     }
 
-    HTMLChatPart header = theme.headerTemplate.createFreshHTMLPart();
-    HTMLChatPart footer = theme.footerTemplate.createFreshHTMLPart();
+    HTMLChatPart header = theme.headerTemplate().createFreshHTMLPart();
+    HTMLChatPart footer = theme.footerTemplate().createFreshHTMLPart();
 
 
     theme.fillPartWithThemeKeywords(header, chatInfo());
@@ -263,13 +262,13 @@ void HTMLChatView::scrollToTop() {
 
 void HTMLChatView::scrollUp() {
     QWebFrame * frame = webView.page()->mainFrame();
-    frame->setScrollBarValue(Qt::Vertical, frame->scrollBarValue(Qt::Vertical) - 42); //TODO 42
+    frame->setScrollBarValue(Qt::Vertical, frame->scrollBarValue(Qt::Vertical) - 42); //TODO 60 - pagestep 2x
 }
 
 
 void HTMLChatView::scrollDown() {
     QWebFrame * frame = webView.page()->mainFrame();
-    frame->setScrollBarValue(Qt::Vertical, frame->scrollBarValue(Qt::Vertical) + 42); //TODO 42
+    frame->setScrollBarValue(Qt::Vertical, frame->scrollBarValue(Qt::Vertical) + 42); //
 }
 
 

@@ -5,8 +5,7 @@
 #include <QColor>
 #include "chatEvent.h"
 
-//TODO rename file
-
+//TODO 91 rename file
 
 /**
  * Contains ChatEvent sender information (nick,jid,icon, ...) 
@@ -25,7 +24,7 @@ public:
     /** Is it our message? */
     bool isLocal() const;
 
-    /** Offline storage */ //TODO enum/ better name
+    /** Offline storage */ 
     bool isSpooled() const;
 
     void setJid(QString);

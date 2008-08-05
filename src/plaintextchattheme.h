@@ -30,7 +30,7 @@ public:
 
     PlainTextChatTheme();
     /** Reads theme from filesystem */
-    //    PlainTextChatTheme(QString path); //TODO theme options from psi options passed here
+    //    PlainTextChatTheme(QString path); //TODO 73 theme options from psi options passed here
 
     QString createIncomingMessagePart(const MessageChatEvent* event) const;
     QString createOutgoingMessagePart(const MessageChatEvent* event) const;
@@ -50,7 +50,7 @@ private:
     QString formatTimeStamp(const QDateTime &time) const;
 
     /** Returns color name based on message type*/
-    QString colorString(bool local, bool isSpooled) const; //TODO make it customizable
+    QString colorString(bool local, bool isSpooled) const; //TODO ? 74 make it customizable
 };
 
 #endif

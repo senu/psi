@@ -797,7 +797,7 @@ const QPixmap& IconsetFactory::emptyPixmap() const
     return *emptyPixmap_;
 }
 
-const QStringList IconsetFactory::icons_() const //TODO
+const QStringList IconsetFactory::icons_() const //TODO 89 ins
 {
     QStringList list;
 

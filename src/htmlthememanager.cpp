@@ -5,7 +5,7 @@
 HTMLThemeManager::HTMLThemeManager() {
 
     _themeList = new HTMLChatThemeList();
-    _themeList->readThemes(ApplicationInfo::homeDir()); //TODO decouple
+    _themeList->readThemes(ApplicationInfo::homeDir()); //TODO 61 move up decouple
 }
 
 
@@ -36,7 +36,7 @@ HTMLChatTheme HTMLThemeManager::getTheme(const QString& themeName, const QString
         }
 
         //cache miss
-        HTMLChatTheme theme(path); //TODO ? pointers/refs insead of copying
+        HTMLChatTheme theme(path);
         theme.setCurrentVariant(variant);
         _themeCache.insert(key, theme);
         return theme;

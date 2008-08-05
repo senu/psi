@@ -49,7 +49,13 @@ public:
     /** Reads theme from filesystem (path to Contents/Resources) */
     void readTheme(QDir dir);
 
-    bool isValid();
+    bool isValid(); //TODO 57
+
+    /** Returns headerTemplate */
+    HTMLChatTemplate headerTemplate() const;
+
+    /** Returns footerTemplate */
+    HTMLChatTemplate footerTemplate() const;
 
     QString createIncomingMessagePart(const MessageChatEvent *) const;
     QString createOutgoingMessagePart(const MessageChatEvent *) const;
@@ -65,9 +71,6 @@ public:
     /** Fills part (footer/header) with keywords (chatName, timeOpened) */
     void fillPartWithThemeKeywords(HTMLChatPart& part, ChatTheme::ChatInfo sessionInfo) const;
 
-    HTMLChatTemplate headerTemplate; //TODO accessors
-    HTMLChatTemplate footerTemplate;
-
     /** True if paths and varians are equal */
     bool operator==(const HTMLChatTheme& other) const;
     bool operator!=(const HTMLChatTheme& other) const;
@@ -80,14 +83,14 @@ private:
 
     /** 
      * Fills part with keywords from event; %message% = eventText (common for eg filetransfer, mood) 
-	 *  
-	 * Not for messages nor emote!
-	 */
+     *  
+     * Not for messages nor emote!
+     */
     void fillPartWithEventKeywords(HTMLChatPart& part, const ChatEvent* event, QString eventText) const;
 
     /** Replaces %time%, %shortTime%, etc */
     void fillPartWithTimeKeywords(HTMLChatPart& part, const AbstractChatEvent* event) const;
-	
+
     /** Returns dir/relativePath (to Contents dir) */
     QString readFileContents(QDir dir, QString relativePath);
 
@@ -105,6 +108,9 @@ private:
 
     HTMLChatEmoteTemplate incomingEmoteEventTemplate;
     HTMLChatEmoteTemplate outgoingEmoteEventTemplate;
+
+    HTMLChatTemplate headerTemplate_;
+    HTMLChatTemplate footerTemplate_;
 
     QString _baseHref;
     QStringList _variants;

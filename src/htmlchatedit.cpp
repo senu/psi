@@ -11,7 +11,7 @@ HTMLChatEdit::HTMLChatEdit(QWidget* parent)
 
     initActions();
 
-    //    setText("Lorem ipsum costam costam i jeszcze cos tam costam."); //TODO remove
+    //    setText("Lorem ipsum costam costam i jeszcze cos tam costam."); //TODO 0 remove
 
     connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(changeAlignButtons()));
     connect(this, SIGNAL(currentCharFormatChanged(const QTextCharFormat&)),
@@ -95,7 +95,7 @@ void HTMLChatEdit::textBackgroundColor() {
 }
 
 
-void HTMLChatEdit::insertImage() { //TODO
+void HTMLChatEdit::insertImage() { //TODO 39 
 
     QTextCursor cursor = textCursor();
     QImage img = QImage("/usr/share/icons/oxygen/128x128/apps/kmail.png");
@@ -105,7 +105,7 @@ void HTMLChatEdit::insertImage() { //TODO
 }
 
 
-void HTMLChatEdit::insertAnchor() { //TODO
+void HTMLChatEdit::insertAnchor() { 
 
     AddUrlDlg *w = new AddUrlDlg(this);
     w->setWindowTitle(tr("Insert hyperlink"));
@@ -119,7 +119,7 @@ void HTMLChatEdit::insertAnchor() { //TODO
     QString desc = w->le_desc->text();
     delete w;
 
-    textCursor().insertHtml(QString("<a href=\"%1\">%2</a>").arg(href, desc)); //TODO escape
+    textCursor().insertHtml(QString("<a href=\"%1\">%2</a>").arg(href, desc)); //TODO 40 escape
 }
 
 
@@ -156,7 +156,7 @@ void HTMLChatEdit::changeTextButtons(const QTextCharFormat& format) {
     actionForegroundColor->setIcon(pixmap);
 
     pixmap.fill(format.background().color());
-    actionBackgroundColor->setIcon(pixmap); //TODO format.background().color() is wrong after style/font change
+    actionBackgroundColor->setIcon(pixmap); //TODO 41 format.background().color() is wrong after style/font change
 
 }
 
@@ -176,7 +176,7 @@ void HTMLChatEdit::mergeFormat(const QTextCharFormat& format) {
 void HTMLChatEdit::initActions() {
 
     //font style
-    QString iconPath("/home/senu/dev/psi/gsoc/psi-fork/src/icons/"); //TODO iconServer
+    QString iconPath("/home/senu/dev/psi/gsoc/psi-fork/src/icons/"); //TODO + 42 iconServer
     actionTextBold = new QAction(QIcon(iconPath + "textbold.png"), tr("&Bold"), this);
     actionTextBold->setShortcut(Qt::CTRL + Qt::Key_B);
     actionTextBold->setCheckable(true);
@@ -214,7 +214,7 @@ void HTMLChatEdit::initActions() {
 
 
     //colors
-    QPixmap pixmap(14, 14); //TODO fore and background color icon
+    QPixmap pixmap(14, 14); //TODO 43 fore and background color icon
     pixmap.fill(Qt::black);
     actionForegroundColor = new QAction(pixmap, tr("&Foreground color..."), this);
 
@@ -233,15 +233,14 @@ void HTMLChatEdit::initActions() {
         sizeCombo->addItem(QString::number(size));
     }
 
-    sizeCombo->setCurrentIndex(sizeCombo->findText(QString::number(font().pointSize()))); //TODO ?(fontPointSize())));
+    sizeCombo->setCurrentIndex(sizeCombo->findText(QString::number(font().pointSize()))); 
 
     //font family
     fontCombo = new QFontComboBox(0);
 
 
     //add hyperling, add image
-    actionInsertHyperlink = new QAction(QIcon(iconPath + "textjustify.png"), tr("Insert &hyperlink"), alignActions); //TODO icon
-    //    actionAlignJustify->setShortcut(Qt::CTRL + Qt::Key_J); //TODO?
+    actionInsertHyperlink = new QAction(QIcon(iconPath + "textjustify.png"), tr("Insert &hyperlink"), alignActions);
 
     //append to toolbar
     formatToolBar->addWidget(fontCombo);
@@ -345,13 +344,13 @@ QString HTMLChatEdit::createFragmentStyle(const QTextCharFormat& fragmentFormat)
 
     if (fragmentFormat.hasProperty(QTextFormat::FontWeight)) {
         style += QLatin1String("; font-weight:");
-        style += QString::number(fragmentFormat.fontWeight() * 8); //TODO
+        style += QString::number(fragmentFormat.fontWeight() * 8);
     }
 
     //font-family
     if (!fragmentFormat.fontFamily().isEmpty()) {
         if (fragmentFormat.fontFamily().contains('\'')) {
-            style += "; font-family: \"" + fragmentFormat.fontFamily() + "\""; //todo escape!
+            style += "; font-family: \"" + fragmentFormat.fontFamily() + "\""; //TODO 44 2x escape!
         }
         else {
             style += "; font-family: '" + fragmentFormat.fontFamily() + "\'";
@@ -371,7 +370,7 @@ QString HTMLChatEdit::createFragmentStyle(const QTextCharFormat& fragmentFormat)
 }
 
 
-QString HTMLChatEdit::xhtmlMessage() { //TODO escape
+QString HTMLChatEdit::xhtmlMessage() { //TODO 45 escape
 
     QString msg; //new message [ QTextDocument -> xhtml-im ];
 
@@ -383,7 +382,7 @@ QString HTMLChatEdit::xhtmlMessage() { //TODO escape
         QTextBlockFormat curTBF = currentBlock.blockFormat();
         //        qDebug() << "TB" << currentBlock.text() << "[ " << curTBF.alignment() << " ]";
 
-        QString block = ""; // inner of block 
+        QString block = ""; //inner of block 
 
         //each framgent
         for (QTextBlock::iterator it = currentBlock.begin(); !(it.atEnd()); ++it) {
@@ -407,7 +406,7 @@ QString HTMLChatEdit::xhtmlMessage() { //TODO escape
             }
         }
 
-        if (document()->blockCount() == 1) { //we dont need extra new lines for ordinary messages
+        if (document()->blockCount() == 1) { //we dont need extra new lines (<p>) for ordinary messages
             msg += block;
         }
         else {

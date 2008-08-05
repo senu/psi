@@ -5,7 +5,7 @@
 
 
 /** Auto-resizing HTMLChatEdit */
-class HTMLLineEdit : public GenericLineEdit<HTMLChatEdit> { //TODO name
+class HTMLLineEdit : public GenericLineEdit<HTMLChatEdit> {
 
     Q_OBJECT
 

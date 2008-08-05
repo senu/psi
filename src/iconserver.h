@@ -11,10 +11,6 @@
 #include <QPixmap>
 
 
-
-//TODO caching/slot clear() on when IconsetFactory changed
-
-
 /**
  * Conains icons and avatars for Webkit use.
  * It has similar to IconsetFactory+AvatarFactory functionality.
@@ -53,7 +49,7 @@ slots:
     void unregisterAll(const QStringList& names);
 
     /** Registers all icons (key => value) from icons */
-    void registerAll(QStringList names, const QList<const QPixmap*>& icons); //TODO qt moc cannot handle const list<pair>& 
+    void registerAll(QStringList names, const QList<const QPixmap*>& icons); //qt moc cannot handle const list<pair>& 
 
 
 protected:

@@ -5,7 +5,7 @@
 #include "psioptions.h"
 #include "ui_opt_themes.h"
 
-#include "iconset.h"//TODO
+#include "iconset.h"
 
 
 class OptThemeUI : public QWidget, public Ui::OptTheme {
@@ -20,22 +20,21 @@ public:
 
 
 OptionsTabThemes::OptionsTabThemes(QObject *parent)
-: OptionsTab(parent, "themes", "", tr("Themes"), tr("Configure how Psi themes"), "psi/playSound") {//TODO icon
+: OptionsTab(parent, "themes", "", tr("Themes"), tr("Configure Psi themes"), "psi/playSound") {//TODO + 70 icon
     w = 0;
     theme = 0;
-    //TDOO
-    const PsiIcon * ic = IconsetFactory::iconPtr("psi/logo_32");
-    qDebug() << ic->name();
 }
 
 
 OptionsTabThemes::~OptionsTabThemes() {
+    delete theme;
 }
 
 
-QWidget *OptionsTabThemes::widget() {
-    if (w)
+QWidget* OptionsTabThemes::widget() {
+    if (w) {
         return 0;
+    }
 
     w = new OptThemeUI();
     OptThemeUI *d = (OptThemeUI *) w;
@@ -67,9 +66,7 @@ void OptionsTabThemes::onThemeLoaded(int themeIndex) {
     QString themeName = d->themeCB->currentText();
 
     delete theme;
-    theme = new HTMLChatTheme(themeList.themePath(themeName)); //TODO free it
-
-    qDebug() << theme->variants();
+    theme = new HTMLChatTheme(themeList.themePath(themeName));
 
     d->variantCB->clear();
     d->variantCB->addItems(theme->variants());
@@ -94,7 +91,7 @@ void OptionsTabThemes::applyOptions() {
     
     if (theme) {
         PsiOptions::instance()->setOption("options.ui.themes.themename",
-                                          d->themeCB->currentText()); //TODO
+                                          d->themeCB->currentText()); 
         PsiOptions::instance()->setOption("options.ui.themes.variantname",
                                           theme->currentVariant());
 
@@ -105,14 +102,15 @@ void OptionsTabThemes::applyOptions() {
 void OptionsTabThemes::restoreOptions() {
 
 
-    if (!w)
+    if (!w) {
         return;
+    }
 
     OptThemeUI * d = (OptThemeUI *) w;
     d->useHtmlViewInMucCK->setChecked(PsiOptions::instance()->getOption("options.ui.themes.htmlviewinmuc").toBool());
     d->useHtmlViewInChatsCK->setChecked(PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool());
 
-    themeList.readThemes(ApplicationInfo::homeDir()); //TODO
+    themeList.readThemes(ApplicationInfo::homeDir());
 
     d->themeCB->clear();
     d->themeCB->addItems(themeList.themeNames());

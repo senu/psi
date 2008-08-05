@@ -23,7 +23,7 @@ public:
         Disconnected,
         Reconnecting,
         Connected,
-        EndedConvesation, //TODO we need nick - subclass
+        EndedConvesation,
         AlreadyJoined, //or joining!
         Error,
         Other

@@ -24,7 +24,7 @@ QString HTMLChatTheme::readFileContents(QDir dir, QString relativePath) {
     qDebug() << "loading theme file" << dir.absoluteFilePath(relativePath);
 
     if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "WARNING\n\n" << "file not found"; //TODO 
+        qDebug() << "WARNING\n\n" << "file not found"; //it's not an error. just lazy theme creator 
         return "";
     }
 
@@ -87,8 +87,8 @@ void HTMLChatTheme::readTheme(QDir dir) {
     }
 
 
-    headerTemplate.setContent(readFileContents(dir, "Header.html"));
-    footerTemplate.setContent(readFileContents(dir, "Footer.html"));
+    headerTemplate_.setContent(readFileContents(dir, "Header.html"));
+    footerTemplate_.setContent(readFileContents(dir, "Footer.html"));
 
     _isValid = true;
 
@@ -178,7 +178,7 @@ QString HTMLChatTheme::createFileTransferEventPart(const FileTransferChatEvent *
             break;
         case FileTransferChatEvent::Aborted :
                 eventText = QObject::tr("Aborted downloading %1.").arg(event->fileName());
-            statusStr = "fileTransferAborted"; //TODO not in adium!
+            statusStr = "fileTransferAborted"; //TODO - 48 not in adium!
             break;
     }
 
@@ -207,7 +207,7 @@ QString HTMLChatTheme::createStatusEventPart(const StatusChatEvent * event) cons
                 statusStr = "offline";
             break;
         case StatusChatEvent::Away :
-                statusStr = "idle"; //TODO ask Kev (adium compatibility)
+                statusStr = "idle"; //TODO - 49 (adium compatibility)
             break;
         case StatusChatEvent::Xa :
                 statusStr = "away";
@@ -218,7 +218,7 @@ QString HTMLChatTheme::createStatusEventPart(const StatusChatEvent * event) cons
         case StatusChatEvent::Chat :
                 statusStr = "online";
             break;
-        case StatusChatEvent::Invisible : //TODO - ?!?
+        case StatusChatEvent::Invisible :
         default:
             statusStr = "offline";
             break;
@@ -251,7 +251,7 @@ QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const 
 
         if (!outgoingEmoteEventTemplate.isEmoteTemplate()) {
             eventText = event->nick() + " " + eventText;
-            part.replaceAndEscapeKeyword("%status%", "emote"); //TODO ask David Smith
+            part.replaceAndEscapeKeyword("%status%", "emote"); //TODO - 50 ask David Smith
         }
     }
     else {
@@ -259,13 +259,13 @@ QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const 
 
         if (!incomingEmoteEventTemplate.isEmoteTemplate()) {
             eventText = event->nick() + " " + eventText;
-            part.replaceAndEscapeKeyword("%status%", "emote"); //TODO ask David Smith
+            part.replaceAndEscapeKeyword("%status%", "emote"); //TODO - 51 ask David Smith
         }
     }
 
     fillPartWithTimeKeywords(part, event);
     fillPartWithUserKeywords(part, event);
-    part.replaceAndEscapeKeyword("%message%", eventText); 
+    part.replaceAndEscapeKeyword("%message%", eventText);
     part.replaceAndEscapeKeyword("%messageClasses%", "event emote");
 
     return part.toString();
@@ -280,7 +280,7 @@ QString HTMLChatTheme::createSystemEventPart(const SystemChatEvent* event) const
     fillPartWithTimeKeywords(part, event);
     fillPartWithEventKeywords(part, event, event->message());
     part.replaceAndEscapeKeyword("%status%", "system");
-    part.replaceAndEscapeKeyword("%messageClasses%", "system"); //TODO
+    part.replaceAndEscapeKeyword("%messageClasses%", "system"); //TODO  - 52 
 
     return part.toString();
 }
@@ -299,7 +299,7 @@ QString HTMLChatTheme::createMoodEventPart(const MoodChatEvent* event) const {
     fillPartWithTimeKeywords(part, event);
     fillPartWithEventKeywords(part, event, moodText);
     part.replaceAndEscapeKeyword("%status%", "mood");
-    part.replaceAndEscapeKeyword("%messageClasses%", "mood"); //TODO
+    part.replaceAndEscapeKeyword("%messageClasses%", "mood"); //TODO - 53
 
     return part.toString();
 }
@@ -321,7 +321,7 @@ QString HTMLChatTheme::createTuneEventPart(const TuneChatEvent* event) const {
     fillPartWithUserKeywords(part, event);
     part.replaceAndEscapeKeyword("%message%", tuneText);
     part.replaceAndEscapeKeyword("%status%", "tune");
-    part.replaceAndEscapeKeyword("%messageClasses%", "tune"); //TODO
+    part.replaceAndEscapeKeyword("%messageClasses%", "tune"); //TODO - 54
 
     return part.toString();
 }
@@ -337,15 +337,15 @@ void HTMLChatTheme::fillPartWithUserKeywords(HTMLChatPart& part, const UserChatD
     part.replaceAndEscapeKeyword("%senderStatusIcon%", event->userStatusIcon());
     part.replaceSenderColorKeyword(event->userColor());
 
-    part.replaceAndEscapeKeyword("%messageDirection%", "ltr"); //TODO
+    part.replaceAndEscapeKeyword("%messageDirection%", "ltr"); //TODO + 55
 
-    //TODO %textbackgroundcolor{X}%
+    //TODO ? 56 %textbackgroundcolor{X}%
 }
 
 
 void HTMLChatTheme::fillPartWithEventKeywords(HTMLChatPart& part, const ChatEvent* event, QString eventText) const {
     Q_UNUSED(event);
-    part.replaceAndEscapeKeyword("%message%", eventText); 
+    part.replaceAndEscapeKeyword("%message%", eventText);
 }
 
 
@@ -411,3 +411,15 @@ bool HTMLChatTheme::operator==(const HTMLChatTheme& other) const {
 bool HTMLChatTheme::operator!=(const HTMLChatTheme& other) const {
     return !(*this == other);
 }
+
+
+HTMLChatTemplate HTMLChatTheme::footerTemplate() const {
+    return footerTemplate_;
+}
+
+
+HTMLChatTemplate HTMLChatTheme::headerTemplate() const {
+    return headerTemplate_;
+}
+
+

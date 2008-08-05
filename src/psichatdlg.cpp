@@ -69,10 +69,9 @@ void PsiChatDlg::initUi() {
 
     ChatTheme::ChatInfo chatInfo;
 
-    UserListItem *ui = account()->findFirstRelevant(jid()); //TODO ask kev (relevant)
-    QString destNick(JIDUtil::nickOrJid(ui->name(), jid().full())); //TODO
+    UserListItem *ui = account()->findFirstRelevant(jid());
+    QString destNick(JIDUtil::nickOrJid(ui->name(), jid().full()));
 
-    //TODO iss| getDisplayName() doesnt work
     chatInfo.chatName = destNick;
     chatInfo.destinationName = destNick;
     chatInfo.destinationDisplayName = jid().full();
@@ -104,7 +103,7 @@ void PsiChatDlg::initUi() {
     chatEditCreated();
 
 #ifdef Q_WS_MAC
-    connect(chatView(), SIGNAL(selectionChanged()), SLOT(logSelectionChanged())); //TODO
+    connect(chatView(), SIGNAL(selectionChanged()), SLOT(logSelectionChanged())); //TODO 80
 #endif
 
     initToolButtons();
@@ -324,14 +323,12 @@ void PsiChatDlg::contactUpdated(UserListItem* u, int status, const QString& stat
 
 void PsiChatDlg::updateAvatar(const Jid& j) {
 
-    //TODO wrong avatar label - ask kev if we still want it
+    //TODO 81 wrong avatar label - ask kev if we still want it
 
     //ignore avatars other than our or destination avatars
     if (!j.compare(jid(), false) && !j.compare(account()->jid(), false)) {
         return;
     }
-
-
 
     QPixmap p(getAvatarForJid(j));
 
@@ -426,7 +423,7 @@ void PsiChatDlg::appendEmoteMessage(SpooledType spooled, const QDateTime& time, 
     fillEventWithUserInfo(event, local ? account()->jid() : jid());
     event->setTimeStamp(time);
     event->setSpooled(spooled);
-    event->setMessage(txt); //TODO escape?
+    event->setMessage(txt); //TODO 82 escape
 
     chatView()->appendEvent(event);
     updateLastMsgTimeAndOwner(time, Other);
@@ -441,7 +438,7 @@ void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time,
     msg->setTimeStamp(time);
     msg->setConsecutive(doConsecutiveMessage(time, local));
     msg->setSpooled(spooled);
-    msg->setBody(txt); //TODO escape?
+    msg->setBody(txt); //TODO 83 escape
 
     chatView()->appendMessage(msg);
     updateLastMsgTimeAndOwner(time, local ? Outgoing : Incoming);
@@ -467,7 +464,7 @@ void PsiChatDlg::appendSystemMsg(const QString &str) {
  */
 
 void PsiChatDlg::appendMessageFields(const Message& m) {
-    //TODO vw rf
+    //TODO 84 append message fiels 
 
     /*
     if (!m.subject().isEmpty()) {
@@ -546,7 +543,7 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
 
     bool local;
     
-    if (j.compare(jid(), false)) { //TODO true?
+    if (j.compare(jid(), false)) { //TODO 85 true?
         //remote user
         local = false;
         userInfo->setNick(whoNick(false));
@@ -573,11 +570,11 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
            userInfo->setUserIconPath("Outgoing/buddy_icon.png");
         }
         else {
-           userInfo->setUserIconPath("Incoming/buddy_icon.png"); //TODO outgoing icon when no incoming folder
+           userInfo->setUserIconPath("Incoming/buddy_icon.png"); //TODO 86 outgoing icon when no incoming folder
         }
     }
     else {
-        userInfo->setUserIconPath("icon://avatars/" + j.bare() + ".png"); //TODO full() is not full in acc()/jid()
+        userInfo->setUserIconPath("icon://avatars/" + j.bare() + ".png"); //TODO 87 ins full() is not full in acc()/jid()
     }
 
     userInfo->setService("Jabber");

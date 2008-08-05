@@ -46,16 +46,16 @@ QString SystemChatEvent::message() const {
                 ret = "Reconnecting...";
             break;
         case SystemChatEvent::EndedConvesation :
-                //assert(0) //TODO 
+                Q_ASSERT(0);
         case SystemChatEvent::AlreadyJoined :
                 ret = "Error: You are in or joining this room already!";
             break;
         case SystemChatEvent::Error :
+                Q_ASSERT(0);
             break;
-            //assert(0)
         case SystemChatEvent::Other :
+                Q_ASSERT(0);
             break;
-            //assert(0)
     }
 
     return QObject::tr(ret);

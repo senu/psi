@@ -22,7 +22,7 @@ QString PlainTextChatTheme::createIncomingMessagePart(const MessageChatEvent * e
     QString color(colorString(event->isLocal(), event->isSpooled()));
     QString timeStr(formatTimeStamp(event->timeStamp()));
 
-    //if (PsiOptions::instance()->getOption("options.ui.chat.use-chat-says-style").toBool()) { //TODO
+    //if (PsiOptions::instance()->getOption("options.ui.chat.use-chat-says-style").toBool()) { //TODO 71
     if (0) {
         return QString("<p style=\"color: %1\">").arg(color) + QString("[%1] ").arg(timeStr)
             + QObject::tr("%1 says:").arg(event->nick()) + "</p>" + event->body();
@@ -40,7 +40,7 @@ QString PlainTextChatTheme::createOutgoingMessagePart(const MessageChatEvent * e
 
 
 QString PlainTextChatTheme::createFileTransferEventPart(const FileTransferChatEvent * event) const {
-    //TODO
+    //TODO 72
 }
 
 
@@ -57,7 +57,7 @@ QString PlainTextChatTheme::createStatusEventPart(const StatusChatEvent * event)
                 statusStr = "offline";
             break;
         case StatusChatEvent::Away :
-                statusStr = "idle"; //TODO ask Kev (adium compatibility)
+                statusStr = "idle";
             break;
         case StatusChatEvent::Xa :
                 statusStr = "away";
@@ -68,7 +68,7 @@ QString PlainTextChatTheme::createStatusEventPart(const StatusChatEvent * event)
         case StatusChatEvent::Chat :
                 statusStr = "online";
             break;
-        case StatusChatEvent::Invisible : //TODO - ?!?
+        case StatusChatEvent::Invisible :
                 statusStr = "offline";
             break;
     }
@@ -96,7 +96,6 @@ QString PlainTextChatTheme::createSystemEventPart(const SystemChatEvent* event) 
 
 QString PlainTextChatTheme::formatTimeStamp(const QDateTime &time) const {
     //TODO: provide an option for user to customize time stamp format
-    //TODO ask kev QDateTime::toString() ?
     return QString().sprintf("%02d:%02d:%02d", time.time().hour(), time.time().minute(), time.time().second());
 }
 

@@ -10,7 +10,7 @@
 class ChatTheme;
 class AstractChatEvent;
 
-//TODO talk with David Smith - i would like to have separate template for tune/mood with jid, etc
+//TODO - 90 talk with David Smith - i would like to have separate template for tune/mood with jid, etc
 
 /** Tune [XEP-0118] ChatEvent */
 class TuneChatEvent : public ChatEvent, public UserChatData {

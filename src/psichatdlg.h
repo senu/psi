@@ -53,7 +53,6 @@ private:
 	void setShortcuts();
 	QString colorString(bool local, SpooledType spooled) const;
     void appendChatEvent(const ChatEvent* event);
-//	void appendSystemMsg(const QString &); //TODO remove
 	void appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
 	void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
 	void appendMessageFields(const Message& m);

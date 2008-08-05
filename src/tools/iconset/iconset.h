@@ -264,11 +264,11 @@ signals:
      * \param names contains registered icon names
      * \param icons their pixmaps (qt moc issue)
      */
-	void iconsetRegistered(QStringList names, const QList<const QPixmap*>& icons); //TODO qt moc cannot handle const list<pair>& 
+	void iconsetRegistered(QStringList names, const QList<const QPixmap*>& icons); // qt moc cannot handle const list<pair>& 
 
 public:
 	const QPixmap& emptyPixmap() const;
-	const QStringList icons_() const; //TODO
+	const QStringList icons_() const;
 	void registerIconset(const Iconset *);
 	void unregisterIconset(const Iconset *);
 

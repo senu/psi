@@ -63,16 +63,10 @@ const QString styleProperties[] = {
     "font-weight", "margin-left", "margin-right", "text-align", "text-decoration"
 };
 
-// http://www.w3.org/TR/CSS21/syndata.html#syntax
-// http://www.w3.org/TR/CSS21/grammar.html
-// CSS is validated in JavaScript code with Webkit 
-
-//TODO static
-
 
 void MessageValidator::dfs(QDomElement cur, const HTMLTextFormatter* formatter, bool* modified) {
 
-//    qDebug() << QString(4, ' ') << cur.tagName();
+    //    qDebug() << QString(4, ' ') << cur.tagName();
 
     QString parentName = cur.tagName();
 
@@ -132,7 +126,7 @@ void MessageValidator::dfs(QDomElement cur, const HTMLTextFormatter* formatter, 
             }
             else { //format text
                 QDomNode newElement = formatter->format(node.toText().data(), cur);
-                QDomNode node2 = cur.replaceChild(newElement, node); //TODO remove node2
+                cur.replaceChild(newElement, node);
             }
         }
     }
@@ -142,9 +136,7 @@ void MessageValidator::dfs(QDomElement cur, const HTMLTextFormatter* formatter, 
 
 
 MessageValidator::MessageValidator() {
-
     generateAllowedDict();
-
 }
 
 
@@ -154,7 +146,6 @@ MessageValidator::~MessageValidator() {
 
 
 void MessageValidator::generateAllowedDict() {
-    //TODO check XHTML rfc 
 
     NodeInfo textNI,
         hypertextNI,
@@ -232,7 +223,7 @@ QString MessageValidator::validateMessage(QString message, bool* modified, const
     if (!doc.setContent(message, false, &errorMessage, &line, &column)) {
         qDebug() << errorMessage << " " << line << " " << column << message;
         *modified = true;
-        return "illformed message!!!"; //TODO - display plain message
+        return "illformed message!!!"; //TODO 64 - display plain message
     }
 
     dfs(doc.documentElement(), formatter, modified);
@@ -241,6 +232,6 @@ QString MessageValidator::validateMessage(QString message, bool* modified, const
 
 
 MessageValidator::NodeInfo::NodeInfo() {
-    canBeEmpty = true;
+    //canBeEmpty = true;
     canHaveText = true;
 }

@@ -65,7 +65,6 @@ void __PlainTextChatView::scrollToTop() {
 bool __PlainTextChatView::atBottom() const {
     // '32' is 32 pixels margin, which was used in the old code
     return (verticalScrollBar()->maximum() - verticalScrollBar()->value()) <= 32;
-    //TODO reimplement in html cv?
 }
 
 

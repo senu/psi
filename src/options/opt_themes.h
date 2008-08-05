@@ -33,7 +33,7 @@ private:
     QWidget *w, *parentWidget;
     PsiCon *psi;
     HTMLChatThemeList themeList;
-    HTMLChatTheme * theme;
+    HTMLChatTheme* theme;
 
 };
 

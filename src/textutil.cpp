@@ -121,7 +121,7 @@ QString TextUtil::plain2rich(const QString &plain)
 		++col;
 	}
 
-	return "<span>" + rich + "</span>"; //TODO
+	return "<span>" + rich + "</span>";
 }
 
 QString TextUtil::rich2plain(const QString &in)

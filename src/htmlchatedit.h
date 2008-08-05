@@ -94,7 +94,7 @@ protected:
 
     QActionGroup * alignActions;
 
-    QString iconPath; //TODO we need icons we can use in Psi!
+    QString iconPath;
     
     /** Formating toolbar */
     QToolBar* formatToolBar;

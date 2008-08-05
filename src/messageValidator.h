@@ -18,6 +18,13 @@
  * Performs XHTML-IM message validation (and cuts off bad elements/attributes). 
  *
  * It also can modify message (e.g emoticonify, linkify) - see HTMLTextFormatter
+ *
+ * http://www.w3.org/TR/CSS21/syndata.html#syntax
+ * http://www.w3.org/TR/CSS21/grammar.html         
+ * 
+ * //TODO I would have to learn flex/bison/? to do that here ->
+ * CSS is validated by JavaScript code with Webkit 
+ *
  */
 class MessageValidator {
 
@@ -33,7 +40,7 @@ public:
     QString validateMessage(QString message, bool* modified, const HTMLTextFormatter* formatter);
 
 protected:
-    //TODO stack instead of recursion?
+    //TODO + 65 stack instead of recursion?
     //OK -> textNode, node we want to delete, textNode2 --delete--> != textNode + textNode2 
 
 
@@ -51,7 +58,7 @@ protected:
         /** Can have text child - eg. false for <br> */
         bool canHaveText;
 
-        bool canBeEmpty; //TODO unused. Do we need that?
+        //bool canBeEmpty;
     };
 
     /**

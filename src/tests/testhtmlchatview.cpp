@@ -6,11 +6,10 @@
 
 
 void TestHTMLChatView::setUp() {
-    //    view = NULL;
 }
 
 
-//TODO buddy_icon test
+//TODO 88 buddy_icon test
 
 
 void TestHTMLChatView::onlyFooterAndHeader() {

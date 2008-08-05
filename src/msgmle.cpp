@@ -113,7 +113,7 @@ void PlainTextChatView::keyPressEvent(QKeyEvent *e)
  */
 void PlainTextChatView::autoCopy()
 {
-	//TODO wv dec
+	//TODO 67 wv dec
 	/*
 	if (isReadOnly() && PsiOptions::instance()->getOption("options.ui.automatically-copy-selected-text").toBool()) {
 		copy();

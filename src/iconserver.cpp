@@ -7,7 +7,7 @@ class IconServer;
 void IconServer::registerIcon(const QString& name, QByteArray data) {
     dataMutex.lock();
 
-//    qDebug() << "registerIcon()" << name << data.size(); //TODO cv open r all
+//    qDebug() << "registerIcon()" << name << data.size(); //TODO 62 cv open r all
     dict.insert(name, data);
 
     dataMutex.unlock();
@@ -48,12 +48,12 @@ void IconServer::unregisterAll(const QStringList& names) {
 }
 
 
-void IconServer::registerAll(QStringList names, const QList<const QPixmap*>& icons) { //TODO qt moc cannot handle const list<pair>& 
+void IconServer::registerAll(QStringList names, const QList<const QPixmap*>& icons) { //qt moc cannot handle const list<pair>& 
     dataMutex.lock();
     qDebug() << "registerAll()" << names;
 
     QPair<QString, const QPixmap*> pair;
-    /* TODO
+    /* TODO 63 
     foreach(pair, icons) {
         dict.insert(pair.first, IconServer::pixmapToPng(*pair.second));
     }

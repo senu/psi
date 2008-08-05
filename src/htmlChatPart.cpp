@@ -47,7 +47,7 @@ void HTMLChatPart::replaceTimeKeyword(QString keyword, QDateTime time) {
 
 
 void HTMLChatPart::replaceSenderColorKeyword(const QColor& userColor) {
-    /* TODO -> move this to default options 
+    /* TODO 46 move this to default options 
     static const char* const colorList[] = {
         "red", "blue", "gray", "magenta", "violet", "#808000", "yellowgreen",
         "darkred", "darkgreen", "darksalmon", "darkcyan", "#B07D2B", "mediumpurple",
