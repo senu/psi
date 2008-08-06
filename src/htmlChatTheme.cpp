@@ -337,7 +337,7 @@ void HTMLChatTheme::fillPartWithUserKeywords(HTMLChatPart& part, const UserChatD
     part.replaceAndEscapeKeyword("%senderStatusIcon%", event->userStatusIcon());
     part.replaceSenderColorKeyword(event->userColor());
 
-    part.replaceAndEscapeKeyword("%messageDirection%", "ltr"); //TODO + 55
+    part.replaceAndEscapeKeyword("%messageDirection%", "ltr");
 
     //TODO ? 56 %textbackgroundcolor{X}%
 }

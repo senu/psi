@@ -34,6 +34,7 @@ QString GenericChatDialog::messageTextGC(const XMPP::Message& m) {
         }
     }
 
+    qDebug() << "messageText1.5" << txt;
 
     textFormatter_.setDoEmoticonify(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool());
     textFormatter_.setDoLegacyFormatting(PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool());

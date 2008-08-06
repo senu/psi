@@ -1310,8 +1310,8 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
 		alert=false;
     }
     
-	QString who;
-//        textcolor, nickcolor,  //TODO 32 nick coloring
+	QString who,
+        nickColor;
 
 	who = m.from().resource(); 
     
@@ -1319,12 +1319,12 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
 	 	d->doTrackBar();
     }
   
-//	nickcolor = getNickColor(who);
+	nickColor = getNickColor(who);
 //	textcolor = ui_.log->palette().active().text().name();
    
-//    if (m.spooled()) {
-//		nickcolor = "#008000";
-//  }
+    if (m.spooled()) {
+		nickColor = "#008000";
+    }
 
     
     textFormatter_.setDoHighlighting(alert);
@@ -1354,6 +1354,7 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
         msg->setSpooled(m.spooled());
         msg->setService("Jabber");
         msg->setBody(txt); //TODO 35 escape
+        msg->setUserColor(nickColor);
 
         //TODO 36 images and icons
 

@@ -6,6 +6,7 @@
 QDomNode DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& parentElement) const {
 
     QString output(input);
+    
 
     if (doLinkify_ && parentElement.nodeName() != "a") {
         output = TextUtil::linkify(output);
@@ -24,9 +25,8 @@ QDomNode DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& 
 
 
     QDomDocument node;
+    qDebug() << "!!! tf messageText1.5 0" << output;
     node.setContent("<span>"+output+"</span>");
-    
-    qDebug() << output;
 
     return node.firstChild();
 }

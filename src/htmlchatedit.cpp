@@ -1,6 +1,7 @@
 #include "htmlchatedit.h"
 #include "messageValidator.h"
 #include "addurldlg.h"
+#include "textutil.h"
 
 
 HTMLChatEdit::HTMLChatEdit(QWidget* parent)
@@ -105,7 +106,7 @@ void HTMLChatEdit::insertImage() { //TODO 39
 }
 
 
-void HTMLChatEdit::insertAnchor() { 
+void HTMLChatEdit::insertAnchor() {
 
     AddUrlDlg *w = new AddUrlDlg(this);
     w->setWindowTitle(tr("Insert hyperlink"));
@@ -115,11 +116,12 @@ void HTMLChatEdit::insertAnchor() {
         return;
     }
 
-    QString href = w->le_url->text();
-    QString desc = w->le_desc->text();
+    QString href = TextUtil::escape(w->le_url->text());
+    QString desc = TextUtil::escape(w->le_desc->text());
+    
     delete w;
 
-    textCursor().insertHtml(QString("<a href=\"%1\">%2</a>").arg(href, desc)); //TODO 40 escape
+    textCursor().insertHtml(QString("<a href=\"%1\">%2</a> ").arg(href, desc));
 }
 
 
@@ -233,7 +235,7 @@ void HTMLChatEdit::initActions() {
         sizeCombo->addItem(QString::number(size));
     }
 
-    sizeCombo->setCurrentIndex(sizeCombo->findText(QString::number(font().pointSize()))); 
+    sizeCombo->setCurrentIndex(sizeCombo->findText(QString::number(font().pointSize())));
 
     //font family
     fontCombo = new QFontComboBox(0);
@@ -350,7 +352,7 @@ QString HTMLChatEdit::createFragmentStyle(const QTextCharFormat& fragmentFormat)
     //font-family
     if (!fragmentFormat.fontFamily().isEmpty()) {
         if (fragmentFormat.fontFamily().contains('\'')) {
-            style += "; font-family: \"" + fragmentFormat.fontFamily() + "\""; //TODO 44 2x escape!
+            style += "; font-family: \"" + fragmentFormat.fontFamily() + "\"";
         }
         else {
             style += "; font-family: '" + fragmentFormat.fontFamily() + "\'";
@@ -370,7 +372,7 @@ QString HTMLChatEdit::createFragmentStyle(const QTextCharFormat& fragmentFormat)
 }
 
 
-QString HTMLChatEdit::xhtmlMessage() { //TODO 45 escape
+QString HTMLChatEdit::xhtmlMessage() {
 
     QString msg; //new message [ QTextDocument -> xhtml-im ];
 
@@ -395,12 +397,12 @@ QString HTMLChatEdit::xhtmlMessage() { //TODO 45 escape
                     block += "<img src=\"http://www.netbeans.org/images/v5/nb-logo2.gif\" ale=\"image\"/>";
                 }
                 else if (!curTCF.anchorHref().isEmpty()) {
-                    block += "<a href=\"" + curTCF.anchorHref() + "\">" + currentFragment.text() + "</a>";
-
+                    block += "<a href=\"" + TextUtil::escape(curTCF.anchorHref()) + "\">" +
+                    TextUtil::escape(currentFragment.text()) + "</a>";
                 }
                 else {
                     block += "<span style=\"" + createFragmentStyle(curTCF) + "\">"
-                        + currentFragment.text() + "</span>\n";
+                        + TextUtil::escape(currentFragment.text()) + "</span>\n";
                 }
 
             }
@@ -416,7 +418,7 @@ QString HTMLChatEdit::xhtmlMessage() { //TODO 45 escape
         currentBlock = currentBlock.next();
     }
 
-
+    qDebug() << "created message" << msg;
     return "<body><span>" + msg + "</span></body>";
 }
 

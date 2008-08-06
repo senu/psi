@@ -58,7 +58,7 @@ void HTMLChatPart::replaceSenderColorKeyword(const QColor& userColor) {
    */
 
     QRegExp colorPattern("%senderColor(?:\\{([^}]*)\\})?%");
-    QString colorString;
+    QString colorString = userColor.name();
 
     for (int pos = 0; (pos = colorPattern.indexIn(content, pos)) != -1;) {
         bool doLight = colorPattern.numCaptures() > 0;

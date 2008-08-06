@@ -1,8 +1,9 @@
 #include <QtXml>
+#include <QTextDocument> //qt escape
+
 
 #include "messageValidator.h"
 #include "messagechatevent.h"
-
 #include "nullhtmltextformatter.h"
 
 
@@ -124,7 +125,9 @@ void MessageValidator::dfs(QDomElement cur, const HTMLTextFormatter* formatter, 
                 i--;
             }
             else { //format text
-                QDomNode newElement = formatter->format(node.toText().data(), cur);
+                QDomNode newElement = formatter->format(Qt::escape(node.toText().data()), cur); 
+                //NOTE: we don't need to escape quotes, and we want this code be more reusable, 
+                //NOTE: so we use Qt::escape() instead of TextUtil::escape()
                 cur.replaceChild(newElement, node);
             }
         }
