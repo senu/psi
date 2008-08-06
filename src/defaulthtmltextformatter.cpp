@@ -6,7 +6,6 @@
 QDomNode DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& parentElement) const {
 
     QString output(input);
-    
 
     if (doLinkify_ && parentElement.nodeName() != "a") {
         output = TextUtil::linkify(output);

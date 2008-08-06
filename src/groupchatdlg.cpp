@@ -128,9 +128,6 @@ public:
 	QStringList hist;
 	int histAt;
 
-	QPointer<GCFindDlg> findDlg;
-	QString lastSearch;
-
 	QPointer<MUCConfigDlg> configDlg;
 	
 public:
@@ -177,31 +174,6 @@ public slots:
 protected slots:
 	void slotScroll() {
         chatView()->scrollToBottom();
-	}
-
-public:
-    //TODO 25 move to generic chat dialog
-	bool internalFind(QString str, bool startFromBeginning = false)
-	{
-        /* TODO 26 webkit implement - delegate 
-		if (startFromBeginning) {
-			QTextCursor cursor = te_log()->textCursor();
-			cursor.movePosition(QTextCursor::Start, QTextCursor::KeepAnchor);
-			cursor.clearSelection();
-			te_log()->setTextCursor(cursor);
-		}
-		
-		bool found = te_log()->find(str);
-		if(!found) {
-			if (!startFromBeginning)
-				return internalFind(str, true);
-			
-			return false;
-		}
-
-		return true;
-         */
-        return true;
 	}
 	
 private:
@@ -498,7 +470,6 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager,
 	d->connecting = false;
 
 	d->histAt = 0;
-	d->findDlg = 0;
 	d->configDlg = 0;
 
 	d->state = Private::Connected;
@@ -841,17 +812,6 @@ void GCMainDlg::doClearButton()
 		doClear();
 }
 
-void GCMainDlg::openFind()
-{
-	if(d->findDlg)
-		::bringToFront(d->findDlg);
-	else {
-		d->findDlg = new GCFindDlg(d->lastSearch, this);
-		connect(d->findDlg, SIGNAL(find(const QString &)), SLOT(doFind(const QString &)));
-		d->findDlg->show();
-	}
-}
-
 void GCMainDlg::configureRoom()
 {
 	if(d->configDlg)
@@ -866,13 +826,13 @@ void GCMainDlg::configureRoom()
 	}
 }
 
-void GCMainDlg::doFind(const QString &str)
-{
-	d->lastSearch = str;
-	if (d->internalFind(str))
-		d->findDlg->found();
-	else
-		d->findDlg->error(str);
+void GCMainDlg::openFind() {
+    openFindGC(this);	
+    connect(findDialog, SIGNAL(find(const QString &)), SLOT(doFind(const QString &)));
+}
+
+void GCMainDlg::doFind(const QString& str) {
+    doFindGC(str);
 }
 
 void GCMainDlg::goDisc()
@@ -1570,65 +1530,5 @@ void GCMainDlg::scrollUp() {
 void GCMainDlg::scrollDown() {
     chatView()->scrollDown();
 }
-
-//----------------------------------------------------------------------------
-// GCFindDlg
-//----------------------------------------------------------------------------
-GCFindDlg::GCFindDlg(const QString &str, QWidget *parent, const char *name)
-	: QDialog(parent, name, false)
-{
-	setAttribute(Qt::WA_DeleteOnClose);
-	setWindowTitle(tr("Find"));
-	QVBoxLayout *vb = new QVBoxLayout(this, 4);
-	QHBoxLayout *hb = new QHBoxLayout(vb);
-	QLabel *l = new QLabel(tr("Find:"), this);
-	hb->addWidget(l);
-	le_input = new QLineEdit(this);
-	hb->addWidget(le_input);
-	vb->addStretch(1);
-
-	QFrame *Line1 = new QFrame(this);
-	Line1->setFrameShape( QFrame::HLine );
-	Line1->setFrameShadow( QFrame::Sunken );
-	Line1->setFrameShape( QFrame::HLine );
-	vb->addWidget(Line1);
-
-	hb = new QHBoxLayout(vb);
-	hb->addStretch(1);
-	QPushButton *pb_close = new QPushButton(tr("&Close"), this);
-	connect(pb_close, SIGNAL(clicked()), SLOT(close()));
-	hb->addWidget(pb_close);
-	QPushButton *pb_find = new QPushButton(tr("&Find"), this);
-	pb_find->setDefault(true);
-	connect(pb_find, SIGNAL(clicked()), SLOT(doFind()));
-	hb->addWidget(pb_find);
-	pb_find->setAutoDefault(true);
-
-	resize(200, minimumSizeHint().height());
-
-	le_input->setText(str);
-	le_input->setFocus();
-}
-
-GCFindDlg::~GCFindDlg()
-{
-}
-
-void GCFindDlg::found()
-{
-	// nothing here to do...
-}
-
-void GCFindDlg::error(const QString &str)
-{
-	QMessageBox::warning(this, tr("Find"), tr("Search string '%1' not found.").arg(str));
-	le_input->setFocus();
-}
-
-void GCFindDlg::doFind()
-{
-	emit find(le_input->text());
-}
-
 
 #include "groupchatdlg.moc"

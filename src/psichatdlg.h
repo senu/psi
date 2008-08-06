@@ -34,6 +34,12 @@ private slots:
 	// reimplemented
 	void chatEditCreated();
 
+    /** Calls openFindGC() (it must be slot and GeCD cannot inherit from QObject) */
+    void openFind();
+    
+    /** Calls doFindGC() (it must be slot and GeCD cannot inherit from QObject) */
+    void doFind(const QString &str);
+
 private:
 
 	void initToolBar();
@@ -97,6 +103,7 @@ private:
 	IconAction* act_file_;
 	IconAction* act_compact_;
 	IconAction* act_voice_;
+    IconAction* act_find_;
 
 	bool smallChat_;
 };

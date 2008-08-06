@@ -119,9 +119,8 @@ slots:
 slots:
     void chatEdit_returnPressed();
     void doTopic();
-    void openFind();
+    
     void configureRoom();
-    void doFind(const QString &);
     void pa_updatedActivity();
     void goDisc();
     void goConn();
@@ -140,6 +139,12 @@ slots:
     
     /** Scrolls ChatView down */
     void scrollDown();
+    
+    /** Calls openFindGC() (it must be slot and GeCD cannot inherit from QObject) */
+    void openFind();
+    
+    /** Calls doFindGC() (it must be slot and GeCD cannot inherit from QObject) */
+    void doFind(const QString &str);
     
 #ifdef WHITEBOARDING
     void openWhiteboard();
@@ -172,26 +177,5 @@ private:
     QDateTime lastMsgTime_;
 };
 
-
-class GCFindDlg : public QDialog {
-
-    Q_OBJECT
-public:
-    GCFindDlg(const QString &, QWidget *parent = 0, const char *name = 0);
-    ~GCFindDlg();
-
-    void found();
-    void error(const QString &);
-
-signals:
-    void find(const QString &);
-
-    private 
-slots:
-    void doFind();
-
-private:
-    QLineEdit *le_input;
-};
 
 #endif

@@ -262,16 +262,29 @@ void HTMLChatView::scrollToTop() {
 
 void HTMLChatView::scrollUp() {
     QWebFrame * frame = webView.page()->mainFrame();
-    frame->setScrollBarValue(Qt::Vertical, frame->scrollBarValue(Qt::Vertical) - 42); //TODO 60 - pagestep 2x
+    frame->setScrollBarValue(Qt::Vertical, frame->scrollBarValue(Qt::Vertical) - 150);
 }
 
 
 void HTMLChatView::scrollDown() {
     QWebFrame * frame = webView.page()->mainFrame();
-    frame->setScrollBarValue(Qt::Vertical, frame->scrollBarValue(Qt::Vertical) + 42); //
+    frame->setScrollBarValue(Qt::Vertical, frame->scrollBarValue(Qt::Vertical) + 150);
 }
 
 
 QSize HTMLChatView::sizeHint() const {
     return minimumSizeHint();
+}
+
+bool HTMLChatView::internalFind(const QString& str, bool startFromBeginning) {
+    
+    bool found = webView.page()->findText(str, startFromBeginning ? 
+        QWebPage::FindWrapsAroundDocument : (QWebPage::FindFlag)0);
+
+    if(!found && !startFromBeginning) {
+        return internalFind(str, true);
+    }
+
+    return found;
+    
 }

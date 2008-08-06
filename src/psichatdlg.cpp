@@ -1,9 +1,6 @@
 
 #include "iconserver.h"
-
-
 #include "abstractChatEvent.h"
-
 #include "psichatdlg.h"
 
 #include <QLabel>
@@ -192,6 +189,7 @@ void PsiChatDlg::setShortcuts() {
     act_clear_->setShortcuts(ShortcutManager::instance()->shortcuts("chat.clear"));
     act_info_->setShortcuts(ShortcutManager::instance()->shortcuts("common.user-info"));
     act_history_->setShortcuts(ShortcutManager::instance()->shortcuts("common.history"));
+	act_find_->setShortcuts(ShortcutManager::instance()->shortcuts("chat.find"));
 }
 
 
@@ -233,6 +231,11 @@ void PsiChatDlg::initToolButtons() {
 
     act_compact_ = new IconAction(tr("Toggle Compact/Full size"), "psi/compact", tr("Toggle Compact/Full size"), 0, this);
     connect(act_compact_, SIGNAL(activated()), SLOT(toggleSmallChat()));
+
+	act_find_ = new IconAction(tr("Find"), "psi/search", tr("&Find"), 0, this);
+    addAction(act_find_);
+	connect(act_find_, SIGNAL(activated()), SLOT(openFind()));
+	ui_.tb_find->setDefaultAction(act_find_); 
 }
 
 
@@ -582,19 +585,25 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
 
 
 QString PsiChatDlg::messageText(const XMPP::Message& m) {
-
-
     return GenericChatDialog::messageTextGC(m);
 }
 
 
 bool PsiChatDlg::isEmoteMessage(const XMPP::Message& m) {
-
-
     return GenericChatDialog::isEmoteMessageGC(m);
 }
 
 
 StatusChatEvent::StatusEventType PsiChatDlg::statusToChatViewStatus(int status) const {
     return GenericChatDialog::statusToChatViewStatus(status);
+}
+
+void PsiChatDlg::openFind() {
+    
+    openFindGC(this);	
+    connect(findDialog, SIGNAL(find(const QString &)), SLOT(doFind(const QString &)));
+}
+
+void PsiChatDlg::doFind(const QString& str) {
+    doFindGC(str);
 }

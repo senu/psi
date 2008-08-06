@@ -2,6 +2,7 @@
 #define	_GENERICCHATDIALOG_H
 
 #include <QObject>
+#include <QPointer>
 
 
 #include "xmpp_message.h"
@@ -11,6 +12,7 @@
 #include "chatView.h"
 #include "psichatedit.h"
 #include "statusChatEvent.h"
+#include "finddialog.h"
 
 
 /**
@@ -31,6 +33,17 @@ class GenericChatDialog {
 public:
     GenericChatDialog();
     ~GenericChatDialog() {};
+
+    /** 
+     * Opens Find Dialog.
+     *
+     * You have to connect findDialog -> SIGNAL(find(const QString &)) with doFindGC 
+     * \param chatDialogWidget points to ChatDialog QWidget (GenericChatDlg cannot be QObject).
+     */
+    void openFindGC(QWidget* chatDialogWidget);
+
+    /** Performs search for str in ChatView */
+    void doFindGC(const QString& str);
 
 protected:
     /** Indicates if next message should be consecutive (who was last owner) */
@@ -77,6 +90,12 @@ protected:
 
     /** Timestamp of last chat event */
     QDateTime lastMsgTime;
+
+    /** Pointer to Find Dialog */
+	QPointer<FindDialog> findDialog;
+    
+    /** Last searched string*/
+	QString lastSearch;
 };
 
 #endif	

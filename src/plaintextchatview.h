@@ -31,6 +31,7 @@ public:
 
     __PlainTextChatView(QWidget *parent);
 
+
     /**
      * Handle KeyPress events that happen in ChatEdit widget. This is used
      * to 'fix' the copy shortcut.
@@ -65,18 +66,20 @@ public:
     //reimplemented
     QSize sizeHint() const;
 
+    void scrollUp();
+    void scrollDown();
+
     /**
      * This function returns true if vertical scroll bar is 
      * at its maximum position.
      */
     bool atBottom() const;
-    void scrollUp();
-    void scrollDown();
-
+    
     void clear();
+
+    bool internalFind(const QString& str, bool startFromBeginning = false);
+
     public
-
-
 slots:
     /**
      * Scrolls the vertical scroll bar to its maximum position i.e. to the bottom.
@@ -90,6 +93,7 @@ slots:
 
 
 protected:
+
     PsiTextView textview;
     PlainTextChatTheme theme;
     QVBoxLayout *layout;

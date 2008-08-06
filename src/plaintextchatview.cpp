@@ -102,3 +102,26 @@ void __PlainTextChatView::appendText(const QString &text) {
 QSize __PlainTextChatView::sizeHint() const {
     return minimumSizeHint();
 }
+
+
+bool __PlainTextChatView::internalFind(const QString& str, bool startFromBeginning) {
+    
+    if (startFromBeginning) {
+        QTextCursor cursor = textview.textCursor();
+        cursor.movePosition(QTextCursor::Start, QTextCursor::KeepAnchor);
+        cursor.clearSelection();
+        textview.setTextCursor(cursor);
+    }
+
+    bool found = textview.find(str);
+    
+    if (!found) {
+        if (!startFromBeginning) {
+            return internalFind(str, true);
+        }
+
+        return false;
+    }
+
+    return true;
+}

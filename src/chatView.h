@@ -72,6 +72,13 @@ public:
     /** Returns session info */
     void setChatInfo(ChatTheme::ChatInfo chatInfo);
 
+    /** 
+     * Returns true if \param str was found in ChatView and selects the match visually.
+     * 
+     * if \param startFromBeginning is true, search will be performed from the beginning of chatView
+     */
+    virtual bool internalFind(const QString& str, bool startFromBeginning = false) = 0;
+
 signals:
 
     /** You cannot append messages until ChatView is ready (synchronization with Webkit) */

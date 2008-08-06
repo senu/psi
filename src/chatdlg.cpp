@@ -199,7 +199,7 @@ void ChatDlg::setShortcuts() {
     act_send_->setShortcuts(ShortcutManager::instance()->shortcuts("chat.send"));
     act_scrollup_->setShortcuts(ShortcutManager::instance()->shortcuts("common.scroll-up"));
     act_scrolldown_->setShortcuts(ShortcutManager::instance()->shortcuts("common.scroll-down"));
-
+    
     if (!isTabbed()) {
         act_close_->setShortcuts(ShortcutManager::instance()->shortcuts("common.close"));
     }

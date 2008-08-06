@@ -254,6 +254,7 @@ HEADERS += \
 	$$PWD/eventview.h\
 	$$PWD/lineedit.h\
 	$$PWD/genericlineedit.h\
+	$$PWD/finddialog.h\
 
 
 # Source files
@@ -401,6 +402,7 @@ SOURCES += \
 	$$PWD/eventview.cpp\
 	$$PWD/lineedit.cpp\
 	$$PWD/genericlineedit.cpp\
+	$$PWD/finddialog.cpp\
 
 
 whiteboarding {
