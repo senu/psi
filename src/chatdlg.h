@@ -56,7 +56,7 @@ class ChatView;
 class ChatEdit;
 
 
-class ChatDlg : public TabbableWidget {
+class ChatDlg : public TabbableWidget, public GenericChatDialog {
 
     Q_OBJECT
 protected:
@@ -164,7 +164,7 @@ slots:
     void setChatState(XMPP::ChatState s);
     void updateIsComposing(bool);
     void setContactChatState(ChatState s);
-    void logSelectionChanged();
+//    void logSelectionChanged();
     void capsChanged(const Jid&);
     void addEmoticon(QString text);
     void initComposing();
@@ -185,12 +185,6 @@ protected:
     virtual void setLooks();
     void setSelfDestruct(int);
     void deferredScroll();
-
-    /** Returns true if m is a emote (/me) message */
-    virtual bool isEmoteMessage(const XMPP::Message& m) = 0;
-
-    /** Returns formatted message body */
-    virtual QString messageText(const XMPP::Message& m) = 0;
 
     /** 
      * Fills User ChatEvent with corresponding data.
@@ -236,15 +230,15 @@ protected:
     virtual void appendChatEvent(const ChatEvent* event) = 0;
     virtual void appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) = 0;
     virtual void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) = 0;
-    virtual void appendMessageFields(const Message& m) = 0;
+    
+    /** Appends to message body message fields (subject and URL list) */
+    virtual void appendMessageFields(const Message& m, QString& messageBody) = 0;
     virtual void nicksChanged();
 
     QString whoNick(bool local) const;
 
     virtual ChatView* chatView() const = 0; //TODO 6 warning! also virtual in GenericCD
     virtual ChatEdit* chatEdit() const = 0;
-
-    virtual StatusChatEvent::StatusEventType statusToChatViewStatus(int status) const = 0;
 
     /** We pass it to MUC/Chat dialog constructor */
     HTMLThemeManager* themeManager;

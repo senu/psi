@@ -11,14 +11,20 @@ class GenericChatDialog;
 GenericChatDialog::GenericChatDialog()
 : textFormatter_(false, true, false), findDialog(0) {
 
+    gcObject = new GenericChatDialogQObject(this);
+
 }
 
+
+GenericChatDialog::~GenericChatDialog() {
+    delete gcObject;
+}
 static const QString me_cmd = "/me ";
 
 
-QString GenericChatDialog::messageTextGC(const XMPP::Message& m) {
+QString GenericChatDialog::messageText(const XMPP::Message& m) {
 
-    bool emote = isEmoteMessageGC(m),
+    bool emote = isEmoteMessage(m),
         modified;
 
     QString txt;
@@ -49,7 +55,7 @@ QString GenericChatDialog::messageTextGC(const XMPP::Message& m) {
 }
 
 
-bool GenericChatDialog::isEmoteMessageGC(const XMPP::Message& m) {
+bool GenericChatDialog::isEmoteMessage(const XMPP::Message& m) {
     if (m.body().startsWith(me_cmd) || m.html().text().trimmed().startsWith(me_cmd)) {
         return true;
     }
@@ -119,3 +125,42 @@ void GenericChatDialog::doFindGC(const QString &str) {
         findDialog->error(str);
     }
 }
+
+
+void GenericChatDialog::logSelectionChanged() {
+#ifdef Q_WS_MAC
+    if (chatView()->hasSelectedText()) {
+        chatView()->setFocus();
+    }
+    else {
+        chatEdit()->setFocus();
+    }
+#endif
+}
+
+bool GenericChatDialog::handleCopyEvent(QEvent *event) {
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *e = (QKeyEvent *) event;
+        if ((e->key() == Qt::Key_C && (e->modifiers() & Qt::ControlModifier)) ||
+            (e->key() == Qt::Key_Insert && (e->modifiers() & Qt::ControlModifier))) {
+            if (!chatEdit()->textCursor().hasSelection()) {
+                chatView()->copySelectedText();
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+void GenericChatDialogQObject::logSelectionChanged() {
+    dlg->logSelectionChanged();
+}
+
+
+void GenericChatDialogQObject::chatViewCreated() {
+#ifdef Q_WS_MAC
+    connect(dlg->chatView(), SIGNAL(selectionChanged()), this, SLOT(logSelectionChanged()));
+#endif
+}
+

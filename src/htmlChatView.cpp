@@ -7,6 +7,8 @@
 #include "htmlChatView.h"
 
 //TODO + 11 webkit sync/busy - queing appending messages
+
+
 HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* iconServer, QString _themePath)
 : ChatView(parent), themePath(_themePath), theme(_theme), isReady(false), queuedTheme(0) {
 
@@ -32,6 +34,7 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* i
     setMinimumSize(100, 100);
 
     connect(webView.page(), SIGNAL(linkClicked(const QUrl&)), this, SLOT(onLinkClicked(const QUrl&)));
+    connect(webView.page(), SIGNAL(selectionChanged()), this, SIGNAL(selectionChanged()));
 
 }
 
@@ -276,15 +279,25 @@ QSize HTMLChatView::sizeHint() const {
     return minimumSizeHint();
 }
 
-bool HTMLChatView::internalFind(const QString& str, bool startFromBeginning) {
-    
-    bool found = webView.page()->findText(str, startFromBeginning ? 
-        QWebPage::FindWrapsAroundDocument : (QWebPage::FindFlag)0);
 
-    if(!found && !startFromBeginning) {
+bool HTMLChatView::internalFind(const QString& str, bool startFromBeginning) {
+
+    bool found = webView.page()->findText(str, startFromBeginning ?
+                                          QWebPage::FindWrapsAroundDocument : (QWebPage::FindFlag)0);
+
+    if (!found && !startFromBeginning) {
         return internalFind(str, true);
     }
 
     return found;
-    
+
+}
+
+
+bool HTMLChatView::hasSelectedText() const {
+    return !(webView.page()->selectedText().isEmpty());
+}
+
+void HTMLChatView::copySelectedText() {
+    webView.page()->triggerAction(QWebPage::Copy);
 }

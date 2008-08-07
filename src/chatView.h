@@ -79,11 +79,19 @@ public:
      */
     virtual bool internalFind(const QString& str, bool startFromBeginning = false) = 0;
 
+    /** This property holds whether there is any text selected. */
+    virtual bool hasSelectedText() const = 0;
+    
+    /** Copies selected text to clipboard */
+    virtual void copySelectedText() = 0;
+
 signals:
 
     /** You cannot append messages until ChatView is ready (synchronization with Webkit) */
     void initDocumentFinished();
-
+    
+    /** Emmited whenever the ChatView selection changes*/
+    void selectionChanged();
     public
 
 

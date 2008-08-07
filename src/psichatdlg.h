@@ -8,8 +8,7 @@
 
 class IconAction;
 
-class PsiChatDlg : public ChatDlg, public GenericChatDialog
-{
+class PsiChatDlg : public ChatDlg {
 	Q_OBJECT
 public:
 	PsiChatDlg(const Jid& jid, PsiAccount* account, TabManager* tabManager, 
@@ -58,10 +57,13 @@ private:
 	void setLooks();
 	void setShortcuts();
 	QString colorString(bool local, SpooledType spooled) const;
+    
     void appendChatEvent(const ChatEvent* event);
 	void appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
 	void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
-	void appendMessageFields(const Message& m);
+    
+    /** Appends to message body message fields (subject and URL list) */
+    void appendMessageFields(const Message& m, QString& messageBody);
 
     /** Returns (null() if absent) avatar pixmap for \param j*/
     QPixmap getAvatarForJid(const Jid& j);
@@ -75,11 +77,6 @@ private:
      */
     virtual void fillEventWithUserInfo(UserChatData * userInfo, const Jid& j);
     
-    //redirected
-    QString messageText(const XMPP::Message& m);
-    bool isEmoteMessage(const XMPP::Message& m);
-    StatusChatEvent::StatusEventType statusToChatViewStatus(int status) const;
-   
     //implemented
 
     /** Returns dialog's ChatView */

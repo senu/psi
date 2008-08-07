@@ -86,7 +86,7 @@ public:
 	PsiCon *psi;
 	PsiAccount *pa;
 	Status s;
-	PlainTextChatView *te;
+	DeprecatedChatView *te;
 	StatusComboBox *cb_type;
 	QComboBox *cb_preset;
 	QLineEdit *le_priority;
@@ -157,7 +157,7 @@ void StatusSetDlg::init()
 	connect(d->cb_preset, SIGNAL(currentIndexChanged(int)), SLOT(chooseStatusPreset(int)));
 	hb1->addWidget(d->cb_preset,3);
 
-	d->te = new PlainTextChatView(this);
+	d->te = new DeprecatedChatView(this);
 	d->te->setDialog(this);
 	d->te->setReadOnly(false);
 	d->te->setTextFormat(Qt::PlainText);

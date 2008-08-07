@@ -15,7 +15,7 @@ HTMLChatTheme::HTMLChatTheme() {
 
 QString HTMLChatTheme::readFileContents(QDir dir, QString relativePath) {
     QFile file(dir.absoluteFilePath(relativePath));
-    qDebug() << "loading theme file" << dir.absoluteFilePath(relativePath);
+//    qDebug() << "loading theme file" << dir.absoluteFilePath(relativePath);
 
     if (!file.open(QIODevice::ReadOnly)) {
         qDebug() << "WARNING\n\n" << "file not found"; //it's not an error. just lazy theme creator 
@@ -61,6 +61,7 @@ void HTMLChatTheme::readTheme(QDir dir) {
         outgoingNextMessageTemplate.setContent(incomingNextMessageTemplate.content());
     }
 
+    noOutgoingDir = !dir.exists("Outgoing/buddy_icon.png");
 
     // status/event template
     fileTransferEventTemplate.setContent(readFileContents(dir, "Status.html"));
@@ -333,7 +334,17 @@ void HTMLChatTheme::fillPartWithUserKeywords(HTMLChatPart& part, const UserChatD
     part.replaceAndEscapeKeyword("%service%", event->service());
     part.replaceAndEscapeKeyword("%senderScreenName%", event->jid());
     part.replaceAndEscapeKeyword("%senderDisplayName%", event->jid());
-    part.replaceAndEscapeKeyword("%userIconPath%", event->userIconPath());
+    
+    if (event->userIconPath() == "incoming") { //default incoming avatar 
+        part.replaceAndEscapeKeyword("%userIconPath%", defaultIncomingAvatar());
+    }
+    else if (event->userIconPath() == "outgoing") {
+        part.replaceAndEscapeKeyword("%userIconPath%", defaultOutgoingAvatar()); 
+    }
+    else { //user avatar
+        part.replaceAndEscapeKeyword("%userIconPath%", event->userIconPath());
+    }
+    
     part.replaceAndEscapeKeyword("%senderStatusIcon%", event->userStatusIcon());
     part.replaceSenderColorKeyword(event->userColor());
 
@@ -368,8 +379,20 @@ void HTMLChatTheme::fillPartWithThemeKeywords(HTMLChatPart& part, ChatTheme::Cha
 
     part.replaceAndEscapeKeyword("%destinationDisplayName%", sessionInfo.destinationName);
 
-    part.replaceAndEscapeKeyword("%incomingIconPath%", sessionInfo.incomingIconPath);
-    part.replaceAndEscapeKeyword("%outgoingIconPath%", sessionInfo.outgoingIconPath);
+    //avatars
+    if (sessionInfo.incomingIconPath.isEmpty()) {
+        part.replaceAndEscapeKeyword("%incomingIconPath%", "incoming_icon.png");
+    }
+    else {
+        part.replaceAndEscapeKeyword("%incomingIconPath%", sessionInfo.incomingIconPath);
+    }
+
+    if (sessionInfo.outgoingIconPath.isEmpty()) {
+        part.replaceAndEscapeKeyword("%outgoingIconPath%", "outgoing_icon.png");
+    }
+    else {
+        part.replaceAndEscapeKeyword("%outgoingIconPath%", sessionInfo.outgoingIconPath);
+    }
 }
 
 
@@ -422,4 +445,17 @@ HTMLChatTemplate HTMLChatTheme::headerTemplate() const {
     return headerTemplate_;
 }
 
+
+QString HTMLChatTheme::defaultIncomingAvatar() const {
+    return "Incoming/buddy_icon.png";
+}
+
+
+QString HTMLChatTheme::defaultOutgoingAvatar() const {
+    if (noOutgoingDir) {
+        return "Incoming/buddy_icon.png";
+    }
+
+    return "Outgoing/buddy_icon.png";
+}
 

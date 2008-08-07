@@ -55,6 +55,12 @@ private:
     QString nick_;
     QString jid_;
     QString service_;
+
+    /** 
+     * User icon/avatar URL. 
+     *
+     * Use  "incoming" for default incoming icon and "outgoing" for default outging one
+     */
     QString userIconPath_;
     QString userStatusIcon_;
 

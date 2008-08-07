@@ -1937,7 +1937,7 @@ void EventDlg::updateEvent(PsiEvent *e)
         
         textFormatter.setDoEmoticonify(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool());
         textFormatter.setDoLegacyFormatting(PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool());
-        
+       
         txt = messageValidator.validateMessage(txt, &modified, &textFormatter);
 
         if ( e->type() == PsiEvent::HttpAuth ) {

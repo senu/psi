@@ -94,6 +94,18 @@ private:
     /** Returns dir/relativePath (to Contents dir) */
     QString readFileContents(QDir dir, QString relativePath);
 
+    //TODO!!!
+    
+    /** Default %userIconPath% for incoming messages*/
+    QString defaultIncomingAvatar() const;
+    
+    /** 
+     * Default %userIconPath% for outgoing messages. 
+     * 
+     * We need that because there can be no Outoging/ dir
+     */
+    QString defaultOutgoingAvatar() const;
+
 
     HTMLChatTemplate incomingConsecutiveMessageTemplate;
     HTMLChatTemplate incomingNextMessageTemplate;
@@ -116,6 +128,13 @@ private:
     QStringList _variants;
     QString _currentVariant;
     bool _isValid;
+    
+    /** 
+     * True if theme doesn't have Ougoing/ directory (Incoming/ is used) 
+     * Well, it's true if Outoging/buddy_icon.png doesnt is not found.
+     */
+    bool noOutgoingDir; 
+    
 
 };
 

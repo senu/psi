@@ -4,6 +4,8 @@
 #include <Qt>
 #include <QDir>
 #include <QString>
+#include <QFont>
+#include <QColor>
 
 #include "chatTheme.h"
 
@@ -43,6 +45,7 @@ public:
     QString createTuneEventPart(const TuneChatEvent* event) const;
     QString createSystemEventPart(const SystemChatEvent* event) const;
 
+    /** Always returns true */
     bool isValid();
     
 private:
@@ -51,6 +54,34 @@ private:
 
     /** Returns color name based on message type*/
     QString colorString(bool local, bool isSpooled) const; //TODO ? 74 make it customizable
+
+
+    //Theme options from PsiOptions
+    
+    /** Font used to display chat events and messages */
+    QFont chatFont;
+    
+    /** Nick color (incoming message) */
+    QColor incomingNickColor;
+    
+    /** Nick color (outgoing message) */
+    QColor outgoingNickColor;
+    
+    /** Nick color (spooled message) */
+    QColor spooledNickColor;
+    
+    /** Color of system/status/emote/filetransfer event */
+    QColor systemMessageColor;
+
+    /**
+     * If false, message will look like:
+     *   <nick> hello 
+     * otherwise:
+     *   nick says: hello
+     */
+    bool useChatSaysStyle;
+
+    
 };
 
 #endif

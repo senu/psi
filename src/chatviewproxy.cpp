@@ -30,14 +30,18 @@ void ChatViewProxy::init(const ChatTheme::ChatInfo& chatInfo, bool inGroupChat_,
     
     _chatView = createChatView(inGroupChat, jid);
     _chatView->init(chatInfo);
+    emit chatViewCreated();
 }
 
 
 void ChatViewProxy::optionsChanged(const QString& optionName) {
     qDebug() << optionName;
+    
     if (!_chatView || !optionName.startsWith("options.ui.themes")) {
         return;
     }
+
+    bool viewWasCreated = false;
     
     if (PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool() != isHTMLChatView) {
         ChatView * newView = createChatView(inGroupChat, jid);
@@ -46,10 +50,15 @@ void ChatViewProxy::optionsChanged(const QString& optionName) {
 
         delete _chatView;
         _chatView = newView;
+        viewWasCreated = true;
     }
     
     if (!optionName.startsWith("options.ui.themes.themename") && 
         !optionName.startsWith("options.ui.themes.variantname")) {
+        
+        if (viewWasCreated) {
+            emit chatViewCreated();
+        }
         return;
     }
 
@@ -59,6 +68,10 @@ void ChatViewProxy::optionsChanged(const QString& optionName) {
         dynamic_cast<HTMLChatView *> (_chatView)->setTheme(themeManager->getTheme(
             PsiOptions::instance()->getOption("options.ui.themes.themename").toString(), 
             PsiOptions::instance()->getOption("options.ui.themes.variantname").toString())); 
+    }
+   
+    if (viewWasCreated) {
+        emit chatViewCreated();
     }
 }
 

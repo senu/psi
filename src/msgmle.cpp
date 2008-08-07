@@ -42,9 +42,9 @@
 
 
 //----------------------------------------------------------------------------
-// PlainTextChatView
+// DeprecatedChatView
 //----------------------------------------------------------------------------
-PlainTextChatView::PlainTextChatView(QWidget *parent)
+DeprecatedChatView::DeprecatedChatView(QWidget *parent)
 	: PsiTextView(parent)
 	, dialog_(0)
 {
@@ -60,27 +60,27 @@ PlainTextChatView::PlainTextChatView(QWidget *parent)
 #endif
 }
 
-PlainTextChatView::~PlainTextChatView()
+DeprecatedChatView::~DeprecatedChatView()
 {
 }
 
-void PlainTextChatView::setDialog(QWidget* dialog)
+void DeprecatedChatView::setDialog(QWidget* dialog)
 {
 	dialog_ = dialog;
 }
 
-QSize PlainTextChatView::sizeHint() const
+QSize DeprecatedChatView::sizeHint() const
 {
     qDebug() << minimumSizeHint();
 	return minimumSizeHint();
 }
 
-bool PlainTextChatView::focusNextPrevChild(bool next)
+bool DeprecatedChatView::focusNextPrevChild(bool next)
 {
 	return QWidget::focusNextPrevChild(next);
 }
 
-void PlainTextChatView::keyPressEvent(QKeyEvent *e)
+void DeprecatedChatView::keyPressEvent(QKeyEvent *e)
 {
 /*	if(e->key() == Qt::Key_Escape)
 		e->ignore(); 
@@ -109,16 +109,13 @@ void PlainTextChatView::keyPressEvent(QKeyEvent *e)
 
 /**
  * Copies any selected text to the clipboard
- * if autoCopy is enabled and PlainTextChatView is in read-only mode.
+ * if autoCopy is enabled and DeprecatedChatView is in read-only mode.
  */
-void PlainTextChatView::autoCopy()
+void DeprecatedChatView::autoCopy()
 {
-	//TODO 67 wv dec
-	/*
 	if (isReadOnly() && PsiOptions::instance()->getOption("options.ui.automatically-copy-selected-text").toBool()) {
 		copy();
 	}
-	*/
 }
 
 /**
@@ -128,7 +125,7 @@ void PlainTextChatView::autoCopy()
  * \param event received event
  * \param chatEdit pointer to the dialog's ChatEdit widget that receives user input
  */
-bool PlainTextChatView::handleCopyEvent(QObject *object, QEvent *event, ChatEdit *chatEdit)
+bool DeprecatedChatView::handleCopyEvent(QObject *object, QEvent *event, ChatEdit *chatEdit)
 {
 	if (object == chatEdit && event->type() == QEvent::KeyPress) {
 		QKeyEvent *e = (QKeyEvent *)event;
@@ -147,7 +144,7 @@ bool PlainTextChatView::handleCopyEvent(QObject *object, QEvent *event, ChatEdit
 	return false;
 }
 
-void PlainTextChatView::appendText(const QString &text)
+void DeprecatedChatView::appendText(const QString &text)
 {
 	bool doScrollToBottom = atBottom();
 	
@@ -167,7 +164,7 @@ void PlainTextChatView::appendText(const QString &text)
  * \brief Common function for ChatDlg and GCMainDlg. FIXME: Extract common
  * chat window from both dialogs and move this function to that class.
  */
-QString PlainTextChatView::formatTimeStamp(const QDateTime &time)
+QString DeprecatedChatView::formatTimeStamp(const QDateTime &time)
 {
 	// TODO: provide an option for user to customize
 	// time stamp format

@@ -128,7 +128,6 @@ slots:
     void doClear();
     void doClearButton();
     void buildMenu();
-    void logSelectionChanged();
     void setConnecting();
     void unsetConnecting();
     void action_error(MUCManager::Action, int, const QString&);

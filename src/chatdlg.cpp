@@ -166,7 +166,7 @@ ChatDlg::~ChatDlg() {
 
 void ChatDlg::initComposing() {
     highlightersInstalled_ = true;
-    chatEditCreated();
+    connect(chatEdit(), SIGNAL(textChanged()), this, SLOT(setComposing()));
 }
 
 
@@ -315,23 +315,6 @@ void ChatDlg::hideEvent(QHideEvent* e) {
 void ChatDlg::showEvent(QShowEvent *) {
     setSelfDestruct(0);
 }
-
-
-void ChatDlg::logSelectionChanged() {
-#ifdef Q_WS_MAC
-    //TODO 1
-    /*
-    // A hack to only give the message log focus when text is selected
-    if (chatView()->hasSelectedText()) {
-        chatView()->setFocus();
-    }
-    else {
-        chatEdit()->setFocus();
-    }
-     */
-#endif
-}
-
 
 void ChatDlg::deactivated() {
     TabbableWidget::deactivated();
@@ -825,6 +808,7 @@ void ChatDlg::appendMessage(const Message &m, bool local) {
     }
 
     QString txt = messageText(m);
+    appendMessageFields(m, txt);
 
     ChatDlg::SpooledType spooledType = m.spooled() ?
         ChatDlg::Spooled_OfflineStorage :
@@ -836,8 +820,6 @@ void ChatDlg::appendMessage(const Message &m, bool local) {
     else {
         appendNormalMessage(spooledType, m.timeStamp(), local, txt);
     }
-
-    appendMessageFields(m);
 
     if (local) {
         deferredScroll();
@@ -984,9 +966,9 @@ bool ChatDlg::eventFilter(QObject *obj, QEvent *event) {
             return true;
     }
 
-    //TODO 5 
-    //if (chatView()->handleCopyEvent(obj, event, chatEdit()))
-    //  return true;
+    if (obj == chatEdit() && handleCopyEvent(event)) {
+        return true;
+    }
 
     return QWidget::eventFilter(obj, event);
 }
@@ -1049,15 +1031,6 @@ void ChatDlg::nicksChanged() {
 
 
 void ChatDlg::chatEditCreated() {
-    
-    chatEdit()->setDialog(this);
-    chatEdit()->installEventFilter(this);
-    
-    connect(chatView(), SIGNAL(selectionChanged()), SLOT(logSelectionChanged()));
-
-    if (highlightersInstalled_) {
-        connect(chatEdit(), SIGNAL(textChanged()), this, SLOT(setComposing()));
-    }
 }
 
 

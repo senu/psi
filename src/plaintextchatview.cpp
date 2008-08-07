@@ -1,7 +1,7 @@
 #include "plaintextchatview.h"
 
 
-__PlainTextChatView::__PlainTextChatView(QWidget *parent) : ChatView(parent), textview(this) {
+PlainTextChatView::PlainTextChatView(QWidget *parent) : ChatView(parent), textview(this) {
 
     layout = new QVBoxLayout(this);
     layout->setMargin(0);
@@ -12,11 +12,12 @@ __PlainTextChatView::__PlainTextChatView(QWidget *parent) : ChatView(parent), te
     setFocusPolicy(Qt::NoFocus);
     textview.setFocusPolicy(Qt::NoFocus);
 
+    connect(&textview, SIGNAL(selectionChanged()), this, SIGNAL(selectionChanged()));
     setLayout(layout);
 }
 
 
-void __PlainTextChatView::appendEvent(const ChatEvent* event, bool alreadyAppended) {
+void PlainTextChatView::appendEvent(const ChatEvent* event, bool alreadyAppended) {
 
     ChatView::appendEvent(event, alreadyAppended);
 
@@ -25,7 +26,7 @@ void __PlainTextChatView::appendEvent(const ChatEvent* event, bool alreadyAppend
 }
 
 
-void __PlainTextChatView::appendMessage(const MessageChatEvent* event, bool alreadyAppended) {
+void PlainTextChatView::appendMessage(const MessageChatEvent* event, bool alreadyAppended) {
 
     ChatView::appendMessage(event, alreadyAppended);
 
@@ -42,48 +43,48 @@ void __PlainTextChatView::appendMessage(const MessageChatEvent* event, bool alre
 }
 
 
-void __PlainTextChatView::clear() {
+void PlainTextChatView::clear() {
 }
 
 
-void __PlainTextChatView::init() {
+void PlainTextChatView::init() {
     reappendEvents();
     emit initDocumentFinished();
 }
 
 
-void __PlainTextChatView::scrollToBottom() {
+void PlainTextChatView::scrollToBottom() {
     verticalScrollBar()->setValue(verticalScrollBar()->maximum());
 }
 
 
-void __PlainTextChatView::scrollToTop() {
+void PlainTextChatView::scrollToTop() {
     verticalScrollBar()->setValue(verticalScrollBar()->minimum());
 }
 
 
-bool __PlainTextChatView::atBottom() const {
+bool PlainTextChatView::atBottom() const {
     // '32' is 32 pixels margin, which was used in the old code
     return (verticalScrollBar()->maximum() - verticalScrollBar()->value()) <= 32;
 }
 
 
-QScrollBar * __PlainTextChatView::verticalScrollBar() const {
+QScrollBar * PlainTextChatView::verticalScrollBar() const {
     return textview.verticalScrollBar();
 }
 
 
-void __PlainTextChatView::scrollUp() {
+void PlainTextChatView::scrollUp() {
     verticalScrollBar()->setValue(verticalScrollBar()->value() - verticalScrollBar()->pageStep() / 2);
 }
 
 
-void __PlainTextChatView::scrollDown() {
+void PlainTextChatView::scrollDown() {
     verticalScrollBar()->setValue(verticalScrollBar()->value() + verticalScrollBar()->pageStep() / 2);
 }
 
 
-void __PlainTextChatView::appendText(const QString &text) {
+void PlainTextChatView::appendText(const QString &text) {
     bool doScrollToBottom = atBottom();
 
     // prevent scrolling back to selected text when 
@@ -99,13 +100,13 @@ void __PlainTextChatView::appendText(const QString &text) {
 }
 
 
-QSize __PlainTextChatView::sizeHint() const {
+QSize PlainTextChatView::sizeHint() const {
     return minimumSizeHint();
 }
 
 
-bool __PlainTextChatView::internalFind(const QString& str, bool startFromBeginning) {
-    
+bool PlainTextChatView::internalFind(const QString& str, bool startFromBeginning) {
+
     if (startFromBeginning) {
         QTextCursor cursor = textview.textCursor();
         cursor.movePosition(QTextCursor::Start, QTextCursor::KeepAnchor);
@@ -114,7 +115,7 @@ bool __PlainTextChatView::internalFind(const QString& str, bool startFromBeginni
     }
 
     bool found = textview.find(str);
-    
+
     if (!found) {
         if (!startFromBeginning) {
             return internalFind(str, true);
@@ -124,4 +125,13 @@ bool __PlainTextChatView::internalFind(const QString& str, bool startFromBeginni
     }
 
     return true;
+}
+
+
+bool PlainTextChatView::hasSelectedText() const {
+    return textview.hasSelectedText();
+}
+
+void PlainTextChatView::copySelectedText() {
+    textview.copy();
 }

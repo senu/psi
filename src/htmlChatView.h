@@ -47,6 +47,8 @@ public:
     //reimplemented
     bool atBottom() const;
     bool internalFind(const QString& str, bool startFromBeginning = false);
+    bool hasSelectedText() const;
+    void copySelectedText();
 
 
     public

@@ -10,54 +10,24 @@
 #include "psichatedit.h"
 #include "plaintextchattheme.h"
 
-
-//#include "msgmle.h"
-
-
 class ChatView;
 class ChatEdit;
 
-
-/** used only in chatdlg */
-class __PlainTextChatView : public ChatView { //TODO 75 rename
+/**
+ * PlainText (old) version of ChatView.
+ *
+ * It has smaller memory footprint (in comparison to HTMLChatView) but is uglier. 
+ */
+class PlainTextChatView : public ChatView {
 
     Q_OBJECT
 public:
     void appendEvent(const ChatEvent* event, bool alreadyAppended = false);
     void appendMessage(const MessageChatEvent* event, bool alreadyAppended = false);
 
-
     void init();
 
-    __PlainTextChatView(QWidget *parent);
-
-
-    /**
-     * Handle KeyPress events that happen in ChatEdit widget. This is used
-     * to 'fix' the copy shortcut.
-     * \param object object that should receive the event
-     * \param event received event
-     * \param chatEdit pointer to the dialog's ChatEdit widget that receives user input
-     */
-    bool handleCopyEvent(QObject *object, QEvent *event, ChatEdit *chatEdit) { //TODO 76 
-        if (object == chatEdit && event->type() == QEvent::KeyPress) {
-            QKeyEvent *e = (QKeyEvent *) event;
-            if ((e->key() == Qt::Key_C && (e->modifiers() & Qt::ControlModifier)) ||
-                (e->key() == Qt::Key_Insert && (e->modifiers() & Qt::ControlModifier))) {
-                if (!chatEdit->textCursor().hasSelection() &&
-                    textview.textCursor().hasSelection()) {
-                    textview.copy();
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-
-    void appendText(const QString &text);
-
+    PlainTextChatView(QWidget *parent);
 
     /** Used for scrollToTop/Bottom/Up/Down */
     QScrollBar * verticalScrollBar() const;
@@ -78,6 +48,8 @@ public:
     void clear();
 
     bool internalFind(const QString& str, bool startFromBeginning = false);
+    bool hasSelectedText() const;
+    void copySelectedText();
 
     public
 slots:
@@ -94,6 +66,8 @@ slots:
 
 protected:
 
+    void appendText(const QString &text);
+    
     PsiTextView textview;
     PlainTextChatTheme theme;
     QVBoxLayout *layout;

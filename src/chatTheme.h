@@ -41,12 +41,15 @@ public:
     struct ChatInfo {
 
         QDateTime timeOpened;
+        
         QString chatName,
             sourceName,
             destinationName,
             destinationDisplayName,
 
+            /** If empty default incoming icon/avatar will be used*/
             incomingIconPath,
+            /** If empty default outgoing icon/avatar will be used*/
             outgoingIconPath;
     };
 };

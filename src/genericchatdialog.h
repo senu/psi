@@ -14,6 +14,8 @@
 #include "statusChatEvent.h"
 #include "finddialog.h"
 
+class GenericChatDialogQObject;
+
 
 /**
  * A step towards better GCMainDlg.
@@ -32,7 +34,7 @@ class GenericChatDialog {
 
 public:
     GenericChatDialog();
-    ~GenericChatDialog() {};
+    ~GenericChatDialog();
 
     /** 
      * Opens Find Dialog.
@@ -46,6 +48,8 @@ public:
     void doFindGC(const QString& str);
 
 protected:
+
+
     /** Indicates if next message should be consecutive (who was last owner) */
     enum LastEventOwner {
 
@@ -60,31 +64,45 @@ protected:
      * \param local indicates if it's our message 
      */
     bool doConsecutiveMessage(const QDateTime& time, bool local);
-    
+
     /** Updates information about last ChatEvent; called after appending an event */
     void updateLastMsgTimeAndOwner(const QDateTime& t, LastEventOwner owner);
-    
+
     /** Status must be translated because we don't want Iris stuff in ChatView */
     StatusChatEvent::StatusEventType statusToChatViewStatus(int status) const;
 
+    /** Gives the ChatView focus when text is selected */
+    void logSelectionChanged();
+
     /** Returns dialog's ChatView */
-	virtual ChatView* chatView() const = 0;
-    
+    virtual ChatView* chatView() const = 0;
+
     /** Returns dialog's ChatEdit */
-	virtual ChatEdit* chatEdit() const = 0;
-
-    //defined in ChatDlg
-    QString messageTextGC(const XMPP::Message& m);
-    bool isEmoteMessageGC(const XMPP::Message& m);
-
+    virtual ChatEdit* chatEdit() const = 0;
     
+    /**
+     * Handle KeyPress events that happen in ChatEdit widget. This is used to 
+     * 'fix' the copy shortcut.
+     *
+     * \param event received event
+     *
+     * Returns true if copy was performed.
+     */
+    bool handleCopyEvent(QEvent *event);
+
+    /** Returns formatted message body */
+    QString messageText(const XMPP::Message& m);
+    
+    /** Returns true if m is a emote (/me) message */
+    bool isEmoteMessage(const XMPP::Message& m);
+
     //fields
     /** Validates XHTML-IM messages */
     MessageValidator messageValidator_;
 
     /** Does emoticonify, linkify, etc in XHTML-IM messages */
     DefaultHTMLTextFormatter textFormatter_;
-    
+
     /** Indicates if next message should be consecutive */
     LastEventOwner lastEventOwner;
 
@@ -92,10 +110,40 @@ protected:
     QDateTime lastMsgTime;
 
     /** Pointer to Find Dialog */
-	QPointer<FindDialog> findDialog;
-    
+    QPointer<FindDialog> findDialog;
+
     /** Last searched string*/
-	QString lastSearch;
+    QString lastSearch;
+
+    /** Nasty hack to avoid virtual inheritance and linker/c++ templates errors*/
+    GenericChatDialogQObject* gcObject;
+
+    friend class GenericChatDialogQObject;
+};
+
+
+/** [Hack - GenericChatDlg cannot inherit from QObject] contains signals and slots */
+class GenericChatDialogQObject : public QObject {
+
+
+    Q_OBJECT
+public:
+    GenericChatDialogQObject(GenericChatDialog* dlg_) : dlg(dlg_) {
+    }
+
+
+    public
+
+
+slots:
+    /** Gives the ChatView focus when text is selected */
+    void logSelectionChanged();
+    
+    /** Sets focus/selection handlers */
+    void chatViewCreated();
+
+private:
+    GenericChatDialog* dlg;
 };
 
 #endif	

@@ -402,7 +402,7 @@ QString HTMLChatEdit::xhtmlMessage() {
                 }
                 else {
                     block += "<span style=\"" + createFragmentStyle(curTCF) + "\">"
-                        + TextUtil::escape(currentFragment.text()) + "</span>\n";
+                        + TextUtil::escape(currentFragment.text()) + "</span>";
                 }
 
             }
@@ -412,7 +412,7 @@ QString HTMLChatEdit::xhtmlMessage() {
             msg += block;
         }
         else {
-            msg += "<p style=\"" + createBlockStyle(curTBF) + "\">" + block + "</p>\n";
+            msg += "<p style=\"" + createBlockStyle(curTBF) + "\">" + block + "</p>";
         }
 
         currentBlock = currentBlock.next();

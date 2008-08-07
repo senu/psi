@@ -33,14 +33,24 @@ class QResizeEvent;
 class QTimer;
 class SpellHighlighter;
 
-/** Old ChatView - it  will be removed! */
-class PlainTextChatView : public PsiTextView //PlainTextChatView
+/** 
+ * Old ChatView. Obsolete/Deprecated.
+ *
+ * Currently used in StatusDlg and FileTransfer Dialog. 
+ * It exist only because if it was replaced with other widget I (senu) wouldn't have
+ * time to fully test substituion.
+ *
+ * If you want feature-rich TextView use webkit-based HTMLChatView or DeprecatedChatView.
+ * If you want to display simple Message/Event use EventView or PsiTextView. 
+ * If you want editor use [line][HTML]ChatEdit.
+ *
+ */
+class DeprecatedChatView : public PsiTextView
 {
-
     Q_OBJECT
 public:
-    PlainTextChatView(QWidget* parent);
-    ~PlainTextChatView();
+    DeprecatedChatView(QWidget* parent);
+    ~DeprecatedChatView();
 
     void setDialog(QWidget* dialog);
 

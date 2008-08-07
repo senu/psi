@@ -75,17 +75,11 @@ void PsiChatDlg::initUi() {
     chatInfo.sourceName = account()->nick();
 
     //avatar or default icon
-    if (getAvatarForJid(jid()).isNull()) {
-        chatInfo.incomingIconPath = "incoming_icon.png";
-    }
-    else {
+    if (!getAvatarForJid(jid()).isNull()) {
         chatInfo.incomingIconPath = "icon://avatars/" + jid().full() + ".png";
     }
 
-    if (getAvatarForJid(account()->jid()).isNull()) {
-        chatInfo.outgoingIconPath = "outgoing_icon.png";
-    }
-    else {
+    if (!getAvatarForJid(account()->jid()).isNull()) {
         chatInfo.outgoingIconPath = "icon://avatars/" + account()->jid().full() + ".png";
     }
 
@@ -94,14 +88,12 @@ void PsiChatDlg::initUi() {
     lastMsgTime = QDateTime::currentDateTime();
     lastEventOwner = Other;
 
-    ui_.log->init(chatInfo, false, themeManager, iconServer);
-
+    connect(ui_.log, SIGNAL(chatViewCreated()), gcObject, SLOT(chatViewCreated()));
     connect(ui_.mle, SIGNAL(textEditCreated(QTextEdit*)), SLOT(chatEditCreated()));
-    chatEditCreated();
 
-#ifdef Q_WS_MAC
-    connect(chatView(), SIGNAL(selectionChanged()), SLOT(logSelectionChanged())); //TODO 80
-#endif
+    chatEditCreated();
+    ui_.log->init(chatInfo, false, themeManager, iconServer);
+//    chatEditCreated();//TODO 101 inv
 
     initToolButtons();
     initToolBar();
@@ -441,7 +433,7 @@ void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time,
     msg->setTimeStamp(time);
     msg->setConsecutive(doConsecutiveMessage(time, local));
     msg->setSpooled(spooled);
-    msg->setBody(txt); //TODO 83 escape
+    msg->setBody(txt);
 
     chatView()->appendMessage(msg);
     updateLastMsgTimeAndOwner(time, local ? Outgoing : Incoming);
@@ -453,37 +445,33 @@ void PsiChatDlg::appendChatEvent(const ChatEvent* event) {
     updateLastMsgTimeAndOwner(event->timeStamp(), Other);
 }
 
+void PsiChatDlg::appendMessageFields(const Message& m, QString& messageBody) {
 
-/*
-void PsiChatDlg::appendSystemMsg(const QString &str) {
-    QDateTime time = QDateTime::currentDateTime();
-
-    ExtendedSystemChatEvent * ev = new ExtendedSystemChatEvent(str);
-    ev->setType(SystemChatEvent::Other);
-    ev->setTimeStamp(time);
-
-    appendSystemMsg(ev);
-}
- */
-
-void PsiChatDlg::appendMessageFields(const Message& m) {
-    //TODO 84 append message fiels 
-
-    /*
+    bool containsField = false;
+    QString appendedPart;
+    
     if (!m.subject().isEmpty()) {
-        chatView()->appendText(QString("<b>") + tr("Subject:") + "</b> " + QString("%1").arg(Qt::escape(m.subject())));
+        appendedPart = QString("<h3><strong>") + 
+            tr("Subject:") + 
+            QString("</strong> %1</h3>").arg(Qt::escape(m.subject()));
+        
+        containsField = true;
     }
     if (!m.urlList().isEmpty()) {
         UrlList urls = m.urlList();
-        chatView()->appendText(QString("<i>") + tr("-- Attached URL(s) --") + "</i>");
+        appendedPart += QString("<ol>") + tr("-- Attached URL(s) --") + "";
         for (QList<Url>::ConstIterator it = urls.begin(); it != urls.end(); ++it) {
             const Url &u = *it;
-            chatView()->appendText(QString("<b>") + tr("URL:") + "</b> " + QString("%1").arg(TextUtil::linkify(Qt::escape(u.url()))));
-            chatView()->appendText(QString("<b>") + tr("Desc:") + "</b> " + QString("%1").arg(u.desc()));
+            appendedPart += QString("<li><strong>") + tr("URL:") + "</strong> " + QString("%1").arg(TextUtil::linkify(Qt::escape(u.url())));
+            appendedPart += QString(" <strong>") + tr("Desc:") + "</strong> " + QString("%1</li>").arg(TextUtil::escape(u.desc()));
         }
+        appendedPart +="</ol>";
+        containsField = true;
     }
-     */
 
+    if (containsField) {
+        messageBody = "<span>"+ appendedPart + messageBody + "</span>";
+    }
 }
 
 
@@ -517,9 +505,9 @@ void PsiChatDlg::chatEditCreated() {
     ChatDlg::chatEditCreated();
 
     connect(chatEdit(), SIGNAL(textChanged()), this, SLOT(updateCounter()));
+    chatEdit()->setDialog(this);
     chatEdit()->installEventFilter(this);
 }
-
 
 QPixmap PsiChatDlg::getAvatarForJid(const Jid& j) {
     QString res;
@@ -570,10 +558,10 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
 
     if (getAvatarForJid(j).isNull()) { //default avatar
         if (local) {
-           userInfo->setUserIconPath("Outgoing/buddy_icon.png");
+           userInfo->setUserIconPath("outgoing");
         }
         else {
-           userInfo->setUserIconPath("Incoming/buddy_icon.png"); //TODO 86 outgoing icon when no incoming folder
+           userInfo->setUserIconPath("incoming");
         }
     }
     else {
@@ -581,21 +569,6 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
     }
 
     userInfo->setService("Jabber");
-}
-
-
-QString PsiChatDlg::messageText(const XMPP::Message& m) {
-    return GenericChatDialog::messageTextGC(m);
-}
-
-
-bool PsiChatDlg::isEmoteMessage(const XMPP::Message& m) {
-    return GenericChatDialog::isEmoteMessageGC(m);
-}
-
-
-StatusChatEvent::StatusEventType PsiChatDlg::statusToChatViewStatus(int status) const {
-    return GenericChatDialog::statusToChatViewStatus(status);
 }
 
 void PsiChatDlg::openFind() {

@@ -35,6 +35,10 @@ public:
 slots:
     void optionsChanged(const QString& optionName);
 
+signals:
+    /** Emitted when new ChatView is created */
+    void chatViewCreated();
+
 private:
     ChatView* _chatView;
 

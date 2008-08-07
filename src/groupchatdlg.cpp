@@ -414,10 +414,11 @@ public:
 	}
 
 	bool eventFilter( QObject *obj, QEvent *ev ) {
-//		if (chatView()->handleCopyEvent(obj, ev, chatEdit())) //TODO 28 cv
-//			return true;
-	
 		if ( obj == chatEdit() && ev->type() == QEvent::KeyPress ) {
+            if (dlg->handleCopyEvent(ev)) {
+                return true;
+            }
+            
 			QKeyEvent *e = (QKeyEvent *)ev;
 
 			if ( e->key() == Qt::Key_Tab ) {
@@ -441,7 +442,7 @@ public:
 			return FALSE;
 		}
 
-		return QObject::eventFilter( obj, ev );
+		return QObject::eventFilter( obj, ev ); //NOTE: QWidget instead of QObject?
 	}
 };
 
@@ -484,6 +485,7 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager,
 	ui_.lb_ident->setAccount(account());
 	ui_.lb_ident->setShowJid(false);
 
+    connect(ui_.log, SIGNAL(chatViewCreated()), gcObject, SLOT(chatViewCreated()));
 #warning move it to the right place
 
     ChatTheme::ChatInfo chatInfo;
@@ -491,8 +493,9 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager,
     chatInfo.chatName = jid().bare();
     chatInfo.destinationName = jid().bare();
     chatInfo.destinationDisplayName = jid().full();
-    chatInfo.sourceName = account()->nick();
-    chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg"; //TODO + 29 images for channels?
+    chatInfo.sourceName = account()->nick(); 
+    //NOTE: we could have separated defaut avatars for conversations and for MUC
+    chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg";
     chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";
     chatInfo.timeOpened = QDateTime::currentDateTime();
 
@@ -510,10 +513,6 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager,
 	ui_.tb_find->setDefaultAction(d->act_find);
 
 	ui_.tb_emoticons->setIcon(IconsetFactory::icon("psi/smile").icon());
-
-#ifdef Q_WS_MAC
-	connect(chatView(), SIGNAL(selectionChanged()), SLOT(logSelectionChanged()));
-#endif
 
 	ui_.lv_users->setMainDlg(this);
 	connect(ui_.lv_users, SIGNAL(action(const QString &, const Status &, int)), SLOT(lv_action(const QString &, const Status &, int)));
@@ -559,7 +558,7 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager,
 	connect(d->act_scrolldown,SIGNAL(activated()), SLOT(scrollDown()));
 
 	connect(ui_.mle, SIGNAL(textEditCreated(QTextEdit*)), SLOT(chatEditCreated()));
-	chatEditCreated();
+	chatEditCreated(); 
 
 	d->pm_settings = new Q3PopupMenu(this);
 	connect(d->pm_settings, SIGNAL(aboutToShow()), SLOT(buildMenu()));
@@ -681,17 +680,6 @@ void GCMainDlg::mucInfoDialog(const QString& title, const QString& message, cons
 		m += tr("\nReason: %1").arg(reason);
 
 	QMessageBox::information(this, title, m);
-}
-
-void GCMainDlg::logSelectionChanged()
-{
-#ifdef Q_WS_MAC
-	// A hack to only give the message log focus when text is selected
-	if (ui_.log->hasSelectedText()) 
-		ui_.log->setFocus(); //TODO 30 and move it to gecd
-	else 
-		chatEdit()->setFocus();
-#endif
 }
 
 void GCMainDlg::setConnecting()
@@ -1189,8 +1177,8 @@ void GCMainDlg::message(const Message &_m)
 			account()->playSound(PsiOptions::instance()->getOption("options.ui.notifications.sounds.chat-message").toString());
 	}
 
-    if(from.isEmpty()) {
-        appendChatEvent(new ExtendedSystemChatEvent(m.body()), alert); //TODO + 31 from is empty
+    if (from.isEmpty()) {
+        appendChatEvent(new ExtendedSystemChatEvent(tr("Message from unknown source: %1").arg(m.body())), alert); //NOTE: we could apppend a MessageChatEvent here
     }
     else {
 		appendMessage(m, alert);
@@ -1288,9 +1276,9 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
 
     
     textFormatter_.setDoHighlighting(alert);
-    QString txt = messageTextGC(m);
+    QString txt = messageText(m);
 
-	if (isEmoteMessageGC(m)) {
+	if (isEmoteMessage(m)) {
         EmoteChatEvent * event = new EmoteChatEvent();
 
         event->setNick(Qt::escape(who));
@@ -1506,8 +1494,9 @@ void GCMainDlg::buildMenu()
 	d->act_icon->addTo( d->pm_settings );
 }
 
-void GCMainDlg::chatEditCreated() //TODO 38 move to gecd
+void GCMainDlg::chatEditCreated()
 {
+    qDebug() << "install event filter";
 	chatEdit()->setDialog(this);
 	chatEdit()->installEventFilter(d);
 }

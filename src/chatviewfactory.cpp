@@ -34,5 +34,5 @@ ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,
         return view;
     }
     *isHTMLChatView = false;
-    return new __PlainTextChatView(parent);
+    return new PlainTextChatView(parent);
 }

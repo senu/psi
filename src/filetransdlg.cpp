@@ -512,7 +512,7 @@ public:
 	QLabel* lb_identity;
 	AccountLabel* lb_ident;
 	QLabel* lb_time;
-	PlainTextChatView *te; //TODO sce
+	DeprecatedChatView *te; //TODO sce
 	Jid jid;
 	FileTransferHandler *ft;
 	QString fileName;
@@ -558,7 +558,7 @@ FileRequestDlg::FileRequestDlg(const Jid &jid, PsiCon *psi, PsiAccount *pa, cons
 	connect(d->psi, SIGNAL(accountCountChanged()), this, SLOT(updateIdentityVisibility()));
 	updateIdentityVisibility();
 
-	d->te = new PlainTextChatView(this);
+	d->te = new DeprecatedChatView(this);
 	d->te->setReadOnly(false);
 	d->te->setTextFormat(Qt::PlainText);
 	replaceWidget(te_desc, d->te);
@@ -644,7 +644,7 @@ FileRequestDlg::FileRequestDlg(const QDateTime &ts, FileTransfer *ft, PsiAccount
 
 	replaceWidget(lb_accountlabel, hb);
 
-	d->te = new PlainTextChatView(this);
+	d->te = new DeprecatedChatView(this);
 	d->te->setTextFormat(Qt::PlainText);
 	replaceWidget(te_desc, d->te);
 	setTabOrder(le_fname, d->te);
