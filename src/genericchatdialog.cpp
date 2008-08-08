@@ -1,15 +1,19 @@
 #include "genericchatdialog.h"
 #include "xmpp_htmlelement.h"
+#include "xmpp_jid.h"
 #include "psioptions.h"
 #include "common.h"
 #include "textutil.h"
 #include "esystemchatevent.h"
 
 class GenericChatDialog;
-
+using XMPP::Jid;
 
 GenericChatDialog::GenericChatDialog() : findDialog(0) {
 
+    lastMsgTime = QDateTime::currentDateTime();
+    lastEventOwner = Jid();
+    
     gcObject = new GenericChatDialogQObject(this);
 
 }
@@ -61,14 +65,14 @@ bool GenericChatDialog::isEmoteMessage(const XMPP::Message& m) {
 }
 
 
-bool GenericChatDialog::doConsecutiveMessage(const QDateTime& time, bool local) {
+bool GenericChatDialog::doConsecutiveMessage(const QDateTime& time, const Jid& sender) {
     //Q_ASSERT(time >= lastMsgTime); this is not true for offline messages
 
     if (lastMsgTime.secsTo(time) > 3 * 60) { //too old
         return false;
     }
 
-    if ((local && lastEventOwner == Outgoing) || (!local && lastEventOwner == Incoming)) { //from the same user
+    if (sender.compare(lastEventOwner, true)) {
         return true;
     }
 
@@ -76,12 +80,12 @@ bool GenericChatDialog::doConsecutiveMessage(const QDateTime& time, bool local) 
 }
 
 
-void GenericChatDialog::updateLastMsgTimeAndOwner(const QDateTime& t, LastEventOwner owner) {
+void GenericChatDialog::updateLastMsgTimeAndOwner(const QDateTime& t, const Jid& owner) {
     lastEventOwner = owner;
 
     if (t.date() != lastMsgTime.date()) { //date changed event
         chatView()->appendEvent(new ExtendedSystemChatEvent(QObject::tr("Date changed: %1").arg(t.date().toString(Qt::ISODate))));
-        lastEventOwner = Other;
+        lastEventOwner = Jid();
     }
 
     lastMsgTime = t;

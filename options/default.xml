@@ -215,10 +215,10 @@
 			<look>
 				<colors>
 					<chat>					
-						<incoming-nick-color type="QColor">#0000FF</color1>
-						<outgoing-nick-color type="QColor">#FF0000</color1>
- 					<spooled-nick-color type="QColor">#008000</color1>
-						<system-message-color type="QColor">#008000</color1>
+						<incoming-nick-color type="QColor">#0000FF</incoming-nick-color>
+						<outgoing-nick-color type="QColor">#FF0000</outgoing-nick-color>
+						<spooled-nick-color type="QColor">#008000</spooled-nick-color>
+						<system-message-color type="QColor">#008000</system-message-color>
 					</chat>
 					<contactlist>
 						<background type="QColor">#ffffff</background>
@@ -239,37 +239,14 @@
 						<status-messages type="QColor">#808080</status-messages>
 					</contactlist>
 					<muc>
+					</muc>
 						<nick-colors type="QStringList" >
-							<item>blue</item> 
-							<item>gray</item>
-							<item>magenta</item>
-							<item>violet</item>
-							<item>#808000</item> 
-							<item>yellowgreen</item>
-							<item>darkred</item>
-							<item>darkgreen</item>
-							<item>darksalmon</item>
-							<item>darkcyan</item>
-							<item>#B07D2B</item>
-						   	<item>mediumpurple</item>
-							<item>peru</item>
-							<item>olivedrab</item>
-							<item>#B01712</item>
-							<item>darkorange</item> 
-							<item>slateblue</item>
-						   	<item>slategray</item>
-							<item>goldenrod</item>
-							<item>orangered</item> 
-							<item>tomato</item>
-							<item>#1E90FF</item> 
-							<item>steelblue</item>
-						   	<item>deeppink</item>
-							<item>saddlebrown</item>
-							<item>coral</item>
-						   	<item>royalblue<item>
+							<item>Blue</item>
+							<item>Green</item>
+							<item>Orange</item>
+							<item>Purple</item>
 							<item>Red</item>
 						</nick-colors>
-					</muc>
 					<passive-popup>
 						<border type="QColor">#5297f9</border>
 					</passive-popup>

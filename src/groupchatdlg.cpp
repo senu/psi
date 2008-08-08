@@ -495,8 +495,10 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager,
     chatInfo.destinationDisplayName = jid().full();
     chatInfo.sourceName = account()->nick(); 
     //NOTE: we could have separated defaut avatars for conversations and for MUC
-    chatInfo.incomingIconPath = "http://a.wordpress.com/avatar/liberumveto-48.jpg";
-    chatInfo.outgoingIconPath = "http://userserve-ak.last.fm/serve/50/4272669.jpg";
+    
+    //chatInfo.incomingIconPath="";
+    //chatInfo.outgoingIconPath="";
+    
     chatInfo.timeOpened = QDateTime::currentDateTime();
 
     ui_.log->init(chatInfo, true, themeManager, iconServer);
@@ -1217,7 +1219,7 @@ void GCMainDlg::appendChatEvent(const ChatEvent* event, bool alert) {
     }
  
     chatView()->appendEvent(event);
-    updateLastMsgTimeAndOwner(event->timeStamp(), Other);
+    updateLastMsgTimeAndOwner(event->timeStamp(), Jid());
 
     if (alert) {
 		doAlert();
@@ -1287,9 +1289,11 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
         event->setSpooled(m.spooled());
         event->setService("Jabber");
         event->setMessage(txt); //TODO 35 escape 2x
+        event->setUserColor(nickColor);
+        event->setUserIconPath(local ? "outgoing" : "incoming");
         
         chatView()->appendEvent(event);
-        updateLastMsgTimeAndOwner(m.timeStamp(), Other); 
+        updateLastMsgTimeAndOwner(m.timeStamp(), Jid()); 
 	}
 	else {
 
@@ -1298,16 +1302,17 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
         msg->setNick(Qt::escape(who));
         msg->setTimeStamp(m.timeStamp());
         msg->setLocal(local);
-        msg->setConsecutive(doConsecutiveMessage(m.timeStamp(), local));
+        msg->setConsecutive(doConsecutiveMessage(m.timeStamp(), m.from()));
         msg->setSpooled(m.spooled());
         msg->setService("Jabber");
         msg->setBody(txt); //TODO 35 escape
         msg->setUserColor(nickColor);
+        msg->setUserIconPath(local ? "outgoing" : "incoming");
 
         //TODO 36 images and icons
 
         chatView()->appendMessage(msg);
-        updateLastMsgTimeAndOwner(m.timeStamp(), local ? Outgoing : Incoming); 
+        updateLastMsgTimeAndOwner(m.timeStamp(), m.from()); 
 	}
 
     //if scroll down if it's our message

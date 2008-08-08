@@ -15,6 +15,7 @@
 #include "finddialog.h"
 
 class GenericChatDialogQObject;
+using XMPP::Jid;
 
 
 /**
@@ -49,24 +50,14 @@ public:
 
 protected:
 
-
-    /** Indicates if next message should be consecutive (who was last owner) */
-    enum LastEventOwner {
-
-        Incoming,
-        Outgoing,
-        Other /** first message or ChatEvent */
-    };
-
-
     /** 
      * Returns true if next message should be consecutive
-     * \param local indicates if it's our message 
+     * \param sender determines sender of the message 
      */
-    bool doConsecutiveMessage(const QDateTime& time, bool local);
+    bool doConsecutiveMessage(const QDateTime& time, const Jid& sender);
 
     /** Updates information about last ChatEvent; called after appending an event */
-    void updateLastMsgTimeAndOwner(const QDateTime& t, LastEventOwner owner);
+    void updateLastMsgTimeAndOwner(const QDateTime& t, const Jid& owner);
 
     /** Status must be translated because we don't want Iris stuff in ChatView */
     StatusChatEvent::StatusEventType statusToChatViewStatus(int status) const;
@@ -104,8 +95,8 @@ protected:
     /** Validates XHTML-IM messages */
     MessageValidator messageValidator_;
 
-    /** Indicates if next message should be consecutive */
-    LastEventOwner lastEventOwner;
+    /** Indicates whether next message should be consecutive */
+    Jid lastEventOwner;
 
     /** Timestamp of last chat event */
     QDateTime lastMsgTime;

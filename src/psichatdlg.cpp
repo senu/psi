@@ -85,9 +85,6 @@ void PsiChatDlg::initUi() {
 
     chatInfo.timeOpened = QDateTime::currentDateTime();
 
-    lastMsgTime = QDateTime::currentDateTime();
-    lastEventOwner = Other;
-
     connect(ui_.log, SIGNAL(chatViewCreated()), gcObject, SLOT(chatViewCreated()));
     connect(ui_.mle, SIGNAL(textEditCreated(QTextEdit*)), SLOT(chatEditCreated()));
 
@@ -422,7 +419,7 @@ void PsiChatDlg::appendEmoteMessage(SpooledType spooled, const QDateTime& time, 
     event->setMessage(txt); //TODO 82 escape
 
     chatView()->appendEvent(event);
-    updateLastMsgTimeAndOwner(time, Other);
+    updateLastMsgTimeAndOwner(time, Jid());
 }
 
 
@@ -430,20 +427,21 @@ void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time,
 
     MessageChatEvent * msg = new MessageChatEvent(); //will be created in another place, of course
 
-    fillEventWithUserInfo(msg, local ? account()->jid() : jid());
+    Jid owner(local ? account()->jid() : jid());
+    fillEventWithUserInfo(msg, owner);
     msg->setTimeStamp(time);
-    msg->setConsecutive(doConsecutiveMessage(time, local));
+    msg->setConsecutive(doConsecutiveMessage(time, owner));
     msg->setSpooled(spooled);
     msg->setBody(txt);
 
     chatView()->appendMessage(msg);
-    updateLastMsgTimeAndOwner(time, local ? Outgoing : Incoming);
+    updateLastMsgTimeAndOwner(time, owner);
 }
 
 
 void PsiChatDlg::appendChatEvent(const ChatEvent* event) {
     chatView()->appendEvent(event);
-    updateLastMsgTimeAndOwner(event->timeStamp(), Other);
+    updateLastMsgTimeAndOwner(event->timeStamp(), Jid());
 }
 
 
