@@ -234,10 +234,33 @@
 					</contactlist>
 					<muc>
 						<nick-colors type="QStringList" >
-							<item>Blue</item>
-							<item>Green</item>
-							<item>Orange</item>
-							<item>Purple</item>
+							<item>blue</item> 
+							<item>gray</item>
+							<item>magenta</item>
+							<item>violet</item>
+							<item>#808000</item> 
+							<item>yellowgreen</item>
+							<item>darkred</item>
+							<item>darkgreen</item>
+							<item>darksalmon</item>
+							<item>darkcyan</item>
+							<item>#B07D2B</item>
+						   	<item>mediumpurple</item>
+							<item>peru</item>
+							<item>olivedrab</item>
+							<item>#B01712</item>
+							<item>darkorange</item> 
+							<item>slateblue</item>
+						   	<item>slategray</item>
+							<item>goldenrod</item>
+							<item>orangered</item> 
+							<item>tomato</item>
+							<item>#1E90FF</item> 
+							<item>steelblue</item>
+						   	<item>deeppink</item>
+							<item>saddlebrown</item>
+							<item>coral</item>
+						   	<item>royalblue<item>
 							<item>Red</item>
 						</nick-colors>
 					</muc>

@@ -31,18 +31,21 @@ public:
      * \param iconServer will be passed to NetworkAccessManager
      * \param theme_ will be used as a ChatView theme
      */
-    HTMLChatView(QWidget * parent, HTMLChatTheme theme_, IconServer* iconServer, QString _themePath);
+    HTMLChatView(QWidget * parent, HTMLChatTheme theme_, IconServer* iconServer);
 
     ~HTMLChatView();
 
     /** Sets theme (if needed) */
     void setTheme(const HTMLChatTheme& theme);
-
-    /** Only in dev version; (only for loading JavaScript file); path to theme/ dir */
-    QString themePath;
     
     /** Creates HTML document (header,chat,footer) */
     void init();
+
+    /** 
+     * Returns true if ChatView was successfully initialized. 
+     * For example, we could not load theme, open file with JavaScript code.
+     */
+    bool isValid() const;
 
     //reimplemented
     bool atBottom() const;

@@ -1364,7 +1364,6 @@ void GCMainDlg::setLooks()
 	// update the fonts
 	QFont f;
 	f.fromString(PsiOptions::instance()->getOption("options.ui.look.font.chat").toString());
-	ui_.log->setFont(f); //TODO 37 plain theme
 	chatEdit()->setFont(f);
 
 	f.fromString(PsiOptions::instance()->getOption("options.ui.look.font.contactlist").toString());

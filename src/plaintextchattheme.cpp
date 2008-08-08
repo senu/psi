@@ -1,6 +1,7 @@
 #include "plaintextchattheme.h"
 #include <QDebug> 
 
+
 PlainTextChatTheme::PlainTextChatTheme() {
 
 }
@@ -22,8 +23,7 @@ QString PlainTextChatTheme::createIncomingMessagePart(const MessageChatEvent * e
     QString color(colorString(event->isLocal(), event->isSpooled()));
     QString timeStr(formatTimeStamp(event->timeStamp()));
 
-    //if (PsiOptions::instance()->getOption("options.ui.chat.use-chat-says-style").toBool()) { //TODO 71
-    if (0) {
+    if (useChatSaysStyle()) {
         return QString("<p style=\"color: %1\">").arg(color) + QString("[%1] ").arg(timeStr)
             + QObject::tr("%1 says:").arg(event->nick()) + "</p>" + event->body();
     }
@@ -45,9 +45,9 @@ QString PlainTextChatTheme::createFileTransferEventPart(const FileTransferChatEv
 
 
 QString PlainTextChatTheme::createStatusEventPart(const StatusChatEvent * event) const {
-    
+
     StatusChatEvent::StatusEventType type = event->type;
-    QString statusStr; 
+    QString statusStr;
 
     switch (type) {
         case StatusChatEvent::Online :
@@ -69,27 +69,27 @@ QString PlainTextChatTheme::createStatusEventPart(const StatusChatEvent * event)
                 statusStr = "online";
             break;
         case StatusChatEvent::Invisible :
+        default:
                 statusStr = "offline";
             break;
     }
 
     QString eventText(event->statusMessage());
-    QString color("#00A000");
+    QString color(systemMessageColor());
 
-    if(!eventText.isEmpty()) {
+    if (!eventText.isEmpty()) {
         eventText = " (" + eventText + ")";
     }
-   
+
     qDebug() << "status event" << statusStr;
-    return QString("<span style=\"color: %1\">[%2] ").arg(color,formatTimeStamp(event->timeStamp()))
+    return QString("<span style=\"color: %1\">[%2] ").arg(color, formatTimeStamp(event->timeStamp()))
         + QObject::tr("*** %2 is %3 </span>").arg(event->nick(), eventText);
 }
 
 
 QString PlainTextChatTheme::createSystemEventPart(const SystemChatEvent* event) const {
 
-    QString color = "#00A000";
-    return QString("<span style=\"color: %1\">").arg(color)
+    return QString("<span style=\"color: %1\">").arg(systemMessageColor())
         + QString("[%1] *** %2 </span>").arg(formatTimeStamp(event->timeStamp()), event->message());
 }
 
@@ -101,13 +101,15 @@ QString PlainTextChatTheme::formatTimeStamp(const QDateTime &time) const {
 
 
 QString PlainTextChatTheme::colorString(bool local, bool isSpooled) const {
-    if (isSpooled)
-        return "#008000";
+    if (isSpooled) {
+        return spooledNickColor();
+    }
 
-    if (local)
-        return "#FF0000";
+    if (local) {
+        return outgoingNickColor();
+    }
 
-    return "#0000FF";
+    return incomingNickColor();
 }
 
 
@@ -139,3 +141,66 @@ QString PlainTextChatTheme::createTuneEventPart(const TuneChatEvent* event) cons
     return QString("<span style=\"color: #00A000\">[%1] *** %2 </span>").arg(formatTimeStamp(event->timeStamp()), tuneText);
 
 }
+
+
+QFont PlainTextChatTheme::chatFont() const {
+    return chatFont_;
+}
+
+
+void PlainTextChatTheme::setChatFont(const QFont& chatFont) {
+    chatFont_ = chatFont;
+}
+
+
+QString PlainTextChatTheme::incomingNickColor() const {
+    return incomingNickColor_;
+}
+
+
+void PlainTextChatTheme::setIncomingNickColor(const QString& incomingNickColor) {
+    incomingNickColor_ = incomingNickColor;
+}
+
+
+QString PlainTextChatTheme::outgoingNickColor() const {
+    return outgoingNickColor_;
+}
+
+
+void PlainTextChatTheme::setOutgoingNickColor(const QString& outgoingNickColor) {
+    outgoingNickColor_ = outgoingNickColor;
+}
+
+
+QString PlainTextChatTheme::spooledNickColor() const {
+    return spooledNickColor_;
+}
+
+
+void PlainTextChatTheme::setSpooledNickColor(const QString& spooledNickColor) {
+    spooledNickColor_ = spooledNickColor;
+}
+
+
+QString PlainTextChatTheme::systemMessageColor() const {
+    return systemMessageColor_;
+}
+
+
+void PlainTextChatTheme::setSystemMessageColor(const QString& systemMessageColor) {
+    systemMessageColor_ = systemMessageColor;
+}
+
+
+bool PlainTextChatTheme::useChatSaysStyle() const {
+    return useChatSaysStyle_;
+}
+
+
+void PlainTextChatTheme::setUseChatSaysStyle(bool useChatSaysStyle) {
+    useChatSaysStyle_ = useChatSaysStyle;
+}
+
+
+

@@ -47,7 +47,45 @@ public:
 
     /** Always returns true */
     bool isValid();
+
+    //options accessors
+
+    /** Returns chatFont */
+    QFont chatFont() const;
+
+    /** Sets chatFont */
+    void setChatFont(const QFont& chatFont);
+
+    /** Returns incomingNickColor */
+    QString incomingNickColor() const;
+
+    /** Sets incomingNickColor */
+    void setIncomingNickColor(const QString& incomingNickColor);
+
+    /** Returns outgoingNickColor */
+    QString outgoingNickColor() const;
+
+    /** Sets outgoingNickColor */
+    void setOutgoingNickColor(const QString& outgoingNickColor);
+
+    /** Returns spooledNickColor */
+    QString spooledNickColor() const;
+
+    /** Sets spooledNickColor */
+    void setSpooledNickColor(const QString& spooledNickColor);
+
+    /** Returns systemMessageColor */
+    QString systemMessageColor() const;
+
+    /** Sets systemMessageColor */
+    void setSystemMessageColor(const QString& systemMessageColor);
     
+    /** Returns useChatSaysStyle */
+    bool useChatSaysStyle() const;
+
+    /** Sets useChatSaysStyle */
+    void setUseChatSaysStyle(bool useChatSaysStyle);
+
 private:
     /** Creates time string */
     QString formatTimeStamp(const QDateTime &time) const;
@@ -57,21 +95,21 @@ private:
 
 
     //Theme options from PsiOptions
-    
+
     /** Font used to display chat events and messages */
-    QFont chatFont;
-    
+    QFont chatFont_;
+
     /** Nick color (incoming message) */
-    QColor incomingNickColor;
-    
+    QString incomingNickColor_;
+
     /** Nick color (outgoing message) */
-    QColor outgoingNickColor;
-    
+    QString outgoingNickColor_;
+
     /** Nick color (spooled message) */
-    QColor spooledNickColor;
-    
+    QString spooledNickColor_;
+
     /** Color of system/status/emote/filetransfer event */
-    QColor systemMessageColor;
+    QString systemMessageColor_;
 
     /**
      * If false, message will look like:
@@ -79,9 +117,9 @@ private:
      * otherwise:
      *   nick says: hello
      */
-    bool useChatSaysStyle;
+    bool useChatSaysStyle_;
 
-    
+
 };
 
 #endif

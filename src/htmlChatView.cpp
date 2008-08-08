@@ -9,8 +9,8 @@
 //TODO + 11 webkit sync/busy - queing appending messages
 
 
-HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* iconServer, QString _themePath)
-: ChatView(parent), themePath(_themePath), theme(_theme), isReady(false), queuedTheme(0) {
+HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* iconServer)
+: ChatView(parent), theme(_theme), isReady(false), queuedTheme(0) {
 
     webView.setParent(this);
 
@@ -178,10 +178,9 @@ void HTMLChatView::evaluateJS(QString scriptSource) {
 
 
 void HTMLChatView::importJSChatFunctions() {
-    // reading from file only while developing	
-    QFile file(themePath + "/htmlChatView.js");
+    QFile file(":/htmlChatView.js");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        exit(7);
+        exit(7); //TODO 103
     }
 
     QString jsCode = file.readAll();

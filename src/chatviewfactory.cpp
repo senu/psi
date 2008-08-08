@@ -27,12 +27,27 @@ ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,
         HTMLChatTheme theme(themeManager->getTheme(themeName, themeVariant));
 
         *isHTMLChatView = true;
-        HTMLChatView * view = new HTMLChatView(parent, theme, iconServer, ApplicationInfo::homeDir());
+        HTMLChatView * view = new HTMLChatView(parent, theme, iconServer);
             
         QObject::connect(view, SIGNAL(openURL(QString)), URLObject::getInstance(), SIGNAL(openURL(QString)));
         
         return view;
     }
+    
     *isHTMLChatView = false;
-    return new PlainTextChatView(parent);
+    
+    PlainTextChatTheme theme;
+    //TODO 37
+    //TODO 71
+    
+    QFont font;
+    font.fromString(PsiOptions::instance()->getOption("options.ui.look.font.chat").toString());
+    theme.setChatFont(font);
+    theme.setIncomingNickColor("#0000FF");
+    theme.setOutgoingNickColor("#FF0000");
+    theme.setSpooledNickColor("#008000");
+    theme.setSystemMessageColor("#008000");
+    theme.setUseChatSaysStyle(PsiOptions::instance()->getOption("options.ui.chat.use-chat-says-style").toBool());
+    
+    return new PlainTextChatView(parent, theme);
 }

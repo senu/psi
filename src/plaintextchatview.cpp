@@ -1,7 +1,12 @@
 #include "plaintextchatview.h"
 
 
-PlainTextChatView::PlainTextChatView(QWidget *parent) : ChatView(parent), textview(this) {
+PlainTextChatView::PlainTextChatView(QWidget *parent, PlainTextChatTheme theme_) 
+: ChatView(parent), 
+    textview(this), 
+    theme(theme_) {
+
+    textview.setFont(theme.chatFont());
 
     layout = new QVBoxLayout(this);
     layout->setMargin(0);

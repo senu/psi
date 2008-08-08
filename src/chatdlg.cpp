@@ -483,7 +483,6 @@ void ChatDlg::setLooks() {
     // update the font
     QFont f;
     f.fromString(PsiOptions::instance()->getOption("options.ui.look.font.chat").toString());
-    chatView()->setFont(f);
     chatEdit()->setFont(f);
 
     // update contact info

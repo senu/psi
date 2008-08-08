@@ -11,13 +11,11 @@
 NetworkAccessManager::NetworkAccessManager(QObject *parent, IconServer* iconServer_)
 : QNetworkAccessManager(parent), iconServer(iconServer_) {
 
-
     foreach(QString iconName, IconsetFactory::icons()) { //TODO 68
         if (!iconName.isEmpty()) {
             iconServer->registerIcon(iconName, IconServer::pixmapToPng(IconsetFactory::iconPixmap(iconName)));
         }
     }
-    //iconServer->registerIcon("icon_0114", IconServer::pixmapToPng(p)); 
 }
 
 

@@ -146,6 +146,7 @@ void PsiChatDlg::setLooks() {
         ui_.le_jid->hide();
         ui_.tb_actions->hide();
         ui_.tb_emoticons->hide();
+        ui_.tb_find->hide();
         ui_.toolbar->hide();
     }
     else {
@@ -318,8 +319,6 @@ void PsiChatDlg::contactUpdated(UserListItem* u, int status, const QString& stat
 
 void PsiChatDlg::updateAvatar(const Jid& j) {
 
-    //TODO 81 wrong avatar label - ask kev if we still want it
-
     //ignore avatars other than our or destination avatars
     if (!j.compare(jid(), false) && !j.compare(account()->jid(), false)) {
         return;
@@ -334,8 +333,10 @@ void PsiChatDlg::updateAvatar(const Jid& j) {
         int size = PsiOptions::instance()->getOption("options.ui.chat.avatars.size").toInt();
 
         if (PsiOptions::instance()->getOption("options.ui.chat.avatars.show").toBool()) {
-            ui_.avatar->setPixmap(p.scaled(QSize(size, size), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-            ui_.avatar->show();
+            if (j.compare(jid(),true)) { 
+                ui_.avatar->setPixmap(p.scaled(QSize(size, size), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                ui_.avatar->show();
+            }
         }
         else {
             ui_.avatar->hide();

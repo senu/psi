@@ -27,7 +27,7 @@ public:
 
     void init();
 
-    PlainTextChatView(QWidget *parent);
+    PlainTextChatView(QWidget *parent, PlainTextChatTheme theme);
 
     /** Used for scrollToTop/Bottom/Up/Down */
     QScrollBar * verticalScrollBar() const;
