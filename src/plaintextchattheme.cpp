@@ -40,7 +40,26 @@ QString PlainTextChatTheme::createOutgoingMessagePart(const MessageChatEvent * e
 
 
 QString PlainTextChatTheme::createFileTransferEventPart(const FileTransferChatEvent * event) const {
-    //TODO 72
+
+    FileTransferChatEvent::FileTransferEventType type = event->type;
+
+    QString eventText;
+
+    switch (type) {
+        case FileTransferChatEvent::Finished :
+                eventText = QObject::tr("Finished downloading %1.").arg(event->fileName());
+            break;
+        case FileTransferChatEvent::Initiated :
+                eventText = QObject::tr("Incoming file transfer: %1.").arg(event->fileName());
+            break;
+        case FileTransferChatEvent::Aborted :
+                eventText = QObject::tr("Aborted downloading %1.").arg(event->fileName());
+            break;
+    }
+    
+    return QString("<span style=\"color: %1\">").arg(systemMessageColor())
+        + QString("[%1] *** %2 </span>").arg(formatTimeStamp(event->timeStamp()), eventText);
+
 }
 
 

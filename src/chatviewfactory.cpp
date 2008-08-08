@@ -46,10 +46,10 @@ ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,
     QFont font;
     font.fromString(PsiOptions::instance()->getOption("options.ui.look.font.chat").toString());
     theme.setChatFont(font);
-    theme.setIncomingNickColor("#0000FF");
-    theme.setOutgoingNickColor("#FF0000");
-    theme.setSpooledNickColor("#008000");
-    theme.setSystemMessageColor("#008000");
+    theme.setIncomingNickColor(PsiOptions::instance()->getOption("options.ui.look.colors.chat.incoming-nick-color").toString());
+    theme.setOutgoingNickColor(PsiOptions::instance()->getOption("options.ui.look.colors.chat.outgoing-nick-color").toString()); 
+    theme.setSpooledNickColor(PsiOptions::instance()->getOption("options.ui.look.colors.chat.spooled-nick-color").toString()); 
+    theme.setSystemMessageColor(PsiOptions::instance()->getOption("options.ui.look.colors.chat.system-message-color").toString());
     theme.setUseChatSaysStyle(PsiOptions::instance()->getOption("options.ui.chat.use-chat-says-style").toBool());
     
     return new PlainTextChatView(parent, theme);
