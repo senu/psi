@@ -181,11 +181,11 @@ void ChatDlg::initActions() {
 
     act_scrollup_ = new QAction(this);
     addAction(act_scrollup_);
-    connect(act_scrollup_, SIGNAL(activated()), SLOT(scrollUp()));
+    connect(act_scrollup_, SIGNAL(activated()), gcObject, SLOT(scrollUp()));
 
     act_scrolldown_ = new QAction(this);
     addAction(act_scrolldown_);
-    connect(act_scrolldown_, SIGNAL(activated()), SLOT(scrollDown()));
+    connect(act_scrolldown_, SIGNAL(activated()), gcObject, SLOT(scrollDown()));
 }
 
 
@@ -206,16 +206,6 @@ void ChatDlg::setShortcuts() {
     else {
         act_close_->QAction::setShortcuts(QList<QKeySequence > ());
     }
-}
-
-
-void ChatDlg::scrollUp() {
-    chatView()->scrollUp();
-}
-
-
-void ChatDlg::scrollDown() {
-    chatView()->scrollDown();
 }
 
 

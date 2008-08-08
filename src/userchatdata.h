@@ -42,7 +42,8 @@ public:
 
     /**
      * Returns userColor.
-     * 
+     *
+     * If unset returns black QColor.
      * It's used for MUC nick coloring.
      */
     QColor userColor() const;

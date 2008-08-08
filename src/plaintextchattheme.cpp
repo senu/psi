@@ -70,20 +70,19 @@ QString PlainTextChatTheme::createStatusEventPart(const StatusChatEvent * event)
             break;
         case StatusChatEvent::Invisible :
         default:
-                statusStr = "offline";
+            statusStr = "offline";
             break;
     }
 
-    QString eventText(event->statusMessage());
     QString color(systemMessageColor());
+    QString eventText = QObject::tr("%1 is %2").arg(event->nick(), statusStr);
 
-    if (!eventText.isEmpty()) {
-        eventText = " (" + eventText + ")";
+    if (!event->statusMessage().isEmpty()) {
+        eventText += " (" + event->statusMessage() + ")";
     }
 
-    qDebug() << "status event" << statusStr;
     return QString("<span style=\"color: %1\">[%2] ").arg(color, formatTimeStamp(event->timeStamp()))
-        + QObject::tr("*** %2 is %3 </span>").arg(event->nick(), eventText);
+        + QObject::tr("*** %1 </span>").arg(eventText);
 }
 
 

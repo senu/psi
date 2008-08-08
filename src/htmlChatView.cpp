@@ -58,9 +58,14 @@ void HTMLChatView::init() {
 
 
 void HTMLChatView::onEmptyDocumentLoaded(bool ok) {
-    if (!ok) { //TODO 59 CTRM eg. when we delete this object
-        qDebug() << "ERROR 3";
-        exit(1);
+    if (!ok) {
+        qDebug() << "WARNING: HTMLChatView::onEmptyDocumentLoaded() - load failed";
+        //NOTE: if ok is false, then:
+        //NOTE: a) there was HTTP error - doesn't apply here, because empty document is loaded from string
+        //NOTE: b) someone deleted QWebView (destructor was called) while it was loading page - 
+        //NOTE: either it's programmer fault or someone close psi exactly when webkit was loading empty page
+
+        return;
     }
 
     HTMLChatPart header = theme.headerTemplate().createFreshHTMLPart();
@@ -180,7 +185,8 @@ void HTMLChatView::evaluateJS(QString scriptSource) {
 void HTMLChatView::importJSChatFunctions() {
     QFile file(":/htmlChatView.js");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        exit(7); //TODO 103
+        qDebug() << "WARNING: HTMLChaTView::importJSChatFunction() - loading Qt Resource failed";
+        //NOTE: I (senu) assume that reading from Qt Resource always succeed - there's no error handling
     }
 
     QString jsCode = file.readAll();

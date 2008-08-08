@@ -93,7 +93,7 @@ void PsiChatDlg::initUi() {
 
     chatEditCreated();
     ui_.log->init(chatInfo, false, themeManager, iconServer);
-//    chatEditCreated();//TODO 101 inv
+    //    chatEditCreated();//TODO 101 inv
 
     initToolButtons();
     initToolBar();
@@ -182,7 +182,7 @@ void PsiChatDlg::setShortcuts() {
     act_clear_->setShortcuts(ShortcutManager::instance()->shortcuts("chat.clear"));
     act_info_->setShortcuts(ShortcutManager::instance()->shortcuts("common.user-info"));
     act_history_->setShortcuts(ShortcutManager::instance()->shortcuts("common.history"));
-	act_find_->setShortcuts(ShortcutManager::instance()->shortcuts("chat.find"));
+    act_find_->setShortcuts(ShortcutManager::instance()->shortcuts("chat.find"));
 }
 
 
@@ -225,10 +225,10 @@ void PsiChatDlg::initToolButtons() {
     act_compact_ = new IconAction(tr("Toggle Compact/Full size"), "psi/compact", tr("Toggle Compact/Full size"), 0, this);
     connect(act_compact_, SIGNAL(activated()), SLOT(toggleSmallChat()));
 
-	act_find_ = new IconAction(tr("Find"), "psi/search", tr("&Find"), 0, this);
+    act_find_ = new IconAction(tr("Find"), "psi/search", tr("&Find"), 0, this);
     addAction(act_find_);
-	connect(act_find_, SIGNAL(activated()), SLOT(openFind()));
-	ui_.tb_find->setDefaultAction(act_find_); 
+    connect(act_find_, SIGNAL(activated()), SLOT(openFind()));
+    ui_.tb_find->setDefaultAction(act_find_);
 }
 
 
@@ -333,7 +333,7 @@ void PsiChatDlg::updateAvatar(const Jid& j) {
         int size = PsiOptions::instance()->getOption("options.ui.chat.avatars.size").toInt();
 
         if (PsiOptions::instance()->getOption("options.ui.chat.avatars.show").toBool()) {
-            if (j.compare(jid(),true)) { 
+            if (j.compare(jid(), true)) {
                 ui_.avatar->setPixmap(p.scaled(QSize(size, size), Qt::KeepAspectRatio, Qt::SmoothTransformation));
                 ui_.avatar->show();
             }
@@ -446,16 +446,17 @@ void PsiChatDlg::appendChatEvent(const ChatEvent* event) {
     updateLastMsgTimeAndOwner(event->timeStamp(), Other);
 }
 
+
 void PsiChatDlg::appendMessageFields(const Message& m, QString& messageBody) {
 
     bool containsField = false;
     QString appendedPart;
-    
+
     if (!m.subject().isEmpty()) {
-        appendedPart = QString("<h3><strong>") + 
-            tr("Subject:") + 
+        appendedPart = QString("<h3><strong>") +
+            tr("Subject:") +
             QString("</strong> %1</h3>").arg(Qt::escape(m.subject()));
-        
+
         containsField = true;
     }
     if (!m.urlList().isEmpty()) {
@@ -466,12 +467,12 @@ void PsiChatDlg::appendMessageFields(const Message& m, QString& messageBody) {
             appendedPart += QString("<li><strong>") + tr("URL:") + "</strong> " + QString("%1").arg(TextUtil::linkify(Qt::escape(u.url())));
             appendedPart += QString(" <strong>") + tr("Desc:") + "</strong> " + QString("%1</li>").arg(TextUtil::escape(u.desc()));
         }
-        appendedPart +="</ol>";
+        appendedPart += "</ol>";
         containsField = true;
     }
 
     if (containsField) {
-        messageBody = "<span>"+ appendedPart + messageBody + "</span>";
+        messageBody = "<span>" + appendedPart + messageBody + "</span>";
     }
 }
 
@@ -510,6 +511,7 @@ void PsiChatDlg::chatEditCreated() {
     chatEdit()->installEventFilter(this);
 }
 
+
 QPixmap PsiChatDlg::getAvatarForJid(const Jid& j) {
     QString res;
     QString client;
@@ -534,7 +536,7 @@ QPixmap PsiChatDlg::getAvatarForJid(const Jid& j) {
 void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
 
     bool local;
-    
+
     if (j.compare(jid(), false)) { //TODO 85 true?
         //remote user
         local = false;
@@ -559,10 +561,10 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
 
     if (getAvatarForJid(j).isNull()) { //default avatar
         if (local) {
-           userInfo->setUserIconPath("outgoing");
+            userInfo->setUserIconPath("outgoing");
         }
         else {
-           userInfo->setUserIconPath("incoming");
+            userInfo->setUserIconPath("incoming");
         }
     }
     else {
@@ -572,12 +574,19 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
     userInfo->setService("Jabber");
 }
 
+
 void PsiChatDlg::openFind() {
-    
-    openFindGC(this);	
+
+    openFindGC(this);
     connect(findDialog, SIGNAL(find(const QString &)), SLOT(doFind(const QString &)));
 }
 
+
 void PsiChatDlg::doFind(const QString& str) {
     doFindGC(str);
+}
+
+
+DefaultHTMLTextFormatter* PsiChatDlg::textFormatter() {
+    return ui_.log->currentTextFormatter();
 }

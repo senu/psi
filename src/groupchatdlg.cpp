@@ -552,10 +552,10 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager,
 	connect(d->act_close,SIGNAL(activated()), SLOT(close()));
 	d->act_scrollup = new QAction(this);
 	addAction(d->act_scrollup);
-	connect(d->act_scrollup,SIGNAL(activated()), SLOT(scrollUp()));
+	connect(d->act_scrollup,SIGNAL(activated()), gcObject, SLOT(scrollUp()));
 	d->act_scrolldown = new QAction(this);
 	addAction(d->act_scrolldown);
-	connect(d->act_scrolldown,SIGNAL(activated()), SLOT(scrollDown()));
+	connect(d->act_scrolldown,SIGNAL(activated()), gcObject, SLOT(scrollDown()));
 
 	connect(ui_.mle, SIGNAL(textEditCreated(QTextEdit*)), SLOT(chatEditCreated()));
 	chatEditCreated(); 
@@ -1275,7 +1275,7 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
     }
 
     
-    textFormatter_.setDoHighlighting(alert);
+    textFormatter()->setDoHighlighting(alert);
     QString txt = messageText(m);
 
 	if (isEmoteMessage(m)) {
@@ -1510,13 +1510,8 @@ int GCMainDlg::unreadMessageCount() const
 	return d->pending;
 }
 
-void GCMainDlg::scrollUp() {
-    chatView()->scrollUp();
-}
-
-
-void GCMainDlg::scrollDown() {
-    chatView()->scrollDown();
+DefaultHTMLTextFormatter* GCMainDlg::textFormatter() {
+    return ui_.log->currentTextFormatter();
 }
 
 #include "groupchatdlg.moc"

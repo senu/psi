@@ -588,7 +588,7 @@ public slots:
 };
 
 EventDlg::EventDlg(const QString &to, PsiCon *psi, PsiAccount *pa) //compose
-	: AdvancedWidget<QWidget>(0), textFormatter(false, true, false)
+	: AdvancedWidget<QWidget>(0), textFormatter(false, true, false, true)
 {
 	setAttribute(Qt::WA_DeleteOnClose);
     
@@ -655,7 +655,7 @@ EventDlg::EventDlg(const QString &to, PsiCon *psi, PsiAccount *pa) //compose
 }
 
 EventDlg::EventDlg(const Jid &j, PsiAccount *pa, bool unique) //read
-	: AdvancedWidget<QWidget>(0), textFormatter(false, true, false)
+	: AdvancedWidget<QWidget>(0), textFormatter(false, true, false, true)
 {
 	setAttribute(Qt::WA_DeleteOnClose);
 	d = new Private(this);

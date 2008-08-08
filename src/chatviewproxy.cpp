@@ -1,10 +1,11 @@
 #include "chatviewproxy.h"
 #include "chatviewfactory.h"
 #include "psioptions.h"
+#include "defaulthtmltextformatter.h"
 
 
 ChatViewProxy::ChatViewProxy(QWidget* parent)
-: QWidget(parent), _chatView(0), themeManager(0), iconServer(0) {
+: QWidget(parent), _chatView(0), themeManager(0), iconServer(0), textFormatter(0) {
 
     layout = new QVBoxLayout(this);
     layout->setMargin(0);
@@ -80,5 +81,19 @@ ChatView * ChatViewProxy::createChatView(bool inGroupChat, const QString& jid) {
     ChatView * newView = ChatViewFactory::createChatView(inGroupChat, jid, this, &isHTMLChatView, 
                                                          themeManager, iconServer);
     layout->addWidget(newView);
+    
+    delete textFormatter;
+    
+    if (isHTMLChatView) { //NOTE: tbh, we need this only because there's IconTextForman not QImageTextFormat in PsiChatView
+        textFormatter = new DefaultHTMLTextFormatter(false, true, false, true);   
+    }
+    else {
+        textFormatter = new DefaultHTMLTextFormatter(false, true, false, false);   
+    }
+    
     return newView;
+}
+
+DefaultHTMLTextFormatter* ChatViewProxy::currentTextFormatter() {
+    return textFormatter;
 }

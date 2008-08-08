@@ -2,10 +2,10 @@
 #include "applicationinfo.h"
 
 
-HTMLThemeManager::HTMLThemeManager() {
+HTMLThemeManager::HTMLThemeManager(const QString& themesDir_) : themesDir(themesDir_){
 
     _themeList = new HTMLChatThemeList();
-    _themeList->readThemes(ApplicationInfo::homeDir()); //TODO 61 move up decouple
+    _themeList->readThemes(themesDir);
 }
 
 
@@ -24,7 +24,7 @@ HTMLChatTheme HTMLThemeManager::getTheme(const QString& themeName, const QString
     QString path = _themeList->themePath(themeName);
 
     if (path.isEmpty()) { //theme not found, but filesystem could be changed since last check
-        _themeList->readThemes(ApplicationInfo::homeDir());
+        _themeList->readThemes(themesDir);
         path = _themeList->themePath(themeName);
     }
 

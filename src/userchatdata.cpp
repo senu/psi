@@ -76,7 +76,7 @@ QColor UserChatData::userColor() const {
         return userColor_;
     }
     else {
-        return QColor("pink");
+        return QColor("black");
     }
 }
 

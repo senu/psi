@@ -12,7 +12,11 @@ class JSNotifier : public QObject {
 
     public slots :
 
-    /** psi_initDocument finished (called by js code) */
+    /** 
+     * psi_initDocument finished (it's JavaScript code) 
+     *
+     * //NOTE: if you connect to this signal, read a NOTEs: in HTMLCHatView::onEmptyDocumentLoaded
+     */
     void initFinished();
 
     /** Append event/message finished (called by js code) - now we can scroll view down, for example */

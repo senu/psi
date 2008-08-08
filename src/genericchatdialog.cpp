@@ -8,8 +8,7 @@
 class GenericChatDialog;
 
 
-GenericChatDialog::GenericChatDialog()
-: textFormatter_(false, true, false), findDialog(0) {
+GenericChatDialog::GenericChatDialog() : findDialog(0) {
 
     gcObject = new GenericChatDialogQObject(this);
 
@@ -43,12 +42,10 @@ QString GenericChatDialog::messageText(const XMPP::Message& m) {
         }
     }
 
-    qDebug() << "messageText1.5" << txt;
+    textFormatter()->setDoEmoticonify(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool());
+    textFormatter()->setDoLegacyFormatting(PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool());
 
-    textFormatter_.setDoEmoticonify(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool());
-    textFormatter_.setDoLegacyFormatting(PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool());
-
-    txt = messageValidator_.validateMessage(txt, &modified, &textFormatter_);
+    txt = messageValidator_.validateMessage(txt, &modified, textFormatter());
 
     qDebug() << "messageText2" << txt;
     return txt;
@@ -138,6 +135,7 @@ void GenericChatDialog::logSelectionChanged() {
 #endif
 }
 
+
 bool GenericChatDialog::handleCopyEvent(QEvent *event) {
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *e = (QKeyEvent *) event;
@@ -152,6 +150,17 @@ bool GenericChatDialog::handleCopyEvent(QEvent *event) {
 
     return false;
 }
+
+
+void GenericChatDialogQObject::scrollUp() {
+    dlg->chatView()->scrollUp();
+}
+
+
+void GenericChatDialogQObject::scrollDown() {
+    dlg->chatView()->scrollDown();
+}
+
 
 void GenericChatDialogQObject::logSelectionChanged() {
     dlg->logSelectionChanged();

@@ -280,11 +280,10 @@ PsiCon::PsiCon()
 	d = new Private(this);
 	d->tabManager = new TabManager(this);
 
-    d->themeManager = new HTMLThemeManager();
+    d->themeManager = new HTMLThemeManager(ApplicationInfo::homeDir());
     d->iconServer = new IconServer();
 
     //keep IconServer up to date
-    qDebug() << "connect to iconserver";
     connect(IconsetFactory::instance(), SIGNAL(iconsetUnregistered(const QStringList&)), 
             d->iconServer, SLOT(unregisterAll(const QStringList&)));
     

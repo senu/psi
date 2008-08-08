@@ -27,7 +27,7 @@ QString HTMLChatTheme::readFileContents(QDir dir, QString relativePath) {
 
 
 void HTMLChatTheme::readTheme(QDir dir) {
-    //    qDebug() << "opening" << path;
+    qDebug() << "reading theme from filesystem" << dir;
 
     _isValid = false;
 
@@ -112,7 +112,6 @@ void HTMLChatTheme::readTheme(QDir dir) {
         _variants.append(variant.left(variant.size() - 4));
     }
 
-    //qDebug() << variants();
 }
 
 

@@ -79,6 +79,8 @@ private:
     
     //implemented
 
+    DefaultHTMLTextFormatter * textFormatter();
+
     /** Returns dialog's ChatView */
 	ChatView* chatView() const;
     

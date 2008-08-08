@@ -96,12 +96,13 @@ protected:
     /** Returns true if m is a emote (/me) message */
     bool isEmoteMessage(const XMPP::Message& m);
 
+    /** Does emoticonify, linkify, etc in XHTML-IM messages */
+    virtual DefaultHTMLTextFormatter * textFormatter() = 0;
+    
     //fields
+    
     /** Validates XHTML-IM messages */
     MessageValidator messageValidator_;
-
-    /** Does emoticonify, linkify, etc in XHTML-IM messages */
-    DefaultHTMLTextFormatter textFormatter_;
 
     /** Indicates if next message should be consecutive */
     LastEventOwner lastEventOwner;
@@ -141,6 +142,12 @@ slots:
     
     /** Sets focus/selection handlers */
     void chatViewCreated();
+    
+    /** Scrolls ChatView up */
+    void scrollUp();
+    
+    /** Scrolls ChatView down */
+    void scrollDown();
 
 private:
     GenericChatDialog* dlg;

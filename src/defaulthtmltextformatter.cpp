@@ -11,7 +11,7 @@ QDomNode DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& 
         output = TextUtil::linkify(output);
     }
     if (doEmoticonify_) {
-        output = TextUtil::emoticonify(output, true);
+        output = TextUtil::emoticonify(output, useImgTagInEmoticonify_);
     }
     if (doLegacyFormatting_) {
         output = TextUtil::legacyFormat(output);

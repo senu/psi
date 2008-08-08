@@ -7,16 +7,17 @@
 
 /**
  * Abstract TextFormatter is used when MessageValidator encounters text node in DOM tree.
- * You can iconify/linkify/etc message body here  */
+ * You can iconify/linkify/etc message body here .
+ */
 class HTMLTextFormatter {
 
 public:
 
 
     /**
-     * Formats xhtml-im text node and return it as a QDomNode
+     * Formats xhtml-im text node and return formated QDomNode
      *
-     * formats \param input a text child of \param ParentTag */
+     * formats \param input a text child of \param parenteElement */
     virtual QDomNode format(const QString& input, const QDomNode& parentElement) const = 0;
 
 

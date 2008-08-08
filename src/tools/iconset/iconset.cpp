@@ -831,20 +831,22 @@ void IconsetFactory::registerIconset(const Iconset *i)
 
     if (!iconsets_->contains((Iconset*)i)) {
 		iconsets_->append((Iconset*)i);
+
+         //emit
+        QStringList names;
+        QList<const QPixmap*> icons;
+        
+        QListIterator<PsiIcon*> it = i->iterator();
+        while (it.hasNext()) {
+            PsiIcon * icon = it.next();
+            names << icon->name();
+            icons.append(&(icon->pixmap()));
+        }
+        
+        qDebug() << "IconsetFactory::registerIconset" << names;
+        emit iconsetRegistered(names, icons);
+    
     }
-    
-    QStringList names;
-    QList<const QPixmap*> icons;
-    
-    QListIterator<PsiIcon*> it = i->iterator();
-    while (it.hasNext()) {
-        PsiIcon * icon = it.next();
-        names << icon->name();
-        icons.append(&(icon->pixmap()));
-    }
-    
-    qDebug() << "IconsetFactory::registerIconset" << names;
-	emit iconsetRegistered(names, icons); 
 }
 
 void IconsetFactory::unregisterIconset(const Iconset *i)
@@ -852,16 +854,18 @@ void IconsetFactory::unregisterIconset(const Iconset *i)
     
     if (iconsets_ && iconsets_->contains((Iconset*)i)) {
 		iconsets_->removeAll((Iconset*)i);
+
+        //emit
+
+        QStringList list; //icon names
+        QListIterator<PsiIcon*> it = i->iterator();
+        while (it.hasNext()) {
+            list << it.next()->name();
+        }
+        
+        qDebug() << "IconsetFactory::unRegisterIconset" << list;
+        emit iconsetUnregistered(list);
     }
-    
-    QStringList list; //icon names
-    QListIterator<PsiIcon*> it = i->iterator();
-    while (it.hasNext()) {
-        list << it.next()->name();
-    }
-    
-    qDebug() << "IconsetFactory::unRegisterIconset" << list;
-    emit iconsetUnregistered(list);
 }
 
 /**
@@ -871,7 +875,8 @@ void IconsetFactory::unregisterIconset(const Iconset *i)
 const PsiIcon* IconsetFactory::iconPtr(const QString &name) 
 {
     IconsetFactory * inst = IconsetFactory::instance();
-    
+    //NOTE: (roster) psi/cryptoYes is obtained few times per second
+
     if (!inst->iconsets_) {
 		qDebug("WARNING: IconsetFactory::icon(\"%s\"): icon not found", name.latin1());
 		return 0;

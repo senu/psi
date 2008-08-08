@@ -41,12 +41,6 @@ public:
     /** Creates HTML document (header,chat,footer) */
     void init();
 
-    /** 
-     * Returns true if ChatView was successfully initialized. 
-     * For example, we could not load theme, open file with JavaScript code.
-     */
-    bool isValid() const;
-
     //reimplemented
     bool atBottom() const;
     bool internalFind(const QString& str, bool startFromBeginning = false);

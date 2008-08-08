@@ -49,7 +49,7 @@ public:
     /** Reads theme from filesystem (path to Contents/Resources) */
     void readTheme(QDir dir);
 
-    bool isValid(); //TODO 57
+    bool isValid();
 
     /** Returns headerTemplate */
     HTMLChatTemplate headerTemplate() const;

@@ -6,10 +6,6 @@ IconReply::IconReply(const QUrl& url, const IconServer* iconSever) : QNetworkRep
     setOpenMode(QIODevice::ReadOnly | QIODevice::Unbuffered);
     setUrl(url);
 
-//    QFile f("/home/senu/2008-06-30-120934_1280x1024_scrot.png");
-
-//    f.open(QIODevice::ReadOnly);
-//    iconBuffer.setData(f.readAll());
     iconBuffer.setData(iconSever->getIcon(url.toString().mid(7))); //icon://
     iconBuffer.open(QIODevice::ReadOnly);
 
@@ -17,6 +13,16 @@ IconReply::IconReply(const QUrl& url, const IconServer* iconSever) : QNetworkRep
     QTimer::singleShot(0, this, SLOT(dataReady()));
 }
 
+IconReply::IconReply() {
+    setOpenMode(QIODevice::ReadOnly | QIODevice::Unbuffered);
+    setUrl(QUrl());
+
+    iconBuffer.open(QIODevice::ReadOnly);
+
+    qDebug() << "access denied IR::IconReply()" << iconBuffer.bytesAvailable();
+    QTimer::singleShot(0, this, SLOT(dataReady()));
+    
+}
 
 void IconReply::abort() {
     qDebug() << "IR::abort()";
@@ -56,8 +62,17 @@ IconReply::~IconReply() {
 void IconReply::dataReady() {
     qDebug() << "IR::dataReady()";
 
-    emit downloadProgress(0, 580);
-    emit downloadProgress(580, 580);
+    qint64 totalSize = iconBuffer.bytesAvailable();
+    
+    if (!totalSize) { //not in IconServer or (internet) access denied
+        setError(QNetworkReply::ContentAccessDenied, "Access Denied");
+        emit error(QNetworkReply::ContentAccessDenied);
+        emit finished();
+        return; 
+    }
+    
+    emit downloadProgress(0, totalSize);
+    emit downloadProgress(totalSize, totalSize);
     emit readyRead();
     emit finished();
 }

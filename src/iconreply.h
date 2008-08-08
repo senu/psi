@@ -21,6 +21,9 @@ class IconReply : public QNetworkReply {
 public:
     /** URL of icon, eg icon://smile.png; icon will be "downloaded" from \param iconServer */
     IconReply(const QUrl& url, const IconServer* iconServer);
+    
+    /** Construct IconReply that fails with ContentAccessDenied error */
+    IconReply();
     ~IconReply();
 
     //reimplemented

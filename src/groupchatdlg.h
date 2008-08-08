@@ -132,13 +132,7 @@ slots:
     void unsetConnecting();
     void action_error(MUCManager::Action, int, const QString&);
     void updateIdentityVisibility();
-    
-    /** Scrolls ChatView up */
-    void scrollUp();
-    
-    /** Scrolls ChatView down */
-    void scrollDown();
-    
+   
     /** Calls openFindGC() (it must be slot and GeCD cannot inherit from QObject) */
     void openFind();
     
@@ -159,6 +153,9 @@ private:
 
     void doAlert();
     //void appendSystemMsg(const QString &, bool, const QDateTime &ts = QDateTime()); //TODO remove
+    
+    //reimplmented
+    DefaultHTMLTextFormatter * textFormatter();
     
     void appendMessage(const Message &, bool alert);
     void appendChatEvent(const ChatEvent* event, bool alert = false);

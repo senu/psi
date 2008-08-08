@@ -11,7 +11,6 @@ ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,
                                            QWidget* parent, bool* isHTMLChatView, 
                                            HTMLThemeManager* themeManager, 
                                            IconServer* iconServer) {
-    //TODO 10 fallback 
     
     bool useHTMLView = PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool();
     
@@ -26,12 +25,16 @@ ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,
 
         HTMLChatTheme theme(themeManager->getTheme(themeName, themeVariant));
 
-        *isHTMLChatView = true;
-        HTMLChatView * view = new HTMLChatView(parent, theme, iconServer);
+        if (theme.isValid()) {
+            *isHTMLChatView = true;
             
-        QObject::connect(view, SIGNAL(openURL(QString)), URLObject::getInstance(), SIGNAL(openURL(QString)));
-        
-        return view;
+            HTMLChatView * view = new HTMLChatView(parent, theme, iconServer);
+            QObject::connect(view, SIGNAL(openURL(QString)), URLObject::getInstance(), SIGNAL(openURL(QString)));
+            
+            return view; 
+        } //else fallback (old, PlainTextChatView) ChatView is created
+
+        qDebug() << "WARNING: loading theme:" << themeName << themeVariant << "failed. PlainTextChatView is used as a ChatView";
     }
     
     *isHTMLChatView = false;

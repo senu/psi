@@ -5,7 +5,9 @@
 
 
 /** 
- * HTMLTextFormatter for HTMLChatView 
+ * Default HTMLTextFormatter for HTMLChatView and PlainTextChatView.
+ *
+ * It should be called 'PsiTextFormatter'.
  *
  * it can: linkify, emoticonify, doLegacyFromatting 
  * and highlight message (eg. for direct messages in MUC)
@@ -17,12 +19,15 @@ public:
 
     /** 
      * Specify what kind of formatting TextFormatter should perform
+     *
+     * \param useImgTagInEmoticonify should be true for HTMLChatView and false for PlainTextChatView
      */
-    DefaultHTMLTextFormatter(bool doEmoticonify, bool doLinkify, bool doLegacyFormatting)
+    DefaultHTMLTextFormatter(bool doEmoticonify, bool doLinkify, bool doLegacyFormatting, bool useImgTagInEmoticonify)
     : doEmoticonify_(doEmoticonify),
     doLinkify_(doLinkify),
     doLegacyFormatting_(doLegacyFormatting),
-    doHighlighting_(false) {
+    doHighlighting_(false), 
+    useImgTagInEmoticonify_(useImgTagInEmoticonify) {
         
     };
 
@@ -46,6 +51,7 @@ public:
 
     /** Sets doLegacyFormatting */
     void setDoLegacyFormatting(bool doLegacyFormatting);
+    
     /** Returns doHighlighting */
     bool doHighlighting() const;
 
@@ -53,11 +59,12 @@ public:
     void setDoHighlighting(bool doHighlighting);
 
 
-private:
+protected:
     bool doEmoticonify_;
     bool doLinkify_;
     bool doLegacyFormatting_;
     bool doHighlighting_;
+    bool useImgTagInEmoticonify_;
 
 };
 

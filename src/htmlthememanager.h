@@ -12,8 +12,10 @@
 class HTMLThemeManager {
 
 public:
-    /** Loads theme list */
-    HTMLThemeManager();
+    /**
+     * Fils theme list with themes located in themesDir dir. 
+     */
+    HTMLThemeManager(const QString& themesDir);
     ~HTMLThemeManager();
 
     /** Returns theme list. Used in PsiOptions */
@@ -29,6 +31,9 @@ private:
 
     /** Loaded themes [(path,variant) -> theme] */
     QHash< QPair<QString, QString>, HTMLChatTheme> _themeCache;
+
+    /** A path to dir with themes */
+    QString themesDir;
 
 
 };

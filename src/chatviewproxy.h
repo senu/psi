@@ -7,6 +7,7 @@
 #include "chatView.h"
 #include "htmlthememanager.h"
 #include "iconserver.h"
+#include "defaulthtmltextformatter.h"
 
 
 /** Adapter to change ChatViews in runtime/embed them with qt designer */
@@ -31,6 +32,9 @@ public:
     void init(const ChatTheme::ChatInfo& chatInfo, bool inGroupChat,
               HTMLThemeManager* themeManager_, IconServer* iconServer_);
 
+    /** Returns textFormatter */
+    DefaultHTMLTextFormatter* currentTextFormatter();
+    
     public
 slots:
     void optionsChanged(const QString& optionName);
@@ -47,13 +51,21 @@ private:
 
     /** Will be passed to ChatViewFactory */
     IconServer* iconServer;
+    
+    /** Currently used (depending on ChatView type) default textFormatter */
+    DefaultHTMLTextFormatter* textFormatter;
 
-    /** Is current chatView() instance of HTMLChatView? */
+
+    /** 
+     * Is current chatView() instance of HTMLChatView? 
+     */
     bool isHTMLChatView;
 
 
     /**
      * Creates new ChatView using ChatViewFactory and updates layout.
+     *
+     * textFormatter is also updated/created. 
      *
      * \param inGroupChat indcates place where ChatView will be used
      * \param jid indicates to whom we are talking or muc room name

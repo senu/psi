@@ -505,7 +505,6 @@ public:
 	QWidget* findDialog(const QMetaObject& mo, const Jid& jid, bool compareResource) const
 	{
 		foreach(item_dialog2* i, dialogList) {
-            qDebug() << "findDialog" <<  i->jid.full() << jid.full();
 			if (mo.cast(i->widget) && compareJids(i->jid, jid, compareResource))
 				return i->widget;
 		}
