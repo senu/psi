@@ -34,7 +34,6 @@ void ChatView::reappendEvents() {
 
     const AbstractChatEvent* event;
 
-
     foreach(event, appendedEvents) {
         if (event->isMessageChatEvent()) {
             appendMessage(dynamic_cast<const MessageChatEvent*> (event), true);

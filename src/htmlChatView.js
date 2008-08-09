@@ -1,5 +1,5 @@
 //internal 
-/** Append all what childs to where*/
+/** Move all what childs to where */
 function psi_appendChilds(where, what) {
     try {
         while(what.hasChildNodes()) {
@@ -57,7 +57,7 @@ allowed = [
     "font-weight", "margin-left", "margin-right", "text-align", "text-decoration", 
 ];
 
-
+/** CSS Validator */
 function psi_dfs(element) {	
     if(element.nodeType == Node.ELEMENT_NODE) {
         
@@ -80,7 +80,6 @@ function psi_dfs(element) {
                 element.setAttribute('style', newStyle);
             }
         }
-
 
         //check children
         for(var i=0; i<element.childNodes.length; i++) {
@@ -107,8 +106,10 @@ function psi_removeSpaces(string) {
     tstring = "";
     string = '' + string;
     splitstring = string.split(" ");
-    for(i = 0; i < splitstring.length; i++)
+
+    for(i = 0; i < splitstring.length; i++) {
         tstring += splitstring[i];
+	}
     return tstring;
 }
 
@@ -146,9 +147,7 @@ function psi_runTests() {
     inp = '<div style="">a<strong style="cle%ar: b;:o=th; color:red">xxx</strong></div>';
     out = '<div>a<strong style="color:red;">xxx</strong></div>';
 
-    //NOTICE imho webkit output is invalid, but it displays test proper way
     psi_cssRunTest("5. invalid style attribute", inp, out, results);
-
 
     inp = '<div style=""><strong style="clear: both; text-align:right;   dispaly:none">xxx</strong></div>';
     out = '<div><strong style="text-align:right;">xxx</strong></div>';
@@ -211,7 +210,6 @@ function psi_initDocument(header, footer) {
 
         footerElement.innerHTML = footer;
         headerElement.innerHTML = header;
-        //		alert(document.baseURI);
 
         psi_appendChilds(document.body, headerElement);
         document.body.appendChild(chatElement);

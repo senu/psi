@@ -19,7 +19,14 @@ class ChatView;
 class HTMLChatTheme;
 
 
-/** Themable Webkit-based HTML Chat View */
+/** 
+ * Themable Webkit-based HTML Chat View 
+ * 
+ * NOTE: 1. QWebkit runs in separate thread (no matter how many instances of QWebView
+ * NOTE:     you have - there always is one thread)
+ * NOTE: 2. Because QWebkit runs in separate thread, and doesn't have DOM interface on C++ side
+ * NOTE:    we need to synchronize IconServer, queue chat events and theme changes
+ */
 class HTMLChatView : public ChatView {
 
     Q_OBJECT
@@ -129,7 +136,7 @@ private:
     /** Handles icon:// URLs and disallwos network requests */
     NetworkAccessManager * networkManager;
 
-    /** ChatView is ready to: change theme, append events (after onInitDouemtet finished) */
+    /** ChatView is ready to: change theme, append events (true after onInitDouemtet finished) */
     bool isReady;
 
     /** Theme changed */

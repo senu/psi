@@ -94,6 +94,8 @@ void HTMLChatView::onInitDocumentFinished() {
 
     isReady = true;
 
+    qDebug() << "onInitDocFin";
+
     if (queuedTheme) {
         qDebug() << "changing queued theme" << queuedTheme->baseHref();
         setTheme(*queuedTheme);
@@ -146,22 +148,29 @@ QString HTMLChatView::createEmptyDocument(QString baseHref, QString themeVariant
 void HTMLChatView::appendMessage(const MessageChatEvent *msg, bool alreadyAppended) {
     ChatView::appendMessage(msg, alreadyAppended);
 
-    QString part;
+    qDebug() << "appendMessage";
 
-    if (msg->isLocal())
-        part = theme.createOutgoingMessagePart(msg);
-    else
-        part = theme.createIncomingMessagePart(msg);
+    if (isReady) { // we dont want to append events before init was finished
+        // events will be appended in reappendEvents (called from onInitDpcumentFinished)
+        qDebug() << " -- appendMessage queued";
 
-    escapeString(part);
+        QString part;
 
-    if (msg->isConsecutive()) {
-        evaluateJS("psi_appendConsecutiveMessage(\"" + part + "\", \"" +
-                   escapeStringCopy(msg->body()) + "\"" + ")");
-    }
-    else {
-        evaluateJS("psi_appendNextMessage(\"" + part + "\", \"" +
-                   escapeStringCopy(msg->body()) + "\"" + ")");
+        if (msg->isLocal())
+            part = theme.createOutgoingMessagePart(msg);
+        else
+            part = theme.createIncomingMessagePart(msg);
+
+        escapeString(part);
+
+        if (msg->isConsecutive()) {
+            evaluateJS("psi_appendConsecutiveMessage(\"" + part + "\", \"" +
+                       escapeStringCopy(msg->body()) + "\"" + ")");
+        }
+        else {
+            evaluateJS("psi_appendNextMessage(\"" + part + "\", \"" +
+                       escapeStringCopy(msg->body()) + "\"" + ")");
+        }
     }
 }
 
@@ -169,10 +178,16 @@ void HTMLChatView::appendMessage(const MessageChatEvent *msg, bool alreadyAppend
 void HTMLChatView::appendEvent(const ChatEvent* event, bool alreadyAppended) {
     ChatView::appendEvent(event, alreadyAppended);
 
-    QString part = event->getRightTemplateAndFillItWithData(theme);
-    escapeString(part);
+    if (isReady) { // we dont want to append events before init was finished
+        // events will be appended in reappendEvents (called from onInitDpcumentFinished)
 
-    evaluateJS("psi_appendEvent(\"" + part + "\")");
+        qDebug() << " -- appendMessage queued";
+
+        QString part = event->getRightTemplateAndFillItWithData(theme);
+        escapeString(part);
+
+        evaluateJS("psi_appendEvent(\"" + part + "\")");
+    }
 }
 
 
@@ -302,6 +317,7 @@ bool HTMLChatView::internalFind(const QString& str, bool startFromBeginning) {
 bool HTMLChatView::hasSelectedText() const {
     return !(webView.page()->selectedText().isEmpty());
 }
+
 
 void HTMLChatView::copySelectedText() {
     webView.page()->triggerAction(QWebPage::Copy);

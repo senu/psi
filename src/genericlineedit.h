@@ -56,21 +56,18 @@ protected:
 
 
     void resizeEvent(QResizeEvent* e) {
-        qDebug() << "gle:resizeEvent";
         TEdit::resizeEvent(e);
         QTimer::singleShot(0, this, SLOT(callUpdateScrollBar()));
     }
 
 
     void recalculateSize() {
-        qDebug() << "gle:crs";
         TEdit::updateGeometry();
         QTimer::singleShot(0, this, SLOT(callUpdateScrollBar()));
     }
 
 
     void updateScrollBar() {
-        qDebug() << "gle:usb";
         TEdit::setVerticalScrollBarPolicy(TEdit::sizeHint().height() > TEdit::height() ? Qt::ScrollBarAlwaysOn : Qt::ScrollBarAlwaysOff);
         TEdit::ensureCursorVisible();
     }
