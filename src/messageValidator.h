@@ -34,15 +34,17 @@ public:
 
     /**
      * Returns new (valid) XHTML message; 
-     * \param modified is set to true if message was modified 
-     * \formatter will be used to format text conntent 
+     *
+     * \param illformed is set to true if message was illformed (couldn't be parsed)
+     * \param formatter will be used to format text conntent. 
+     *
+     * formatter is not const pointer. You can modify it in HTMLTextFormatter::format()
+     * format() is called for every DOM text node in preorder format.
+     *  
      */
-    QString validateMessage(QString message, bool* modified, const HTMLTextFormatter* formatter);
+    QString validateMessage(QString message, bool* illformed, HTMLTextFormatter* formatter);
 
 protected:
-    //TODO + 65 stack instead of recursion?
-    //OK -> textNode, node we want to delete, textNode2 --delete--> != textNode + textNode2 
-
 
     /** per-Node structure used in XHTML-IM validation */
     struct NodeInfo {
@@ -60,13 +62,6 @@ protected:
 
         //bool canBeEmpty;
     };
-
-    /**
-     * Traverse through Tree(cur) and cut off bad elements/attributes/styles.
-     * \param modified will be set to true if tree was modified
-     * \param formatter will be used as a TextFormatter
-     */
-    void dfs(QDomElement cur, const HTMLTextFormatter* formatter, bool* modified);
 
     /** Fills allowed dictionary */
     void generateAllowedDict();

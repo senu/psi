@@ -40,8 +40,6 @@ ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,
     *isHTMLChatView = false;
     
     PlainTextChatTheme theme;
-    //TODO 37
-    //TODO 71
     
     QFont font;
     font.fromString(PsiOptions::instance()->getOption("options.ui.look.font.chat").toString());

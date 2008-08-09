@@ -10,9 +10,10 @@ class NullHTMLTextFormatter : public HTMLTextFormatter {
 
 public:
 
-    QDomNode format(const QString& input, const QDomNode& parentElement) const {
+    QDomNode format(const QString& input, const QDomNode& parentElement) {
         QDomText node;
         node.setData(input);
+        return node;
     }
 };
 

@@ -9,8 +9,11 @@
  *
  * It should be called 'PsiTextFormatter'.
  *
- * it can: linkify, emoticonify, doLegacyFromatting 
+ * It can: linkify, emoticonify, doLegacyFromatting 
  * and highlight message (eg. for direct messages in MUC)
+ *
+ * You have to reset textNodeNumber everytime you call MessageValidator::validateMessage() 
+ * with this textFormatter.
  */
 class DefaultHTMLTextFormatter : public HTMLTextFormatter {
 
@@ -26,14 +29,16 @@ public:
     : doEmoticonify_(doEmoticonify),
     doLinkify_(doLinkify),
     doLegacyFormatting_(doLegacyFormatting),
-    doHighlighting_(false), 
-    useImgTagInEmoticonify_(useImgTagInEmoticonify) {
-        
+    doHighlighting_(false),
+    useImgTagInEmoticonify_(useImgTagInEmoticonify),
+    removeEmoteString_(false),
+    textNodeNumber_(0) {
+
     };
 
 
-    QDomNode format(const QString& input, const QDomNode& parentElement) const;
-    
+    QDomNode format(const QString& input, const QDomNode& parentElement);
+
     /** Returns doLinkify */
     bool doLinkify() const;
 
@@ -51,12 +56,25 @@ public:
 
     /** Sets doLegacyFormatting */
     void setDoLegacyFormatting(bool doLegacyFormatting);
-    
+
     /** Returns doHighlighting */
     bool doHighlighting() const;
 
     /** Sets doHighlighting */
     void setDoHighlighting(bool doHighlighting);
+
+    /** Returns removeEmoteString */
+    bool removeEmoteString() const;
+
+    /** Sets removeEmoteString */
+    void setRemoveEmoteString(bool removeEmoteString);
+
+    /** Returns textNodeNumber */
+    int textNodeNumber() const;
+
+    /** Sets textNodeNumber */
+    void setTextNodeNumber(int textNodeNumber);
+
 
 
 protected:
@@ -66,6 +84,14 @@ protected:
     bool doHighlighting_;
     bool useImgTagInEmoticonify_;
 
+    /** This property holds whether '/me' substring should be deleted from the first text node*/
+    bool removeEmoteString_;
+
+    /**
+     * This this variable is used to count text nodes (preorder). 
+     * We count nodes from 0.
+     */
+    int textNodeNumber_;
 };
 
 #endif	

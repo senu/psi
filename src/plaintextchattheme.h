@@ -31,8 +31,6 @@ class PlainTextChatTheme : public ChatTheme {
 public:
 
     PlainTextChatTheme();
-    /** Reads theme from filesystem */
-    //    PlainTextChatTheme(QString path); //TODO 73 theme options from psi options passed here
 
     QString createIncomingMessagePart(const MessageChatEvent* event) const;
     QString createOutgoingMessagePart(const MessageChatEvent* event) const;

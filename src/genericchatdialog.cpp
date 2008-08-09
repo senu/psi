@@ -28,28 +28,40 @@ static const QString me_cmd = "/me ";
 QString GenericChatDialog::messageText(const XMPP::Message& m) {
 
     bool emote = isEmoteMessage(m),
-        modified;
+        illformed;
 
     QString txt;
 
     qDebug() << "message text containsHTML" << m.containsHTML() << m.body() << m.html().toString("notb3") << "EOF";
 
+    //reset textFormatter
+    textFormatter()->setRemoveEmoteString(false); 
+    textFormatter()->setTextNodeNumber(0);
+    
     if (m.containsHTML() && PsiOptions::instance()->getOption("options.html.chat.render").toBool() && !m.html().text().isEmpty()) {
-        txt = m.html().toString("span"); //TODO + 23 remove /me if emote
+        if (emote) {
+            textFormatter()->setRemoveEmoteString(true);
+        }
+        txt = m.html().toString("span");
     }
     else {
         if (emote) {
             txt = "<span>" + m.body().mid(me_cmd.length()) + "</span>";
         }
         else {
-            txt = TextUtil::plain2rich(m.body()); //plain2rich returns everything wrapped with <span/>
+            txt = TextUtil::plain2rich(m.body());
         }
     }
 
     textFormatter()->setDoEmoticonify(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool());
     textFormatter()->setDoLegacyFormatting(PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool());
 
-    txt = messageValidator_.validateMessage(txt, &modified, textFormatter());
+    txt = messageValidator_.validateMessage(txt, &illformed, textFormatter());
+    
+    if (illformed) { //html content was illformed, plain version is displayed
+        textFormatter()->setTextNodeNumber(0);
+        txt = messageValidator_.validateMessage(TextUtil::plain2rich(m.body()), &illformed, textFormatter());
+    }
 
     qDebug() << "messageText2" << txt;
     return txt;

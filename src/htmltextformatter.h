@@ -18,7 +18,7 @@ public:
      * Formats xhtml-im text node and return formated QDomNode
      *
      * formats \param input a text child of \param parenteElement */
-    virtual QDomNode format(const QString& input, const QDomNode& parentElement) const = 0;
+    virtual QDomNode format(const QString& input, const QDomNode& parentElement) = 0;
 
 
     virtual ~HTMLTextFormatter() {

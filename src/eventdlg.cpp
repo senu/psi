@@ -1917,7 +1917,7 @@ void EventDlg::updateEvent(PsiEvent *e)
 		}
 
        
-        bool modified; //qwer
+        bool illformed;
         QString txt;
         
         if (m.containsHTML() && PsiOptions::instance()->getOption("options.html.chat.render").toBool() && !m.html().text().isEmpty()) {
@@ -1934,11 +1934,23 @@ void EventDlg::updateEvent(PsiEvent *e)
                 + " " 
                 + TextUtil::plain2rich(m.subject()) + "</b></font></p>"); 
         }
-        
+       
+        textFormatter.setTextNodeNumber(0);
         textFormatter.setDoEmoticonify(PsiOptions::instance()->getOption("options.ui.emoticons.use-emoticons").toBool());
         textFormatter.setDoLegacyFormatting(PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool());
        
-        txt = messageValidator.validateMessage(txt, &modified, &textFormatter);
+        txt = messageValidator.validateMessage(txt, &illformed, &textFormatter);
+        
+        if (illformed) { //html content was illformed, plain version is displayed
+            textFormatter.setTextNodeNumber(0);
+
+            txt = messageValidator.validateMessage(TextUtil::plain2rich(m.body()), &illformed, &textFormatter);
+            
+            if(m.subject() != "" && !PsiOptions::instance()->getOption("options.ui.message.show-subjects").toBool()) {
+                txt = txt.insert(5, "<p><font color=\"red\"><b>" //<span>
+                    + tr("Subject:") + " " + TextUtil::plain2rich(m.subject()) + "</b></font></p>");
+            }
+        }
 
         if ( e->type() == PsiEvent::HttpAuth ) {
 			txt = "<big>[HTTP Request Confirmation]</big><br>" + txt;

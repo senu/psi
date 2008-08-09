@@ -1,4 +1,5 @@
 #include <QtXml>
+#include <QStack>
 #include <QTextDocument> //qt escape
 
 
@@ -64,79 +65,6 @@ const QString styleProperties[] = {
 };
 
 
-void MessageValidator::dfs(QDomElement cur, const HTMLTextFormatter* formatter, bool* modified) {
-
-    //    qDebug() << QString(4, ' ') << cur.tagName();
-
-    QString parentName = cur.tagName();
-
-    NodeInfo curNI = allowed[parentName];
-
-    //delete disallowed attributes
-    for (int i = 0; i < cur.attributes().count(); i++) {
-        QString attrName = cur.attributes().item(i).toAttr().name();
-
-        if (!curNI.allowedAttributes.contains(attrName)) {
-            //     qDebug() << "VALIDATIN ERR" << "TA" << attrName  << " in " << parentName;
-            //   qDebug() << "note allowed attributes are:" << curNI.allowedAttributes;
-
-            cur.attributes().removeNamedItem(attrName);
-            *modified = true;
-            i--;
-        }
-    }
-
-    QDomNodeList children = cur.childNodes();
-
-    for (int i = 0; i < children.size(); i++) {
-        QDomNode node = children.at(i);
-
-        if (node.isElement()) {
-            QString childName = node.toElement().tagName();
-
-            if (childName == "style") { //this action is not XHTML-IM compliant!
-                cur.removeChild(node);
-                *modified = true;
-                i--;
-            }
-            else if (!curNI.allowedTags.contains(childName)) {//is subElement valid here?
-
-                //qDebug() << "VALIDATIN ERR" << "TS" << childName << " in " << parentName;
-                //qDebug() << "note allowed subElements are:" << curNI.allowedTags;
-
-                //append bad node's children (they will be walidated in next loop iteration)
-                while (node.hasChildNodes()) {
-                    cur.insertBefore(node.firstChild(), node);
-                }
-
-                //delete bad node
-                cur.removeChild(node);
-                *modified = true;
-                i--;
-            }
-            else {
-                dfs(node.toElement(), formatter, modified);
-            }
-        }
-        else if (node.isText() && !node.isCDATASection()) {
-            if (!curNI.canHaveText) {
-                cur.removeChild(node);
-                *modified = true;
-                i--;
-            }
-            else { //format text
-                QDomNode newElement = formatter->format(Qt::escape(node.toText().data()), cur); 
-                //NOTE: we don't need to escape quotes, and we want this code be more reusable, 
-                //NOTE: so we use Qt::escape() instead of TextUtil::escape()
-                cur.replaceChild(newElement, node);
-            }
-        }
-    }
-
-
-}
-
-
 MessageValidator::MessageValidator() {
     generateAllowedDict();
 }
@@ -174,11 +102,11 @@ void MessageValidator::generateAllowedDict() {
     appendArrayToList(hypertextAttributes, sizeof (hypertextAttributes), hypertextNI.allowedAttributes);
 
     //fill allowed dict
-    for (int i = 0; i< sizeof (textElements) / sizeof (QString); i++) {
+    for (unsigned int i = 0; i< sizeof (textElements) / sizeof (QString); i++) {
         allowed[textElements[i]] = textNI;
     }
 
-    for (int i = 0; i< sizeof (structureElements) / sizeof (QString); i++) {
+    for (unsigned int i = 0; i< sizeof (structureElements) / sizeof (QString); i++) {
         allowed[structureElements[i]] = structNI;
     }
 
@@ -208,27 +136,105 @@ void MessageValidator::generateAllowedDict() {
 
 
 void MessageValidator::appendArrayToList(const QString *array, int arraySize, QStringList& list) {
-    for (int i = 0; i < arraySize / sizeof (QString); i++) {
+    for (unsigned int i = 0; i < arraySize / sizeof (QString); i++) {
         list.append(array[i]);
     }
 }
 
 
-QString MessageValidator::validateMessage(QString message, bool* modified, const HTMLTextFormatter* formatter) {
+QString MessageValidator::validateMessage(QString message, bool* illformed, HTMLTextFormatter* formatter) {
 
     QDomDocument doc("document");
+    *illformed = false;
 
     QString errorMessage;
     int line, column;
-    *modified = false;
 
     if (!doc.setContent(message, false, &errorMessage, &line, &column)) {
         qDebug() << errorMessage << " " << line << " " << column << message;
-        *modified = true;
-        return "illformed message!!!"; //TODO 64 - display plain message
+        *illformed = true;
+        qDebug() << "WARNING: MessageValidator::validateMessage() - illformed message";
+        return "illformed message!!!";
     }
 
-    dfs(doc.documentElement(), formatter, modified);
+    //    dfs(doc.documentElement(), formatter, illformed);
+
+    //now DOM tree will be traversed in preorder. 
+    QStack<QDomElement> stack; //current element, QStack is used to avoid possible stack overflow in ordinary recursion
+    stack.push(doc.documentElement());
+
+    while (!stack.empty()) {
+        QDomElement cur = stack.top();
+        stack.pop();
+
+        // Traverse through DOM Tree(cur), cut off bad elements/attributes 
+        // and format text nodes using textFormatter
+
+        //    qDebug() << QString(4, ' ') << cur.tagName();
+
+        QString parentName = cur.tagName();
+        NodeInfo curNI = allowed[parentName];
+
+        //delete disallowed attributes
+        for (int i = 0; i < cur.attributes().count(); i++) {
+            QString attrName = cur.attributes().item(i).toAttr().name();
+
+            if (!curNI.allowedAttributes.contains(attrName)) {
+                //     qDebug() << "VALIDATIN ERR" << "TA" << attrName  << " in " << parentName;
+                //   qDebug() << "note allowed attributes are:" << curNI.allowedAttributes;
+
+                cur.attributes().removeNamedItem(attrName);
+                i--;
+            }
+        }
+
+        QDomNodeList children = cur.childNodes();
+
+        for (int i = 0; i < children.size(); i++) {
+            QDomNode node = children.at(i);
+
+            if (node.isElement()) {
+                QString childName = node.toElement().tagName();
+
+                if (childName == "style") { //NOTE: this action is not XHTML-IM compliant! (css rules should be displayed, but it's stupid)
+                    cur.removeChild(node);
+                    i--;
+                }
+                else if (!curNI.allowedTags.contains(childName)) {//is subElement valid here?
+
+                    //qDebug() << "VALIDATIN ERR" << "TS" << childName << " in " << parentName;
+                    //qDebug() << "note allowed subElements are:" << curNI.allowedTags;
+
+                    //append bad node's children (they will be validated in next loop iteration)
+                    while (node.hasChildNodes()) {
+                        cur.insertBefore(node.firstChild(), node);
+                    }
+
+                    //delete bad node
+                    cur.removeChild(node);
+                    i--;
+                }
+                else {
+                    stack.push(node.toElement());
+                    //dfs(node.toElement(), formatter, illformed); //TODO 105 ins
+                }
+            }
+            else if (node.isText() && !node.isCDATASection()) {
+                if (!curNI.canHaveText) {
+                    cur.removeChild(node);
+                    i--;
+                }
+                else { //format text
+                    QDomNode newElement = formatter->format(Qt::escape(node.toText().data()), cur);
+                    //NOTE: we don't need to escape quotes, and we want this code be more reusable, 
+                    //NOTE: so we use Qt::escape() instead of TextUtil::escape()
+                    cur.replaceChild(newElement, node);
+                }
+            }
+        }//foreach child
+    } //stack/dfs
+
+
     return doc.toString(0);
 }
 

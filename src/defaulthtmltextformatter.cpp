@@ -3,9 +3,15 @@
 #include  <QDebug>
 
 
-QDomNode DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& parentElement) const {
+QDomNode DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& parentElement) {
 
     QString output(input);
+    
+    //remove /me from first text node
+    if(textNodeNumber_ == 0 && removeEmoteString_ && output.startsWith("/me ")) {         
+        qDebug() << "DOM transform: removed /me ";
+        output = output.mid(4);
+    }
 
     if (doLinkify_ && parentElement.nodeName() != "a") {
         output = TextUtil::linkify(output);
@@ -25,8 +31,9 @@ QDomNode DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& 
 
     QDomDocument node;
     qDebug() << "!!! tf messageText1.5 0" << output;
-    node.setContent("<span>"+output+"</span>");
+    node.setContent("<span>" + output + "</span>");
 
+    textNodeNumber_++;
     return node.firstChild();
 }
 
@@ -68,4 +75,24 @@ bool DefaultHTMLTextFormatter::doHighlighting() const {
 
 void DefaultHTMLTextFormatter::setDoHighlighting(bool doHighlighting) {
     doHighlighting_ = doHighlighting;
+}
+
+
+bool DefaultHTMLTextFormatter::removeEmoteString() const {
+    return removeEmoteString_;
+}
+
+
+void DefaultHTMLTextFormatter::setRemoveEmoteString(bool removeEmoteString) {
+    removeEmoteString_ = removeEmoteString;
+}
+
+
+int DefaultHTMLTextFormatter::textNodeNumber() const {
+    return textNodeNumber_;
+}
+
+
+void DefaultHTMLTextFormatter::setTextNodeNumber(int textNodeNumber) {
+    textNodeNumber_ = textNodeNumber;
 }
