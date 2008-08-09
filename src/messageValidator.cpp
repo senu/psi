@@ -190,7 +190,7 @@ QString MessageValidator::validateMessage(QString message, bool* illformed, HTML
 
         QDomNodeList children = cur.childNodes();
 
-        for (int i = 0; i < children.size(); i++) {
+        for (int i = children.size()-1; i >= 0; i--) {
             QDomNode node = children.at(i);
 
             if (node.isElement()) {
@@ -198,7 +198,6 @@ QString MessageValidator::validateMessage(QString message, bool* illformed, HTML
 
                 if (childName == "style") { //NOTE: this action is not XHTML-IM compliant! (css rules should be displayed, but it's stupid)
                     cur.removeChild(node);
-                    i--;
                 }
                 else if (!curNI.allowedTags.contains(childName)) {//is subElement valid here?
 
@@ -206,13 +205,16 @@ QString MessageValidator::validateMessage(QString message, bool* illformed, HTML
                     //qDebug() << "note allowed subElements are:" << curNI.allowedTags;
 
                     //append bad node's children (they will be validated in next loop iteration)
+                    int j = 0;
                     while (node.hasChildNodes()) {
                         cur.insertBefore(node.firstChild(), node);
+                        j++;
                     }
+
+                    i = i + j; //j nodes were inserted
 
                     //delete bad node
                     cur.removeChild(node);
-                    i--;
                 }
                 else {
                     stack.push(node.toElement());
@@ -222,7 +224,6 @@ QString MessageValidator::validateMessage(QString message, bool* illformed, HTML
             else if (node.isText() && !node.isCDATASection()) {
                 if (!curNI.canHaveText) {
                     cur.removeChild(node);
-                    i--;
                 }
                 else { //format text
                     QDomNode newElement = formatter->format(Qt::escape(node.toText().data()), cur);
