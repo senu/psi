@@ -146,7 +146,6 @@ slots:
 slots:
     void doInfo();
     virtual void doHistory();
-    virtual void doClear();
     void doSend();
     void doVoice();
     void doFile();
@@ -184,17 +183,7 @@ protected:
     void setSelfDestruct(int);
     void deferredScroll();
 
-    /** 
-     * Fills User ChatEvent with corresponding data.
-     * Fields nick, jid, icons (status and avatar), isLocal and service are updated;
-     *
-     * \param userInfo will be filled 
-     * \param j is jid of user owner/sender
-     */
-    virtual void fillEventWithUserInfo(UserChatData * userInfo, const Jid& j) = 0;
-
     virtual void chatEditCreated();
-
 
     struct UserStatus {
         UserStatus() : userListItem(0), statusType(XMPP::Status::Offline) {}
@@ -206,7 +195,6 @@ protected:
     };
     
     UserStatus userStatusFor(const Jid& jid, QList<UserListItem*> ul, bool forceEmptyResource);
-
 
     enum SpooledType {
 

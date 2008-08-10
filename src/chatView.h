@@ -38,7 +38,14 @@ public:
      */
     virtual void appendMessage(const MessageChatEvent* event, bool alreadyAppended = false);
 
-    /** Clears all messages */
+    /** 
+     * Clears all messages 
+     *
+     * NOTE: In Psi you should not call this method. Use clear() from ChatDialog, because
+     * NOTE: ChatDialog is responsible for message 'successiveness' (making message consecutive)
+     * NOTE: so if you call this->clear() ChatDialog could try to attach consecutive message to 
+     * NOTE: one that doesn't now exist. If you really need to call clear() here - create signal cleared()
+     */
     virtual void clear() = 0;
 
     /** 

@@ -536,11 +536,6 @@ void ChatDlg::doFile() {
 }
 
 
-void ChatDlg::doClear() {
-    chatView()->clear();
-}
-
-
 void ChatDlg::setKeepOpenFalse() {
     keepOpen_ = false;
 }
@@ -612,7 +607,7 @@ void ChatDlg::doSend() {
 
     if (chatEdit()->text() == "/clear") {
         chatEdit()->clear();
-        doClear();
+        gcObject->doClear();
         return;
     }
 

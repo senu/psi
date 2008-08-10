@@ -107,7 +107,11 @@ slots:
     /** JS::psi_initDocument finished; Reappends events */
     void onInitDocumentFinished();
 
-    /** JS::psi_append* finished */
+    /** 
+     * JS::psi_append* finished 
+     *
+     * Scrolls to bottom if needed.
+     */
     void onAppendFinished();
 
     /** Scrolls to the bottom of page */
@@ -139,8 +143,11 @@ private:
     /** ChatView is ready to: change theme, append events (true after onInitDouemtet finished) */
     bool isReady;
 
-    /** Theme changed */
+    /** Theme changed while webkit was busy */
     HTMLChatTheme* queuedTheme;
+    
+    /** Someone tried to clear() ChatView before Webkit was ready to do that */
+    bool queuedClear;
 
     QWebView webView;
     

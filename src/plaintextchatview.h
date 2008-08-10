@@ -56,12 +56,12 @@ slots:
     /**
      * Scrolls the vertical scroll bar to its maximum position i.e. to the bottom.
      */
-    virtual void scrollToBottom();
+    void scrollToBottom();
 
     /**
      * Scrolls the vertical scroll bar to its minimum position i.e. to the top.
      */
-    virtual void scrollToTop();
+    void scrollToTop();
 
 
 protected:

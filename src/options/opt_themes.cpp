@@ -110,7 +110,7 @@ void OptionsTabThemes::restoreOptions() {
     d->useHtmlViewInMucCK->setChecked(PsiOptions::instance()->getOption("options.ui.themes.htmlviewinmuc").toBool());
     d->useHtmlViewInChatsCK->setChecked(PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool());
 
-    themeList.readThemes(ApplicationInfo::homeDir());
+    themeList.readThemes(ApplicationInfo::homeDir()+"/themes/");
 
     d->themeCB->clear();
     d->themeCB->addItems(themeList.themeNames());

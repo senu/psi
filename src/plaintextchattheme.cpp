@@ -70,26 +70,26 @@ QString PlainTextChatTheme::createStatusEventPart(const StatusChatEvent * event)
 
     switch (type) {
         case StatusChatEvent::Online :
-                statusStr = "online";
+                statusStr = "Online";
             break;
         case StatusChatEvent::Offline :
-                statusStr = "offline";
+                statusStr = "Offline";
             break;
         case StatusChatEvent::Away :
-                statusStr = "idle";
+                statusStr = "Away"; 
             break;
         case StatusChatEvent::Xa :
-                statusStr = "away";
+                statusStr = "Not available";
             break;
         case StatusChatEvent::Dnd :
-                statusStr = "away";
+                statusStr = "Do not Disturb";
             break;
         case StatusChatEvent::Chat :
-                statusStr = "online";
+                statusStr = "Free for Chat";
             break;
         case StatusChatEvent::Invisible :
         default:
-            statusStr = "offline";
+            statusStr = "Offline";
             break;
     }
 

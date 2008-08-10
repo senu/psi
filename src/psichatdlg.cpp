@@ -196,7 +196,7 @@ void PsiChatDlg::updateIdentityVisibility() {
 
 void PsiChatDlg::initToolButtons() {
     act_clear_ = new IconAction(tr("Clear chat window"), "psi/clearChat", tr("Clear chat window"), 0, this);
-    connect(act_clear_, SIGNAL(activated()), SLOT(doClearButton()));
+    connect(act_clear_, SIGNAL(activated()), gcObject, SLOT(doClearButton()));
 
     connect(account()->psi()->iconSelectPopup(), SIGNAL(textSelected(QString)), this, SLOT(addEmoticon(QString)));
     act_icon_ = new IconAction(tr("Select icon"), "psi/smile", tr("Select icon"), 0, this);
@@ -365,14 +365,6 @@ void PsiChatDlg::updatePGP() {
                            !smallChat_ &&
                            !PsiOptions::instance()->getOption("options.ui.chat.central-toolbar").toBool());
 }
-
-
-void PsiChatDlg::doClearButton() {
-    int n = QMessageBox::information(this, tr("Warning"), tr("Are you sure you want to clear the chat window?\n(note: does not affect saved history)"), tr("&Yes"), tr("&No"));
-    if (n == 0)
-        doClear();
-}
-
 
 void PsiChatDlg::setPGPEnabled(bool enabled) {
     act_pgp_->setChecked(enabled);

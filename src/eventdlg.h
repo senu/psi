@@ -31,6 +31,7 @@
 #include "addurldlg.h"
 #include "htmlchatedit.h"
 #include "eventview.h"
+#include "plaintexteventview.h"
 #include "messageValidator.h"
 #include "defaulthtmltextformatter.h"
 

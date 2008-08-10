@@ -2252,8 +2252,6 @@ void PsiAccount::client_incomingFileTransfer()
 	FileEvent *fe = new FileEvent(ft->peer().full(), ft, this);
 	fe->setTimeStamp(QDateTime::currentDateTime());
 	handleEvent(fe, IncomingStanza);
-
-    //TODO + 77 i could notify chat dialogs here not in handle event
 }
 
 void PsiAccount::client_rejectedFileTransfer(const QString& fileName, const Jid& jid) {

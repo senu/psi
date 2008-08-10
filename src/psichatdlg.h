@@ -24,7 +24,6 @@ private:
 
 private slots:
 	void toggleSmallChat();
-	void doClearButton();
 	void buildMenu();
 	void updateCounter();
 	void updateIdentityVisibility();
@@ -68,16 +67,8 @@ private:
     /** Returns (null() if absent) avatar pixmap for \param j*/
     QPixmap getAvatarForJid(const Jid& j);
 
-    /** 
-     * Fills User ChatEvent with corresponding data.
-     * Fields nick, jid, icons (status and avatar), isLocal and service are updated;
-     *
-     * \param userInfo will be filled 
-     * \param j is jid of user owner/sender
-     */
-    virtual void fillEventWithUserInfo(UserChatData * userInfo, const Jid& j);
-    
     //implemented
+    void fillEventWithUserInfo(UserChatData* userInfo, const Jid& j);
 
     DefaultHTMLTextFormatter * textFormatter();
 

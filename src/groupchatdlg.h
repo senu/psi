@@ -125,8 +125,6 @@ slots:
     void goDisc();
     void goConn();
     void lv_action(const QString &, const Status &, int);
-    void doClear();
-    void doClearButton();
     void buildMenu();
     void setConnecting();
     void unsetConnecting();
@@ -155,6 +153,7 @@ private:
     //void appendSystemMsg(const QString &, bool, const QDateTime &ts = QDateTime()); //TODO remove
     
     //reimplmented
+    void fillEventWithUserInfo(UserChatData* userInfo, const Jid& j);
     DefaultHTMLTextFormatter * textFormatter();
     
     void appendMessage(const Message &, bool alert);

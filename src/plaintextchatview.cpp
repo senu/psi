@@ -1,10 +1,10 @@
 #include "plaintextchatview.h"
 
 
-PlainTextChatView::PlainTextChatView(QWidget *parent, PlainTextChatTheme theme_) 
-: ChatView(parent), 
-    textview(this), 
-    theme(theme_) {
+PlainTextChatView::PlainTextChatView(QWidget *parent, PlainTextChatTheme theme_)
+: ChatView(parent),
+textview(this),
+theme(theme_) {
 
     textview.setFont(theme.chatFont());
 
@@ -55,16 +55,6 @@ void PlainTextChatView::clear() {
 void PlainTextChatView::init() {
     reappendEvents();
     emit initDocumentFinished();
-}
-
-
-void PlainTextChatView::scrollToBottom() {
-    verticalScrollBar()->setValue(verticalScrollBar()->maximum());
-}
-
-
-void PlainTextChatView::scrollToTop() {
-    verticalScrollBar()->setValue(verticalScrollBar()->minimum());
 }
 
 
@@ -137,6 +127,15 @@ bool PlainTextChatView::hasSelectedText() const {
     return textview.hasSelectedText();
 }
 
+
 void PlainTextChatView::copySelectedText() {
     textview.copy();
+}
+
+void PlainTextChatView::scrollToTop() {
+    textview.scrollToTop();
+}
+
+void PlainTextChatView::scrollToBottom() {
+    textview.scrollToBottom();
 }

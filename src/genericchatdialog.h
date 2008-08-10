@@ -58,6 +58,15 @@ protected:
 
     /** Updates information about last ChatEvent; called after appending an event */
     void updateLastMsgTimeAndOwner(const QDateTime& t, const Jid& owner);
+    
+    /** 
+     * Fills User ChatEvent with corresponding data.
+     * Fields nick, jid, icons (status and avatar), isLocal and service are updated;
+     *
+     * \param userInfo will be filled 
+     * \param j is jid of user owner/sender
+     */
+    virtual void fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) = 0;
 
     /** Status must be translated because we don't want Iris stuff in ChatView */
     StatusChatEvent::StatusEventType statusToChatViewStatus(int status) const;
@@ -95,7 +104,11 @@ protected:
     /** Validates XHTML-IM messages */
     MessageValidator messageValidator_;
 
-    /** Indicates whether next message should be consecutive */
+    /** 
+     * Indicates whether next message should be consecutive.
+     * 
+     * Empty Jid() is used if not applicable.
+     */
     Jid lastEventOwner;
 
     /** Timestamp of last chat event */
@@ -107,7 +120,7 @@ protected:
     /** Last searched string*/
     QString lastSearch;
 
-    /** Nasty hack to avoid virtual inheritance and linker/c++ templates errors*/
+    /** Nasty hack to avoid virtual inheritance and linker/c++ templates errors */
     GenericChatDialogQObject* gcObject;
 
     friend class GenericChatDialogQObject;
@@ -139,6 +152,12 @@ slots:
     
     /** Scrolls ChatView down */
     void scrollDown();
+
+    /** Ask whether doClear() should be performed and doesClear() */
+	void doClearButton();
+
+    /** Clears ChatView and resets message successivenes */
+	void doClear();
 
 private:
     GenericChatDialog* dlg;

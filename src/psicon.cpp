@@ -280,7 +280,7 @@ PsiCon::PsiCon()
 	d = new Private(this);
 	d->tabManager = new TabManager(this);
 
-    d->themeManager = new HTMLThemeManager(ApplicationInfo::homeDir());
+    d->themeManager = new HTMLThemeManager(ApplicationInfo::homeDir()+"/themes/");
     d->iconServer = new IconServer();
 
     //keep IconServer up to date

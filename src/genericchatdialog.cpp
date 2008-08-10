@@ -1,3 +1,4 @@
+#include <QMessageBox>
 #include "genericchatdialog.h"
 #include "xmpp_htmlelement.h"
 #include "xmpp_jid.h"
@@ -9,11 +10,12 @@
 class GenericChatDialog;
 using XMPP::Jid;
 
+
 GenericChatDialog::GenericChatDialog() : findDialog(0) {
 
     lastMsgTime = QDateTime::currentDateTime();
     lastEventOwner = Jid();
-    
+
     gcObject = new GenericChatDialogQObject(this);
 
 }
@@ -35,9 +37,9 @@ QString GenericChatDialog::messageText(const XMPP::Message& m) {
     qDebug() << "message text containsHTML" << m.containsHTML() << m.body() << m.html().toString("notb3") << "EOF";
 
     //reset textFormatter
-    textFormatter()->setRemoveEmoteString(false); 
+    textFormatter()->setRemoveEmoteString(false);
     textFormatter()->setTextNodeNumber(0);
-    
+
     if (m.containsHTML() && PsiOptions::instance()->getOption("options.html.chat.render").toBool() && !m.html().text().isEmpty()) {
         if (emote) {
             textFormatter()->setRemoveEmoteString(true);
@@ -57,7 +59,7 @@ QString GenericChatDialog::messageText(const XMPP::Message& m) {
     textFormatter()->setDoLegacyFormatting(PsiOptions::instance()->getOption("options.ui.chat.legacy-formatting").toBool());
 
     txt = messageValidator_.validateMessage(txt, &illformed, textFormatter());
-    
+
     if (illformed) { //html content was illformed, plain version is displayed
         textFormatter()->setTextNodeNumber(0);
         txt = messageValidator_.validateMessage(TextUtil::plain2rich(m.body()), &illformed, textFormatter());
@@ -189,3 +191,17 @@ void GenericChatDialogQObject::chatViewCreated() {
 #endif
 }
 
+
+void GenericChatDialogQObject::doClear() {
+    dlg->chatView()->clear();
+    dlg->lastEventOwner = Jid();
+}
+
+
+void GenericChatDialogQObject::doClearButton() {
+    QMessageBox::StandardButton btn = QMessageBox::information(0, tr("Warning"), tr("Are you sure you want to clear the chat window?\n(note: does not affect saved history)"), QMessageBox::Yes | QMessageBox::No);
+
+    if (btn == QMessageBox::Yes) {
+        doClear();
+    }
+}

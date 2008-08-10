@@ -3,19 +3,24 @@
 
 #include <QHash>
 #include <QString>
+#include <QDir>
 #include <QStringList>
 #include "chatTheme.h"
 
 /** Abstract List of theme names; eg for selecting theme */
 class ChatThemeList {
 public:	
-    /** Path to themes/ dir */
-	virtual void readThemes(const QString& path) = 0;
+    
+    /** Reads themes from themesDir/ */
+	virtual void readThemes(const QDir& themesDir) = 0;
 	QStringList themeNames();
 	QString themePath(QString themeName);
 	
 protected:
-	/** Checks if themeFolder contains valid theme */
+	/** 
+     * Checks if themeFolder contains valid theme.  
+     * Default implementation returns true.
+     */
 	virtual bool validateTheme(QString themeFolder);
 	
 	/** Generates theme name for theme in themeFolder */

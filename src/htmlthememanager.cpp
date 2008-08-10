@@ -5,7 +5,7 @@
 HTMLThemeManager::HTMLThemeManager(const QString& themesDir_) : themesDir(themesDir_){
 
     _themeList = new HTMLChatThemeList();
-    _themeList->readThemes(themesDir);
+    _themeList->readThemes(QDir(themesDir));
 }
 
 
@@ -24,7 +24,7 @@ HTMLChatTheme HTMLThemeManager::getTheme(const QString& themeName, const QString
     QString path = _themeList->themePath(themeName);
 
     if (path.isEmpty()) { //theme not found, but filesystem could be changed since last check
-        _themeList->readThemes(themesDir);
+        _themeList->readThemes(QDir(themesDir));
         path = _themeList->themePath(themeName);
     }
 

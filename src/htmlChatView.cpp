@@ -6,11 +6,9 @@
 
 #include "htmlChatView.h"
 
-//TODO + 11 webkit sync/busy - queing appending messages
-
 
 HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* iconServer)
-: ChatView(parent), theme(_theme), isReady(false), queuedTheme(0) {
+: ChatView(parent), theme(_theme), isReady(false), queuedTheme(0), queuedClear(false) {
 
     webView.setParent(this);
 
@@ -40,9 +38,14 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* i
 
 
 void HTMLChatView::clear() {
-    //TODO 58 wait
-    appendedEvents.clear();
-    evaluateJS("psi_clearMessages()");
+    if (isReady) {
+        appendedEvents.clear();
+        evaluateJS("psi_clearMessages()");
+    }
+    else {
+        qDebug() << "queued clear()";
+        queuedClear = true;
+    }
 }
 
 
@@ -71,7 +74,6 @@ void HTMLChatView::onEmptyDocumentLoaded(bool ok) {
     HTMLChatPart header = theme.headerTemplate().createFreshHTMLPart();
     HTMLChatPart footer = theme.footerTemplate().createFreshHTMLPart();
 
-
     theme.fillPartWithThemeKeywords(header, chatInfo());
     theme.fillPartWithThemeKeywords(footer, chatInfo());
 
@@ -94,8 +96,6 @@ void HTMLChatView::onInitDocumentFinished() {
 
     isReady = true;
 
-    qDebug() << "onInitDocFin";
-
     if (queuedTheme) {
         qDebug() << "changing queued theme" << queuedTheme->baseHref();
         setTheme(*queuedTheme);
@@ -105,12 +105,19 @@ void HTMLChatView::onInitDocumentFinished() {
 
     reappendEvents();
 
+    if (queuedClear) {
+        queuedClear = false;
+        clear();
+    }
+
     emit initDocumentFinished();
 }
 
 
 void HTMLChatView::onAppendFinished() {
-    QTimer::singleShot(0, this, SLOT(onDoScrolling())); //advice from qt mailing list
+    if (atBottom()) {
+        QTimer::singleShot(0, this, SLOT(onDoScrolling()));
+    }
 }
 
 
@@ -148,11 +155,8 @@ QString HTMLChatView::createEmptyDocument(QString baseHref, QString themeVariant
 void HTMLChatView::appendMessage(const MessageChatEvent *msg, bool alreadyAppended) {
     ChatView::appendMessage(msg, alreadyAppended);
 
-    qDebug() << "appendMessage";
-
     if (isReady) { // we dont want to append events before init was finished
         // events will be appended in reappendEvents (called from onInitDpcumentFinished)
-        qDebug() << " -- appendMessage queued";
 
         QString part;
 
@@ -172,6 +176,9 @@ void HTMLChatView::appendMessage(const MessageChatEvent *msg, bool alreadyAppend
                        escapeStringCopy(msg->body()) + "\"" + ")");
         }
     }
+    else {
+        qDebug() << " -- appendMessage queued";
+    }
 }
 
 
@@ -181,12 +188,14 @@ void HTMLChatView::appendEvent(const ChatEvent* event, bool alreadyAppended) {
     if (isReady) { // we dont want to append events before init was finished
         // events will be appended in reappendEvents (called from onInitDpcumentFinished)
 
-        qDebug() << " -- appendMessage queued";
 
         QString part = event->getRightTemplateAndFillItWithData(theme);
         escapeString(part);
 
         evaluateJS("psi_appendEvent(\"" + part + "\")");
+    }
+    else {
+        qDebug() << " -- appendEvent queued";
     }
 }
 

@@ -197,30 +197,38 @@ QString HTMLChatTheme::createFileTransferEventPart(const FileTransferChatEvent *
 QString HTMLChatTheme::createStatusEventPart(const StatusChatEvent * event) const {
 
     StatusChatEvent::StatusEventType type = event->type;
-    QString statusStr; //adium %status%
+    QString statusType; //adium %status%
+    QString statusStr;
 
     switch (type) {
         case StatusChatEvent::Online :
-                statusStr = "online";
+                statusType = "online"; 
+                statusStr = "Online";
             break;
         case StatusChatEvent::Offline :
-                statusStr = "offline";
+                statusType = "offline"; 
+                statusStr = "Offline";
             break;
         case StatusChatEvent::Away :
-                statusStr = "idle"; //TODO - 49 (adium compatibility)
+                statusType = "idle"; //TODO - 49 (adium compatibility) 
+                statusStr = "Away"; 
             break;
         case StatusChatEvent::Xa :
-                statusStr = "away";
+                statusType = "away";
+                statusStr = "Not available";
             break;
         case StatusChatEvent::Dnd :
-                statusStr = "away";
+                statusType = "away";
+                statusStr = "Do not Disturb";
             break;
         case StatusChatEvent::Chat :
-                statusStr = "online";
+                statusType = "online"; 
+                statusStr = "Free for Chat";
             break;
         case StatusChatEvent::Invisible :
         default:
-            statusStr = "offline";
+            statusType = "offline";
+            statusStr = "Offline";
             break;
     }
 
@@ -234,7 +242,7 @@ QString HTMLChatTheme::createStatusEventPart(const StatusChatEvent * event) cons
 
     fillPartWithTimeKeywords(part, event);
     fillPartWithEventKeywords(part, event, eventText);
-    part.replaceAndEscapeKeyword("%status%", statusStr);
+    part.replaceAndEscapeKeyword("%status%", statusType);
     part.replaceAndEscapeKeyword("%messageClasses%", "status");
 
     return part.toString();

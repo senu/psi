@@ -520,7 +520,7 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager,
 	connect(ui_.lv_users, SIGNAL(action(const QString &, const Status &, int)), SLOT(lv_action(const QString &, const Status &, int)));
 
 	d->act_clear = new IconAction (tr("Clear chat window"), "psi/clearChat", tr("Clear chat window"), 0, this);
-	connect( d->act_clear, SIGNAL( activated() ), SLOT( doClearButton() ) );
+	connect( d->act_clear, SIGNAL( activated() ), gcObject, SLOT( doClearButton() ) );
 	
 	d->act_configure = new IconAction(tr("Configure Room"), "psi/configure-room", tr("&Configure Room"), 0, this);
 	connect(d->act_configure, SIGNAL(activated()), SLOT(configureRoom()));
@@ -719,7 +719,7 @@ void GCMainDlg::chatEdit_returnPressed()
 
 	QString str = chatEdit()->text();
 	if(str == "/clear") {
-		doClear();
+		gcObject->doClear();
 
 		d->histAt = 0;
 		d->hist.prepend(str);
@@ -745,7 +745,7 @@ void GCMainDlg::chatEdit_returnPressed()
 	Message m(jid());
 	m.setType("groupchat");
 	m.setBody(str);
-	m.setTimeStamp(QDateTime::currentDateTime());
+	m.setTimeStamp(QDateTime::currentDateTime()); //TODO 107 xhtml-im
 
 	aSend(m);
 
@@ -790,17 +790,6 @@ void GCMainDlg::doTopic()
 	}
 }
 
-void GCMainDlg::doClear()
-{
-	chatView()->clear();
-}
-
-void GCMainDlg::doClearButton()
-{
-	int n = QMessageBox::information(this, tr("Warning"), tr("Are you sure you want to clear the chat window?\n(note: does not affect saved history)"), tr("&Yes"), tr("&No"));
-	if(n == 0)
-		doClear();
-}
 
 void GCMainDlg::configureRoom()
 {
@@ -998,16 +987,22 @@ void GCMainDlg::presence(const QString &nick, const Status &s)
 			}
 			if ( !d->connecting && options_->getOption("options.muc.show-status-changes").toBool() ) {
 				if (s.status() != contact->s.status() || s.show() != contact->s.show())	{
-					QString message;
-					QString st;
-					if (s.show().isEmpty()) 
+					QString message, st;
+                    
+                    if (s.show().isEmpty()) {
 						st=tr("online");
-					else
+                    }
+                    else {
 						st=s.show();
+                    }
+                    
 					message = tr("%1 is now %2").arg(nick).arg(st);
-					if (!s.status().isEmpty())
+                    
+                    if (!s.status().isEmpty()) {
 						message+=QString(" (%1)").arg(s.status());
-					appendChatEvent(new ExtendedSystemChatEvent(message, SystemChatEvent::Other), false);
+                    }
+		
+                    appendChatEvent(new ExtendedSystemChatEvent(message, SystemChatEvent::Other), false);
 				}
 			}
 		}
@@ -1269,13 +1264,14 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
 	 	d->doTrackBar();
     }
   
-	nickColor = getNickColor(who);
 //	textcolor = ui_.log->palette().active().text().name();
    
     if (m.spooled()) {
 		nickColor = "#008000";
+    } 
+    else {
+        nickColor = getNickColor(who);
     }
-
     
     textFormatter()->setDoHighlighting(alert);
     QString txt = messageText(m);
@@ -1283,33 +1279,26 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
 	if (isEmoteMessage(m)) {
         EmoteChatEvent * event = new EmoteChatEvent();
 
-        event->setNick(Qt::escape(who));
         event->setTimeStamp(m.timeStamp());
-        event->setLocal(local);
         event->setSpooled(m.spooled());
-        event->setService("Jabber");
         event->setMessage(txt); //TODO 35 escape 2x
         event->setUserColor(nickColor);
-        event->setUserIconPath(local ? "outgoing" : "incoming");
+        
+        fillEventWithUserInfo(event, m.from());
         
         chatView()->appendEvent(event);
         updateLastMsgTimeAndOwner(m.timeStamp(), Jid()); 
 	}
 	else {
-
         MessageChatEvent * msg = new MessageChatEvent(); //will be created in another place, of course
 
-        msg->setNick(Qt::escape(who));
         msg->setTimeStamp(m.timeStamp());
-        msg->setLocal(local);
         msg->setConsecutive(doConsecutiveMessage(m.timeStamp(), m.from()));
         msg->setSpooled(m.spooled());
-        msg->setService("Jabber");
         msg->setBody(txt); //TODO 35 escape
         msg->setUserColor(nickColor);
-        msg->setUserIconPath(local ? "outgoing" : "incoming");
 
-        //TODO 36 images and icons
+        fillEventWithUserInfo(msg, m.from());
 
         chatView()->appendMessage(msg);
         updateLastMsgTimeAndOwner(m.timeStamp(), m.from()); 
@@ -1518,5 +1507,28 @@ int GCMainDlg::unreadMessageCount() const
 DefaultHTMLTextFormatter* GCMainDlg::textFormatter() {
     return ui_.log->currentTextFormatter();
 }
+
+
+void GCMainDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
+
+    bool local = j.resource() == d->self; //is it our message?
+	QString who = j.resource(); 
+
+    userInfo->setLocal(local);
+    userInfo->setNick(who);
+    userInfo->setJid(j.full());
+    userInfo->setService("Jabber");
+    userInfo->setUserIconPath(local ? "outgoing" : "incoming");
+       
+    //status icon
+    GCUserViewItem* contact = (GCUserViewItem*) ui_.lv_users->findEntry(who);
+    if (contact) {
+        userInfo->setUserStatusIcon("icon://" + PsiIconset::instance()->status(contact->s).name());
+    }
+    else {
+        userInfo->setUserStatusIcon("icon://status/offline");
+    }
+}
+
 
 #include "groupchatdlg.moc"

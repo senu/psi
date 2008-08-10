@@ -76,8 +76,7 @@
 #include "htmlchatedit.h"
 #include "urlobject.h"
 
-//TODO 16 plain event view
-//TODO 17 html escaping ctso
+class PsiTextView;
 
 static QString findJid(const QString &s, int x, int *p1, int *p2)
 {
@@ -1068,7 +1067,6 @@ void EventDlg::accountUpdatedActivity()
 
 void EventDlg::displayText(const QString &text) //qwer !
 {
-    //clear();
 	view()->displayText(text); //qwer
 }
 
