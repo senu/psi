@@ -1,4 +1,7 @@
 #include <QWebFrame>
+#include <QMenu>
+#include <QContextMenuEvent>
+
 #include "eventview.h"
 #include "iconserver.h"
 
@@ -14,7 +17,6 @@ EventView::EventView(QWidget* parent, IconServer* iconServer) : QWebView(parent)
     page()->setNetworkAccessManager(networkManager);
 
     page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-    setContextMenuPolicy(Qt::NoContextMenu);
 
     connect(page(), SIGNAL(linkClicked(const QUrl&)), this, SLOT(onLinkClicked(const QUrl&)));
 }
@@ -38,4 +40,17 @@ void EventView::scrollToTop() {
 
 void EventView::onLinkClicked(const QUrl& url) {
     emit openURL(url.toString());
+}
+
+void EventView::contextMenuEvent(QContextMenuEvent* event) {
+    
+    QList<QAction*> actions;
+
+    QAction* copyAction = page()->action(QWebPage::Copy);
+    actions.append(copyAction);
+        
+    QAction* chosen = QMenu::exec(actions, event->globalPos());
+    if (chosen == copyAction) {
+        page()->triggerAction(QWebPage::Copy);
+    }
 }

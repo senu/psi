@@ -64,9 +64,12 @@ const QString styleProperties[] = {
     "font-weight", "margin-left", "margin-right", "text-align", "text-decoration"
 };
 
+QHash<QString, MessageValidator::NodeInfo> MessageValidator::allowed = QHash<QString, MessageValidator::NodeInfo>();
 
 MessageValidator::MessageValidator() {
-    generateAllowedDict();
+    if (allowed.isEmpty()) {
+        generateAllowedDict();
+    } //else - allowed is static so it was generated before
 }
 
 
@@ -130,8 +133,6 @@ void MessageValidator::generateAllowedDict() {
 
     allowed["img"] = imgNI;
     allowed["a"] = hypertextNI;
-
-
 }
 
 

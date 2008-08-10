@@ -7,7 +7,7 @@ function psi_appendChilds(where, what) {
         }
     }
     catch(e) {
-        alert('ac'+e);
+        alert('Webkit JavaScript [ac] exception:' + e);
     }
 }
 
@@ -19,18 +19,20 @@ function psi_appendNextMessage(messagePart, messageBody) {
         chatElement = document.getElementById('Chat');
         insertDiv = document.getElementById('insert');
 
-        if(insertDiv != null) //could be removed by appendEvent
+        if(insertDiv != null) { //could be removed by appendEvent
             insertDiv.parentNode.removeChild(insertDiv);
+		}
 
         newNode = document.createElement('div');
         newNode.innerHTML=psi_setMessageBody(messagePart, messageBody);
         psi_appendChilds(chatElement, newNode);
     }
     catch(e) {
-        alert(e);
+        alert('Webkit JavaScript [anm] exception:' + e);
     }
     jsNotifier.appendFinished();
 }
+
 
 /** Part is almost filled template with %message% keyword,
  * messageBody is value of this keyword*/
@@ -43,7 +45,7 @@ function psi_appendConsecutiveMessage(messagePart, messageBody) {
         parentNode.replaceChild(newNode, insertDiv);
     }
     catch(e) {
-        alert('2 ' + e);
+        alert('Webkit JavaScript [acm] exception:' + e);
     }
     jsNotifier.appendFinished();
 }
@@ -52,12 +54,15 @@ function psi_appendEvent(eventPart) {
     psi_appendNextMessage(eventPart);
 }
 
+
+/** Allowed in XHTML-IM CSS properties */
 allowed = [
     "background-color", "color", "font-family", "font-size", "font-style",
     "font-weight", "margin-left", "margin-right", "text-align", "text-decoration", 
 ];
 
-/** CSS Validator */
+
+/** CSS XHTML-IM Validator */
 function psi_dfs(element) {	
     if(element.nodeType == Node.ELEMENT_NODE) {
         
@@ -65,7 +70,6 @@ function psi_dfs(element) {
         var newStyle = '';
         for(var j=0; j<element.style.length; j++) {
             var cssProperty = element.style.item(j);
-            //            alert(cssProperty);
             if(allowed.indexOf(cssProperty) != -1) {
                 newStyle += cssProperty + ':' + element.style.getPropertyValue(cssProperty) + ';';
             }
@@ -88,10 +92,12 @@ function psi_dfs(element) {
     }
 }
 
+
 /** Replaces %message% keyword with CSS-validated messageBody */
 function psi_setMessageBody(messagePart, messageBody) {
     return messagePart.replace("%message%", psi_validateCSS(messageBody));
 }
+
 
 /** Takes String and returns DOM element (<span>) with validated CSS */
 function psi_validateCSS(elementString) {
@@ -102,6 +108,8 @@ function psi_validateCSS(elementString) {
     return returned.innerHTML;
 }
 
+
+/** Removes all spaces from string*/
 function psi_removeSpaces(string) {
     tstring = "";
     string = '' + string;
@@ -110,6 +118,7 @@ function psi_removeSpaces(string) {
     for(i = 0; i < splitstring.length; i++) {
         tstring += splitstring[i];
 	}
+
     return tstring;
 }
 
@@ -168,6 +177,7 @@ function psi_runTests() {
       
 }
 
+
 function psi_cssRunTest(name, input, validOutput, results) {
     pe1Str = psi_validateCSS(input);
     output = document.createElement('p');
@@ -223,8 +233,23 @@ function psi_initDocument(header, footer) {
     }
 }
 
-//removes messages from ChatView
+/** removes messages from ChatView */
 function psi_clearMessages() {
     chatElement = document.getElementById('Chat');
     chatElement.innerHTML = "";
+}
+
+/** Inserts trackBar */
+function psi_addTrackBar() {	
+	trackBar = '<hr id="psi_trackBar"/>';
+    psi_appendNextMessage(trackBar);
+}
+
+/** Removes trackBar from ChatView */
+function psi_removeTrackBar() {	
+	trackBarElement = document.getElementById('psi_trackBar');
+
+	if (trackBarElement != null) { 
+		trackBarElement.parentNode.removeChild(trackBarElement);
+	}
 }

@@ -12,8 +12,6 @@ HTMLChatEdit::HTMLChatEdit(QWidget* parent)
 
     initActions();
 
-    //    setText("Lorem ipsum costam costam i jeszcze cos tam costam."); //TODO 0 remove
-
     connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(changeAlignButtons()));
     connect(this, SIGNAL(currentCharFormatChanged(const QTextCharFormat&)),
             this, SLOT(changeTextButtons(const QTextCharFormat&)));
@@ -90,7 +88,9 @@ void HTMLChatEdit::textBackgroundColor() {
     }
 
     QTextCharFormat format;
+    qDebug() << "bg" << format.background().color();
     format.setBackground(color);
+    qDebug() << "bg2" << format.background().color();
 
     mergeFormat(format);
 }
@@ -126,10 +126,11 @@ void HTMLChatEdit::insertAnchor() {
 
 
 void HTMLChatEdit::changeAlignButtons() {
-    //    qDebug() << cursor(). format.background().color();
+    qDebug() << "bg test" << textCursor().charFormat().background().color()
+    << textCursor().charFormat().background().color().isValid();
+
 
     Qt::Alignment aligment = alignment();
-
 
     foreach(QAction* action, alignActions->actions()) {
         if (action->property("align").toInt() & aligment) {
@@ -157,8 +158,13 @@ void HTMLChatEdit::changeTextButtons(const QTextCharFormat& format) {
     pixmap.fill(format.foreground().color());
     actionForegroundColor->setIcon(pixmap);
 
-    pixmap.fill(format.background().color());
-    actionBackgroundColor->setIcon(pixmap); //TODO 41 format.background().color() is wrong after style/font change
+    if (format.background().color() == QTextCharFormat().background().color()) {
+        pixmap.fill(Qt::white); //NOTE: it's Qt bug, I think. it's black by default, but displayed as white
+    }
+    else {
+        pixmap.fill(format.background().color());
+    }
+    actionBackgroundColor->setIcon(pixmap); 
 
 }
 
@@ -317,6 +323,9 @@ QString HTMLChatEdit::createBlockStyle(const QTextBlockFormat& blockFormat) {
 
 
 QString HTMLChatEdit::createFragmentStyle(const QTextCharFormat& fragmentFormat) {
+
+    QTextCharFormat defaultCharFormat;
+    
     QString style = "text-decoration:";
 
     //text-decoration
@@ -342,7 +351,9 @@ QString HTMLChatEdit::createFragmentStyle(const QTextCharFormat& fragmentFormat)
     }
 
     //font-style
-    style += "; font-style:" + (fragmentFormat.fontItalic() ? QLatin1String("italic") : QLatin1String("normal"));
+    if (fragmentFormat.fontItalic()) {
+        style += "; font-style:" + QLatin1String("italic");
+    }
 
     if (fragmentFormat.hasProperty(QTextFormat::FontWeight)) {
         style += QLatin1String("; font-weight:");
@@ -365,8 +376,14 @@ QString HTMLChatEdit::createFragmentStyle(const QTextCharFormat& fragmentFormat)
     }
 
     //colors
-    style += "; color:" + fragmentFormat.foreground().color().name();
-    //    style += "; background-color:" + fragmentFormat.background().color().name() + ";";
+
+    if (fragmentFormat.foreground() != defaultCharFormat.foreground()) {
+        style += "; color:" + fragmentFormat.foreground().color().name();
+    }
+    
+    if (fragmentFormat.background() != defaultCharFormat.background()) {
+        style += "; background-color:" + fragmentFormat.background().color().name() + ";";
+    }
 
     return style;
 }
@@ -408,7 +425,7 @@ QString HTMLChatEdit::xhtmlMessage() {
             }
         }
 
-        if (document()->blockCount() == 1) { //we dont need extra new lines (<p>) for ordinary messages
+        if (document()->blockCount() == 1 && curTBF.alignment() == Qt::AlignLeft) { //we dont need extra new lines (<p>) for ordinary messages
             msg += block;
         }
         else {

@@ -201,8 +201,13 @@ private:
 public:		
 	void doTrackBar()
 	{
-        /* TODO ? 27 trackbar
+        //TODO ? 27 trackbar
 		trackBar = false;
+
+        chatView()->removeTrackBar();
+        chatView()->addTrackBar();
+
+        /*
 
 		// save position, because our manipulations could change it
 		int scrollbarValue = te_log()->verticalScrollBar()->value();

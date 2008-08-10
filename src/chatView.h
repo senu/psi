@@ -92,6 +92,16 @@ public:
     /** Copies selected text to clipboard */
     virtual void copySelectedText() = 0;
 
+    /** Removes/hides trackBar from ChatView*/
+    virtual void removeTrackBar() {
+    
+    }; //TODO!!!
+    
+    /** Inserts trackBar at the end of ChatView*/
+    virtual void addTrackBar() {
+        
+    }; //TODO!!!
+
 signals:
 
     /** You cannot append messages until ChatView is ready (synchronization with Webkit) */

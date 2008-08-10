@@ -87,9 +87,14 @@ slots:
     //reimplemented
     void setVisible(bool visible);
     QSize sizeHint() const;
+    
     void clear();
+    
     void scrollUp();
     void scrollDown();
+    
+    void removeTrackBar();
+    void addTrackBar();
 
 signals:
     void appendFinished();
@@ -124,12 +129,14 @@ slots:
     QString createEmptyDocument(QString baseHref, QString themeVariant);
 
 private:
-    
     /** Escapes " and \n  (for JS evaluation) */
     void escapeString(QString& str);
 
     /** Escapes " and \n  (for JS evaluation) */
     QString escapeStringCopy(QString str);
+
+    /** Creates menu with Copy action */
+    void contextMenuEvent(QContextMenuEvent* event);
 
     /** Current theme */
     HTMLChatTheme theme;

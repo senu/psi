@@ -3,6 +3,8 @@
 #include <QList>
 #include <QWidget>
 #include <QMessageBox>
+#include <QMenu>
+#include <QContextMenuEvent>
 
 #include "htmlChatView.h"
 
@@ -21,12 +23,12 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* i
     setLayout(layout);
     setFocusPolicy(Qt::NoFocus);
     webView.setFocusPolicy(Qt::NoFocus);
+    webView.setContextMenuPolicy(Qt::NoContextMenu);
 
     networkManager = new NetworkAccessManager(0, iconServer);
     webView.page()->setNetworkAccessManager(networkManager);
 
     webView.page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-    webView.setContextMenuPolicy(Qt::NoContextMenu);
 
     webView.setMinimumSize(100, 100);
     setMinimumSize(100, 100);
@@ -330,4 +332,29 @@ bool HTMLChatView::hasSelectedText() const {
 
 void HTMLChatView::copySelectedText() {
     webView.page()->triggerAction(QWebPage::Copy);
+}
+
+
+void HTMLChatView::contextMenuEvent(QContextMenuEvent* event) {
+
+    QList<QAction*> actions;
+
+    QAction* copyAction = webView.page()->action(QWebPage::Copy);
+    actions.append(copyAction);
+
+    QAction* chosen = QMenu::exec(actions, event->globalPos());
+    if (chosen == copyAction) {
+        webView.page()->triggerAction(QWebPage::Copy);
+    }
+}
+
+
+void HTMLChatView::removeTrackBar() {
+    //TOOD 107 wait x2
+   evaluateJS("psi_removeTrackBar()");
+}
+
+
+void HTMLChatView::addTrackBar() {
+   evaluateJS("psi_addTrackBar()");
 }

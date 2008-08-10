@@ -22,7 +22,7 @@
  * http://www.w3.org/TR/CSS21/syndata.html#syntax
  * http://www.w3.org/TR/CSS21/grammar.html         
  * 
- * //TODO I would have to learn flex/bison/? to do that here ->
+ * //NOTE: I would have to learn flex/bison/? to do that here ->
  * CSS is validated by JavaScript code with Webkit 
  *
  */
@@ -70,13 +70,9 @@ protected:
     void appendArrayToList(const QString *array, int arraySize, QStringList& list);
 
     /** Tag name -> NodeInfo dict */
-    QHash<QString, NodeInfo> allowed;
-
-
+    static QHash<QString, NodeInfo> allowed;
 
 };
 
 
-
 #endif	/* _MESSAGEVALIDATOR_H */
-

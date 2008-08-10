@@ -48,6 +48,10 @@ private slots:
     void onLinkClicked(const QUrl& url);
 
 protected:
+
+    /** Creates menu with Copy action */
+    void contextMenuEvent(QContextMenuEvent* event);
+    
     NetworkAccessManager *networkManager;
 
 };
