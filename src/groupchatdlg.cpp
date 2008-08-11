@@ -204,6 +204,7 @@ public:
         //TODO ? 27 trackbar
 		trackBar = false;
 
+        dlg->updateLastMsgTimeAndOwner(QDateTime::currentDateTime(), Jid());
         chatView()->removeTrackBar();
         chatView()->addTrackBar();
 

@@ -132,10 +132,22 @@ void PlainTextChatView::copySelectedText() {
     textview.copy();
 }
 
+
 void PlainTextChatView::scrollToTop() {
     textview.scrollToTop();
 }
 
+
 void PlainTextChatView::scrollToBottom() {
     textview.scrollToBottom();
+}
+
+
+void PlainTextChatView::removeTrackBar() {
+    //TODO!!!
+}
+
+
+void PlainTextChatView::addTrackBar() {
+    //TODO!!!
 }

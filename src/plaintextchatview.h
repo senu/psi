@@ -51,6 +51,9 @@ public:
     bool hasSelectedText() const;
     void copySelectedText();
 
+    void removeTrackBar();
+    void addTrackBar();
+
     public
 slots:
     /**

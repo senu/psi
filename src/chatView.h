@@ -93,14 +93,10 @@ public:
     virtual void copySelectedText() = 0;
 
     /** Removes/hides trackBar from ChatView*/
-    virtual void removeTrackBar() {
-    
-    }; //TODO!!!
+    virtual void removeTrackBar() = 0;
     
     /** Inserts trackBar at the end of ChatView*/
-    virtual void addTrackBar() {
-        
-    }; //TODO!!!
+    virtual void addTrackBar() = 0;
 
 signals:
 

@@ -350,11 +350,14 @@ void HTMLChatView::contextMenuEvent(QContextMenuEvent* event) {
 
 
 void HTMLChatView::removeTrackBar() {
-    //TOOD 107 wait x2
-   evaluateJS("psi_removeTrackBar()");
+    if (isReady) { //if webkit is intializing now it couldn't add trackBar (so there'll be no 2 trackbars)
+       evaluateJS("psi_removeTrackBar()");
+    }
 }
 
 
 void HTMLChatView::addTrackBar() {
-   evaluateJS("psi_addTrackBar()");
+    if (isReady) {
+        evaluateJS("psi_addTrackBar()");
+    }
 }
