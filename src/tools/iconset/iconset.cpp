@@ -843,7 +843,7 @@ void IconsetFactory::registerIconset(const Iconset *i)
             icons.append(&(icon->pixmap()));
         }
         
-        qDebug() << "IconsetFactory::registerIconset" << names;
+        //qDebug() << "IconsetFactory::registerIconset" << names;
         emit iconsetRegistered(names, icons);
     
     }
@@ -863,7 +863,7 @@ void IconsetFactory::unregisterIconset(const Iconset *i)
             list << it.next()->name();
         }
         
-        qDebug() << "IconsetFactory::unRegisterIconset" << list;
+        //qDebug() << "IconsetFactory::unRegisterIconset" << list;
         emit iconsetUnregistered(list);
     }
 }

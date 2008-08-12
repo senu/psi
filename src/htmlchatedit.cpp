@@ -97,12 +97,15 @@ void HTMLChatEdit::textBackgroundColor() {
 
 
 void HTMLChatEdit::insertImage() { //TODO 39 
-
     QTextCursor cursor = textCursor();
-    QImage img = QImage("/usr/share/icons/oxygen/128x128/apps/kmail.png");
-    document()->addResource(QTextDocument::ImageResource, QUrl("myimage"), img);
+    /*
+       QImage img = QImage("/usr/share/icons/oxygen/128x128/apps/kmail.png");
+       document()->addResource(QTextDocument::ImageResource, QUrl("myimage"), img);
 
-    cursor.insertImage("myimage");
+       cursor.insertImage("myimage");
+     */
+    cursor.insertHtml("<img src=\"http://www.google.pl/images/nav_logo3.png\"/>");
+
 }
 
 
@@ -118,7 +121,7 @@ void HTMLChatEdit::insertAnchor() {
 
     QString href = TextUtil::escape(w->le_url->text());
     QString desc = TextUtil::escape(w->le_desc->text());
-    
+
     delete w;
 
     textCursor().insertHtml(QString("<a href=\"%1\">%2</a> ").arg(href, desc));
@@ -127,10 +130,11 @@ void HTMLChatEdit::insertAnchor() {
 
 void HTMLChatEdit::changeAlignButtons() {
     qDebug() << "bg test" << textCursor().charFormat().background().color()
-    << textCursor().charFormat().background().color().isValid();
+        << textCursor().charFormat().background().color().isValid();
 
 
     Qt::Alignment aligment = alignment();
+
 
     foreach(QAction* action, alignActions->actions()) {
         if (action->property("align").toInt() & aligment) {
@@ -164,7 +168,7 @@ void HTMLChatEdit::changeTextButtons(const QTextCharFormat& format) {
     else {
         pixmap.fill(format.background().color());
     }
-    actionBackgroundColor->setIcon(pixmap); 
+    actionBackgroundColor->setIcon(pixmap);
 
 }
 
@@ -248,7 +252,8 @@ void HTMLChatEdit::initActions() {
 
 
     //add hyperling, add image
-    actionInsertHyperlink = new QAction(QIcon(iconPath + "textjustify.png"), tr("Insert &hyperlink"), alignActions);
+    actionInsertHyperlink = new QAction(QIcon(iconPath + "textjustify.png"), tr("Insert &hyperlink"), this);
+    actionInsertImage = new QAction(QIcon(iconPath + "textjustify.png"), tr("Insert ima&ge"), this);
 
     //append to toolbar
     formatToolBar->addWidget(fontCombo);
@@ -275,6 +280,7 @@ void HTMLChatEdit::initActions() {
     formatToolBar->addSeparator();
 
     formatToolBar->addAction(actionInsertHyperlink);
+    formatToolBar->addAction(actionInsertImage);
 
 
     //connect actions
@@ -291,6 +297,7 @@ void HTMLChatEdit::initActions() {
     connect(actionBackgroundColor, SIGNAL(triggered()), this, SLOT(textBackgroundColor()));
 
     connect(actionInsertHyperlink, SIGNAL(triggered()), this, SLOT(insertAnchor()));
+    connect(actionInsertImage, SIGNAL(triggered()), this, SLOT(insertImage()));
 }
 
 
@@ -325,7 +332,7 @@ QString HTMLChatEdit::createBlockStyle(const QTextBlockFormat& blockFormat) {
 QString HTMLChatEdit::createFragmentStyle(const QTextCharFormat& fragmentFormat) {
 
     QTextCharFormat defaultCharFormat;
-    
+
     QString style = "text-decoration:";
 
     //text-decoration
@@ -380,7 +387,7 @@ QString HTMLChatEdit::createFragmentStyle(const QTextCharFormat& fragmentFormat)
     if (fragmentFormat.foreground() != defaultCharFormat.foreground()) {
         style += "; color:" + fragmentFormat.foreground().color().name();
     }
-    
+
     if (fragmentFormat.background() != defaultCharFormat.background()) {
         style += "; background-color:" + fragmentFormat.background().color().name() + ";";
     }
@@ -411,11 +418,11 @@ QString HTMLChatEdit::xhtmlMessage() {
                 QTextCharFormat curTCF = currentFragment.charFormat();
 
                 if (curTCF.isImageFormat()) {
-                    block += "<img src=\"http://www.netbeans.org/images/v5/nb-logo2.gif\" ale=\"image\"/>";
+                    block += "<img src=\"http://www.netbeans.org/images/v5/nb-logo2.gif\" alt=\"image\"/>";
                 }
                 else if (!curTCF.anchorHref().isEmpty()) {
                     block += "<a href=\"" + TextUtil::escape(curTCF.anchorHref()) + "\">" +
-                    TextUtil::escape(currentFragment.text()) + "</a>";
+                        TextUtil::escape(currentFragment.text()) + "</a>";
                 }
                 else {
                     block += "<span style=\"" + createFragmentStyle(curTCF) + "\">"

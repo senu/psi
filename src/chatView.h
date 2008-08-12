@@ -92,11 +92,8 @@ public:
     /** Copies selected text to clipboard */
     virtual void copySelectedText() = 0;
 
-    /** Removes/hides trackBar from ChatView*/
-    virtual void removeTrackBar() = 0;
-    
-    /** Inserts trackBar at the end of ChatView*/
-    virtual void addTrackBar() = 0;
+    /** Removes/hides old trackBar (if it exist) and inserts trackBar at the bottom of ChatView */
+    virtual void updateTrackBar() = 0;
 
 signals:
 

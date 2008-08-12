@@ -24,6 +24,7 @@ class HTMLChatEdit : public ChatEdit {
 
     Q_OBJECT
 public:
+    
     /** 
      * Constructor. 
      *
@@ -90,7 +91,8 @@ protected:
     *actionAlignCenter,
     *actionAlignRight,
     *actionAlignJustify,
-    *actionInsertHyperlink;
+    *actionInsertHyperlink,
+    *actionInsertImage;
 
     QActionGroup * alignActions;
 

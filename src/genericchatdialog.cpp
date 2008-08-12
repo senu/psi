@@ -15,6 +15,7 @@ GenericChatDialog::GenericChatDialog() : findDialog(0) {
 
     lastMsgTime = QDateTime::currentDateTime();
     lastEventOwner = Jid();
+    sendXHTML = false;
 
     gcObject = new GenericChatDialogQObject(this);
 
@@ -24,6 +25,7 @@ GenericChatDialog::GenericChatDialog() : findDialog(0) {
 GenericChatDialog::~GenericChatDialog() {
     delete gcObject;
 }
+
 static const QString me_cmd = "/me ";
 
 

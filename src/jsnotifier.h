@@ -5,7 +5,11 @@
 #include <QtDebug>
 
 
-/** Qt object inserted into Webkit to establish two-way communication between (js-c++) */
+/** 
+ * Qt object inserted into Webkit to establish two-way communication between Webkit JS and C++.
+ *
+ * Maybe JSBridge would be a better name.
+ */
 class JSNotifier : public QObject {
 
     Q_OBJECT
@@ -22,9 +26,17 @@ class JSNotifier : public QObject {
     /** Append event/message finished (called by js code) - now we can scroll view down, for example */
     void appendFinished();
 
+    /** 
+     * Emits onAddToWhiteListRequest. 
+     *
+     * JavaScript call this when someone/something (most likely user) wants to see blcoked image.
+     */
+    void addToWhiteListRequested(const QString& url);
+
 signals:
     void onInitFinished();
     void onAppendFinished();
+    void onAddToWhiteListRequested(const QString& url);
 
 
 };

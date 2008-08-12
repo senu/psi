@@ -2,6 +2,8 @@
 #define _NETWORKACCESSMANAGER_H
 
 #include <QNetworkAccessManager>
+#include <QStringList>
+#include <QMutex>
 #include "iconserver.h"
 
 
@@ -17,6 +19,9 @@ public:
      */
     NetworkAccessManager(QObject *parent, IconServer* iconServer);
 
+    /** Add URL to whiteList. */
+    void addUrlToWhiteList(const QString& url);
+
     private
 slots:
     /** Called by QNetworkReply::finish(); reemits finish(reply) */
@@ -27,6 +32,19 @@ protected:
 
     /** For icon::// serving */
     IconServer* iconServer;
+
+    /* 
+     * List of whitelisted URLs.
+     *
+     * Access to whitelisted URLs is not denied.
+     */
+    QStringList whiteList;
+
+    /** 
+     * Mutal exclusion for whitList. WhiteList can be accessed by Webkit (createRequest()) 
+     * and Psi (addUrlToWhiteList()) simultaneously)
+     */
+    QMutex whiteListMutex;
 };
 
 #endif

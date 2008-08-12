@@ -93,8 +93,7 @@ slots:
     void scrollUp();
     void scrollDown();
     
-    void removeTrackBar();
-    void addTrackBar();
+    void updateTrackBar();
 
 signals:
     void appendFinished();
@@ -127,6 +126,13 @@ slots:
 
     /** Creates html document with base href tag somewhere; themeVariant is without css suffix */ 
     QString createEmptyDocument(QString baseHref, QString themeVariant);
+    
+    /**
+     * Ask user if \param url should be added to whiteList.
+     * 
+     * For example, to display blocked images.
+     */
+    void onAddToWhiteListRequested(const QString& url);
 
 private:
     /** Escapes " and \n  (for JS evaluation) */

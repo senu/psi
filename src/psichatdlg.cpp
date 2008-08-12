@@ -257,10 +257,14 @@ void PsiChatDlg::capsChanged() {
 
     QString resource = jid().resource();
     UserListItem *ul = account()->findFirstRelevant(jid());
+    
     if (resource.isEmpty() && ul && !ul->userResourceList().isEmpty()) {
         resource = (*(ul->userResourceList().priority())).name();
     }
+    
     act_voice_->setEnabled(!account()->capsManager()->isEnabled() || (ul && ul->isAvailable() && account()->capsManager()->features(jid().withResource(resource)).canVoice()));
+    sendXHTML = (account()->capsManager()->isEnabled() && account()->capsManager()->features(jid().withResource(resource)).canXHTML());
+    qDebug() << "psiChatDlg caps Changed, sendXHTML" << sendXHTML;
 }
 
 

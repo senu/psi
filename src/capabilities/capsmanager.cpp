@@ -233,12 +233,12 @@ bool CapsManager::capsEnabled(const Jid& jid) const
  */
 XMPP::Features CapsManager::features(const Jid& jid) const
 {
-	//qDebug() << "caps.cpp: Retrieving features of " << jid.full();
+//	qDebug() << "############caps.cpp: Retrieving features of " << jid.full();
 	QStringList f;
 	if (capsEnabled(jid)) {
 		CapsSpecs cs = capsSpecs_[jid.full()].flatten();
 		foreach(CapsSpec s, cs) {
-			//qDebug() << QString("    %1").arg(registry_->features(s).list().join("\n"));
+//			qDebug() << QString("############    %1").arg(registry_->features(s).list().join("\n"));
 			f += registry_->features(s).list();
 		}
 	}

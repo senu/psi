@@ -21,7 +21,7 @@ function psi_appendNextMessage(messagePart, messageBody) {
 
         if(insertDiv != null) { //could be removed by appendEvent
             insertDiv.parentNode.removeChild(insertDiv);
-		}
+        }
 
         newNode = document.createElement('div');
         newNode.innerHTML=psi_setMessageBody(messagePart, messageBody);
@@ -117,7 +117,7 @@ function psi_removeSpaces(string) {
 
     for(i = 0; i < splitstring.length; i++) {
         tstring += splitstring[i];
-	}
+    }
 
     return tstring;
 }
@@ -241,15 +241,42 @@ function psi_clearMessages() {
 
 /** Inserts trackBar */
 function psi_addTrackBar() {	
-	trackBar = '<hr id="psi_trackBar"/>';
+    trackBar = '<hr id="psi_trackBar"/>';
     psi_appendNextMessage(trackBar);
 }
 
 /** Removes trackBar from ChatView */
 function psi_removeTrackBar() {	
-	trackBarElement = document.getElementById('psi_trackBar');
+    trackBarElement = document.getElementById('psi_trackBar');
 
-	if (trackBarElement != null) { 
-		trackBarElement.parentNode.removeChild(trackBarElement);
-	}
+    if (trackBarElement != null) { 
+        trackBarElement.parentNode.removeChild(trackBarElement);
+    }
+}
+
+/** Sends signal to Psi to add to whitelist url*/
+function psi_unban(url) {
+    try {
+        candidates = document.getElementsByTagName('a');
+        
+        alert('before' + url + candidates.length);
+        jsNotifier.addToWhiteListRequested(url);
+        alert('unban' + url + candidates.length);
+        
+        //foreach <a class="psi_disabled_image" ...>
+        for(var i=0; i < candidates.length; i++) { 
+            cand = candidates[i];
+            if (cand.getAttribute('class') == 'psi_disabled_image' 
+                && cand.getAttribute('href') == 'javascript:psi_unban(\'' + url + '\')') {
+                //replace <a> with corresponding <img>
+                imgElement = document.createElement('img');
+                imgElement.setAttribute('src', url);
+                cand.parentNode.replaceChild(imgElement, cand);
+                i--;
+            }
+        }
+    }
+    catch(e) {
+        alert('Webkit JavaScript [unban] exception:' + e);
+    }
 }

@@ -631,15 +631,21 @@ void ChatDlg::doSend() {
     Message m(jid());
     
     m.setType("chat");
-    m.setBody(chatEdit()->messageBody(false)); //TODO 3 inspect escaping 
+    m.setBody(chatEdit()->messageBody(false));
     
-    QString richBody(chatEdit()->messageBody(true)); //xhtml-im 
-    if(!richBody.isNull()) {
-        QDomDocument richDoc;
-        richDoc.setContent(richBody);
-        m.setHTML(HTMLElement(richDoc.firstChild().toElement()));
+    if (sendXHTML) {
+        
+        QString richBody(chatEdit()->messageBody(true)); //xhtml-im
+        
+        if(!richBody.isNull()) {
+            QDomDocument richDoc;
+            richDoc.setContent(richBody);
+            m.setHTML(HTMLElement(richDoc.firstChild().toElement()));
 //        qDebug() << "do send: rich content" << richBody << "m:" << m.containsHTML() << m.html().toString("notb"); //TODO 0
+        }
     }
+
+    qDebug() << "sending XHTML-IM ? " << sendXHTML;
     
     m.setTimeStamp(QDateTime::currentDateTime());
     

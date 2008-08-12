@@ -6,11 +6,13 @@
 
 #include "iconreply.h"
 #include "iconset.h"
+#include "addurldlg.h"
 
 
 NetworkAccessManager::NetworkAccessManager(QObject *parent, IconServer* iconServer_)
 : QNetworkAccessManager(parent), iconServer(iconServer_) {
-    
+
+    addUrlToWhiteList("http://www.netbeans.org/images/v5/nb-logo2.gif"); //TODO!!!
 }
 
 
@@ -29,12 +31,23 @@ QNetworkReply * NetworkAccessManager::createRequest(Operation op, const QNetwork
         return QNetworkAccessManager::createRequest(op, req, outgoingData);
     }
 
+    //on whiteList?
+    whiteListMutex.lock();
+
+    bool whiteListed = whiteList.contains(req.url().toString());
+
+    whiteListMutex.unlock();
+
+    if (whiteListed) {
+        return QNetworkAccessManager::createRequest(op, req, outgoingData);
+    }
+
     //deny all other access
     QNetworkRequest req2(req);
 
     QNetworkReply * reply = new IconReply(); //finishes with error
     connect(reply, SIGNAL(finished()), SLOT(callFinished()));
-    
+
     return reply;
 }
 
@@ -44,6 +57,16 @@ void NetworkAccessManager::callFinished() {
     if (reply) {
         emit finished(reply);
     }
+}
+
+
+void NetworkAccessManager::addUrlToWhiteList(const QString& url) {
+
+    whiteListMutex.lock();
+
+    whiteList.append(url);
+
+    whiteListMutex.unlock();
 }
 
 

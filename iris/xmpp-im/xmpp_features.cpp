@@ -129,6 +129,15 @@ bool Features::canVoice() const
 	return test(ns);
 }
 
+#define FID_XHTML "http://jabber.org/protocol/xhtml-im"
+bool Features::canXHTML() const
+{
+	QStringList ns;
+	ns << FID_XHTML;
+
+	return test(ns);
+}
+
 #define FID_GATEWAY "jabber:iq:gateway"
 bool Features::isGateway() const
 {
@@ -187,6 +196,7 @@ public:
 		id2s[FID_Disco]		= tr("Service Discovery");
 		id2s[FID_VCard]		= tr("VCard");
 		id2s[FID_AHCommand]	= tr("Execute command");
+		id2s[FID_Xhtml]     = tr("XHTML-IM");
 
 		// custom Psi actions
 		id2s[FID_Add]		= tr("Add to roster");
@@ -203,6 +213,7 @@ public:
 		id2f[FID_Disco]		= FID_DISCO;
 		id2f[FID_VCard]		= FID_VCARD;
 		id2f[FID_AHCommand]	= FID_AHCOMMAND;
+		id2s[FID_Xhtml]     = FID_XHTML;
 
 		// custom Psi actions
 		id2f[FID_Add]		= FID_ADD;
@@ -233,6 +244,8 @@ long Features::id() const
 		return FID_VCard;
 	else if ( canCommand() )
 		return FID_AHCommand;
+	else if ( canXHTML() )
+		return FID_Xhtml;
 	else if ( test(QStringList(FID_ADD)) )
 		return FID_Add;
 

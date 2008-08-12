@@ -4,7 +4,8 @@
 PlainTextChatView::PlainTextChatView(QWidget *parent, PlainTextChatTheme theme_)
 : ChatView(parent),
 textview(this),
-theme(theme_) {
+theme(theme_),
+oldTrackBarPosition(0) {
 
     textview.setFont(theme.chatFont());
 
@@ -49,6 +50,7 @@ void PlainTextChatView::appendMessage(const MessageChatEvent* event, bool alread
 
 
 void PlainTextChatView::clear() {
+    textview.clear();
 }
 
 
@@ -143,11 +145,39 @@ void PlainTextChatView::scrollToBottom() {
 }
 
 
-void PlainTextChatView::removeTrackBar() {
-    //TODO!!!
-}
+void PlainTextChatView::updateTrackBar() {
+    
+    // save position, because our manipulations could change it
+    int scrollbarValue = verticalScrollBar()->value();
+
+    QTextCursor cursor = textview.textCursor();
+    cursor.beginEditBlock();
+    PsiTextView::Selection selection = textview.saveSelection(cursor);
 
 
-void PlainTextChatView::addTrackBar() {
-    //TODO!!!
+    //remove trackbar
+    if (oldTrackBarPosition) {
+        cursor.setPosition(oldTrackBarPosition, QTextCursor::KeepAnchor);
+        QTextBlockFormat blockFormat = cursor.blockFormat();
+        blockFormat.clearProperty(QTextFormat::BlockTrailingHorizontalRulerWidth);
+        cursor.clearSelection();
+        cursor.setBlockFormat(blockFormat);
+    }
+
+    //add trackbar
+    cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+    oldTrackBarPosition = cursor.position();
+    QTextBlockFormat blockFormat = cursor.blockFormat();
+    blockFormat.setProperty(QTextFormat::BlockTrailingHorizontalRulerWidth, QVariant(true));
+    cursor.clearSelection();
+    cursor.setBlockFormat(blockFormat);
+
+
+    textview.restoreSelection(cursor, selection);
+    cursor.endEditBlock();
+    textview.setTextCursor(cursor);
+
+    textview.verticalScrollBar()->setValue(scrollbarValue);
+
+
 }

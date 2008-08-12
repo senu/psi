@@ -51,8 +51,7 @@ public:
     bool hasSelectedText() const;
     void copySelectedText();
 
-    void removeTrackBar();
-    void addTrackBar();
+    void updateTrackBar();
 
     public
 slots:
@@ -74,6 +73,9 @@ protected:
     PsiTextView textview;
     PlainTextChatTheme theme;
     QVBoxLayout *layout;
+
+    /** Holds position of trackBar (0 if no trackBar) */
+	int  oldTrackBarPosition;
 
 
 };

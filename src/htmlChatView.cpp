@@ -56,6 +56,7 @@ void HTMLChatView::init() {
     connect(&webView, SIGNAL(loadFinished(bool)), this, SLOT(onEmptyDocumentLoaded(bool)));
     connect(&jsNotifier, SIGNAL(onInitFinished()), this, SLOT(onInitDocumentFinished()));
     connect(&jsNotifier, SIGNAL(onAppendFinished()), this, SLOT(onAppendFinished()));
+    connect(&jsNotifier, SIGNAL(onAddToWhiteListRequested(const QString&)), this, SLOT(onAddToWhiteListRequested(const QString&)));
 
     webView.setHtml(createEmptyDocument(theme.baseHref(), theme.currentVariant()), theme.baseHref());
     //rest in onEmptyDocumentLoaded
@@ -349,15 +350,22 @@ void HTMLChatView::contextMenuEvent(QContextMenuEvent* event) {
 }
 
 
-void HTMLChatView::removeTrackBar() {
-    if (isReady) { //if webkit is intializing now it couldn't add trackBar (so there'll be no 2 trackbars)
-       evaluateJS("psi_removeTrackBar()");
+void HTMLChatView::updateTrackBar() {
+    if (isReady) {
+        evaluateJS("psi_removeTrackBar()");
+        evaluateJS("psi_addTrackBar()");
     }
 }
 
 
-void HTMLChatView::addTrackBar() {
-    if (isReady) {
-        evaluateJS("psi_addTrackBar()");
+void HTMLChatView::onAddToWhiteListRequested(const QString& url) {
+
+    QMessageBox::StandardButton btn =
+        QMessageBox::information(this, tr("Warning"),
+                                 tr("Are you sure you want to add %1 to whiteList?").arg(url),
+                                 QMessageBox::Yes | QMessageBox::No);
+
+    if (btn == QMessageBox::Yes) {
+        networkManager->addUrlToWhiteList(url); //TODO!!! else dont replace a to img
     }
 }

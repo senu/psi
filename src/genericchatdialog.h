@@ -123,6 +123,14 @@ protected:
     /** Nasty hack to avoid virtual inheritance and linker/c++ templates errors */
     GenericChatDialogQObject* gcObject;
 
+    /**
+     * This property holds whether Psi should send \<message/\> stanza with XHTML-IM extension
+     *
+     * NOTE: Currently we send XHTML-IM messages only after we get <feature var='http://jabber.org/protocol/xhtml-im'/>
+     * NOTE: Disco Info Result
+     */
+    bool sendXHTML;
+
     friend class GenericChatDialogQObject;
 };
 

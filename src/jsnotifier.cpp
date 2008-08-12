@@ -2,9 +2,15 @@
 
 
 void JSNotifier::initFinished() {
-	emit onInitFinished();
+    emit onInitFinished();
 }
 
+
 void JSNotifier::appendFinished() {
-	emit onAppendFinished();
+    emit onAppendFinished();
+}
+
+
+void JSNotifier::addToWhiteListRequested(const QString& url) {
+    emit onAddToWhiteListRequested(url);
 }

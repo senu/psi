@@ -107,7 +107,6 @@ public:
 		nonAnonymous = false;
 		
 		trackBar = false;
-		oldTrackBarPosition = 0;
 	}
 
 	GCMainDlg *dlg;
@@ -132,8 +131,6 @@ public:
 	
 public:
 	bool trackBar;
-protected:
-	int  oldTrackBarPosition;
 
 private:
 	ChatEdit* chatEdit() const {
@@ -176,60 +173,20 @@ protected slots:
         chatView()->scrollToBottom();
 	}
 	
-private:
-	void removeTrackBar(QTextCursor &cursor)
-	{
-		if (oldTrackBarPosition) {
-			cursor.setPosition(oldTrackBarPosition, QTextCursor::KeepAnchor);
-			QTextBlockFormat blockFormat = cursor.blockFormat();
-			blockFormat.clearProperty(QTextFormat::BlockTrailingHorizontalRulerWidth);
-			cursor.clearSelection();
-			cursor.setBlockFormat(blockFormat);
-		}
-	}
-		
-	void addTrackBar(QTextCursor &cursor)
-	{
-		cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
-		oldTrackBarPosition = cursor.position();
-		QTextBlockFormat blockFormat = cursor.blockFormat();
-		blockFormat.setProperty(QTextFormat::BlockTrailingHorizontalRulerWidth, QVariant(true));
-		cursor.clearSelection();
-		cursor.setBlockFormat(blockFormat);
-	}
-
 public:		
 	void doTrackBar()
 	{
-        //TODO ? 27 trackbar
 		trackBar = false;
 
         dlg->updateLastMsgTimeAndOwner(QDateTime::currentDateTime(), Jid());
-        chatView()->removeTrackBar();
-        chatView()->addTrackBar();
-
-        /*
-
-		// save position, because our manipulations could change it
-		int scrollbarValue = te_log()->verticalScrollBar()->value();
-
-		QTextCursor cursor = te_log()->textCursor();
-		cursor.beginEditBlock();
-		PsiTextView::Selection selection = te_log()->saveSelection(cursor);
-
-		removeTrackBar(cursor);
-		addTrackBar(cursor);
-
-		te_log()->restoreSelection(cursor, selection);
-		cursor.endEditBlock();
-		te_log()->setTextCursor(cursor);
-
-		te_log()->verticalScrollBar()->setValue(scrollbarValue);
-         */
+        chatView()->updateTrackBar();
 	}
 
 public:
-	QString lastReferrer;  // contains nick of last person, who have said "yourNick: ..."
+    
+    /** Contains nick of last person, who have said "yourNick: ..." */
+	QString lastReferrer;  
+
 protected:		
 	// Nick auto-completion code follows...
 	enum TypingStatus {

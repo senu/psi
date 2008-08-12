@@ -66,6 +66,7 @@ const QString styleProperties[] = {
 
 QHash<QString, MessageValidator::NodeInfo> MessageValidator::allowed = QHash<QString, MessageValidator::NodeInfo>();
 
+
 MessageValidator::MessageValidator() {
     if (allowed.isEmpty()) {
         generateAllowedDict();
@@ -191,7 +192,7 @@ QString MessageValidator::validateMessage(QString message, bool* illformed, HTML
 
         QDomNodeList children = cur.childNodes();
 
-        for (int i = children.size()-1; i >= 0; i--) {
+        for (int i = children.size() - 1; i >= 0; i--) {
             QDomNode node = children.at(i);
 
             if (node.isElement()) {
@@ -199,6 +200,18 @@ QString MessageValidator::validateMessage(QString message, bool* illformed, HTML
 
                 if (childName == "style") { //NOTE: this action is not XHTML-IM compliant! (css rules should be displayed, but it's stupid)
                     cur.removeChild(node);
+                }
+                //TODO 109 move it to formatter
+                else if (childName == "img") {
+
+                    QString href = node.toElement().attribute("src");
+                    
+                    QDomElement newElement = doc.createElement("a");
+                    newElement.setAttribute("class", "psi_disabled_image");
+                    newElement.setAttribute("href", "javascript:psi_unban('" + href + "')");
+                    newElement.appendChild(doc.createTextNode("[ click here to display: " + href + " ]"));
+                    
+                    cur.replaceChild(newElement, node);
                 }
                 else if (!curNI.allowedTags.contains(childName)) {//is subElement valid here?
 
