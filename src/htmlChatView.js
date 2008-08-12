@@ -254,20 +254,20 @@ function psi_removeTrackBar() {
     }
 }
 
-/** Sends signal to Psi to add to whitelist url*/
+/** Sends signal to Psi to add url to the whitelist */
+function psi_addToWhiteList(url) {
+    jsNotifier.addToWhiteListRequested(url);
+}
+
+/** Replaces all banned images (<a class="psi_diabled_image">) pointing to url back to <img/> */
 function psi_unban(url) {
     try {
         candidates = document.getElementsByTagName('a');
-        
-        alert('before' + url + candidates.length);
-        jsNotifier.addToWhiteListRequested(url);
-        alert('unban' + url + candidates.length);
-        
         //foreach <a class="psi_disabled_image" ...>
         for(var i=0; i < candidates.length; i++) { 
             cand = candidates[i];
             if (cand.getAttribute('class') == 'psi_disabled_image' 
-                && cand.getAttribute('href') == 'javascript:psi_unban(\'' + url + '\')') {
+                && cand.getAttribute('href') == 'javascript:psi_addToWhiteList(\'' + url + '\')') {
                 //replace <a> with corresponding <img>
                 imgElement = document.createElement('img');
                 imgElement.setAttribute('src', url);

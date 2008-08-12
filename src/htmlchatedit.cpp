@@ -2,6 +2,7 @@
 #include "messageValidator.h"
 #include "addurldlg.h"
 #include "textutil.h"
+#include "imagedownloaddialog.h"
 
 
 HTMLChatEdit::HTMLChatEdit(QWidget* parent)
@@ -97,15 +98,19 @@ void HTMLChatEdit::textBackgroundColor() {
 
 
 void HTMLChatEdit::insertImage() { //TODO 39 
-    QTextCursor cursor = textCursor();
-    /*
-       QImage img = QImage("/usr/share/icons/oxygen/128x128/apps/kmail.png");
-       document()->addResource(QTextDocument::ImageResource, QUrl("myimage"), img);
 
-       cursor.insertImage("myimage");
-     */
-    cursor.insertHtml("<img src=\"http://www.google.pl/images/nav_logo3.png\"/>");
+    ImageDownloadDialog * dlg = new ImageDownloadDialog(this);
+    int ret = dlg->exec(); //TODO 111 widget modality
 
+    if (ret == QDialog::Accepted) {
+        QString url = dlg->url();
+        document()->addResource(QTextDocument::ImageResource, QUrl(url), dlg->downloadedImage());
+
+        QTextCursor cursor = textCursor();
+        cursor.insertImage(url);
+    }
+
+    delete dlg;
 }
 
 
@@ -115,6 +120,8 @@ void HTMLChatEdit::insertAnchor() {
     w->setWindowTitle(tr("Insert hyperlink"));
 
     if (w->exec() != QDialog::Accepted) {
+
+
         delete w;
         return;
     }
@@ -129,6 +136,8 @@ void HTMLChatEdit::insertAnchor() {
 
 
 void HTMLChatEdit::changeAlignButtons() {
+
+
     qDebug() << "bg test" << textCursor().charFormat().background().color()
         << textCursor().charFormat().background().color().isValid();
 
@@ -138,6 +147,8 @@ void HTMLChatEdit::changeAlignButtons() {
 
     foreach(QAction* action, alignActions->actions()) {
         if (action->property("align").toInt() & aligment) {
+
+
             action->setChecked(true);
             break;
         }
@@ -166,6 +177,8 @@ void HTMLChatEdit::changeTextButtons(const QTextCharFormat& format) {
         pixmap.fill(Qt::white); //NOTE: it's Qt bug, I think. it's black by default, but displayed as white
     }
     else {
+
+
         pixmap.fill(format.background().color());
     }
     actionBackgroundColor->setIcon(pixmap);
@@ -177,6 +190,8 @@ void HTMLChatEdit::mergeFormat(const QTextCharFormat& format) {
     QTextCursor cursor = textCursor();
 
     if (!cursor.hasSelection()) {
+
+
         cursor.select(QTextCursor::WordUnderCursor);
     }
 
@@ -188,6 +203,8 @@ void HTMLChatEdit::mergeFormat(const QTextCharFormat& format) {
 void HTMLChatEdit::initActions() {
 
     //font style
+
+
     QString iconPath("/home/senu/dev/psi/gsoc/psi-fork/src/icons/"); //TODO + 42 iconServer
     actionTextBold = new QAction(QIcon(iconPath + "textbold.png"), tr("&Bold"), this);
     actionTextBold->setShortcut(Qt::CTRL + Qt::Key_B);
@@ -242,6 +259,8 @@ void HTMLChatEdit::initActions() {
 
 
     foreach(int size, fontDB.standardSizes()) {
+
+
         sizeCombo->addItem(QString::number(size));
     }
 
@@ -302,6 +321,8 @@ void HTMLChatEdit::initActions() {
 
 
 HTMLChatEdit::~HTMLChatEdit() {
+
+
     delete formatToolBar;
     qDebug() << xhtmlMessage();
 }
@@ -311,6 +332,8 @@ QString HTMLChatEdit::createBlockStyle(const QTextBlockFormat& blockFormat) {
     QString style = "text-align:";
 
     switch (blockFormat.alignment()) {
+
+
         case Qt::AlignLeft :
                 style += "left";
             break;
@@ -406,7 +429,6 @@ QString HTMLChatEdit::xhtmlMessage() {
     //each textBlock [== text, image, hyperlink] - we omit tables, lists, frames
     while (currentBlock.isValid()) {
         QTextBlockFormat curTBF = currentBlock.blockFormat();
-        //        qDebug() << "TB" << currentBlock.text() << "[ " << curTBF.alignment() << " ]";
 
         QString block = ""; //inner of block 
 
@@ -418,7 +440,7 @@ QString HTMLChatEdit::xhtmlMessage() {
                 QTextCharFormat curTCF = currentFragment.charFormat();
 
                 if (curTCF.isImageFormat()) {
-                    block += "<img src=\"http://www.netbeans.org/images/v5/nb-logo2.gif\" alt=\"image\"/>";
+                    block += "<img src=\"" + TextUtil::escape(curTCF.toImageFormat().name()) + "\" alt=\"image\"/>";
                 }
                 else if (!curTCF.anchorHref().isEmpty()) {
                     block += "<a href=\"" + TextUtil::escape(curTCF.anchorHref()) + "\">" +
@@ -436,6 +458,8 @@ QString HTMLChatEdit::xhtmlMessage() {
             msg += block;
         }
         else {
+
+
             msg += "<p style=\"" + createBlockStyle(curTBF) + "\">" + block + "</p>";
         }
 
@@ -452,6 +476,8 @@ QString HTMLChatEdit::messageBody(bool xhtml) {
         return xhtmlMessage();
     }
     else {
+
+
         return toPlainText();
     }
 }

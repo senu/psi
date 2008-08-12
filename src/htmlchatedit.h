@@ -60,7 +60,6 @@ slots:
     //reimplemented
     QString messageBody(bool xhtml);
     QToolBar* toolBar() const;
-    
 
 protected:
     void mergeFormat(const QTextCharFormat &format);

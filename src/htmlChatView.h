@@ -128,9 +128,9 @@ slots:
     QString createEmptyDocument(QString baseHref, QString themeVariant);
     
     /**
-     * Ask user if \param url should be added to whiteList.
+     * Ask user if \param url should be added to whiteList and then calls js:psi_unban(url) if user confims.
      * 
-     * For example, to display blocked images.
+     * It's used to display blocked images.
      */
     void onAddToWhiteListRequested(const QString& url);
 

@@ -198,17 +198,21 @@ QString MessageValidator::validateMessage(QString message, bool* illformed, HTML
             if (node.isElement()) {
                 QString childName = node.toElement().tagName();
 
+                if (childName == "a") { // always show hyperlink destination
+                    QString href = node.toElement().attribute("href");
+                    node.appendChild(doc.createTextNode(" [ " + href + " ]")); 
+                }
+                
                 if (childName == "style") { //NOTE: this action is not XHTML-IM compliant! (css rules should be displayed, but it's stupid)
                     cur.removeChild(node);
                 }
-                //TODO 109 move it to formatter
-                else if (childName == "img") {
+                else if (childName == "img") { //disabling images until they are whitelisted
 
                     QString href = node.toElement().attribute("src");
                     
                     QDomElement newElement = doc.createElement("a");
                     newElement.setAttribute("class", "psi_disabled_image");
-                    newElement.setAttribute("href", "javascript:psi_unban('" + href + "')");
+                    newElement.setAttribute("href", "javascript:psi_addToWhiteList('" + href + "')");
                     newElement.appendChild(doc.createTextNode("[ click here to display: " + href + " ]"));
                     
                     cur.replaceChild(newElement, node);

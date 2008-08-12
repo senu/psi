@@ -12,7 +12,6 @@
 NetworkAccessManager::NetworkAccessManager(QObject *parent, IconServer* iconServer_)
 : QNetworkAccessManager(parent), iconServer(iconServer_) {
 
-    addUrlToWhiteList("http://www.netbeans.org/images/v5/nb-logo2.gif"); //TODO!!!
 }
 
 

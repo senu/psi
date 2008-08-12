@@ -8,6 +8,8 @@
 
 #include "htmlChatView.h"
 
+#include "htmlChatView.h"
+
 
 HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* iconServer)
 : ChatView(parent), theme(_theme), isReady(false), queuedTheme(0), queuedClear(false) {
@@ -142,7 +144,7 @@ QString HTMLChatView::createEmptyDocument(QString baseHref, QString themeVariant
                    "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
                    "        <head>"
                    "                <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />"
-                   "                <base href=\"%1\"/>"
+                   "                <base href=\"file://%1\"/>"
                    "                <style id=\"baseStyle\" type=\"text/css\" media=\"screen,print\">"
                    "                        @import url(\"main.css\");"
                    "                        @import url(\"%2\");"
@@ -235,6 +237,7 @@ QString HTMLChatView::dumpContent() {
 
 
 void HTMLChatView::escapeString(QString& str) {
+    str.replace("\\", "\\\\");
     str.replace("\"", "\\\"");
     str.replace("\n", "\\\n");
     str.replace(QChar(8232), "\\\n"); //ctrl+enter
@@ -242,6 +245,7 @@ void HTMLChatView::escapeString(QString& str) {
 
 
 QString HTMLChatView::escapeStringCopy(QString str) {
+    str.replace("\\", "\\\\");
     str.replace("\"", "\\\"");
     str.replace("\n", "\\\n");
     str.replace(QChar(8232), "\\\n"); //ctrl+enter
@@ -366,6 +370,9 @@ void HTMLChatView::onAddToWhiteListRequested(const QString& url) {
                                  QMessageBox::Yes | QMessageBox::No);
 
     if (btn == QMessageBox::Yes) {
-        networkManager->addUrlToWhiteList(url); //TODO!!! else dont replace a to img
+        networkManager->addUrlToWhiteList(url);
+        if (isReady) {
+            evaluateJS("psi_unban('" + escapeStringCopy(url) + "')");
+        } //else should never happen, but...
     }
 }

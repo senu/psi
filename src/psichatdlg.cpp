@@ -285,7 +285,7 @@ void PsiChatDlg::contactUpdated(UserListItem* u, int status, const QString& stat
     Q_UNUSED(statusString);
 
     if (status == -1 || !u) {
-        ui_.lb_status->setPsiIcon(IconsetFactory::iconPtr("status/noauth")); //senu: i think 
+        ui_.lb_status->setPsiIcon(IconsetFactory::iconPtr("status/noauth"));
     }
     else {
         ui_.lb_status->setPsiIcon(PsiIconset::instance()->statusPtr(jid(), status));
@@ -344,6 +344,7 @@ void PsiChatDlg::updateAvatar(const Jid& j) {
         }
 
         //update avatar in IconServer (webkit chats)
+        qDebug() << "registered avatar for:" << j.full() << jid().full() << account()->jid().full();
         iconServer->registerIcon("avatars/" + j.full() + ".png", IconServer::pixmapToPng(p));
     }
 }
@@ -562,7 +563,8 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
         }
     }
     else {
-        userInfo->setUserIconPath("icon://avatars/" + j.bare() + ".png"); //TODO 87 ins full() is not full in acc()/jid()
+        qDebug() << "fetching avatar for:" << j.full();
+        userInfo->setUserIconPath("icon://avatars/" + j.full() + ".png"); //TODO 87 ins full() is not full in acc()/jid()
     }
 
     userInfo->setService("Jabber");

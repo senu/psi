@@ -30,7 +30,7 @@ QDomNode DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& 
 
 
     QDomDocument node;
-    qDebug() << "!!! tf messageText1.5 0" << output;
+//    qDebug() << "!!! tf messageText1.5 0" << output;
     node.setContent("<span>" + output + "</span>");
 
     textNodeNumber_++;

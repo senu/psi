@@ -7,8 +7,10 @@
 #include <QPushButton>
 #include <QMessageBox>
 
+
 FindDialog::FindDialog(const QString &str, QWidget *parent, const char *name)
 : QDialog(parent, name, false) {
+    
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowTitle(tr("Find"));
     QVBoxLayout *vb = new QVBoxLayout(this, 4);
