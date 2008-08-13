@@ -144,7 +144,7 @@ QString HTMLChatView::createEmptyDocument(QString baseHref, QString themeVariant
                    "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
                    "        <head>"
                    "                <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />"
-                   "                <base href=\"file://%1\"/>"
+                   "                <base href=\"file:///%1\"/>"
                    "                <style id=\"baseStyle\" type=\"text/css\" media=\"screen,print\">"
                    "                        @import url(\"main.css\");"
                    "                        @import url(\"%2\");"
