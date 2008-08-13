@@ -14,13 +14,3 @@ void EmoteChatEvent::setMessage(QString message) {
 QString EmoteChatEvent::message() const {
     return _message;
 }
-
-
-bool EmoteChatEvent::isLocal() const {
-    return _isLocal;
-}
-
-
-void EmoteChatEvent::setLocal(bool isLocal) {
-    _isLocal = isLocal;
-}

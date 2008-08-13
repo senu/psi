@@ -9,6 +9,7 @@ PlainTextChatTheme::PlainTextChatTheme() {
 
 QString PlainTextChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const {
 
+    qDebug() << "&&&&" << event->isLocal();
     QString color = colorString(event->isLocal(), event->isSpooled());
 
     return QString("<span style=\"color: %1\">").arg(color)
@@ -56,7 +57,7 @@ QString PlainTextChatTheme::createFileTransferEventPart(const FileTransferChatEv
                 eventText = QObject::tr("Aborted downloading %1.").arg(event->fileName());
             break;
     }
-    
+
     return QString("<span style=\"color: %1\">").arg(systemMessageColor())
         + QString("[%1] *** %2 </span>").arg(formatTimeStamp(event->timeStamp()), eventText);
 
@@ -76,7 +77,7 @@ QString PlainTextChatTheme::createStatusEventPart(const StatusChatEvent * event)
                 statusStr = "Offline";
             break;
         case StatusChatEvent::Away :
-                statusStr = "Away"; 
+                statusStr = "Away";
             break;
         case StatusChatEvent::Xa :
                 statusStr = "Not available";

@@ -257,11 +257,11 @@ void PsiChatDlg::capsChanged() {
 
     QString resource = jid().resource();
     UserListItem *ul = account()->findFirstRelevant(jid());
-    
+
     if (resource.isEmpty() && ul && !ul->userResourceList().isEmpty()) {
         resource = (*(ul->userResourceList().priority())).name();
     }
-    
+
     act_voice_->setEnabled(!account()->capsManager()->isEnabled() || (ul && ul->isAvailable() && account()->capsManager()->features(jid().withResource(resource)).canVoice()));
     sendXHTML = (account()->capsManager()->isEnabled() && account()->capsManager()->features(jid().withResource(resource)).canXHTML());
     qDebug() << "psiChatDlg caps Changed, sendXHTML" << sendXHTML;
@@ -370,6 +370,7 @@ void PsiChatDlg::updatePGP() {
                            !smallChat_ &&
                            !PsiOptions::instance()->getOption("options.ui.chat.central-toolbar").toBool());
 }
+
 
 void PsiChatDlg::setPGPEnabled(bool enabled) {
     act_pgp_->setChecked(enabled);
@@ -532,18 +533,18 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
 
     bool local;
 
-    if (j.compare(jid(), false)) { //TODO 85 true?
+    qDebug() << account()->jid().full() << "[j,acc,jid]" << j.full() << account()->jid().full() << jid().full();
+
+    if (!(j.compare(account()->jid(), false))) { //TODO 85 true?
         //remote user
         local = false;
         userInfo->setNick(whoNick(false));
-        userInfo->setLocal(false);
         userInfo->setUserStatusIcon("icon://" + ui_.lb_status->psiIconName());
     }
     else {
         //local user
         local = true;
         userInfo->setNick(whoNick(true));
-        userInfo->setLocal(true);
 
         //status icon
         QList<UserListItem*> ul = account()->findRelevant(j);
@@ -553,6 +554,7 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
 
 
     userInfo->setJid(j.full());
+    userInfo->setLocal(local);
 
     if (getAvatarForJid(j).isNull()) { //default avatar
         if (local) {

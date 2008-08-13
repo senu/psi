@@ -1138,7 +1138,7 @@ void GCMainDlg::message(const Message &_m)
 	}
 
     if (from.isEmpty()) {
-        appendChatEvent(new ExtendedSystemChatEvent(tr("Message from unknown source: %1").arg(m.body())), alert); //NOTE: we could apppend a MessageChatEvent here
+        appendChatEvent(new ExtendedSystemChatEvent(m.body()), alert); //NOTE: we could apppend a MessageChatEvent here
     }
     else {
 		appendMessage(m, alert);

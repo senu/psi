@@ -19,15 +19,12 @@ public:
     QString message() const;
     void setMessage(QString message);
 
-    bool isLocal() const;
-    void setLocal(bool isLocal);
-
     QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const;
 
 private:
     QString _message;
     QString _nick;
-    bool _isLocal;
+    bool isLocal_;
 };
 
 

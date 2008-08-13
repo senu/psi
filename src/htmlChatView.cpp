@@ -345,11 +345,21 @@ void HTMLChatView::contextMenuEvent(QContextMenuEvent* event) {
     QList<QAction*> actions;
 
     QAction* copyAction = webView.page()->action(QWebPage::Copy);
-    actions.append(copyAction);
+    if(copyAction->isEnabled()) {
+        actions.append(copyAction);
+    }
+
+    QAction* copyLinkAction = webView.page()->action(QWebPage::CopyLinkToClipboard);
+    if(copyLinkAction->isEnabled()) {
+        actions.append(copyLinkAction);
+    }
 
     QAction* chosen = QMenu::exec(actions, event->globalPos());
     if (chosen == copyAction) {
         webView.page()->triggerAction(QWebPage::Copy);
+    }
+    else if (chosen == copyLinkAction) {
+        webView.page()->triggerAction(QWebPage::CopyLinkToClipboard);
     }
 }
 
