@@ -219,7 +219,6 @@ void HTMLChatView::importJSChatFunctions() {
 
     QString jsCode = file.readAll();
     evaluateJS(jsCode);
-
 }
 
 

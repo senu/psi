@@ -641,7 +641,7 @@ void ChatDlg::doSend() {
             QDomDocument richDoc;
             richDoc.setContent(richBody);
             m.setHTML(HTMLElement(richDoc.firstChild().toElement()));
-//        qDebug() << "do send: rich content" << richBody << "m:" << m.containsHTML() << m.html().toString("notb"); //TODO 0
+//            qDebug() << "IMG do send: rich content" << richBody << "m:" << m.containsHTML() << m.html().toString("notb"); //TODO 0
         }
     }
 

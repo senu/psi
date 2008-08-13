@@ -146,6 +146,7 @@ void MessageValidator::appendArrayToList(const QString *array, int arraySize, QS
 
 QString MessageValidator::validateMessage(QString message, bool* illformed, HTMLTextFormatter* formatter) {
 
+//    qDebug() << "IMG val0" << message;
     QDomDocument doc("document");
     *illformed = false;
 
@@ -158,8 +159,6 @@ QString MessageValidator::validateMessage(QString message, bool* illformed, HTML
         qDebug() << "WARNING: MessageValidator::validateMessage() - illformed message";
         return "illformed message!!!";
     }
-
-    //    dfs(doc.documentElement(), formatter, illformed);
 
     //now DOM tree will be traversed in preorder. 
     QStack<QDomElement> stack; //current element, QStack is used to avoid possible stack overflow in ordinary recursion
@@ -219,8 +218,8 @@ QString MessageValidator::validateMessage(QString message, bool* illformed, HTML
                 }
                 else if (!curNI.allowedTags.contains(childName)) {//is subElement valid here?
 
-                    //qDebug() << "VALIDATIN ERR" << "TS" << childName << " in " << parentName;
-                    //qDebug() << "note allowed subElements are:" << curNI.allowedTags;
+                    qDebug() << "VALIDATIN ERR" << "TS" << childName << " in " << parentName;
+                    qDebug() << "note allowed subElements are:" << curNI.allowedTags;
 
                     //append bad node's children (they will be validated in next loop iteration)
                     int j = 0;
@@ -253,7 +252,7 @@ QString MessageValidator::validateMessage(QString message, bool* illformed, HTML
         }//foreach child
     } //stack/dfs
 
-
+//    qDebug() << "IMG" <<  doc.toString(0);
     return doc.toString(0);
 }
 
