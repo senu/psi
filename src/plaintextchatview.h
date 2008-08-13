@@ -22,8 +22,8 @@ class PlainTextChatView : public ChatView {
 
     Q_OBJECT
 public:
-    void appendEvent(const ChatEvent* event, bool alreadyAppended = false);
-    void appendMessage(const MessageChatEvent* event, bool alreadyAppended = false);
+    void appendEvent(ChatEvent* event, bool alreadyAppended = false);
+    void appendMessage(MessageChatEvent* event, bool alreadyAppended = false);
 
     void init();
 

@@ -18,9 +18,17 @@ class ChatView : public QWidget {
 
 public:
     ChatView(QWidget* parent) : QWidget(parent) {
+    qDebug() << "@@@@ MEM WEBKIT: ++++" << "ChatView::ChatView()"; 
     }
 
 
+    /** 
+     * Destructor.
+     * 
+     * NOTE: events in appendedEvents are not freed, because they can be used in
+     * NOTE: another chatView (restoreDataFrom()).
+     * NOTE: you have to call deleteChatEvents() to free them.
+     */
     virtual ~ChatView() {
     }
 
@@ -29,24 +37,24 @@ public:
      * 
      * It's ChatView responsibility to free event
      */
-    virtual void appendEvent(const ChatEvent* event, bool alreadyAppended = false);
+    virtual void appendEvent(ChatEvent* event, bool alreadyAppended = false);
 
     /**
      * Appends message; adds it to the appendedEvents 
      * 
      * It's ChatView responsibility to free event
      */
-    virtual void appendMessage(const MessageChatEvent* event, bool alreadyAppended = false);
+    virtual void appendMessage(MessageChatEvent* event, bool alreadyAppended = false);
 
     /** 
-     * Clears all messages 
+     * Clears all messages. All Events will be freed.
      *
      * NOTE: In Psi you should not call this method. Use clear() from ChatDialog, because
      * NOTE: ChatDialog is responsible for message 'successiveness' (making message consecutive)
      * NOTE: so if you call this->clear() ChatDialog could try to attach consecutive message to 
      * NOTE: one that doesn't now exist. If you really need to call clear() here - create signal cleared()
      */
-    virtual void clear() = 0;
+    virtual void clear();
 
     /** 
      * Initialize ChatView 
@@ -95,6 +103,9 @@ public:
     /** Removes/hides old trackBar (if it exist) and inserts trackBar at the bottom of ChatView */
     virtual void updateTrackBar() = 0;
 
+    /** Clears appendedEvents and free events */
+    void deleteChatEvents();
+
 signals:
 
     /** You cannot append messages until ChatView is ready (synchronization with Webkit) */
@@ -123,7 +134,7 @@ protected:
     ChatTheme::ChatInfo _chatInfo;
 
     /** Appended events - we need to remember it in case of theme change */
-    QList <const AbstractChatEvent*> appendedEvents;
+    QList <AbstractChatEvent*> appendedEvents;
 
     /** Reappends events */
     void reappendEvents();

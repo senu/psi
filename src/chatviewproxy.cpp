@@ -5,7 +5,7 @@
 
 
 ChatViewProxy::ChatViewProxy(QWidget* parent)
-: QWidget(parent), _chatView(0), themeManager(0), iconServer(0), textFormatter(0) {
+: QWidget(parent), chatView_(0), themeManager(0), iconServer(0), textFormatter(0) {
 
     layout = new QVBoxLayout(this);
     layout->setMargin(0);
@@ -17,8 +17,16 @@ ChatViewProxy::ChatViewProxy(QWidget* parent)
 }
 
 
+ChatViewProxy::~ChatViewProxy() {
+    if (chatView_) {
+        chatView_->deleteChatEvents();
+    }
+    delete textFormatter;
+}
+
+
 ChatView* ChatViewProxy::chatView() const {
-    return _chatView;
+    return chatView_;
 }
 
 
@@ -28,35 +36,35 @@ void ChatViewProxy::init(const ChatTheme::ChatInfo& chatInfo, bool inGroupChat_,
     iconServer = iconServer_;
     inGroupChat = inGroupChat_;
     jid = chatInfo.destinationDisplayName;
-    
-    _chatView = createChatView(inGroupChat, jid);
-    _chatView->init(chatInfo);
+
+    chatView_ = createChatView(inGroupChat, jid);
+    chatView_->init(chatInfo);
     emit chatViewCreated();
 }
 
 
 void ChatViewProxy::optionsChanged(const QString& optionName) {
     qDebug() << optionName;
-    
-    if (!_chatView || !optionName.startsWith("options.ui.themes")) {
+
+    if (!chatView_ || !optionName.startsWith("options.ui.themes")) {
         return;
     }
 
     bool viewWasCreated = false;
-    
+
     if (PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool() != isHTMLChatView) {
         ChatView * newView = createChatView(inGroupChat, jid);
-        newView->restoreDataFrom(*_chatView);
+        newView->restoreDataFrom(*chatView_);
         newView->init();
 
-        delete _chatView;
-        _chatView = newView;
+        delete chatView_;
+        chatView_ = newView;
         viewWasCreated = true;
     }
-    
-    if (!optionName.startsWith("options.ui.themes.themename") && 
+
+    if (!optionName.startsWith("options.ui.themes.themename") &&
         !optionName.startsWith("options.ui.themes.variantname")) {
-        
+
         if (viewWasCreated) {
             emit chatViewCreated();
         }
@@ -64,13 +72,13 @@ void ChatViewProxy::optionsChanged(const QString& optionName) {
     }
 
     //TODO + 12 muc/chat/per group/per regexp settings
-    if(isHTMLChatView) { //theme change?
+    if (isHTMLChatView) { //theme change?
         qDebug() << "themeChanged?" << PsiOptions::instance()->getOption("options.ui.themes.themename").toString();
-        dynamic_cast<HTMLChatView *> (_chatView)->setTheme(themeManager->getTheme(
-            PsiOptions::instance()->getOption("options.ui.themes.themename").toString(), 
-            PsiOptions::instance()->getOption("options.ui.themes.variantname").toString())); 
+        dynamic_cast<HTMLChatView *> (chatView_)->setTheme(themeManager->getTheme(
+                                                                                  PsiOptions::instance()->getOption("options.ui.themes.themename").toString(),
+                                                                                  PsiOptions::instance()->getOption("options.ui.themes.variantname").toString()));
     }
-   
+
     if (viewWasCreated) {
         emit chatViewCreated();
     }
@@ -78,21 +86,22 @@ void ChatViewProxy::optionsChanged(const QString& optionName) {
 
 
 ChatView * ChatViewProxy::createChatView(bool inGroupChat, const QString& jid) {
-    ChatView * newView = ChatViewFactory::createChatView(inGroupChat, jid, this, &isHTMLChatView, 
+    ChatView * newView = ChatViewFactory::createChatView(inGroupChat, jid, this, &isHTMLChatView,
                                                          themeManager, iconServer);
     layout->addWidget(newView);
-    
+
     delete textFormatter;
-    
+
     if (isHTMLChatView) { //NOTE: tbh, we need this only because there's IconTextForman not QImageTextFormat in PsiChatView
-        textFormatter = new DefaultHTMLTextFormatter(false, true, false, true);   
+        textFormatter = new DefaultHTMLTextFormatter(false, true, false, true);
     }
     else {
-        textFormatter = new DefaultHTMLTextFormatter(false, true, false, false);   
+        textFormatter = new DefaultHTMLTextFormatter(false, true, false, false);
     }
-    
+
     return newView;
 }
+
 
 DefaultHTMLTextFormatter* ChatViewProxy::currentTextFormatter() {
     return textFormatter;

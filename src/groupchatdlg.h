@@ -157,7 +157,7 @@ private:
     DefaultHTMLTextFormatter * textFormatter();
     
     void appendMessage(const Message &, bool alert);
-    void appendChatEvent(const ChatEvent* event, bool alert = false);
+    void appendChatEvent(ChatEvent* event, bool alert = false);
     void setLooks();
 
     void contextMenuEvent(QContextMenuEvent *);

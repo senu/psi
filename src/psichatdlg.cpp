@@ -436,7 +436,7 @@ void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time,
 }
 
 
-void PsiChatDlg::appendChatEvent(const ChatEvent* event) {
+void PsiChatDlg::appendChatEvent(ChatEvent* event) {
     chatView()->appendEvent(event);
     updateLastMsgTimeAndOwner(event->timeStamp(), Jid());
 }

@@ -1167,7 +1167,7 @@ const QString& GCMainDlg::nick() const
 	return d->self;
 }
 
-void GCMainDlg::appendChatEvent(const ChatEvent* event, bool alert) {
+void GCMainDlg::appendChatEvent(ChatEvent* event, bool alert) {
     if (d->trackBar) {
 	 	d->doTrackBar();
     }

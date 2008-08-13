@@ -43,7 +43,7 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* i
 
 void HTMLChatView::clear() {
     if (isReady) {
-        appendedEvents.clear();
+        ChatView::clear();
         evaluateJS("psi_clearMessages()");
     }
     else {
@@ -157,7 +157,7 @@ QString HTMLChatView::createEmptyDocument(QString baseHref, QString themeVariant
 }
 
 
-void HTMLChatView::appendMessage(const MessageChatEvent *msg, bool alreadyAppended) {
+void HTMLChatView::appendMessage(MessageChatEvent *msg, bool alreadyAppended) {
     ChatView::appendMessage(msg, alreadyAppended);
 
     if (isReady) { // we dont want to append events before init was finished
@@ -187,12 +187,11 @@ void HTMLChatView::appendMessage(const MessageChatEvent *msg, bool alreadyAppend
 }
 
 
-void HTMLChatView::appendEvent(const ChatEvent* event, bool alreadyAppended) {
+void HTMLChatView::appendEvent(ChatEvent* event, bool alreadyAppended) {
     ChatView::appendEvent(event, alreadyAppended);
 
     if (isReady) { // we dont want to append events before init was finished
         // events will be appended in reappendEvents (called from onInitDpcumentFinished)
-
 
         QString part = event->getRightTemplateAndFillItWithData(theme);
         escapeString(part);
@@ -225,6 +224,7 @@ void HTMLChatView::importJSChatFunctions() {
 
 
 HTMLChatView::~HTMLChatView() {
+    qDebug() << "@@@@ MEM WEBKIT: ----" << "HTMLChatView::~HTMLChatView()";
     qDebug() << dumpContent();
     delete queuedTheme;
     delete networkManager;

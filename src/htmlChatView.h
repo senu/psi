@@ -76,10 +76,10 @@ slots:
     void importJSChatFunctions();
 
     /** Appends message */
-    void appendMessage(const MessageChatEvent *msg, bool alreadyAppended = false);
+    void appendMessage(MessageChatEvent *msg, bool alreadyAppended = false);
 
     /** Appends event (filetransfer, mood, etc) */
-    void appendEvent(const ChatEvent* event, bool alreadyAppended = false);
+    void appendEvent(ChatEvent* event, bool alreadyAppended = false);
 
     /** Returns HTML contained in webView */
     QString dumpContent();

@@ -16,14 +16,14 @@ void ChatView::init(const ChatTheme::ChatInfo& chatInfo) {
 }
 
 
-void ChatView::appendEvent(const ChatEvent* event, bool alreadyAppended) {
+void ChatView::appendEvent(ChatEvent* event, bool alreadyAppended) {
     if (!alreadyAppended) {
         appendedEvents.append(event);
     }
 }
 
 
-void ChatView::appendMessage(const MessageChatEvent* event, bool alreadyAppended) {
+void ChatView::appendMessage(MessageChatEvent* event, bool alreadyAppended) {
     if (!alreadyAppended) {
         appendedEvents.append(event);
     }
@@ -32,14 +32,15 @@ void ChatView::appendMessage(const MessageChatEvent* event, bool alreadyAppended
 
 void ChatView::reappendEvents() {
 
-    const AbstractChatEvent* event;
+    AbstractChatEvent* event;
+
 
     foreach(event, appendedEvents) {
         if (event->isMessageChatEvent()) {
-            appendMessage(dynamic_cast<const MessageChatEvent*> (event), true);
+            appendMessage(dynamic_cast<MessageChatEvent*> (event), true);
         }
         else {
-            appendEvent(dynamic_cast<const ChatEvent*> (event), true);
+            appendEvent(dynamic_cast<ChatEvent*> (event), true);
         }
     }
 }
@@ -52,4 +53,23 @@ void ChatView::setChatInfo(ChatTheme::ChatInfo chatInfo) {
 
 ChatTheme::ChatInfo ChatView::chatInfo() const {
     return _chatInfo;
+}
+
+
+void ChatView::deleteChatEvents() {
+    AbstractChatEvent * event;
+
+
+    foreach(event, appendedEvents) {
+        qDebug() << "%%%%%" << "CV: delete" << (int)event;
+        delete event;
+    }
+
+    qDebug() << "%%%%%" << "CV: clear()";
+    appendedEvents.clear();
+}
+
+
+void ChatView::clear() {
+    deleteChatEvents();
 }

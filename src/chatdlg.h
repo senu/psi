@@ -213,7 +213,7 @@ protected:
     /** 
      * Appends chat event (not message nor emote event)
      */
-    virtual void appendChatEvent(const ChatEvent* event) = 0;
+    virtual void appendChatEvent(ChatEvent* event) = 0;
     virtual void appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) = 0;
     virtual void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) = 0;
     

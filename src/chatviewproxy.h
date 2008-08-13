@@ -17,6 +17,13 @@ class ChatViewProxy : public QWidget {
 public:
     /** Constructor; you have to call init() to use ChatViewProxy */
     ChatViewProxy(QWidget* parent);
+    
+    /**
+     * Destructor.
+     * 
+     * It will free all chatEvents (ChatView::appendedEvents)
+     */
+    ~ChatViewProxy();
 
     /** Returns encapsulated ChatView widget; you have to call init(ci) after that! */
     ChatView* chatView() const;
@@ -44,7 +51,7 @@ signals:
     void chatViewCreated();
 
 private:
-    ChatView* _chatView;
+    ChatView* chatView_;
 
     /** Will be passed to ChatViewFactory */
     HTMLThemeManager* themeManager;

@@ -23,7 +23,7 @@ oldTrackBarPosition(0) {
 }
 
 
-void PlainTextChatView::appendEvent(const ChatEvent* event, bool alreadyAppended) {
+void PlainTextChatView::appendEvent(ChatEvent* event, bool alreadyAppended) {
 
     ChatView::appendEvent(event, alreadyAppended);
 
@@ -32,7 +32,7 @@ void PlainTextChatView::appendEvent(const ChatEvent* event, bool alreadyAppended
 }
 
 
-void PlainTextChatView::appendMessage(const MessageChatEvent* event, bool alreadyAppended) {
+void PlainTextChatView::appendMessage(MessageChatEvent* event, bool alreadyAppended) {
 
     ChatView::appendMessage(event, alreadyAppended);
 
@@ -50,6 +50,7 @@ void PlainTextChatView::appendMessage(const MessageChatEvent* event, bool alread
 
 
 void PlainTextChatView::clear() {
+    ChatView::clear(); //free events
     textview.clear();
 }
 
@@ -146,7 +147,7 @@ void PlainTextChatView::scrollToBottom() {
 
 
 void PlainTextChatView::updateTrackBar() {
-    
+
     // save position, because our manipulations could change it
     int scrollbarValue = verticalScrollBar()->value();
 

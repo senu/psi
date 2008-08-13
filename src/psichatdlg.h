@@ -57,7 +57,7 @@ private:
 	void setShortcuts();
 	QString colorString(bool local, SpooledType spooled) const;
     
-    void appendChatEvent(const ChatEvent* event);
+    void appendChatEvent(ChatEvent* event);
 	void appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
 	void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
     

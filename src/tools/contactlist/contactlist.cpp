@@ -7,10 +7,10 @@
 ContactList::ContactList(QObject* parent)
 	: QObject(parent), showOffline_(false), showGroups_(true)
 {
-	rootItem_ = new ContactListRootItem(this);
-	invisibleGroup_ = new ContactListRootItem(this);
-	altInvisibleGroup_ = new ContactListRootItem(this);
-	itemComparator_ = new ContactListAlphaComparator();
+	rootItem_ = new ContactListRootItem(this); //VALGRIND: 20 bytes in 1 blocks are definitely lost
+	invisibleGroup_ = new ContactListRootItem(this); //VALGRIND:
+	altInvisibleGroup_ = new ContactListRootItem(this); //VALGRIND:
+	itemComparator_ = new ContactListAlphaComparator();//VALGRIND: 4 bytes in 1 blocks are definitely lost
 }
 
 const ContactListItemComparator* ContactList::itemComparator() const

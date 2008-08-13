@@ -3,6 +3,7 @@
 
 #include <Qt>
 #include <QString>
+#include <QDebug> //TODO 112
 
 #include "chatTheme.h"
 
@@ -15,6 +16,9 @@ class AbstractChatEvent {
 public:
     /** Default constructor sets timeStamp to currentDate */
     AbstractChatEvent(); 
+    virtual ~AbstractChatEvent() { //TODO 112
+        qDebug() << "@@@@ MEM WEBKIT: ----" << "AbstractChatEvent::AbstractChatEvent()";
+    }
     
     /** Returns true if it's MessageChatEvent */
     virtual bool isMessageChatEvent() const;
