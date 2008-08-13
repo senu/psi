@@ -97,20 +97,29 @@ void HTMLChatEdit::textBackgroundColor() {
 }
 
 
-void HTMLChatEdit::insertImage() { //TODO 39 
+void HTMLChatEdit::insertImage() {
 
     ImageDownloadDialog * dlg = new ImageDownloadDialog(this);
-    int ret = dlg->exec(); //TODO 111 widget modality
+    dlg->setWindowModality(Qt::WindowModal);
 
-    if (ret == QDialog::Accepted) {
-        QString url = dlg->url();
-        document()->addResource(QTextDocument::ImageResource, QUrl(url), dlg->downloadedImage());
+    connect(dlg, SIGNAL(finished(const QString&, const QImage&)),
+            this, SLOT(insertImageDialogFinished(const QString&, const QImage&)));
 
-        QTextCursor cursor = textCursor();
-        cursor.insertImage(url);
+    dlg->show();
+}
+
+
+void HTMLChatEdit::insertImageDialogFinished(const QString& url, const QImage& image) {
+
+    if (image.isNull()) {
+        return;
     }
 
-    delete dlg;
+    document()->addResource(QTextDocument::ImageResource, QUrl(url), image);
+
+    QTextCursor cursor = textCursor();
+    cursor.insertImage(url);
+
 }
 
 

@@ -6,12 +6,13 @@
 #include <QPushButton>
 
 
-ImageDownloadDialog::ImageDownloadDialog(QWidget* parent) : QDialog(parent), reply(0), downloadStarted(0) {
+ImageDownloadDialog::ImageDownloadDialog(QWidget* parent) : QDialog(parent), downloadStarted(0), reply(0) {
     manager = new QNetworkAccessManager(this);
 
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
 
+    setAttribute(Qt::WA_DeleteOnClose);
     setWindowTitle(tr("Insert image"));
     QVBoxLayout *vb = new QVBoxLayout(this, 4);
     QHBoxLayout *hb = new QHBoxLayout(vb);
@@ -37,13 +38,12 @@ ImageDownloadDialog::ImageDownloadDialog(QWidget* parent) : QDialog(parent), rep
     QPushButton *cancelButton = new QPushButton(tr("&Cancel"), this);
     connect(cancelButton, SIGNAL(clicked()), SLOT(cancel()));
     hb->addWidget(cancelButton);
-    cancelButton->setAutoDefault(true);
-    cancelButton->setDefault(true);
 
     okButton = new QPushButton(tr("&OK"), this);
     connect(okButton, SIGNAL(clicked()), SLOT(startDownload()));
     hb->addWidget(okButton);
-    
+    okButton->setAutoDefault(true);
+    okButton->setDefault(true);
 
     resize(350, minimumSizeHint().height());
 
@@ -53,7 +53,7 @@ ImageDownloadDialog::ImageDownloadDialog(QWidget* parent) : QDialog(parent), rep
 
 
 ImageDownloadDialog::~ImageDownloadDialog() {
-
+    qDebug() << "img dlg";
 }
 
 
@@ -62,7 +62,7 @@ void ImageDownloadDialog::cancel() {
         reply->abort();
     }
 
-    reject();
+    emit reject();
 }
 
 
@@ -89,7 +89,8 @@ void ImageDownloadDialog::replyFinished(QNetworkReply* imageReply) {
         downloadedImage_.load(imageReply, 0);
     }
 
-    accept();
+    emit finished(url(), downloadedImage());
+    emit accept();
 }
 
 

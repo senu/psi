@@ -76,11 +76,11 @@ void PsiChatDlg::initUi() {
 
     //avatar or default icon
     if (!getAvatarForJid(jid()).isNull()) {
-        chatInfo.incomingIconPath = "icon://avatars/" + jid().full() + ".png";
+        chatInfo.incomingIconPath = "icon://avatars/" + jid().bare() + ".png";
     }
 
     if (!getAvatarForJid(account()->jid()).isNull()) {
-        chatInfo.outgoingIconPath = "icon://avatars/" + account()->jid().full() + ".png";
+        chatInfo.outgoingIconPath = "icon://avatars/" + account()->jid().bare() + ".png";
     }
 
     chatInfo.timeOpened = QDateTime::currentDateTime();
@@ -344,8 +344,8 @@ void PsiChatDlg::updateAvatar(const Jid& j) {
         }
 
         //update avatar in IconServer (webkit chats)
-        qDebug() << "registered avatar for:" << j.full() << jid().full() << account()->jid().full();
-        iconServer->registerIcon("avatars/" + j.full() + ".png", IconServer::pixmapToPng(p));
+        qDebug() << "registered avatar for:" << j.bare() << jid().full() << account()->jid().full();
+        iconServer->registerIcon("avatars/" + j.bare() + ".png", IconServer::pixmapToPng(p));
     }
 }
 
@@ -535,7 +535,7 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
 
     qDebug() << account()->jid().full() << "[j,acc,jid]" << j.full() << account()->jid().full() << jid().full();
 
-    if (!(j.compare(account()->jid(), false))) { //TODO 85 true?
+    if (!(j.compare(account()->jid(), false))) {
         //remote user
         local = false;
         userInfo->setNick(whoNick(false));
@@ -565,8 +565,8 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
         }
     }
     else {
-        qDebug() << "fetching avatar for:" << j.full();
-        userInfo->setUserIconPath("icon://avatars/" + j.full() + ".png"); //TODO 87 ins full() is not full in acc()/jid()
+        qDebug() << "fetching avatar for:" << j.bare();
+        userInfo->setUserIconPath("icon://avatars/" + j.bare() + ".png");
     }
 
     userInfo->setService("Jabber");

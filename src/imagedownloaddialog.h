@@ -14,6 +14,11 @@ class ImageDownloadDialog : public QDialog {
     Q_OBJECT
 public:
 
+    /**
+     * Constructor.
+     *
+     * DeleteOnClose is set.
+     */
     ImageDownloadDialog(QWidget* parent);
     ~ImageDownloadDialog();
 
@@ -23,7 +28,17 @@ public:
     /** Returns urlEdit.text() */
     QString url() const;
 
-    private 
+
+signals:
+    /** 
+     * Emitted when image download is finished.
+     *
+     * \param image is a downloaded image. Can be null()
+     * \param url of the image
+     */
+    void finished(const QString& url, const QImage& image);
+
+    private
 slots:
     /** Closes dialog and aborts downloading file (if needed) */
     void cancel();
@@ -32,24 +47,24 @@ slots:
     void startDownload();
 
     /** Reads image from imageReply and sets downloadedImage */
-    void replyFinished(QNetworkReply* imageReply);
+    void replyFinished(QNetworkReply * imageReply);
 
 private:
     /** True if download was started */
     bool downloadStarted;
-    
+
     /** Performs HTTP GET */
     QNetworkAccessManager *manager;
 
     /** Downloaded image or null QImage()*/
     QImage downloadedImage_;
-    
+
     /** URL input */
     QLineEdit* urlEdit;
 
     /** QNetworkReply with an image */
     QNetworkReply* reply;
-    
+
     QPushButton *okButton;
     QLabel *downloadingLabel;
 };

@@ -51,8 +51,16 @@ void ChatViewProxy::optionsChanged(const QString& optionName) {
     }
 
     bool viewWasCreated = false;
+    bool newChatType;
+    
+    if (inGroupChat) {
+        newChatType = PsiOptions::instance()->getOption("options.ui.themes.htmlviewinmuc").toBool();
+    }
+    else {
+        newChatType = PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool();
+    }
 
-    if (PsiOptions::instance()->getOption("options.ui.themes.htmlviewinchats").toBool() != isHTMLChatView) {
+    if (newChatType != isHTMLChatView) {
         ChatView * newView = createChatView(inGroupChat, jid);
         newView->restoreDataFrom(*chatView_);
         newView->init();
@@ -71,7 +79,6 @@ void ChatViewProxy::optionsChanged(const QString& optionName) {
         return;
     }
 
-    //TODO + 12 muc/chat/per group/per regexp settings
     if (isHTMLChatView) { //theme change?
         qDebug() << "themeChanged?" << PsiOptions::instance()->getOption("options.ui.themes.themename").toString();
         dynamic_cast<HTMLChatView *> (chatView_)->setTheme(themeManager->getTheme(

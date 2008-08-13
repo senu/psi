@@ -61,6 +61,13 @@ slots:
     QString messageBody(bool xhtml);
     QToolBar* toolBar() const;
 
+protected slots:
+    
+    /** 
+     * Inserts downloaded image. 
+     */
+    void insertImageDialogFinished(const QString& url, const QImage& image);
+
 protected:
     void mergeFormat(const QTextCharFormat &format);
 
