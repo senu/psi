@@ -3,7 +3,7 @@
 #include  <QDebug>
 
 
-QDomNode DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& parentElement) {
+QString DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& parentElement) {
 
     QString output(input);
     
@@ -28,13 +28,10 @@ QDomNode DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& 
         output = "<strong>" + output + "</strong>";
     }
 
-
-    QDomDocument node;
 //    qDebug() << "!!! tf messageText1.5 0" << output;
-    node.setContent("<span>" + output + "</span>");
 
     textNodeNumber_++;
-    return node.firstChild();
+    return output;
 }
 
 

@@ -42,7 +42,7 @@ public:
      * You have to connect findDialog -> SIGNAL(find(const QString &)) with doFindGC 
      * \param chatDialogWidget points to ChatDialog QWidget (GenericChatDlg cannot be QObject).
      */
-    void openFindGC(QWidget* chatDialogWidget);//TODO 117
+    void openFindGC(QWidget* chatDialogWidget); //TODO 117
 
     /** Performs search for str in ChatView */
     void doFindGC(const QString& str);
@@ -57,7 +57,7 @@ protected:
 
     /** Updates information about last ChatEvent; called after appending an event */
     void updateLastMsgTimeAndOwner(const QDateTime& t, const Jid& owner);
-    
+
     /** 
      * Fills User ChatEvent with corresponding data.
      * Fields nick, jid, icons (status and avatar), isLocal and service are updated;
@@ -78,7 +78,7 @@ protected:
 
     /** Returns dialog's ChatEdit */
     virtual ChatEdit* chatEdit() const = 0;
-    
+
     /**
      * Handle KeyPress events that happen in ChatEdit widget. This is used to 
      * 'fix' the copy shortcut.
@@ -95,15 +95,15 @@ protected:
      * Plain or XHTML-IM message body is formatted (linkify, emoticonify) and returned.
      */
     QString messageText(const XMPP::Message& m);
-    
+
     /** Returns true if m is a emote (/me) message */
     bool isEmoteMessage(const XMPP::Message& m);
 
     /** Does emoticonify, linkify, etc in XHTML-IM messages */
     virtual DefaultHTMLTextFormatter * textFormatter() = 0;
-    
+
     //fields
-    
+
     /** Validates XHTML-IM messages */
     MessageValidator messageValidator_;
 
@@ -134,6 +134,12 @@ protected:
      */
     bool sendXHTML;
 
+    /** Used to convert XML string to DOM document */
+    QXmlInputSource xmlSource;
+    
+    /** Used to convert XML string to DOM document */
+    QXmlSimpleReader xmlReader;
+
     friend class GenericChatDialogQObject;
 };
 
@@ -154,21 +160,21 @@ public:
 slots:
     /** Gives the ChatView focus when text is selected */
     void logSelectionChanged();
-    
+
     /** Sets focus/selection handlers */
     void chatViewCreated();
-    
+
     /** Scrolls ChatView up */
     void scrollUp();
-    
+
     /** Scrolls ChatView down */
     void scrollDown();
 
     /** Ask whether doClear() should be performed and doesClear() */
-	void doClearButton();
+    void doClearButton();
 
     /** Clears ChatView and resets message successivenes */
-	void doClear();
+    void doClear();
 
 private:
     GenericChatDialog* dlg;

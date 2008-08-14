@@ -7,7 +7,8 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "../htmlChatView.h"
+#include "../../htmlChatView.h"
+#include "../../iconserver.h"
 
 
 /** We cannot inherit from TestCase AND QObject */
@@ -26,9 +27,9 @@ public:
 
 
 /** CppUnit unit test for HTMLChatView */
-class TestHTMLChatView : public CPPUNIT_NS::TestCase {
+class HTMLChatViewTest : public CPPUNIT_NS::TestCase {
 
-    CPPUNIT_TEST_SUITE(TestHTMLChatView);
+    CPPUNIT_TEST_SUITE(HTMLChatViewTest);
     CPPUNIT_TEST(onlyFooterAndHeader);
     CPPUNIT_TEST(messagesAndEvents);
 
@@ -42,11 +43,8 @@ class TestHTMLChatView : public CPPUNIT_NS::TestCase {
     CPPUNIT_TEST_SUITE_END();
 
 public:
-    void setUp(void);
-
-    /** :/ */
+    /** I know, I know. */
     void waitUntil(volatile  bool * flag);
-    //    void tearDown(void);
 
 protected:
     /** No changes in output message*/
@@ -77,6 +75,4 @@ protected:
 };
 
 
-
 #endif
-

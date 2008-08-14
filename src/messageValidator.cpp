@@ -146,14 +146,17 @@ void MessageValidator::appendArrayToList(const QString *array, int arraySize, QS
 
 QString MessageValidator::validateMessage(QString message, bool* illformed, HTMLTextFormatter* formatter) {
 
-//    qDebug() << "IMG val0" << message;
+    //    qDebug() << "IMG val0" << message;
     QDomDocument doc("document");
     *illformed = false;
 
     QString errorMessage;
     int line, column;
+    QDomDocument tmpDoc; //used by textformatter
 
-    if (!doc.setContent(message, false, &errorMessage, &line, &column)) {
+    xmlSource.setData(message);
+
+    if (!doc.setContent(&xmlSource, &xmlReader, &errorMessage, &line, &column)) {
         qDebug() << errorMessage << " " << line << " " << column << message;
         *illformed = true;
         qDebug() << "WARNING: MessageValidator::validateMessage() - illformed message";
@@ -199,21 +202,21 @@ QString MessageValidator::validateMessage(QString message, bool* illformed, HTML
 
                 if (childName == "a") { // always show hyperlink destination
                     QString href = node.toElement().attribute("href");
-                    node.appendChild(doc.createTextNode(" [ " + href + " ]")); 
+                    node.appendChild(doc.createTextNode(" [ " + href + " ]"));
                 }
-                
+
                 if (childName == "style") { //NOTE: this action is not XHTML-IM compliant! (css rules should be displayed, but it's stupid)
                     cur.removeChild(node);
                 }
                 else if (childName == "img") { //disabling images until they are whitelisted
 
                     QString href = node.toElement().attribute("src");
-                    
+
                     QDomElement newElement = doc.createElement("a");
                     newElement.setAttribute("class", "psi_disabled_image");
                     newElement.setAttribute("href", "javascript:psi_addToWhiteList('" + href + "')");
                     newElement.appendChild(doc.createTextNode("[ click here to display: " + href + " ]"));
-                    
+
                     cur.replaceChild(newElement, node);
                 }
                 else if (!curNI.allowedTags.contains(childName)) {//is subElement valid here?
@@ -243,16 +246,25 @@ QString MessageValidator::validateMessage(QString message, bool* illformed, HTML
                     cur.removeChild(node);
                 }
                 else { //format text
-                    QDomNode newElement = formatter->format(Qt::escape(node.toText().data()), cur);
-                    //NOTE: we don't need to escape quotes, and we want this code be more reusable, 
+                    QString formattedText = "<tmp>" + formatter->format(Qt::escape(node.toText().data()), cur) + "</tmp>";
+                    //NOTE: we don't need to escape quotes, and we want this code be more reusable/decoupled, 
                     //NOTE: so we use Qt::escape() instead of TextUtil::escape()
-                    cur.replaceChild(newElement, node);
+                   
+                    xmlSource.setData(formattedText);
+                    tmpDoc.setContent(&xmlSource, &xmlReader);
+                   
+                    QDomNode tmpElement = tmpDoc.firstChild();
+                    while (tmpElement.hasChildNodes()) { //append <tmp> children. They won't be validated
+                        cur.insertBefore(tmpElement.firstChild(), node);
+                    }
+                    
+                    cur.removeChild(node);
                 }
             }
         }//foreach child
     } //stack/dfs
 
-//    qDebug() << "IMG" <<  doc.toString(0);
+//    qDebug() << "IMG MV:" << doc.toString(0);
     return doc.toString(0);
 }
 

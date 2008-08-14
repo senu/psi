@@ -15,10 +15,14 @@ public:
 
 
     /**
-     * Formats xhtml-im text node and return formated QDomNode
+     * Formats xhtml-im text node and return formated xml fragment (QString)
      *
-     * formats \param input a text child of \param parenteElement */
-    virtual QDomNode format(const QString& input, const QDomNode& parentElement) = 0;
+     * formats \param input which is a text child of \param parenteElement 
+     * 
+     * Some may wonder why QString is returned (eg. "<b>text</b>") not QDomNode, 
+     * it's a long story (performance issues, missing spaces, unclean code).
+     */
+    virtual QString format(const QString& input, const QDomNode& parentElement) = 0;
 
 
     virtual ~HTMLTextFormatter() {

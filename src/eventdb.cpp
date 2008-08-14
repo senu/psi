@@ -25,6 +25,7 @@
 #include <QVector>
 #include <QFileInfo>
 #include <QDir>
+#include <QDebug> //TODO 0 
 #include <q3ptrlist.h>
 #include <qtimer.h>
 #include <qtextstream.h>

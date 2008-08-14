@@ -37,7 +37,7 @@ public:
     };
 
 
-    QDomNode format(const QString& input, const QDomNode& parentElement);
+    QString format(const QString& input, const QDomNode& parentElement);
 
     /** Returns doLinkify */
     bool doLinkify() const;

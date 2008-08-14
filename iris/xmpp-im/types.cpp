@@ -1051,6 +1051,7 @@ HTMLElement Message::html(const QString &lang) const
 //! in the message.
 bool Message::containsHTML() const
 {
+    qDebug() << "containsHTML" << !(d->htmlElements.isEmpty()) << d->htmlElements.keys() ;
 	return !(d->htmlElements.isEmpty());
 }
 
@@ -1450,13 +1451,13 @@ Stanza Message::toStanza(Stream *stream) const
         QDomElement htmlElement = s.createElement("http://jabber.org/protocol/xhtml-im", "html");
         
         for(QMap<QString, XMPP::HTMLElement>::const_iterator it = d->htmlElements.begin(); it != d->htmlElements.end(); ++it) {
-            QDomNode htmlContents = it.data().body().cloneNode();
-            QDomElement e = s.createElement("http://jabber.org/protocol/xhtml-im", "body");
             
+            QDomNode htmlContents = it.data().body().cloneNode(true);
+            QDomElement e = s.createElement("http://jabber.org/protocol/xhtml-im", "body");
             QDomNodeList list = htmlContents.childNodes();
-            for(int i=0; i<list.length(); i++) { //append all body children
-                qDebug() << "app xhtml-im node:" << list.item(i).nodeType();
-                e.appendChild(list.item(i));
+            
+            while(!list.isEmpty()) { //append all body children
+                e.appendChild(list.item(0));
             }
             
             if(!it.key().isEmpty()) {
@@ -1468,6 +1469,7 @@ Stanza Message::toStanza(Stream *stream) const
         
         s.appendChild(htmlElement);
     }
+    
 
     
 

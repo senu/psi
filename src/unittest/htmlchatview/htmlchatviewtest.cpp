@@ -1,18 +1,15 @@
 #include <QtTest>
 #include <QDateTime>
 #include <QString>
+#include <QFrame>
 
-#include "testhtmlchatview.h"
-
-
-void TestHTMLChatView::setUp() {
-}
-
+#include "htmlchatviewtest.h"
 
 //TODO 88 buddy_icon test
+//
+CPPUNIT_TEST_SUITE_REGISTRATION(HTMLChatViewTest);
 
-
-void TestHTMLChatView::onlyFooterAndHeader() {
+void HTMLChatViewTest::onlyFooterAndHeader() {
     prepareTest("testingTheme/");
     checkResultBody(
                     "<div><b style=\"color: green\">header</b></div><hr>"
@@ -22,7 +19,7 @@ void TestHTMLChatView::onlyFooterAndHeader() {
 }
 
 
-void TestHTMLChatView::messagesAndEvents() {
+void HTMLChatViewTest::messagesAndEvents() {
     prepareTest("testingTheme/");
 
     appendSomeEvents();
@@ -47,7 +44,7 @@ void TestHTMLChatView::messagesAndEvents() {
 }
 
 
-void TestHTMLChatView::clearMessages() {
+void HTMLChatViewTest::clearMessages() {
     prepareTest("testingTheme/");
     appendSomeEvents();
 
@@ -65,7 +62,7 @@ void TestHTMLChatView::clearMessages() {
 }
 
 
-void TestHTMLChatView::themeChanged() {
+void HTMLChatViewTest::themeChanged() {
     prepareTest("testingTheme/");
 
     appendSomeEvents();
@@ -93,7 +90,7 @@ void TestHTMLChatView::themeChanged() {
 }
 
 
-void TestHTMLChatView::noActionTemplate() {
+void HTMLChatViewTest::noActionTemplate() {
     prepareTest("testingTheme_noAction/");
 
     QDateTime time;
@@ -126,7 +123,7 @@ void TestHTMLChatView::noActionTemplate() {
 }
 
 
-void TestHTMLChatView::noOutgoingTemplates() {
+void HTMLChatViewTest::noOutgoingTemplates() {
     prepareTest("testingTheme_noOutgoing/");
 
     QDateTime time;
@@ -159,7 +156,7 @@ void TestHTMLChatView::noOutgoingTemplates() {
 }
 
 
-void TestHTMLChatView::emoteEvent() {
+void HTMLChatViewTest::emoteEvent() {
     prepareTest("testingTheme/");
 
     QDateTime time;
@@ -195,25 +192,27 @@ void TestHTMLChatView::emoteEvent() {
 }
 
 
-void TestHTMLChatView::prepareTest(QString themePath) {
+void HTMLChatViewTest::prepareTest(QString themePath) {
+
+	QApplication app();
+
     form = new QFrame(0);
 
     helper.append = false;
     helper.init = false;
 
     theme.readTheme(QDir::currentPath() + QString("/themes/") + themePath);
-    view = new HTMLChatView(form, theme, QDir::currentPath() + '/');
+    view = new HTMLChatView(form, theme, new IconServer());
 
     QObject::connect(view, SIGNAL(appendFinished()), &helper, SLOT(onAppendFinished()));
     QObject::connect(view, SIGNAL(initDocumentFinished()), &helper, SLOT(onInitDocumentFinished()));
 
     view->init();
     waitUntil(&(helper.init));
-
 }
 
 
-void TestHTMLChatView::checkResultBody(QString validOutput) {
+void HTMLChatViewTest::checkResultBody(QString validOutput) {
     QString out = view->dumpContent();
 
     delete view;
@@ -242,7 +241,7 @@ void TestHTMLChatView::checkResultBody(QString validOutput) {
 }
 
 
-void TestHTMLChatView::appendSomeEvents() {
+void HTMLChatViewTest::appendSomeEvents() {
     // FT event
     FileTransferChatEvent *event = new FileTransferChatEvent();
     QDateTime time;
@@ -281,7 +280,7 @@ void CppUnitHelper::onInitDocumentFinished() {
 }
 
 
-void TestHTMLChatView::waitUntil(volatile bool * flag) {
+void HTMLChatViewTest::waitUntil(volatile bool * flag) {
     while (! *flag) {
         QTest::qWait(50);
     }

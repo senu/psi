@@ -639,9 +639,13 @@ void ChatDlg::doSend() {
         
         if(!richBody.isNull()) {
             QDomDocument richDoc;
-            richDoc.setContent(richBody);
+            
+            xmlSource.setData(richBody); //we cannot use setContent(QString), because <t> <t/> are converted to <t/>
+            richDoc.setContent(&xmlSource, &xmlReader);
+            
             m.setHTML(HTMLElement(richDoc.firstChild().toElement()));
-//            qDebug() << "IMG do send: rich content" << richBody << "m:" << m.containsHTML() << m.html().toString("notb"); //TODO 0
+            qDebug() << "IMG 00 do send: rich content" << richBody << "m:"
+                << m.containsHTML() << m.html().toString("notb") << "?" << richDoc.toString(0); //TODO 0
         }
     }
 

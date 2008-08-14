@@ -953,6 +953,7 @@ void Client::importRosterItem(const RosterItem &item)
 
 void Client::sendMessage(const Message &m)
 {
+    qDebug() << "IMG 10 do send: rich content" << m.html().toString("notb"); //TODO 0
 	JT_Message *j = new JT_Message(rootTask(), m);
 	j->go(true);
 }

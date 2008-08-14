@@ -146,11 +146,6 @@ void HTMLChatEdit::insertAnchor() {
 
 void HTMLChatEdit::changeAlignButtons() {
 
-
-    qDebug() << "bg test" << textCursor().charFormat().background().color()
-        << textCursor().charFormat().background().color().isValid();
-
-
     Qt::Alignment aligment = alignment();
 
 
@@ -167,7 +162,6 @@ void HTMLChatEdit::changeAlignButtons() {
 
 void HTMLChatEdit::changeTextButtons(const QTextCharFormat& format) {
 
-    qDebug() << format.background().color();
     QFont font = format.font();
 
     actionTextBold->setChecked(font.bold());
@@ -330,10 +324,7 @@ void HTMLChatEdit::initActions() {
 
 
 HTMLChatEdit::~HTMLChatEdit() {
-
-
     delete formatToolBar;
-    qDebug() << xhtmlMessage();
 }
 
 
@@ -456,6 +447,7 @@ QString HTMLChatEdit::xhtmlMessage() {
                         TextUtil::escape(currentFragment.text()) + "</a>";
                 }
                 else {
+                    qDebug() << "mess ed " << createFragmentStyle(curTCF) << TextUtil::escape(currentFragment.text()) << currentFragment.text();
                     block += "<span style=\"" + createFragmentStyle(curTCF) + "\">"
                         + TextUtil::escape(currentFragment.text()) + "</span>";
                 }
@@ -467,8 +459,6 @@ QString HTMLChatEdit::xhtmlMessage() {
             msg += block;
         }
         else {
-
-
             msg += "<p style=\"" + createBlockStyle(curTBF) + "\">" + block + "</p>";
         }
 

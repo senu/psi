@@ -18,7 +18,6 @@ GenericChatDialog::GenericChatDialog() : findDialog(0) {
     sendXHTML = false;
 
     gcObject = new GenericChatDialogQObject(this);
-
 }
 
 
@@ -36,7 +35,7 @@ QString GenericChatDialog::messageText(const XMPP::Message& m) {
 
     QString txt;
 
-  //  qDebug() << "IMG messageText containsHTML" << m.containsHTML() << m.body() << m.html().toString("notb3") << "EOF";
+    qDebug() << "IMG messageText containsHTML" << m.containsHTML() << m.body() << m.html().toString("notb3") << "EOF";
 
     //reset textFormatter
     textFormatter()->setRemoveEmoteString(false);
@@ -68,7 +67,7 @@ QString GenericChatDialog::messageText(const XMPP::Message& m) {
         txt = messageValidator_.validateMessage(TextUtil::plain2rich(m.body()), &illformed, textFormatter());
     }
 
-//    qDebug() << "IMG messageText 2" << txt;
+    qDebug() << "IMG messageText 2" << txt;
     return txt;
 }
 

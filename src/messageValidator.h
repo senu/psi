@@ -8,6 +8,7 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QDomNodeList>
+#include <QXmlSimpleReader>
 #include <QHash>
 #include <QPair>
 
@@ -71,6 +72,12 @@ protected:
 
     /** Tag name -> NodeInfo dict */
     static QHash<QString, NodeInfo> allowed;
+    
+    /** Used to convert XML string to DOM document */
+    QXmlInputSource xmlSource;
+    
+    /** Used to convert XML string to DOM document */
+    QXmlSimpleReader xmlReader;
 
 };
 
