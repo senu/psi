@@ -44,7 +44,7 @@ public:
 
     /** Sets theme (if needed) */
     void setTheme(const HTMLChatTheme& theme);
-    
+
     /** Creates HTML document (header,chat,footer) */
     void init();
 
@@ -87,17 +87,17 @@ slots:
     //reimplemented
     void setVisible(bool visible);
     QSize sizeHint() const;
-    
+
     void clear();
-    
+
     void scrollUp();
     void scrollDown();
-    
+
     void updateTrackBar();
 
 signals:
     void appendFinished();
-    
+
     /** Emitted when user click on URL */
     void openURL(QString);
 
@@ -124,15 +124,18 @@ slots:
     /** Emits openURL() */
     void onLinkClicked(const QUrl& url);
 
-    /** Creates html document with base href tag somewhere; themeVariant is without css suffix */ 
+    /** Creates html document with base href tag somewhere; themeVariant is without css suffix */
     QString createEmptyDocument(QString baseHref, QString themeVariant);
-    
+
     /**
      * Ask user if \param url should be added to whiteList and then calls js:psi_unban(url) if user confims.
      * 
      * It's used to display blocked images.
      */
     void onAddToWhiteListRequested(const QString& url);
+
+protected:
+    void keyPressEvent(QKeyEvent* event);
 
 private:
     /** Escapes " and \n  (for JS evaluation) */
@@ -158,13 +161,14 @@ private:
 
     /** Theme changed while webkit was busy */
     HTMLChatTheme* queuedTheme;
-    
+
     /** Someone tried to clear() ChatView before Webkit was ready to do that */
     bool queuedClear;
 
     QWebView webView;
-    
+
     QVBoxLayout * layout;
+    QAction* copyAction, *copyLinkAction;
 
 };
 

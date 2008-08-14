@@ -14,6 +14,7 @@
 HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* iconServer)
 : ChatView(parent), theme(_theme), isReady(false), queuedTheme(0), queuedClear(false) {
 
+    //layout
     webView.setParent(this);
 
     layout = new QVBoxLayout(this);
@@ -27,14 +28,21 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* i
     webView.setFocusPolicy(Qt::NoFocus);
     webView.setContextMenuPolicy(Qt::NoContextMenu);
 
-    networkManager = new NetworkAccessManager(0, iconServer)
+    //sercurity 
+    networkManager = new NetworkAccessManager(parent, iconServer)
         ;
     webView.page()->setNetworkAccessManager(networkManager);
     webView.page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-    webView.page()->settings()->setObjectCacheCapacities(0,5*1024*1024,5*1024*1024); //TODO 114
+
+    //dont set it to (0,0,0) - webkit's garbage collector wont free allocated memory
+    webView.page()->settings()->setObjectCacheCapacities(0, 5 * 1024 * 1024, 5 * 1024 * 1024); //TODO 114
 
     webView.setMinimumSize(100, 100);
     setMinimumSize(100, 100);
+
+    //actions
+    copyAction = webView.page()->action(QWebPage::Copy);
+    copyLinkAction = webView.page()->action(QWebPage::CopyLinkToClipboard);
 
     connect(webView.page(), SIGNAL(linkClicked(const QUrl&)), this, SLOT(onLinkClicked(const QUrl&)));
     connect(webView.page(), SIGNAL(selectionChanged()), this, SIGNAL(selectionChanged()));
@@ -227,7 +235,6 @@ HTMLChatView::~HTMLChatView() {
     qDebug() << "@@@@ MEM WEBKIT: ----" << "HTMLChatView::~HTMLChatView()";
     qDebug() << dumpContent();
     delete queuedTheme;
-    delete networkManager;
 }
 
 
@@ -237,7 +244,7 @@ QString HTMLChatView::dumpContent() {
 
 
 void HTMLChatView::escapeString(QString& str) {
-    
+
     str.replace("\r\n", "\n"); //windows
     str.replace("\\", "\\\\");
     str.replace("\"", "\\\"");
@@ -247,7 +254,7 @@ void HTMLChatView::escapeString(QString& str) {
 
 
 QString HTMLChatView::escapeStringCopy(QString str) {
-    
+
     str.replace("\r\n", "\n"); //windows
     str.replace("\\", "\\\\");
     str.replace("\"", "\\\"");
@@ -348,13 +355,11 @@ void HTMLChatView::contextMenuEvent(QContextMenuEvent* event) {
 
     QList<QAction*> actions;
 
-    QAction* copyAction = webView.page()->action(QWebPage::Copy);
-    if(copyAction->isEnabled()) {
+    if (copyAction->isEnabled()) {
         actions.append(copyAction);
     }
 
-    QAction* copyLinkAction = webView.page()->action(QWebPage::CopyLinkToClipboard);
-    if(copyLinkAction->isEnabled()) {
+    if (copyLinkAction->isEnabled()) {
         actions.append(copyLinkAction);
     }
 
@@ -389,4 +394,17 @@ void HTMLChatView::onAddToWhiteListRequested(const QString& url) {
             evaluateJS("psi_unban('" + escapeStringCopy(url) + "')");
         } //else should never happen, but...
     }
+}
+
+
+void HTMLChatView::keyPressEvent(QKeyEvent* event) {
+    qDebug() << "webkit key event" << event->text() << event->modifiers();
+
+    if ((event->key() == Qt::Key_C && (event->modifiers() & Qt::ControlModifier)) ||
+        (event->key() == Qt::Key_Insert && (event->modifiers() & Qt::ControlModifier))) {
+        qDebug() << "webkit key event -> copy";
+        copySelectedText();
+    }
+
+    QWidget::keyPressEvent(event);
 }

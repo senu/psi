@@ -161,7 +161,6 @@ slots:
     void setChatState(XMPP::ChatState s);
     void updateIsComposing(bool);
     void setContactChatState(ChatState s);
-//    void logSelectionChanged();
     void capsChanged(const Jid&);
     void addEmoticon(QString text);
     void initComposing();

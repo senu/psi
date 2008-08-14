@@ -423,7 +423,7 @@ void PsiChatDlg::appendEmoteMessage(SpooledType spooled, const QDateTime& time, 
 
 void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) {
 
-    MessageChatEvent * msg = new MessageChatEvent(); //will be created in another place, of course
+    MessageChatEvent * msg = new MessageChatEvent();
 
     Jid owner(local ? account()->jid() : jid());
     fillEventWithUserInfo(msg, owner);

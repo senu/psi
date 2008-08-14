@@ -24,11 +24,10 @@ using XMPP::Jid;
  * Currently ChatDlg is a base class of PsiChatDlg.
  * Currently ChatDlg is not a base class of GCMainDlg.
  *
- * GenericChatDialog is a base class of PsiChatDlg and GCMainDlg and in the future
+ * GenericChatDialog is a base class of ChatDlg and GCMainDlg and in the future
  * it will replace ChatDlg
  * 
- * Methods used in GCMainDlg/ChatDlg but defined here don't have to end with GC (Generic Chat) 
- * but they do, because it's less confusing and error prone. 
+ * New ChatDlg/MUC methods should be added here.
  * 
  **/
 class GenericChatDialog {
@@ -43,7 +42,7 @@ public:
      * You have to connect findDialog -> SIGNAL(find(const QString &)) with doFindGC 
      * \param chatDialogWidget points to ChatDialog QWidget (GenericChatDlg cannot be QObject).
      */
-    void openFindGC(QWidget* chatDialogWidget);
+    void openFindGC(QWidget* chatDialogWidget);//TODO 117
 
     /** Performs search for str in ChatView */
     void doFindGC(const QString& str);
@@ -90,7 +89,11 @@ protected:
      */
     bool handleCopyEvent(QEvent *event);
 
-    /** Returns formatted message body */
+    /** 
+     * Returns formatted message body 
+     *
+     * Plain or XHTML-IM message body is formatted (linkify, emoticonify) and returned.
+     */
     QString messageText(const XMPP::Message& m);
     
     /** Returns true if m is a emote (/me) message */

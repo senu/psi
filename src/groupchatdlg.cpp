@@ -449,7 +449,6 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager,
 	ui_.lb_ident->setShowJid(false);
 
     connect(ui_.log, SIGNAL(chatViewCreated()), gcObject, SLOT(chatViewCreated()));
-#warning move it to the right place
 
     ChatTheme::ChatInfo chatInfo;
     
@@ -457,15 +456,14 @@ GCMainDlg::GCMainDlg(PsiAccount *pa, const Jid &j, TabManager *tabManager,
     chatInfo.destinationName = jid().bare();
     chatInfo.destinationDisplayName = jid().full();
     chatInfo.sourceName = account()->nick(); 
-    //NOTE: we could have separated defaut avatars for conversations and for MUC
     
+    //NOTE: we could have separated defaut avatars for conversations and for MUC
     //chatInfo.incomingIconPath="";
     //chatInfo.outgoingIconPath="";
     
     chatInfo.timeOpened = QDateTime::currentDateTime();
 
     ui_.log->init(chatInfo, true, themeManager, iconServer);
-    
 
 	connect(ui_.pb_topic, SIGNAL(clicked()), SLOT(doTopic()));
 	PsiToolTip::install(ui_.le_topic);
