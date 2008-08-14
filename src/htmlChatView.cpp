@@ -27,10 +27,11 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* i
     webView.setFocusPolicy(Qt::NoFocus);
     webView.setContextMenuPolicy(Qt::NoContextMenu);
 
-    networkManager = new NetworkAccessManager(0, iconServer);
+    networkManager = new NetworkAccessManager(0, iconServer)
+        ;
     webView.page()->setNetworkAccessManager(networkManager);
-
     webView.page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    webView.page()->settings()->setObjectCacheCapacities(0,5*1024*1024,5*1024*1024); //TODO 114
 
     webView.setMinimumSize(100, 100);
     setMinimumSize(100, 100);
@@ -236,6 +237,8 @@ QString HTMLChatView::dumpContent() {
 
 
 void HTMLChatView::escapeString(QString& str) {
+    
+    str.replace("\r\n", "\n"); //windows
     str.replace("\\", "\\\\");
     str.replace("\"", "\\\"");
     str.replace("\n", "\\\n");
@@ -244,6 +247,8 @@ void HTMLChatView::escapeString(QString& str) {
 
 
 QString HTMLChatView::escapeStringCopy(QString str) {
+    
+    str.replace("\r\n", "\n"); //windows
     str.replace("\\", "\\\\");
     str.replace("\"", "\\\"");
     str.replace("\n", "\\\n");

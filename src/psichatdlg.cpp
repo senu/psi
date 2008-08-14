@@ -432,7 +432,11 @@ void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time,
     msg->setSpooled(spooled);
     msg->setBody(txt);
 
-    chatView()->appendMessage(msg);
+    //for(int i=1; i<=3000; i++) {
+      //  msg->setBody("Senu tu byl i cos napisal:" + QString::number(i));
+        chatView()->appendMessage(msg);
+//    }
+
     updateLastMsgTimeAndOwner(time, owner);
 }
 
