@@ -222,4 +222,16 @@ void PlainTextChatTheme::setUseChatSaysStyle(bool useChatSaysStyle) {
 }
 
 
+bool PlainTextChatTheme::operator==(const PlainTextChatTheme& other) const {
+    return ( chatFont_ == other.chatFont_ &&
+        incomingNickColor_ == other.incomingNickColor_ &&
+        outgoingNickColor_ == other.outgoingNickColor_ &&
+        spooledNickColor_ == other.spooledNickColor_ &&
+        systemMessageColor_ == other.systemMessageColor_ &&
+        useChatSaysStyle_ == other.useChatSaysStyle_);
+}
 
+
+bool PlainTextChatTheme::operator!=(const PlainTextChatTheme& other) const {
+    return !(*this == other);
+}

@@ -182,3 +182,18 @@ void PlainTextChatView::updateTrackBar() {
 
 
 }
+
+
+void PlainTextChatView::setTheme(const PlainTextChatTheme& newTheme) {
+
+    qDebug() << "PlainTextChatView :: setTheme";
+    
+    if (newTheme != theme) {
+        theme = newTheme;
+
+        textview.clear();
+        textview.setFont(theme.chatFont());
+        
+        reappendEvents();
+    }
+}

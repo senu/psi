@@ -46,13 +46,16 @@ void ChatViewProxy::init(const ChatTheme::ChatInfo& chatInfo, bool inGroupChat_,
 void ChatViewProxy::optionsChanged(const QString& optionName) {
     qDebug() << optionName;
 
-    if (!chatView_ || !optionName.startsWith("options.ui.themes")) {
+    if (!(chatView_ &&
+        (optionName.startsWith("options.ui.themes")
+        || optionName.startsWith("options.ui.look")
+        || optionName.startsWith("options.ui.chat.use-chat-says-style")))) {
         return;
     }
 
     bool viewWasCreated = false;
     bool newChatType;
-    
+
     if (inGroupChat) {
         newChatType = PsiOptions::instance()->getOption("options.ui.themes.htmlviewinmuc").toBool();
     }
@@ -70,6 +73,7 @@ void ChatViewProxy::optionsChanged(const QString& optionName) {
         viewWasCreated = true;
     }
 
+    /*
     if (!optionName.startsWith("options.ui.themes.themename") &&
         !optionName.startsWith("options.ui.themes.variantname")) {
 
@@ -77,15 +81,21 @@ void ChatViewProxy::optionsChanged(const QString& optionName) {
             emit chatViewCreated();
         }
         return;
-    }
+    }*/
 
-    if (isHTMLChatView) { //changes theme if needed
+    if (isHTMLChatView) { //change theme if needed
         QString themeName = PsiOptions::instance()->getOption("options.ui.themes.themename").toString();
         QString themeVariant = PsiOptions::instance()->getOption("options.ui.themes.variantname").toString();
         dynamic_cast<HTMLChatView *> (chatView_)->setTheme(themeManager->getTheme(themeName, themeVariant));
     }
+    else { //change PlainText theme
+        dynamic_cast<PlainTextChatView *> (chatView_)->setTheme(ChatViewFactory::createPlainTextChatTheme());
+        //NOTE: maybe I should move it to [HTML]ThemeManager
+    }
 
     if (viewWasCreated) {
+
+
         emit chatViewCreated();
     }
 }
@@ -102,6 +112,8 @@ ChatView * ChatViewProxy::createChatView(bool inGroupChat, const QString& jid) {
         textFormatter = new DefaultHTMLTextFormatter(false, true, false, true);
     }
     else {
+
+
         textFormatter = new DefaultHTMLTextFormatter(false, true, false, false);
     }
 

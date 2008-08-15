@@ -13,6 +13,7 @@
 class ChatView;
 class ChatEdit;
 
+
 /**
  * PlainText (old) version of ChatView.
  *
@@ -29,6 +30,9 @@ public:
 
     PlainTextChatView(QWidget *parent, PlainTextChatTheme theme);
 
+    /** Sets theme (if needed) */
+    void setTheme(const PlainTextChatTheme& theme);
+
     /** Used for scrollToTop/Bottom/Up/Down */
     QScrollBar * verticalScrollBar() const;
 
@@ -44,7 +48,7 @@ public:
      * at its maximum position.
      */
     bool atBottom() const;
-    
+
     void clear();
 
     bool internalFind(const QString& str, bool startFromBeginning = false);
@@ -69,13 +73,13 @@ slots:
 protected:
 
     void appendText(const QString &text);
-    
+
     PsiTextView textview;
     PlainTextChatTheme theme;
     QVBoxLayout *layout;
 
     /** Holds position of trackBar (0 if no trackBar) */
-	int  oldTrackBarPosition;
+    int oldTrackBarPosition;
 
 
 };

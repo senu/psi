@@ -30,7 +30,9 @@ QString DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& p
 
 //    qDebug() << "!!! tf messageText1.5 0" << output;
 
-    textNodeNumber_++;
+    if (!input.trimmed().isEmpty()) { //skip nodes that contains only whitespaces
+        textNodeNumber_++;
+    }
     return output;
 }
 

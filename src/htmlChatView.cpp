@@ -275,7 +275,6 @@ void HTMLChatView::setTheme(const HTMLChatTheme& theme_) {
     }
 
     if (theme_ != theme) {
-        qDebug() << theme.baseHref() << theme_.baseHref() << theme.currentVariant() << theme_.currentVariant();
         theme = theme_;
         isReady = false;
         webView.setHtml(createEmptyDocument(theme.baseHref(), theme.currentVariant()), theme.baseHref());

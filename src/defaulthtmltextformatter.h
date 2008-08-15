@@ -89,7 +89,9 @@ protected:
 
     /**
      * This this variable is used to count text nodes (preorder). 
-     * We count nodes from 0.
+     * We count nodes from 0. 
+     *
+     * Nodes containg whitespaces aren't counted.
      */
     int textNodeNumber_;
 };

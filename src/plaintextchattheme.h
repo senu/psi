@@ -83,6 +83,12 @@ public:
 
     /** Sets useChatSaysStyle */
     void setUseChatSaysStyle(bool useChatSaysStyle);
+    
+    /** Compares themes (theme options) */
+    bool operator==(const PlainTextChatTheme& other) const;
+    
+    /** Compares themes (theme options) */
+    bool operator!=(const PlainTextChatTheme& other) const;
 
 private:
     /** Creates time string */
