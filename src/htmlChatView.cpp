@@ -8,8 +8,6 @@
 
 #include "htmlChatView.h"
 
-#include "htmlChatView.h"
-
 
 HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* iconServer)
 : ChatView(parent), theme(_theme), isReady(false), queuedTheme(0), queuedClear(false) {
@@ -254,12 +252,7 @@ void HTMLChatView::escapeString(QString& str) {
 
 
 QString HTMLChatView::escapeStringCopy(QString str) {
-
-    str.replace("\r\n", "\n"); //windows
-    str.replace("\\", "\\\\");
-    str.replace("\"", "\\\"");
-    str.replace("\n", "\\\n");
-    str.replace(QChar(8232), "\\\n"); //ctrl+enter
+    escapeString(str);
     return str;
 }
 
@@ -354,21 +347,26 @@ void HTMLChatView::copySelectedText() {
 void HTMLChatView::contextMenuEvent(QContextMenuEvent* event) {
 
     QList<QAction*> actions;
+    bool haveActions = false; //does context menu have appended actions?
 
     if (copyAction->isEnabled()) {
         actions.append(copyAction);
+        haveActions = true;
     }
 
     if (copyLinkAction->isEnabled()) {
         actions.append(copyLinkAction);
+        haveActions = true;
     }
 
-    QAction* chosen = QMenu::exec(actions, event->globalPos());
-    if (chosen == copyAction) {
-        webView.page()->triggerAction(QWebPage::Copy);
-    }
-    else if (chosen == copyLinkAction) {
-        webView.page()->triggerAction(QWebPage::CopyLinkToClipboard);
+    if (haveActions) {
+        QAction* chosen = QMenu::exec(actions, event->globalPos());
+        if (chosen == copyAction) {
+            webView.page()->triggerAction(QWebPage::Copy);
+        }
+        else if (chosen == copyLinkAction) {
+            webView.page()->triggerAction(QWebPage::CopyLinkToClipboard);
+        }
     }
 }
 

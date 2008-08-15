@@ -204,7 +204,6 @@ protected:
     virtual void initUi() = 0;
     virtual void capsChanged();
     virtual void contactUpdated(UserListItem* u, int status, const QString& statusString);
-    virtual QString colorString(bool local, SpooledType spooled) const = 0;
 
     void appendMessage(const Message &, bool local = false);
     virtual bool isEncryptionEnabled() const;
@@ -220,10 +219,8 @@ protected:
     virtual void appendMessageFields(const Message& m, QString& messageBody) = 0;
     virtual void nicksChanged();
 
+    /** Returns local nickname if local is true or destination nickname otherwise */
     QString whoNick(bool local) const;
-
-    virtual ChatView* chatView() const = 0; //TODO 6 warning! also virtual in GenericCD
-    virtual ChatEdit* chatEdit() const = 0;
 
     /** We pass it to MUC/Chat dialog constructor */
     HTMLThemeManager* themeManager;

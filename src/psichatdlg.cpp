@@ -452,6 +452,7 @@ void PsiChatDlg::appendMessageFields(const Message& m, QString& messageBody) {
     bool containsField = false;
     QString appendedPart;
 
+    //subject
     if (!m.subject().isEmpty()) {
         appendedPart = QString("<h3><strong>") +
             tr("Subject:") +
@@ -459,14 +460,19 @@ void PsiChatDlg::appendMessageFields(const Message& m, QString& messageBody) {
 
         containsField = true;
     }
+
+    //URLs
     if (!m.urlList().isEmpty()) {
+        
         UrlList urls = m.urlList();
         appendedPart += QString("<ol>") + tr("-- Attached URL(s) --") + "";
+        
         for (QList<Url>::ConstIterator it = urls.begin(); it != urls.end(); ++it) {
             const Url &u = *it;
             appendedPart += QString("<li><strong>") + tr("URL:") + "</strong> " + QString("%1").arg(TextUtil::linkify(Qt::escape(u.url())));
             appendedPart += QString(" <strong>") + tr("Desc:") + "</strong> " + QString("%1</li>").arg(TextUtil::escape(u.desc()));
         }
+        
         appendedPart += "</ol>";
         containsField = true;
     }
@@ -479,17 +485,6 @@ void PsiChatDlg::appendMessageFields(const Message& m, QString& messageBody) {
 
 bool PsiChatDlg::isEncryptionEnabled() const {
     return act_pgp_->isChecked();
-}
-
-
-QString PsiChatDlg::colorString(bool local, ChatDlg::SpooledType spooled) const {
-    if (spooled == ChatDlg::Spooled_OfflineStorage)
-        return "#008000";
-
-    if (local)
-        return "#FF0000";
-
-    return "#0000FF";
 }
 
 

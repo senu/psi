@@ -22,9 +22,12 @@ public:
      * \param themeManager is needed because Kev didnt want it as singleton
      * \param iconServer will be used in HTMLChatView for serving icons purporses
      */
-    static ChatView * createChatView(bool isGroupChat, QString jid, QWidget * parent,
+    static ChatView* createChatView(bool isGroupChat, QString jid, QWidget * parent,
                                      bool * isHTMLChatView, HTMLThemeManager* themeManager,
                                      IconServer* iconServer);
+
+    /** Creates ChatTheme based on PsiOptions */
+    static PlainTextChatTheme createPlainTextChatTheme();
 
 };
 

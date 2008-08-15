@@ -79,11 +79,10 @@ void ChatViewProxy::optionsChanged(const QString& optionName) {
         return;
     }
 
-    if (isHTMLChatView) { //theme change?
-        qDebug() << "themeChanged?" << PsiOptions::instance()->getOption("options.ui.themes.themename").toString();
-        dynamic_cast<HTMLChatView *> (chatView_)->setTheme(themeManager->getTheme(
-                                                                                  PsiOptions::instance()->getOption("options.ui.themes.themename").toString(),
-                                                                                  PsiOptions::instance()->getOption("options.ui.themes.variantname").toString()));
+    if (isHTMLChatView) { //changes theme if needed
+        QString themeName = PsiOptions::instance()->getOption("options.ui.themes.themename").toString();
+        QString themeVariant = PsiOptions::instance()->getOption("options.ui.themes.variantname").toString();
+        dynamic_cast<HTMLChatView *> (chatView_)->setTheme(themeManager->getTheme(themeName, themeVariant));
     }
 
     if (viewWasCreated) {
@@ -99,7 +98,7 @@ ChatView * ChatViewProxy::createChatView(bool inGroupChat, const QString& jid) {
 
     delete textFormatter;
 
-    if (isHTMLChatView) { //NOTE: tbh, we need this only because there's IconTextForman not QImageTextFormat in PsiChatView
+    if (isHTMLChatView) { //NOTE: tbh, we need this only because there's IconTextFormat not QImageTextFormat in PsiChatView
         textFormatter = new DefaultHTMLTextFormatter(false, true, false, true);
     }
     else {
