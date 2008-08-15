@@ -2,19 +2,14 @@
 #include <QTimer>
 #include <QList>
 #include <QWidget>
-#include <QMessageBox>
-#include <QMenu>
-#include <QContextMenuEvent>
 
 #include "htmlChatView.h"
 
 
 HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* iconServer)
-: ChatView(parent), theme(_theme), isReady(false), queuedTheme(0), queuedClear(false) {
+: ChatView(parent), theme(_theme), isReady(false), queuedTheme(0), queuedClear(false), webView(this, iconServer) {
 
     //layout
-    webView.setParent(this);
-
     layout = new QVBoxLayout(this);
     layout->setMargin(0);
     layout->setSpacing(0);
@@ -24,23 +19,12 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* i
     setLayout(layout);
     setFocusPolicy(Qt::NoFocus);
     webView.setFocusPolicy(Qt::NoFocus);
-    webView.setContextMenuPolicy(Qt::NoContextMenu);
-
-    //sercurity 
-    networkManager = new NetworkAccessManager(parent, iconServer)
-        ;
-    webView.page()->setNetworkAccessManager(networkManager);
-    webView.page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
     //dont set it to (0,0,0) - webkit's garbage collector wont free allocated memory
     webView.page()->settings()->setObjectCacheCapacities(0, 5 * 1024 * 1024, 5 * 1024 * 1024); //TODO 114
 
     webView.setMinimumSize(100, 100);
     setMinimumSize(100, 100);
-
-    //actions
-    copyAction = webView.page()->action(QWebPage::Copy);
-    copyLinkAction = webView.page()->action(QWebPage::CopyLinkToClipboard);
 
     connect(webView.page(), SIGNAL(linkClicked(const QUrl&)), this, SLOT(onLinkClicked(const QUrl&)));
     connect(webView.page(), SIGNAL(selectionChanged()), this, SIGNAL(selectionChanged()));
@@ -51,7 +35,7 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* i
 void HTMLChatView::clear() {
     if (isReady) {
         ChatView::clear();
-        evaluateJS("psi_clearMessages()");
+        webView.evaluateJS("psi_clearMessages()");
     }
     else {
         qDebug() << "queued clear()";
@@ -65,7 +49,7 @@ void HTMLChatView::init() {
     connect(&webView, SIGNAL(loadFinished(bool)), this, SLOT(onEmptyDocumentLoaded(bool)));
     connect(&jsNotifier, SIGNAL(onInitFinished()), this, SLOT(onInitDocumentFinished()));
     connect(&jsNotifier, SIGNAL(onAppendFinished()), this, SLOT(onAppendFinished()));
-    connect(&jsNotifier, SIGNAL(onAddToWhiteListRequested(const QString&)), this, SLOT(onAddToWhiteListRequested(const QString&)));
+    connect(&jsNotifier, SIGNAL(onAddToWhiteListRequested(const QString&)), &webView, SLOT(onAddToWhiteListRequested(const QString&)));
 
     webView.setHtml(createEmptyDocument(theme.baseHref(), theme.currentVariant()), theme.baseHref());
     //rest in onEmptyDocumentLoaded
@@ -92,14 +76,14 @@ void HTMLChatView::onEmptyDocumentLoaded(bool ok) {
     QString headerStr = header.toString();
     QString footerStr = footer.toString();
 
-    escapeString(headerStr);
-    escapeString(footerStr);
+    webView.escapeString(headerStr);
+    webView.escapeString(footerStr);
 
-    importJSChatFunctions();
+    webView.importJSChatFunctions();
 
     webView.page()->mainFrame()->addToJavaScriptWindowObject("jsNotifier", &jsNotifier);
 
-    evaluateJS("psi_initDocument(\"" + headerStr + "\", \"" + footerStr + "\")");
+    webView.evaluateJS("psi_initDocument(\"" + headerStr + "\", \"" + footerStr + "\")");
     //rest in onInitDocumentFinished
 }
 
@@ -177,15 +161,15 @@ void HTMLChatView::appendMessage(MessageChatEvent *msg, bool alreadyAppended) {
         else
             part = theme.createIncomingMessagePart(msg);
 
-        escapeString(part);
+        webView.escapeString(part);
 
         if (msg->isConsecutive()) {
-            evaluateJS("psi_appendConsecutiveMessage(\"" + part + "\", \"" +
-                       escapeStringCopy(msg->body()) + "\"" + ")");
+            webView.evaluateJS("psi_appendConsecutiveMessage(\"" + part + "\", \"" +
+                       webView.escapeStringCopy(msg->body()) + "\"" + ")");
         }
         else {
-            evaluateJS("psi_appendNextMessage(\"" + part + "\", \"" +
-                       escapeStringCopy(msg->body()) + "\"" + ")");
+            webView.evaluateJS("psi_appendNextMessage(\"" + part + "\", \"" +
+                       webView.escapeStringCopy(msg->body()) + "\"" + ")");
         }
     }
     else {
@@ -201,33 +185,14 @@ void HTMLChatView::appendEvent(ChatEvent* event, bool alreadyAppended) {
         // events will be appended in reappendEvents (called from onInitDpcumentFinished)
 
         QString part = event->getRightTemplateAndFillItWithData(theme);
-        escapeString(part);
+        webView.escapeString(part);
 
-        evaluateJS("psi_appendEvent(\"" + part + "\")");
+        webView.evaluateJS("psi_appendEvent(\"" + part + "\")");
     }
     else {
         qDebug() << " -- appendEvent queued";
     }
 }
-
-
-void HTMLChatView::evaluateJS(QString scriptSource) {
-    webView.page()->mainFrame()->evaluateJavaScript(scriptSource);
-    //qDebug() << "HTMLChatView::evaluateJS(" << scriptSource << ")\n";
-}
-
-
-void HTMLChatView::importJSChatFunctions() {
-    QFile file(":/htmlChatView.js");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "WARNING: HTMLChaTView::importJSChatFunction() - loading Qt Resource failed";
-        //NOTE: I (senu) assume that reading from Qt Resource always succeed - there's no error handling
-    }
-
-    QString jsCode = file.readAll();
-    evaluateJS(jsCode);
-}
-
 
 HTMLChatView::~HTMLChatView() {
     qDebug() << "@@@@ MEM WEBKIT: ----" << "HTMLChatView::~HTMLChatView()";
@@ -238,22 +203,6 @@ HTMLChatView::~HTMLChatView() {
 
 QString HTMLChatView::dumpContent() {
     return webView.page()->mainFrame()->toHtml();
-}
-
-
-void HTMLChatView::escapeString(QString& str) {
-
-    str.replace("\r\n", "\n"); //windows
-    str.replace("\\", "\\\\");
-    str.replace("\"", "\\\"");
-    str.replace("\n", "\\\n");
-    str.replace(QChar(8232), "\\\n"); //ctrl+enter
-}
-
-
-QString HTMLChatView::escapeStringCopy(QString str) {
-    escapeString(str);
-    return str;
 }
 
 
@@ -290,15 +239,12 @@ bool HTMLChatView::atBottom() const {
 
 
 void HTMLChatView::scrollToBottom() {
-    webView.page()->mainFrame()->setScrollBarValue(
-                                                   Qt::Vertical,
-                                                   webView.page()->mainFrame()->scrollBarMaximum(Qt::Vertical)
-                                                   );
+    webView.scrollToBottom();
 }
 
 
 void HTMLChatView::scrollToTop() {
-    webView.page()->mainFrame()->setScrollBarValue(Qt::Vertical, 0);
+    webView.scrollToTop();
 }
 
 
@@ -343,53 +289,10 @@ void HTMLChatView::copySelectedText() {
 }
 
 
-void HTMLChatView::contextMenuEvent(QContextMenuEvent* event) {
-
-    QList<QAction*> actions;
-    bool haveActions = false; //does context menu have appended actions?
-
-    if (copyAction->isEnabled()) {
-        actions.append(copyAction);
-        haveActions = true;
-    }
-
-    if (copyLinkAction->isEnabled()) {
-        actions.append(copyLinkAction);
-        haveActions = true;
-    }
-
-    if (haveActions) {
-        QAction* chosen = QMenu::exec(actions, event->globalPos());
-        if (chosen == copyAction) {
-            webView.page()->triggerAction(QWebPage::Copy);
-        }
-        else if (chosen == copyLinkAction) {
-            webView.page()->triggerAction(QWebPage::CopyLinkToClipboard);
-        }
-    }
-}
-
-
 void HTMLChatView::updateTrackBar() {
     if (isReady) {
-        evaluateJS("psi_removeTrackBar()");
-        evaluateJS("psi_addTrackBar()");
-    }
-}
-
-
-void HTMLChatView::onAddToWhiteListRequested(const QString& url) {
-
-    QMessageBox::StandardButton btn =
-        QMessageBox::information(this, tr("Warning"),
-                                 tr("Are you sure you want to add %1 to whiteList?").arg(url),
-                                 QMessageBox::Yes | QMessageBox::No);
-
-    if (btn == QMessageBox::Yes) {
-        networkManager->addUrlToWhiteList(url);
-        if (isReady) {
-            evaluateJS("psi_unban('" + escapeStringCopy(url) + "')");
-        } //else should never happen, but...
+        webView.evaluateJS("psi_removeTrackBar()");
+        webView.evaluateJS("psi_addTrackBar()");
     }
 }
 

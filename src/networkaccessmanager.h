@@ -18,6 +18,7 @@ public:
      * \param iconServer will be used to serve icon:// urls 
      */
     NetworkAccessManager(QObject *parent, IconServer* iconServer);
+    ~NetworkAccessManager();
 
     /** Add URL to whiteList. */
     void addUrlToWhiteList(const QString& url);

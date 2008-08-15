@@ -1,22 +1,23 @@
 #ifndef _EVENTVIEW_H
 #define	_EVENTVIEW_H
 
-#include <QWebView>
-#include "networkaccessmanager.h"
+#include "webview.h"
+#include "jsnotifier.h"
 
 
 /**
  * Webkit-based event viewer (used in EventDlg).
  * 
  * It offers better XHTML(-IM) rendering.
- * It's a QWebPage with disabled JavaScript/Network access/Plugins/Objects
+ * It's a WebPage with disabled JavaScript
  * It also has icon:// URL support
  */
-class EventView : public QWebView {
+class EventView : public WebView {
+
     Q_OBJECT
 
 public:
-    /** IconServer will be used to display icons:// */
+    /** IconServer will be used to display iconx:// */
     EventView(QWidget* parent, IconServer* iconServer);
 
     /** 
@@ -34,26 +35,23 @@ public:
      */
     QString getHtml();
 
-    /** Scrolls to top of the view */
-    void scrollToTop();
-
 signals:
 
     /** Emitted when user click on URL */
     void openURL(QString);
 
-private slots:
-    
+    private 
+slots:
+
     /** Emits openURL() */
     void onLinkClicked(const QUrl& url);
 
-protected:
+    /** Loads JavaScript Psi code from file and connects jsNotifier signals (image unbanning) */
+    void loadAndBindJS(bool ok);
 
-    /** Creates menu with Copy action */
-    void contextMenuEvent(QContextMenuEvent* event);
-    
-    NetworkAccessManager *networkManager;
-
+private:
+    /** JavaScript - C++ bridge */
+    JSNotifier jsNotifier;
 };
 
 #endif

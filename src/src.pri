@@ -257,6 +257,7 @@ HEADERS += \
 	$$PWD/finddialog.h\
 	$$PWD/plaintexteventview.h\
 	$$PWD/imagedownloaddialog.h\
+	$$PWD/webview.h\
 
 
 # Source files
@@ -407,6 +408,7 @@ SOURCES += \
 	$$PWD/finddialog.cpp\
 	$$PWD/plaintexteventview.cpp\
 	$$PWD/imagedownloaddialog.cpp\
+	$$PWD/webview.cpp\
 
 
 whiteboarding {

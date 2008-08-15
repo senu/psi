@@ -1,9 +1,7 @@
 #ifndef HAVE_HTML_CHAT_VIEW
 #define HAVE_HTML_CHAT_VIEW
 
-#include <QWebView>
 #include <QWebFrame>
-#include <QFile>
 #include <QtDebug>
 #include <QPair>
 #include <QRect>
@@ -14,10 +12,10 @@
 #include "jsnotifier.h"
 #include "networkaccessmanager.h"
 #include "iconserver.h"
+#include "webview.h"
 
 class ChatView;
 class HTMLChatTheme;
-
 
 /** 
  * Themable Webkit-based HTML Chat View 
@@ -68,12 +66,6 @@ slots:
      * Scrolls the vertical scroll bar to its minimum position i.e. to the top.
      */
     void scrollToTop();
-
-    /** Evaluates JavaScript code in Webkit */
-    void evaluateJS(QString scriptSource);
-
-    /** Reads JavaScript code (function definitions) from file and evaluates it in webkit */
-    void importJSChatFunctions();
 
     /** Appends message */
     void appendMessage(MessageChatEvent *msg, bool alreadyAppended = false);
@@ -127,34 +119,17 @@ slots:
     /** Creates html document with base href tag somewhere; themeVariant is without css suffix */
     QString createEmptyDocument(QString baseHref, QString themeVariant);
 
-    /**
-     * Ask user if \param url should be added to whiteList and then calls js:psi_unban(url) if user confims.
-     * 
-     * It's used to display blocked images.
-     */
-    void onAddToWhiteListRequested(const QString& url);
 
 protected:
     void keyPressEvent(QKeyEvent* event);
 
+
 private:
-    /** Escapes " and \n  (for JS evaluation) */
-    void escapeString(QString& str);
-
-    /** Escapes " and \n  (for JS evaluation) */
-    QString escapeStringCopy(QString str);
-
-    /** Creates menu with Copy action */
-    void contextMenuEvent(QContextMenuEvent* event);
-
     /** Current theme */
     HTMLChatTheme theme;
 
     /** JavaScript - C++ bridge */
     JSNotifier jsNotifier;
-
-    /** Handles icon:// URLs and disallwos network requests */
-    NetworkAccessManager * networkManager;
 
     /** ChatView is ready to: change theme, append events (true after onInitDouemtet finished) */
     bool isReady;
@@ -165,11 +140,9 @@ private:
     /** Someone tried to clear() ChatView before Webkit was ready to do that */
     bool queuedClear;
 
-    QWebView webView;
+    WebView webView;
 
     QVBoxLayout * layout;
-    QAction* copyAction, *copyLinkAction;
-
 };
 
 #endif

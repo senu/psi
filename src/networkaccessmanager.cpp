@@ -15,6 +15,11 @@ NetworkAccessManager::NetworkAccessManager(QObject *parent, IconServer* iconServ
 }
 
 
+NetworkAccessManager::~NetworkAccessManager() {
+    qDebug() << "@@@@ MEM WEBKIT: ----" << "NetworkAccessManager::~NetworkAccessManager()";
+}
+
+
 QNetworkReply * NetworkAccessManager::createRequest(Operation op, const QNetworkRequest & req, QIODevice * outgoingData = 0) {
     qDebug() << "create request" << op << req.url();
 

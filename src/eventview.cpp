@@ -6,24 +6,17 @@
 #include "iconserver.h"
 
 
-EventView::EventView(QWidget* parent, IconServer* iconServer) : QWebView(parent) {
-
-    //security
-    settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
-    settings()->setAttribute(QWebSettings::JavaEnabled, false);
-    settings()->setAttribute(QWebSettings::PluginsEnabled, false);
-
-    networkManager = new NetworkAccessManager(0, iconServer);
-    page()->setNetworkAccessManager(networkManager);
-
-    page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-
+EventView::EventView(QWidget* parent, IconServer* iconServer) : WebView(parent, iconServer) {
+    
     connect(page(), SIGNAL(linkClicked(const QUrl&)), this, SLOT(onLinkClicked(const QUrl&)));
+    
+    connect(this, SIGNAL(loadFinished(bool)), this, SLOT(loadAndBindJS(bool)));
+    connect(&jsNotifier, SIGNAL(onAddToWhiteListRequested(const QString&)), SLOT(onAddToWhiteListRequested(const QString&)));
 }
 
 
 void EventView::displayText(const QString& xhtmlText) {
-    QString xhtml("<html><body style=\"background-color:green\">%1</body></html>"); //TODO 15 make it pretty
+    QString xhtml("<html><body style=\"background-color:#008030\">%1</body></html>");
     setHtml(xhtml.arg(xhtmlText));
 }
 
@@ -33,24 +26,17 @@ QString EventView::getHtml() {
 }
 
 
-void EventView::scrollToTop() {
-    page()->mainFrame()->setScrollBarValue(Qt::Vertical, page()->mainFrame()->scrollBarMinimum(Qt::Vertical));
-}
-
-
 void EventView::onLinkClicked(const QUrl& url) {
     emit openURL(url.toString());
 }
 
-void EventView::contextMenuEvent(QContextMenuEvent* event) {
-    
-    QList<QAction*> actions;
-
-    QAction* copyAction = page()->action(QWebPage::Copy);
-    actions.append(copyAction);
-        
-    QAction* chosen = QMenu::exec(actions, event->globalPos());
-    if (chosen == copyAction) {
-        page()->triggerAction(QWebPage::Copy);
+void EventView::loadAndBindJS(bool ok) {
+    if (!ok) {
+        qDebug() << "WARNING: EventView::onEmptyDocumentLoaded() - load failed"; //NOTE: see HTMLChatView note
+        return;
     }
+
+    importJSChatFunctions();
+    page()->mainFrame()->addToJavaScriptWindowObject("jsNotifier", &jsNotifier);
+
 }
