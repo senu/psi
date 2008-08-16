@@ -37,6 +37,9 @@ class HTMLChatViewTest : public CPPUNIT_NS::TestCase {
     CPPUNIT_TEST(emoteEvent);
     CPPUNIT_TEST(themeChanged);
 
+    CPPUNIT_TEST(javaScriptCSSValidatorIntegration);
+    CPPUNIT_TEST(defaultIcons);
+
     CPPUNIT_TEST(noActionTemplate);
     CPPUNIT_TEST(noOutgoingTemplates);
 
@@ -58,6 +61,12 @@ protected:
 
     void noActionTemplate();
     void noOutgoingTemplates();
+
+	/** Checks if HTMLChatView uses JavaScript CSS Validator */
+    void javaScriptCSSValidatorIntegration();
+
+	/** Checks if HTMLChatView uses JavaScript CSS Validator */
+    void defaultIcons();
 
     void prepareTest(QString themePath);
 

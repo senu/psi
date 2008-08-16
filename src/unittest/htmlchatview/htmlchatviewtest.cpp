@@ -5,8 +5,6 @@
 
 #include "htmlchatviewtest.h"
 
-//TODO 88 buddy_icon test
-//
 CPPUNIT_TEST_SUITE_REGISTRATION(HTMLChatViewTest);
 
 void HTMLChatViewTest::onlyFooterAndHeader() {
@@ -24,7 +22,7 @@ void HTMLChatViewTest::messagesAndEvents() {
 
     appendSomeEvents();
 
-	qDebug() << "after app ft event";
+    qDebug() << "after app ft event";
     waitUntil(&helper.append);
 
     checkResultBody(
@@ -80,8 +78,10 @@ void HTMLChatViewTest::themeChanged() {
     checkResultBody(
                     "<div><b style=\"color: green\">header2</b></div><hr>"
                     "<div id=\"Chat\">"
+
                     "<div class=\"status_container\"><div>fileTransferComplete :: 1970-02-05 -- 01:00</div>"
                     "Finished downloading screen.png. || event fileTransfer<br></div>"
+
                     "<span><div class=\"combine\"><div class=\"ctime\">1970-02-05 -- 01:00</div>"
                     "senu - Jabber - senu@jabber.pl - http://url.com :: message \" <br> "
                     ".</div><div id=\"insert\"></div></span>"
@@ -194,9 +194,102 @@ void HTMLChatViewTest::emoteEvent() {
 }
 
 
+void HTMLChatViewTest::javaScriptCSSValidatorIntegration() {
+    prepareTest("testingTheme/");
+
+    QDateTime time;
+    time.setTime_t(24 * 60 * 60 * 35);
+
+    MessageChatEvent * ce = new MessageChatEvent();
+
+    ce->setBody("message \" <div style=\"border-color: red; color: green \"></div> \\ <br/> .");
+
+    ce->setTimeStamp(time);
+    ce->setNick("senu");
+    ce->setService("Jabber");
+    ce->setConsecutive(false);
+    ce->setJid("senu@jabber.pl");
+    ce->setLocal(true);
+    ce->setUserIconPath("http://url.com");
+    ce->setUserStatusIcon("myicon.png");
+    ce->setUserColor("#123456");
+
+    view->appendMessage(ce);
+
+    waitUntil(&helper.append);
+
+    checkResultBody(
+                    "<div><b style=\"color: green\">header</b></div><hr>"
+                    "<div id=\"Chat\">"
+
+                    "<div class=\"combine\"><div class=\"ctime\">1970-02-05 - 01:00</div>"
+                    "http://url.com - myicon.png - ltr - senu@jabber.pl - senu - "
+                    "Jabber - senu@jabber.pl - http://url.com :: "
+
+                    "message \" <div style=\"color:green;\"></div> \\ <br> . " //
+
+                    "|| message outgoing <span style=\"color: #194978\">COLOR</span>"
+                    "</div>"
+
+                    "<div id=\"insert\"></div>"
+
+                    "</div>"
+                    "<hr>"
+                    "<div><b style=\"color: red\">footer</b></div>"
+                    );
+}
+
+
+void HTMLChatViewTest::defaultIcons() {
+    prepareTest("testingTheme/");
+
+    QDateTime time;
+    time.setTime_t(24 * 60 * 60 * 35);
+
+    MessageChatEvent * ce = new MessageChatEvent();
+
+    ce->setBody("message");
+
+    ce->setTimeStamp(time);
+    ce->setNick("senu");
+    ce->setService("Jabber");
+    ce->setConsecutive(false);
+    ce->setJid("senu@jabber.pl");
+    ce->setLocal(true);
+    ce->setUserIconPath("outgoing"); //
+    ce->setUserStatusIcon("myicon.png");
+    ce->setUserColor("#123456");
+
+    view->appendMessage(ce);
+
+    waitUntil(&helper.append);
+
+    checkResultBody(
+                    "<div><b style=\"color: green\">header</b></div><hr>"
+                    "<div id=\"Chat\">"
+
+                    "<div class=\"combine\"><div class=\"ctime\">1970-02-05 - 01:00</div>"
+                    "Outgoing/buddy_icon.png - myicon.png - ltr - senu@jabber.pl - senu - " //
+                    "Jabber - senu@jabber.pl - Outgoing/buddy_icon.png :: " //
+
+                    "message"
+
+                    " || message outgoing <span style=\"color: #194978\">COLOR</span>"
+                    "</div>"
+
+                    "<div id=\"insert\"></div>"
+
+                    "</div>"
+                    "<hr>"
+                    "<div><b style=\"color: red\">footer</b></div>"
+                    );
+
+}
+
+
 void HTMLChatViewTest::prepareTest(QString themePath) {
 
-	QApplication app();
+    QApplication app();
 
     form = new QFrame(0);
 
@@ -221,7 +314,7 @@ void HTMLChatViewTest::checkResultBody(QString validOutput) {
     delete form;
 
     int a = out.indexOf("<body>"),
-            b = out.lastIndexOf("</body>");
+        b = out.lastIndexOf("</body>");
 
     if (a < 0 || b < 0) {
         CPPUNIT_FAIL("no <body> element");
@@ -274,20 +367,20 @@ void HTMLChatViewTest::appendSomeEvents() {
 
 
 void CppUnitHelper::onAppendFinished() {
-	qDebug() << "on append finished";
+    qDebug() << "on append finished";
     append = true;
 }
 
 
 void CppUnitHelper::onInitDocumentFinished() {
-	qDebug() << "on init finished";
+    qDebug() << "on init finished";
     init = true;
 }
 
 
 void HTMLChatViewTest::waitUntil(volatile bool * flag) {
     while (! *flag) {
-		qDebug() << "waiting";
+        qDebug() << "waiting";
         QTest::qWait(50);
     }
 }
