@@ -1,4 +1,4 @@
-#include "fileTransferChatEvent.h"
+#include "filetransferchatevent.h"
 
 
 FileTransferChatEvent::FileTransferChatEvent() 

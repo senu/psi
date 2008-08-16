@@ -5,7 +5,7 @@
 #include <QString>
 #include <QDir>
 #include <QStringList>
-#include "chatTheme.h"
+#include "chattheme.h"
 
 /** Abstract List of theme names; eg for selecting theme */
 class ChatThemeList {

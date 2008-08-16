@@ -11,7 +11,7 @@
 #include "htmlChatThemeList.h"
 #include "htmlChatView.h"
 #include "htmlchateditframe.h"
-#include "messageValidator.h"
+#include "messagevalidator.h"
 
 
 /** Form that holds ChatView widget */

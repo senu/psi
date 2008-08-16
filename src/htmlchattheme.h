@@ -4,11 +4,11 @@
 #include <Qt>
 #include <QDir>
 
-#include "chatTheme.h"
+#include "chattheme.h"
 #include "htmlChatTemplate.h"
 #include "htmlchatemotetemplate.h"
 
-#include "fileTransferChatEvent.h"
+#include "filetransferchatevent.h"
 #include "statuschatevent.h"
 #include "messagechatevent.h"
 #include "emotechatevent.h"

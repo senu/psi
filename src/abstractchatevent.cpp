@@ -1,4 +1,4 @@
-#include "abstractChatEvent.h"
+#include "abstractchatevent.h"
 
 
 AbstractChatEvent::AbstractChatEvent() : timeStamp_(QDateTime::currentDateTime()) {

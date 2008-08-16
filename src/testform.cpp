@@ -6,7 +6,7 @@
 
 #include "testForm.h"
 #include "htmlChatView.h"
-#include "fileTransferChatEvent.h"
+#include "filelransferchatevent.h"
 #include "htmlChatView.h"
 
 #include "htmlchateditframe.h"

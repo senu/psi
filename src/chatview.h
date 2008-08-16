@@ -6,7 +6,7 @@
 #include <QScrollBar> 
 #include <QList>
 
-#include "chatEvent.h"
+#include "chatevent.h"
 
 class ChatEvent;
 

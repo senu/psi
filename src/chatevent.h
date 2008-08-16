@@ -4,7 +4,7 @@
 #include <Qt>
 #include <QString>
 
-#include "abstractChatEvent.h"
+#include "abstractchatevent.h"
 
 
 /** ChatEvent is an AbstractChatEvent that's not MessageChatEvent :D.
