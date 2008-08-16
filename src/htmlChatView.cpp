@@ -114,6 +114,9 @@ void HTMLChatView::onAppendFinished() {
     if (atBottom()) {
         QTimer::singleShot(0, this, SLOT(onDoScrolling()));
     }
+	else {
+    	emit appendFinished();	
+	}
 }
 
 
@@ -298,11 +301,9 @@ void HTMLChatView::updateTrackBar() {
 
 
 void HTMLChatView::keyPressEvent(QKeyEvent* event) {
-    qDebug() << "webkit key event" << event->text() << event->modifiers();
 
     if ((event->key() == Qt::Key_C && (event->modifiers() & Qt::ControlModifier)) ||
         (event->key() == Qt::Key_Insert && (event->modifiers() & Qt::ControlModifier))) {
-        qDebug() << "webkit key event -> copy";
         copySelectedText();
     }
 

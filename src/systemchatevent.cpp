@@ -58,5 +58,5 @@ QString SystemChatEvent::message() const {
             break;
     }
 
-    return QObject::tr(ret);
+    return QObject::tr(ret); 
 }

@@ -24,7 +24,8 @@ void HTMLChatViewTest::messagesAndEvents() {
 
     appendSomeEvents();
 
-    waitUntil(&(helper.append));
+	qDebug() << "after app ft event";
+    waitUntil(&helper.append);
 
     checkResultBody(
                     "<div><b style=\"color: green\">header</b></div><hr>"
@@ -35,7 +36,7 @@ void HTMLChatViewTest::messagesAndEvents() {
                     "<div class=\"combine\"><div class=\"ctime\">1970-02-05 - 01:00</div>"
                     "http://url.com - myicon.png - ltr - senu@jabber.pl - senu - "
                     "Jabber - senu@jabber.pl - http://url.com :: message \" <br>"
-                    " . || message outgoing <span style=\"color: #008c00\">COLOR</span>"
+                    " . || message outgoing <span style=\"color: #194978\">COLOR</span>"
                     "</div><div id=\"insert\"></div></span>"
 
                     "</div>"
@@ -170,6 +171,7 @@ void HTMLChatViewTest::emoteEvent() {
     event->setJid("senu@jabber.pl");
     event->setUserIconPath("http://userserve-ak.last.fm/serve/50/4272669.jpg");
     event->setUserStatusIcon("myicon.png");
+    event->setUserColor("#123456");
     event->setTimeStamp(time);
 
     view->appendEvent(event);
@@ -181,7 +183,7 @@ void HTMLChatViewTest::emoteEvent() {
 
                     "<div class=\"status_container\"><div>1970-02-05 - 01:00</div>"
                     "Pawel Wiejacha is working hard<br> "
-                    "darkgreen - myicon.png - ltr - senu@jabber.pl - Jabber - senu@jabbe"
+                    "#123456 - myicon.png - ltr - senu@jabber.pl - Jabber - senu@jabbe"
                     "r.pl - http://userserve-ak.last.fm/serve/50/4272669.jpg - 01:00 || event emote</div>"
                     "<div id=\"insert\"></div>"
 
@@ -265,23 +267,27 @@ void HTMLChatViewTest::appendSomeEvents() {
     ce->setLocal(true);
     ce->setUserIconPath("http://url.com");
     ce->setUserStatusIcon("myicon.png");
+    ce->setUserColor("#123456");
 
     view->appendMessage(ce);
 }
 
 
 void CppUnitHelper::onAppendFinished() {
+	qDebug() << "on append finished";
     append = true;
 }
 
 
 void CppUnitHelper::onInitDocumentFinished() {
+	qDebug() << "on init finished";
     init = true;
 }
 
 
 void HTMLChatViewTest::waitUntil(volatile bool * flag) {
     while (! *flag) {
+		qDebug() << "waiting";
         QTest::qWait(50);
     }
 }

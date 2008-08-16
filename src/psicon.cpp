@@ -318,6 +318,7 @@ PsiCon::~PsiCon()
 	delete d->defaultMenuBar;
 	delete d->tabManager;
     delete d->themeManager;
+    delete d->iconServer;
 	delete d;
 }
 

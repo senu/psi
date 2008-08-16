@@ -7,9 +7,8 @@
 #include <cppunit/TextTestResult.h>
 
 int main(int argc, char* argv[])
-{
+{  
 	QCoreApplication a(argc, argv);
-
 	CppUnit::TestFactoryRegistry& registry = CppUnit::TestFactoryRegistry::getRegistry();
 	CppUnit::TextUi::TestRunner runner;
 	runner.addTest( registry.makeTest() );
