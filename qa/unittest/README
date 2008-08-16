@@ -1,6 +1,6 @@
 CPPUnit test runner.
 
 1. It runs almost all unittests (see below).
-2. MessageValidator unittests are merged with qa/unittest.
+2. MessageValidator and DefaultHTMLTextFormatter unittests are merged with qa/unittest.
 3. HTMLChatView unittest cannot be merged with qa/unittest, you have to compile src/unittest/htmlchatview/.
 4. Webkit JavaScript CSSValidator unittests are in src/unittest/htmlchatview/cssValidatorTest.html - run them e.g. with Qt Demo Browser.

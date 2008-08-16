@@ -1,4 +1,4 @@
-#include "statusChatEvent.h"
+#include "statuschatevent.h"
 
 
 QString StatusChatEvent::getRightTemplateAndFillItWithData(const ChatTheme& theme) const {

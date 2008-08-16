@@ -15,7 +15,7 @@
  * You have to reset textNodeNumber everytime you call MessageValidator::validateMessage() 
  * with this textFormatter.
  * 
- * Here is a fragment of unittest - not how unknown entities ant &quot; are transformed:
+ * Here is a fragment of unittest - note how unknown entities and &quot; are transformed:
  *
  *    output = formatter.format("abc < > \n abc", parent);
  *    qStringAssert(output, "abc < > \n abc");

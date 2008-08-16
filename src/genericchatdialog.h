@@ -11,7 +11,7 @@
 #include "messageValidator.h"
 #include "chatView.h"
 #include "psichatedit.h"
-#include "statusChatEvent.h"
+#include "statuschatevent.h"
 #include "finddialog.h"
 
 class GenericChatDialogQObject;
