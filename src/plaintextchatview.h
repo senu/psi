@@ -5,7 +5,7 @@
 #include <QScrollBar>
 #include <QtDebug>
 #include <QVBoxLayout>
-#include "chatView.h"
+#include "chatview.h"
 #include "psitextview.h"
 #include "psichatedit.h"
 #include "plaintextchattheme.h"

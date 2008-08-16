@@ -1,6 +1,6 @@
 
 #include "iconserver.h"
-#include "abstractChatEvent.h"
+#include "abstractchatevent.h"
 #include "psichatdlg.h"
 
 #include <QLabel>

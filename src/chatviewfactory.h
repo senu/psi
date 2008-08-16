@@ -2,8 +2,8 @@
 #define	_CHATVIEWFACTORY_H
 
 #include <QString>
-#include "chatView.h"
-#include "htmlChatView.h"
+#include "chatview.h"
+#include "htmlchatview.h"
 #include "plaintextchatview.h"
 #include "htmlthememanager.h"
 

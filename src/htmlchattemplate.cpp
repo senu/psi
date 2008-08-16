@@ -1,7 +1,4 @@
-#include "htmlChatTemplate.h"
-
-#include <QtDebug>
-
+#include "htmlchattemplate.h"
 
 HTMLChatTemplate::HTMLChatTemplate(const QString content)
 : content_(content_) {

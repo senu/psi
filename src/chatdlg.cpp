@@ -80,7 +80,7 @@
 #include "psichatdlg.h"
 #include "moodchatevent.h"
 #include "esystemchatevent.h"
-#include "fileTransferChatEvent.h"
+#include "filetransferchatevent.h"
 #include "userchatdata.h"
 #include "ui_about.h"
 #include "chatdlg.h"

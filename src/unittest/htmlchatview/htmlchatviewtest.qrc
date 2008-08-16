@@ -1,6 +1,6 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
 	<qresource>
-		<file alias="htmlChatView.js">../../htmlChatView.js</file>
+		<file alias="htmlChatView.js">../../htmlchatview.js</file>
 	</qresource>
 </RCC>

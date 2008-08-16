@@ -3,7 +3,7 @@
 
 #include <Qt>
 
-#include "htmlChatPart.h"
+#include "htmlchatpart.h"
 
 /** Message/Event template 
  * 

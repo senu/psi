@@ -34,7 +34,7 @@
 #include "tabbablewidget.h"
 #include "systemchatevent.h"
 
-#include "chatView.h"
+#include "chatview.h"
 #include "htmlthememanager.h"
 #include "iconserver.h"
 #include "mood.h"

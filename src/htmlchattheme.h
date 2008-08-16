@@ -5,7 +5,7 @@
 #include <QDir>
 
 #include "chattheme.h"
-#include "htmlChatTemplate.h"
+#include "htmlchattemplate.h"
 #include "htmlchatemotetemplate.h"
 
 #include "filetransferchatevent.h"

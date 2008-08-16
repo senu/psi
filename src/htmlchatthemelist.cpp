@@ -1,8 +1,9 @@
-#include "htmlChatThemeList.h"
 #include <QDir>
 #include <QtDebug>
 #include <QStringList>
 #include <QString>
+
+#include "htmlchatthemelist.h"
 
 
 void HTMLChatThemeList::readThemes(const QDir& themesDir) {

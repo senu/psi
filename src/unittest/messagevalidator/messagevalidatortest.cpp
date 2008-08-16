@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "../../nullhtmltextformatter.h"
-#include "../../messageValidator.h"
+#include "../../messagevalidator.h"
 
 /** CppUnit unit test for MessageValidator */
 class MessageValidatorTest : public CPPUNIT_NS::TestFixture {

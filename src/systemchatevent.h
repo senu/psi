@@ -3,8 +3,8 @@
 
 #include <QString>
 
-#include "chatEvent.h"
-#include "chatTheme.h"
+#include "chatevent.h"
+#include "chattheme.h"
 
 class ChatTheme;
 class AstractChatEvent;

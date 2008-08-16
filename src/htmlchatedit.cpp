@@ -1,5 +1,5 @@
 #include "htmlchatedit.h"
-#include "messageValidator.h"
+#include "messagevalidator.h"
 #include "addurldlg.h"
 #include "textutil.h"
 #include "imagedownloaddialog.h"

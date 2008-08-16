@@ -7,6 +7,6 @@
 		<file>options/windows.xml</file>
 		<file>options/macosx.xml</file>
 		<file>options/newprofile.xml</file>
-		<file alias="htmlChatView.js">src/htmlChatView.js</file>
+		<file alias="htmlChatView.js">src/htmlchatview.js</file>
 	</qresource>
 </RCC>

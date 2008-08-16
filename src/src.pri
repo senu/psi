@@ -218,29 +218,30 @@ HEADERS += \
 	$$PWD/psichatedit.h\
 	$$PWD/plaintextchatview.h\
 	$$PWD/chatview.h\
-	$$PWD/chatEvent.h\
+	$$PWD/chatevent.h\
 	$$PWD/userchatdata.h\
 	$$PWD/emotechatevent.h\
 	$$PWD/systemchatevent.h\
 	$$PWD/esystemchatevent.h\
-	$$PWD/abstractChatEvent.h\
+	$$PWD/abstractchatevent.h\
 	$$PWD/messagechatevent.h\
 	$$PWD/plaintextchattheme.h\
 	$$PWD/chatviewfactory.h\
-	$$PWD/htmlChatView.h\
-	$$PWD/htmlChatTheme.h\
-	$$PWD/htmlChatTemplate.h \
+	$$PWD/htmlchatview.h\
+	$$PWD/htmlchattheme.h\
+	$$PWD/htmlchattemplate.h \
 	$$PWD/htmlchatemotetemplate.h\
-	$$PWD/htmlChatPart.h\
-	$$PWD/htmlChatThemeList.h\
-	$$PWD/fileTransferChatEvent.h \
-	$$PWD/chatTheme.h\
-	$$PWD/chatThemeList.h\
+	$$PWD/htmlchatpart.h\
+	$$PWD/htmlchatthemelist.h\
+	$$PWD/filetransferchatevent.h \
+	$$PWD/chattheme.h\
+	$$PWD/chatthemelist.h\
 	$$PWD/statuschatevent.h \
-	$$PWD/jsNotifier.h\
+	$$PWD/jsnotifier.h\
 	$$PWD/chatviewproxy.h \
 	$$PWD/htmlthememanager.h \
 	$$PWD/defaulthtmltextformatter.h\
+	$$PWD/messagevalidator.h\
 	$$PWD/htmltextformatter.h\
 	$$PWD/nullhtmltextformatter.h\
 	$$PWD/moodchatevent.h\
@@ -372,28 +373,28 @@ SOURCES += \
 	$$PWD/plaintextchatview.cpp\
 	$$PWD/plaintextchattheme.cpp\
 	$$PWD/chatview.cpp\
-	$$PWD/chatEvent.cpp\
+	$$PWD/chatevent.cpp\
 	$$PWD/userchatdata.cpp\
 	$$PWD/emotechatevent.cpp\
 	$$PWD/esystemchatevent.cpp\
 	$$PWD/systemchatevent.cpp\
 	$$PWD/messagechatevent.cpp\
-	$$PWD/abstractChatEvent.cpp\
+	$$PWD/abstractchatevent.cpp\
 	$$PWD/chatviewfactory.cpp\
-	$$PWD/htmlChatView.cpp\
-	$$PWD/htmlChatTheme.cpp\
-	$$PWD/htmlChatTemplate.cpp \
+	$$PWD/htmlchatview.cpp\
+	$$PWD/htmlchattheme.cpp\
+	$$PWD/htmlchattemplate.cpp \
 	$$PWD/htmlchatemotetemplate.cpp\
-	$$PWD/htmlChatPart.cpp\
-	$$PWD/htmlChatThemeList.cpp\
-	$$PWD/chatThemeList.cpp\
-	$$PWD/fileTransferChatEvent.cpp \
-	$$PWD/jsNotifier.cpp\
+	$$PWD/htmlchatpart.cpp\
+	$$PWD/htmlchatthemelist.cpp\
+	$$PWD/chatthemelist.cpp\
+	$$PWD/filetransferchatevent.cpp \
+	$$PWD/jsnotifier.cpp\
 	$$PWD/statuschatevent.cpp \
 	$$PWD/chatviewproxy.cpp \
 	$$PWD/htmlthememanager.cpp \
 	$$PWD/defaulthtmltextformatter.cpp\
-	$$PWD/messageValidator.cpp\
+	$$PWD/messagevalidator.cpp\
 	$$PWD/moodchatevent.cpp\
 	$$PWD/tunechatevent.cpp\
 	$$PWD/iconserver.cpp\

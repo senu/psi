@@ -3,7 +3,7 @@
 
 #include <QString>
 #include <QColor>
-#include "chatEvent.h"
+#include "chatevent.h"
 
 /**
  * Contains ChatEvent sender information (nick,jid,icon, ...) 

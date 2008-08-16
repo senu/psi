@@ -1,5 +1,6 @@
 #include <QHash>
-#include "chatThemeList.h"
+
+#include "chatthemelist.h"
 
 
 QStringList ChatThemeList::themeNames() {

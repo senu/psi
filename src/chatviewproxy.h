@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QLayout>
 
-#include "chatView.h"
+#include "chatview.h"
 #include "htmlthememanager.h"
 #include "iconserver.h"
 #include "defaulthtmltextformatter.h"

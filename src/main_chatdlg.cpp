@@ -1,8 +1,8 @@
 #include <QtXml>
 #include <QApplication>
 
-#include "testForm.h"
-#include "messageValidator.h"
+#include "testform.h"
+#include "messagevalidator.h"
 
 #ifdef TESTS
 #include <cppunit/CompilerOutputter.h>
@@ -25,50 +25,12 @@ int main(int argc, char *argv[]) {
 
     int ret = 0;
 
-#ifdef TESTS
-    if (argc > 1) {
-
-        qDebug() << "'themes' dir must be in:" << QDir::currentPath() + '/';
-
-        MessageValidator vaildator;
-
-        CPPUNIT_TEST_SUITE_REGISTRATION(TestMessageValidator);
-        CPPUNIT_TEST_SUITE_REGISTRATION (TestHTMLChatView);
-
-        // informs test-listener about testresults
-        CPPUNIT_NS::TestResult testresult;
-
-        // register listener for collecting the test-results
-        CPPUNIT_NS::TestResultCollector collectedresults;
-        testresult.addListener(&collectedresults);
-
-        // register listener for per-test progress output
-        CPPUNIT_NS::BriefTestProgressListener progress;
-        testresult.addListener(&progress);
-
-        // insert test-suite at test-runner by registry
-        CPPUNIT_NS::TestRunner testrunner;
-        testrunner.addTest(CPPUNIT_NS::TestFactoryRegistry::getRegistry().makeTest());
-        testrunner.run(testresult);
-
-        // output results in compiler-format
-        CPPUNIT_NS::CompilerOutputter compileroutputter(&collectedresults, std::cerr);
-        compileroutputter.write();
-
-		exit(0);
-
-    }
-#endif
-
     TestForm * form = new TestForm(0);
     form->show();
     ret = app.exec();
     delete form;
-    /*
-     */
 
     return ret;
-
 }
 
 

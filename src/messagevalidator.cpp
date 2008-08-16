@@ -3,7 +3,7 @@
 #include <QTextDocument> //qt escape
 
 
-#include "messageValidator.h"
+#include "messagevalidator.h"
 #include "messagechatevent.h"
 #include "nullhtmltextformatter.h"
 

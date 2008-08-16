@@ -4,8 +4,9 @@
 #include <QString>
 #include <QHash>
 #include <QPair>
-#include "htmlChatThemeList.h"
-#include "htmlChatTheme.h"
+
+#include "htmlchatthemelist.h"
+#include "htmlchattheme.h"
 
 
 /** Keeps HTML theme list, and caches loaded themes */

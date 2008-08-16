@@ -5,7 +5,7 @@
 #include <QString>
 #include <QDebug> //TODO 112
 
-#include "chatTheme.h"
+#include "chattheme.h"
 
 class ChatTheme;
 

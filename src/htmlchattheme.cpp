@@ -2,10 +2,9 @@
 #include <ctime>
 #include <QDir>
 
-#include "htmlChatTheme.h"
-#include "htmlChatPart.h"
-#include "htmlChatTheme.h"
-#include "htmlChatView.h"
+#include "htmlchattheme.h"
+#include "htmlchatpart.h"
+#include "htmlchatview.h"
 
 
 HTMLChatTheme::HTMLChatTheme() {

@@ -1,15 +1,14 @@
 #ifndef HAVE_TEST_FORM
 #define HAVE_TEST_FORM
 
-#include <Qt> 
 #include <QWidget> 
 #include <QComboBox> 
 #include <QFrame> 
 #include <QLineEdit>
 
 #include "messagechatevent.h"
-#include "htmlChatThemeList.h"
-#include "htmlChatView.h"
+#include "htmlchatthemelist.h"
+#include "htmlchatview.h"
 #include "htmlchateditframe.h"
 #include "messagevalidator.h"
 

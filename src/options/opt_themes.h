@@ -2,8 +2,8 @@
 #define	_OPT_THEMES_H
 
 #include "optionstab.h"
-#include "../htmlChatThemeList.h"
-#include "../htmlChatTheme.h"
+#include "../htmlchatthemelist.h"
+#include "../htmlchattheme.h"
 
 /** Options tab where user can set theme/ChatView */
 class OptionsTabThemes : public OptionsTab {

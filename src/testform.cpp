@@ -4,10 +4,10 @@
 #include <QFileDialog>
 #include <QDir>
 
-#include "testForm.h"
-#include "htmlChatView.h"
+#include "testform.h"
+#include "htmlchatview.h"
 #include "filelransferchatevent.h"
-#include "htmlChatView.h"
+#include "htmlchatview.h"
 
 #include "htmlchateditframe.h"
 #include "nullhtmltextformatter.h"

@@ -7,9 +7,9 @@
 #include <QFont>
 #include <QColor>
 
-#include "chatTheme.h"
+#include "chattheme.h"
 
-#include "fileTransferChatEvent.h"
+#include "filetransferchatevent.h"
 #include "statuschatevent.h"
 #include "messagechatevent.h"
 #include "emotechatevent.h"

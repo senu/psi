@@ -18,17 +18,10 @@
  *
  */
 
-#include "chatView.h"
-
-
-#include "groupchatdlg.h"
-
 
 
 // TODO: Move all the 'logic' of groupchats into MUCManager. See MUCManager
 // for more details.
-
-#include "groupchatdlg.h"
 
 #include <qlabel.h>
 #include <qlayout.h>
@@ -83,6 +76,8 @@
 #include "accountlabel.h"
 #include "gcuserview.h"
 
+#include "chatview.h"
+#include "groupchatdlg.h"
 #include "esystemchatevent.h"
 #include "htmlthememanager.h"
 

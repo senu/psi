@@ -7,8 +7,8 @@
 #include <QRect>
 #include <QVBoxLayout>
 
-#include "chatView.h"
-#include "htmlChatTheme.h"
+#include "chatview.h"
+#include "htmlchattheme.h"
 #include "jsnotifier.h"
 #include "networkaccessmanager.h"
 #include "iconserver.h"

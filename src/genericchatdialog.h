@@ -8,8 +8,8 @@
 #include "xmpp_message.h"
 
 #include "defaulthtmltextformatter.h"
-#include "messageValidator.h"
-#include "chatView.h"
+#include "messagevalidator.h"
+#include "chatview.h"
 #include "psichatedit.h"
 #include "statuschatevent.h"
 #include "finddialog.h"

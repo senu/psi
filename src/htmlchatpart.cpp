@@ -2,7 +2,8 @@
 #include <QColor>
 #include <QDateTime>
 #include <ctime> //time
-#include "htmlChatPart.h"
+
+#include "htmlchatpart.h"
 
 
 HTMLChatPart::HTMLChatPart(const QString _content)

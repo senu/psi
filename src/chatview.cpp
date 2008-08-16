@@ -1,4 +1,4 @@
-#include "chatView.h"
+#include "chatview.h"
 #include "messagechatevent.h"
 
 class MessageChatEvent;

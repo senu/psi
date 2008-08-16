@@ -5,7 +5,7 @@
 #include <QString>
 #include <QDateTime>
 
-#include "abstractChatEvent.h"
+#include "abstractchatevent.h"
 #include "userchatdata.h"
 
 class AbstractChatEvent;

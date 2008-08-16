@@ -4,7 +4,7 @@
 #include "applicationinfo.h"
 #include "urlobject.h"
 
-#include "htmlChatTheme.h"
+#include "htmlchattheme.h"
 
 
 ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,

@@ -32,7 +32,7 @@
 #include "htmlchatedit.h"
 #include "eventview.h"
 #include "plaintexteventview.h"
-#include "messageValidator.h"
+#include "messagevalidator.h"
 #include "defaulthtmltextformatter.h"
 
 class QDateTime;

@@ -5,7 +5,7 @@
 #include <QString>
 
 #include "userchatdata.h"
-#include "chatTheme.h"
+#include "chattheme.h"
 
 class ChatTheme;
 class AstractChatEvent;

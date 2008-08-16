@@ -3,7 +3,7 @@
 #include <QList>
 #include <QWidget>
 
-#include "htmlChatView.h"
+#include "htmlchatview.h"
 
 
 HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* iconServer)

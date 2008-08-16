@@ -1,7 +1,7 @@
 #ifndef _HTMLCHATEMOTETEMPLATE_H
 #define	_HTMLCHATEMOTETEMPLATE_H
 
-#include "htmlChatTemplate.h"
+#include "htmlchattemplate.h"
 
 /** Emote (Action) template is a Kopete extension. We must handle Adium themes in different way */
 class HTMLChatEmoteTemplate : public HTMLChatTemplate {
