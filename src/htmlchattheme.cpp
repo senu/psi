@@ -283,9 +283,18 @@ QString HTMLChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const 
 QString HTMLChatTheme::createSystemEventPart(const SystemChatEvent* event) const {
 
     HTMLChatPart part = systemEventTemplate.createFreshHTMLPart();
+    
+    QString eventText(event->message());
+
+    if (event->type() == SystemChatEvent::EncryptionEnabled) { //append icons
+        eventText = "<img name=\"icon://psi/cryptoYes\"> " + eventText;
+    }
+    else if (event->type() == SystemChatEvent::EncryptionDisabled) {
+        eventText = "<img name=\"icon://psi/cryptoNo\"> " + eventText;
+    }
 
     fillPartWithTimeKeywords(part, event);
-    fillPartWithEventKeywords(part, event, event->message());
+    fillPartWithEventKeywords(part, event, eventText);
     part.replaceAndEscapeKeyword("%status%", "system");
     part.replaceAndEscapeKeyword("%messageClasses%", "system"); //TODO  - 52 
 

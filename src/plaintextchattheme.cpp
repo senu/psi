@@ -108,8 +108,17 @@ QString PlainTextChatTheme::createStatusEventPart(const StatusChatEvent * event)
 
 QString PlainTextChatTheme::createSystemEventPart(const SystemChatEvent* event) const {
 
+    QString eventText(event->message());
+
+    if (event->type() == SystemChatEvent::EncryptionEnabled) { //append icons
+        eventText = "<icon name=\"psi/cryptoYes\"> " + eventText;
+    }
+    else if (event->type() == SystemChatEvent::EncryptionDisabled) {
+        eventText = "<icon name=\"psi/cryptoNo\"> " + eventText;
+    }
+    
     return QString("<span style=\"color: %1\">").arg(systemMessageColor())
-        + QString("[%1] *** %2 </span>").arg(formatTimeStamp(event->timeStamp()), event->message());
+        + QString("[%1] *** %2 </span>").arg(formatTimeStamp(event->timeStamp()), eventText);
 }
 
 

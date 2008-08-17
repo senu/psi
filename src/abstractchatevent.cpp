@@ -2,7 +2,12 @@
 
 
 AbstractChatEvent::AbstractChatEvent() : timeStamp_(QDateTime::currentDateTime()) {
-    qDebug() << "@@@@ MEM WEBKIT: ++++" << "AbstractChatEvent::AbstractChatEvent()" << (int)this; //TODO 112
+    qDebug() << "@@@@ MEM WEBKIT: ++++" << "AbstractChatEvent::AbstractChatEvent()" << (int) this; //TODO 112
+}
+
+
+AbstractChatEvent::~AbstractChatEvent() { //TODO 112
+    qDebug() << "@@@@ MEM WEBKIT: ----" << "AbstractChatEvent::AbstractChatEvent()";
 }
 
 

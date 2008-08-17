@@ -5,13 +5,14 @@
 
 
 /** 
- * SystemChatEvent with text content 
+ * SystemChatEvent with a text content (description).
  */
 class ExtendedSystemChatEvent : public SystemChatEvent {
 
 public:
     /** 
      * Constructor that sets event text to message; 
+     *
      * timestamp = current date 
      * type = Other
      */
@@ -19,6 +20,7 @@ public:
 
     /** 
      * Constructor that sets event text to message; 
+     *
      * timestamp = current date 
      * event type = \param type
      */
@@ -26,19 +28,21 @@ public:
 
     /** 
      * Constructor.
+     *
      * message - unset
      * timestamp = current date 
      * type = Other
      */
     ExtendedSystemChatEvent();
 
-    /** Reimplemented */
+    /** Returns message */
     QString message() const;
 
     /** Sets message */
     void setMessage(QString message);
 
 protected:
+    /** Event description */
     QString message_;
 
 };

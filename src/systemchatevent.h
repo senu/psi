@@ -10,7 +10,15 @@ class ChatTheme;
 class AstractChatEvent;
 
 
-/** System ChatEvent (dsconnected/encryption enabled, etc) */
+/**
+ * System ChatEvent - displays system message. 
+ *
+ * For example: dsconnected, encryption enabled. 
+ *
+ * NOTE: For Error, Other and EndedConversation types you must use 
+ * NOTE: ExtendedSystemChatEvent and provide nick/error description.
+ *
+ */
 class SystemChatEvent : public ChatEvent {
 
 public:
@@ -24,18 +32,16 @@ public:
         Reconnecting,
         Connected,
         EndedConvesation,
-        AlreadyJoined, //or joining!
+        AlreadyJoined, //or joining
         Error,
         Other
     };
 
     /** Constructor that sets event type, timesamp = current date */
     SystemChatEvent(SystemChatEvent::SystemEventType type);
-    
-    /** type = other; timestamp = current date */
-    SystemChatEvent();
 
-    QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const;
+    /** Sets type to other; timestamp = current date */
+    SystemChatEvent();
 
     /** Returns event type */
     SystemChatEvent::SystemEventType type() const;
@@ -46,6 +52,9 @@ public:
     /** Text of event */
     virtual QString message() const;
 
+    //reimplemented
+    QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const;
+
 protected:
     SystemEventType type_;
 };
@@ -53,4 +62,3 @@ protected:
 
 
 #endif
-

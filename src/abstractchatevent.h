@@ -10,17 +10,30 @@
 class ChatTheme;
 
 
-/** Abstract Chat Event: Messages and FileTransfer/Mood/etc events */
+/** 
+ * Abstract Chat Event.
+ *
+ * Base of all Chat Events.
+ * 
+ * Messages and ChatEvents: FileTransfer, Mood, etc. 
+ */
 class AbstractChatEvent {
 
 public:
-    /** Default constructor sets timeStamp to currentDate */
-    AbstractChatEvent(); 
-    virtual ~AbstractChatEvent() { //TODO 112
-        qDebug() << "@@@@ MEM WEBKIT: ----" << "AbstractChatEvent::AbstractChatEvent()";
-    }
-    
-    /** Returns true if it's MessageChatEvent */
+    /** 
+     * Default constructor. 
+     * 
+     * Sets timeStamp to current date. 
+     */
+    AbstractChatEvent();
+
+    virtual ~AbstractChatEvent();
+
+    /** 
+     * Returns true if it's MessageChatEvent 
+     *
+     * Default implementation returns false.
+     */
     virtual bool isMessageChatEvent() const;
 
     /** Returns timeStamp */

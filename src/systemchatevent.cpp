@@ -2,6 +2,15 @@
 #include "systemchatevent.h"
 
 
+SystemChatEvent::SystemChatEvent(SystemChatEvent::SystemEventType type) : type_(type) {
+}
+
+
+SystemChatEvent::SystemChatEvent() : type_(SystemChatEvent::Other) {
+
+}
+
+
 SystemChatEvent::SystemEventType SystemChatEvent::type() const {
     return type_;
 }
@@ -9,17 +18,6 @@ SystemChatEvent::SystemEventType SystemChatEvent::type() const {
 
 void SystemChatEvent::setType(SystemChatEvent::SystemEventType type) {
     type_ = type;
-}
-
-
-SystemChatEvent::SystemChatEvent(SystemChatEvent::SystemEventType type)
-: type_(type) {
-}
-
-
-SystemChatEvent::SystemChatEvent()
-: type_(SystemChatEvent::Other) {
-
 }
 
 
@@ -33,9 +31,11 @@ QString SystemChatEvent::message() const {
 
     switch (type_) {
         case SystemChatEvent::EncryptionEnabled :
-            return "<icon name=\"psi/cryptoYes\"> " + QObject::tr("Encryption Enabled");
+                ret = "Encryption Enabled";
+            break;
         case SystemChatEvent::EncryptionDisabled :
-            return "<icon name=\"psi/cryptoNo\"> " + QObject::tr("Encryption Disabled");
+                ret = "Encryption Disabled";
+            break;
         case SystemChatEvent::Disconnected :
                 ret = "Disconnected";
             break;
@@ -58,5 +58,5 @@ QString SystemChatEvent::message() const {
             break;
     }
 
-    return QObject::tr(ret); 
+    return QObject::tr(ret);
 }

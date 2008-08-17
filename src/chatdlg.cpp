@@ -702,16 +702,21 @@ void ChatDlg::doneSend() {
 
 
 void ChatDlg::encryptedMessageSent(int x, bool b, int e, const QString &dtext) {
+    
     if (transid_ == -1 || transid_ != x) {
         return;
     }
+    
     transid_ = -1;
+    
     if (b) {
         doneSend();
     }
+    
     else {
         PGPUtil::showDiagnosticText(static_cast<QCA::SecureMessage::Error> (e), dtext);
     }
+    
     chatEdit()->setEnabled(true);
     chatEdit()->setFocus();
 }
@@ -782,14 +787,14 @@ void ChatDlg::appendMessage(const Message &m, bool local) {
 
     if (encChanged) {
         if (encEnabled) {
-            SystemChatEvent * ev = new SystemChatEvent(SystemChatEvent::EncryptionEnabled); //freed in chatview
+            SystemChatEvent * ev = new SystemChatEvent(SystemChatEvent::EncryptionEnabled);
             appendChatEvent(ev);
             if (!local) {
                 setPGPEnabled(true);
             }
         }
         else {
-            SystemChatEvent * ev = new SystemChatEvent(SystemChatEvent::EncryptionDisabled); //freed in chatview
+            SystemChatEvent * ev = new SystemChatEvent(SystemChatEvent::EncryptionDisabled);
             appendChatEvent(ev);
             if (!local) {
                 setPGPEnabled(false);
