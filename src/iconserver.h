@@ -13,16 +13,18 @@
 
 /**
  * Conains icons and avatars for Webkit use.
- * It has similar to IconsetFactory+AvatarFactory functionality.
- * When webkit encounter for example \<img src="icon://smile.png"\> it will call * 
+ *
+ * It has similar to the IconsetFactory + AvatarFactory functionality.
+ *
+ * When webkit encounter for example \<img src="icon://smile.png"\> it will call  
  * IconServer::getIcon("smile.png") 
  *
- * You have to registerIcon() before webkit could use it
+ * You have to registerIcon() before webkit could use it. 
+ * You can register any data (e.g. you can "download" HTML using icon:// URL).
  *
- * You have to delete this object afer all Webkit (ChatDialogs) instances deletion
+ * You have to delete this object afer all Webkit (ChatDialogs) instances are deleted.
  * 
- * dataMutex is mutable
- *
+ * NOTE: dataMutex is mutable
  */
 class IconServer : public QObject {
 
@@ -30,14 +32,22 @@ class IconServer : public QObject {
 public:
 
     IconServer() : QObject() {}
+    
     /**
      * Registers icon.
-     * name => data. \param data should contain image data eg. BMP, PNG 
-     * It will replace old icon
+     *
+     * name => data. \param data should contain image data eg. BMP, PNG *
+     * It will replace old icon.
+     *
+     * NOTE: dataMutex is modified 
      */
     void registerIcon(const QString& name, QByteArray data);
 
-    /** Returns image data or empty QByteArray if \param name was't registered; dataMutex is modified */
+    /** 
+     * Returns image data or empty QByteArray if \param name was't registered.
+     *
+     * NOTE: dataMutex is modified 
+     */
     QByteArray getIcon(const QString& name) const;
 
     /** Converts QPixmap to QByteArray using PNG format */
@@ -45,10 +55,18 @@ public:
 
     public 
 slots:
-    /** Unregisters all icons from (icon)names */
+    /** 
+     * Unregisters all icons from (icon)names 
+     *
+     * NOTE: dataMutex is modified 
+     */
     void unregisterAll(const QStringList& names);
 
-    /** Registers all icons (key => value) from icons */
+    /**
+     * Registers all icons (name => icon) 
+     *
+     * NOTE: dataMutex is modified 
+     */
     void registerAll(QStringList names, const QList<const QPixmap*>& icons); //qt moc cannot handle const list<pair>& 
 
 
@@ -60,6 +78,4 @@ protected:
     mutable QMutex dataMutex;
 };
 
-
 #endif	
-

@@ -7,6 +7,7 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(HTMLChatViewTest);
 
+
 void HTMLChatViewTest::onlyFooterAndHeader() {
     prepareTest("testingTheme/");
     checkResultBody(
@@ -255,6 +256,53 @@ void HTMLChatViewTest::defaultIcons() {
     ce->setService("Jabber");
     ce->setConsecutive(false);
     ce->setJid("senu@jabber.pl");
+    ce->setLocal(true);
+    ce->setUserIconPath("outgoing"); //
+    ce->setUserStatusIcon("myicon.png");
+    ce->setUserColor("#123456");
+
+    view->appendMessage(ce);
+
+    waitUntil(&helper.append);
+
+    checkResultBody(
+                    "<div><b style=\"color: green\">header</b></div><hr>"
+                    "<div id=\"Chat\">"
+
+                    "<div class=\"combine\"><div class=\"ctime\">1970-02-05 - 01:00</div>"
+                    "Outgoing/buddy_icon.png - myicon.png - ltr - senu@jabber.pl - senu - " //
+                    "Jabber - senu@jabber.pl - Outgoing/buddy_icon.png :: " //
+
+                    "message"
+
+                    " || message outgoing <span style=\"color: #194978\">COLOR</span>"
+                    "</div>"
+
+                    "<div id=\"insert\"></div>"
+
+                    "</div>"
+                    "<hr>"
+                    "<div><b style=\"color: red\">footer</b></div>"
+                    );
+
+}
+
+
+void HTMLChatViewTest::keywordEscaping() {
+    prepareTest("testingTheme/");
+
+    QDateTime time;
+    time.setTime_t(24 * 60 * 60 * 35);
+
+    MessageChatEvent * ce = new MessageChatEvent();
+
+    ce->setBody("ABCDEFGHIJ1234567890");
+
+    ce->setTimeStamp(time);
+    ce->setNick("se%service%nu");
+    ce->setService("Jab%userIconPath%ber");
+    ce->setConsecutive(false);
+    ce->setJid("senu@ja%message%bber.pl");
     ce->setLocal(true);
     ce->setUserIconPath("outgoing"); //
     ce->setUserStatusIcon("myicon.png");

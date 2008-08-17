@@ -12,6 +12,8 @@ ChatView * ChatViewFactory::createChatView(bool isGroupChat, QString jid,
                                            HTMLThemeManager* themeManager,
                                            IconServer* iconServer) {
 
+    Q_UNUSED(jid); //jid could be used to select jid-based theme.
+
     bool useHTMLView;
     
     if (isGroupChat) {

@@ -1,5 +1,6 @@
-#include "iconserver.h"
 #include <QDebug>
+
+#include "iconserver.h"
 
 class IconServer;
 
@@ -16,7 +17,6 @@ void IconServer::registerIcon(const QString& name, QByteArray data) {
 QByteArray IconServer::getIcon(const QString& name) const {
     dataMutex.lock();
 
-//    qDebug() << "IconServer :: getIcon()" << name;
     QByteArray data = dict[name];
 
     dataMutex.unlock();
@@ -36,7 +36,6 @@ QByteArray IconServer::pixmapToPng(const QPixmap& pixmap) {
 
 void IconServer::unregisterAll(const QStringList& names) {
     dataMutex.lock();
-//    qDebug() << "   ---| runregisterAll()" << names;
 
     foreach(QString name, names) {
         dict.remove(name);
@@ -48,7 +47,6 @@ void IconServer::unregisterAll(const QStringList& names) {
 
 void IconServer::registerAll(QStringList names, const QList<const QPixmap*>& icons) { //qt moc cannot handle const list<pair>& 
     dataMutex.lock();
-//    qDebug() << "+++   | registerAll()" << names;
 
     Q_ASSERT(icons.size() == names.size());
 

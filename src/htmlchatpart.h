@@ -7,17 +7,21 @@
 #include <QColor> 
 
 
-/** Part (string) of HTMLChat document (eg. newly created message/event)
+/** 
+ * Part (string) of HTMLChat document (eg. newly created message/event).
  *
- * 	+ method to escape and replace %keywords% with corresponding values
+ * Main methods: replaceAndEscapeKeyword(key, value), toString().
+ *
+ *  Usage:
+ *
+ *   HTMLChatPart part = fileTransferEventTemplate.createFreshHTMLPart();
+ *   part.replaceAndEscapeKeyword("%status%", statusStr);
  */
 class HTMLChatPart {
 
 public:
 
-
-    HTMLChatPart() {
-    };
+    HTMLChatPart();
 
     /** Creates HTMLChatPart with body = content*/
     HTMLChatPart(const QString _content);
@@ -25,14 +29,13 @@ public:
     /** Replaces occurence of %keyword% with escaped value */
     void replaceAndEscapeKeyword(QString keyword, QString value);
 
-    /** Replaces occurence of %message% with escaped value;
-     *  We need this method because user input must be validated by CSS validator  
-     *  written in JS.
+    /* 
+     * "Replaces" occurence of %message% with escaped value;
+     *
+     * \param value is stored (messageBody()) and is replaced in JavaScript code after 
+     * CSS validation/transformermation.
      */
-    void replaceMessageBody(QString value); 
-
-    /** Replaces %keyword% with value */
-    void replaceKeyword(QString keyword, QString value);
+    void replaceMessageBody(QString value);
 
     /** Replaces time keyword %keyword{format}% with formatted time */
     void replaceTimeKeyword(QString keyword, QDateTime time);
@@ -40,14 +43,13 @@ public:
     /** Replaces time keyword %senderColor% with color computed using userHash */
     void replaceSenderColorKeyword(const QColor& userColor);
 
-    /** Escapes string */
-    static QString escapeString(QString string); //TODO 47 unused
-
-    /** Creates "short time" string (%shortTime%) */
+    /** Creates 'short time' string (%shortTime%) */
     static QString createShortTime(const QDateTime& time);
 
-    /** Converts part to string */
-    QString toString();
+    /** 
+     * Converts part to string.
+     */
+    QString toString() const;
 
     /** Returns value of %message% */
     QString messageBody() const;
@@ -56,13 +58,15 @@ private:
     /** Part body */
     QString content;
 
-    /** Message body (%message%) */ 
+    /** Message body (%message%) */
     QString _messageBody;
 
     /** Returns formated time, eg for %timeOpened{X}% */
     QString formatTime(QString format, const QDateTime& time);
-
-
+    
+    /** Escapes string (% escaping) */ 
+    QString escapeString(QString string); //TODO!!!
+    
 };
 
 #endif

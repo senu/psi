@@ -7,7 +7,7 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "../../htmlChatView.h"
+#include "../../htmlchatview.h"
 #include "../../iconserver.h"
 
 
@@ -36,8 +36,10 @@ class HTMLChatViewTest : public CPPUNIT_NS::TestCase {
     CPPUNIT_TEST(clearMessages);
     CPPUNIT_TEST(emoteEvent);
     CPPUNIT_TEST(themeChanged);
-
+    
+    CPPUNIT_TEST(keywordEscaping);
     CPPUNIT_TEST(javaScriptCSSValidatorIntegration);
+    
     CPPUNIT_TEST(defaultIcons);
 
     CPPUNIT_TEST(noActionTemplate);
@@ -67,6 +69,9 @@ protected:
 
 	/** Checks if HTMLChatView uses JavaScript CSS Validator */
     void defaultIcons();
+
+    /** Keyword values with %% have to be escaped */
+    void keywordEscaping();
 
     void prepareTest(QString themePath);
 

@@ -7,10 +7,10 @@ QString EmoteChatEvent::getRightTemplateAndFillItWithData(const ChatTheme& theme
 
 
 void EmoteChatEvent::setMessage(QString message) {
-    _message = message;
+    message_ = message;
 }
 
 
 QString EmoteChatEvent::message() const {
-    return _message;
+    return message_;
 }

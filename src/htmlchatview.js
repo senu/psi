@@ -95,7 +95,7 @@ function psi_dfs(element) {
 
 /** Replaces %message% keyword with CSS-validated messageBody */
 function psi_setMessageBody(messagePart, messageBody) {
-    return messagePart.replace("%message%", psi_validateCSS(messageBody));
+    return messagePart.replace(/%message%/g, psi_validateCSS(messageBody));
 }
 
 

@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QLineEdit>
 
-/** Dialog for text searching */
+/** Text searching dialog */
 class FindDialog : public QDialog {
 
     Q_OBJECT

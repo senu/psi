@@ -4,6 +4,7 @@
 #include <QNetworkAccessManager>
 #include <QStringList>
 #include <QMutex>
+
 #include "iconserver.h"
 
 
@@ -15,6 +16,7 @@ class NetworkAccessManager : public QNetworkAccessManager {
 public:
     /** 
      * Constructor. 
+     *
      * \param iconServer will be used to serve icon:// urls 
      */
     NetworkAccessManager(QObject *parent, IconServer* iconServer);
@@ -25,7 +27,12 @@ public:
 
     private
 slots:
-    /** Called by QNetworkReply::finish(); reemits finish(reply) */
+        
+    /** 
+     * Called by QNetworkReply::finish(). 
+     * 
+     * Emitts finish(reply) 
+     */
     void callFinished();
 
 protected:
@@ -42,7 +49,9 @@ protected:
     QStringList whiteList;
 
     /** 
-     * Mutal exclusion for whitList. WhiteList can be accessed by Webkit (createRequest()) 
+     * Mutal exclusion for whitList. 
+     * 
+     * WhiteList can be accessed by Webkit (createRequest()) 
      * and Psi (addUrlToWhiteList()) simultaneously)
      */
     QMutex whiteListMutex;

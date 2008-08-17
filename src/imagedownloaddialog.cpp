@@ -12,16 +12,20 @@ ImageDownloadDialog::ImageDownloadDialog(QWidget* parent) : QDialog(parent), dow
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
 
+    //layout
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowTitle(tr("Insert image"));
     QVBoxLayout *vb = new QVBoxLayout(this, 4);
     QHBoxLayout *hb = new QHBoxLayout(vb);
     QLabel *l = new QLabel(tr("URL:"), this);
     hb->addWidget(l);
+
+    //URL input
     urlEdit = new QLineEdit(this);
     hb->addWidget(urlEdit);
     vb->addStretch(1);
 
+    //separator
     QFrame *Line1 = new QFrame(this);
     Line1->setFrameShape(QFrame::HLine);
     Line1->setFrameShadow(QFrame::Sunken);
@@ -31,10 +35,12 @@ ImageDownloadDialog::ImageDownloadDialog(QWidget* parent) : QDialog(parent), dow
     hb = new QHBoxLayout(vb);
     hb->addStretch(1);
 
+    //downloading label
     downloadingLabel = new QLabel(tr("Downloading..."), this);
     hb->addWidget(downloadingLabel);
     downloadingLabel->setVisible(false);
 
+    //buttons
     QPushButton *cancelButton = new QPushButton(tr("&Cancel"), this);
     connect(cancelButton, SIGNAL(clicked()), SLOT(cancel()));
     hb->addWidget(cancelButton);
@@ -53,7 +59,7 @@ ImageDownloadDialog::ImageDownloadDialog(QWidget* parent) : QDialog(parent), dow
 
 
 ImageDownloadDialog::~ImageDownloadDialog() {
-    qDebug() << "img dlg";
+    qDebug() << "@@@@ MEM WEBKIT: ----" << "ImageDownloadDialog::~ImageDownloadDialog()";
 }
 
 

@@ -8,16 +8,14 @@
 /**
  * Webkit-based event viewer (used in EventDlg).
  * 
- * It offers better XHTML(-IM) rendering.
- * It's a WebPage with disabled JavaScript
- * It also has icon:// URL support
+ * It offers better XHTML(-IM) rendering and has icon:// URL support
  */
 class EventView : public WebView {
 
     Q_OBJECT
 
 public:
-    /** IconServer will be used to display iconx:// */
+    /** IconServer will be used to display icon:// URLs */
     EventView(QWidget* parent, IconServer* iconServer);
 
     /** 

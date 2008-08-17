@@ -1,17 +1,16 @@
 #ifndef HAVE_FILE_TRANSFER_CHAT_EVENT
 #define HAVE_FILE_TRANSFER_CHAT_EVENT
 
-#include <Qt>
 #include <QString>
 
 #include "chatevent.h"
 #include "chattheme.h"
 
-class ChatTheme;
-class AstractChatEvent;
-
-
-/** FileTransfer (init/abort/finished) ChatEvent */
+/**
+ * FileTransfer ChatEvent
+ * 
+ * Displayed when user receives/aborts File Transfer.  
+ */
 class FileTransferChatEvent : public ChatEvent {
 
 public:
@@ -24,6 +23,11 @@ public:
         Finished,
     };
 
+    /**
+     * Constructor.
+     *
+     * type = Initiated.
+     */
     FileTransferChatEvent();
 
     /** Type of FileTransferEvent */
@@ -35,13 +39,11 @@ public:
     /** Sets fileName */
     void setFileName(QString fileName);
 
-
-    QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const {
-        return theme.createFileTransferEventPart(this);
-    }
+    //reimplemented
+    QString getRightTemplateAndFillItWithData(const ChatTheme& theme) const;
 
 private:
-    QString _fileName; //need accessors
+    QString fileName_; 
 };
 
 #endif

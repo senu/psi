@@ -8,7 +8,11 @@
 #include <QImage>
 #include <QLabel>
 
-
+/**
+ * Dialog used for downloading images over HTTP.
+ *
+ * User provides image's URL and when download id finished finished() signal is emmited. 
+ */
 class ImageDownloadDialog : public QDialog {
 
     Q_OBJECT
@@ -17,7 +21,7 @@ public:
     /**
      * Constructor.
      *
-     * DeleteOnClose is set.
+     * NOTE: DeleteOnClose is set.
      */
     ImageDownloadDialog(QWidget* parent);
     ~ImageDownloadDialog();
@@ -40,6 +44,7 @@ signals:
 
     private
 slots:
+        
     /** Closes dialog and aborts downloading file (if needed) */
     void cancel();
 
@@ -71,4 +76,3 @@ private:
 
 
 #endif
-

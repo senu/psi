@@ -11,8 +11,14 @@ HTMLChatPart::HTMLChatPart(const QString _content)
 }
 
 
-QString HTMLChatPart::toString() {
-    return content;
+HTMLChatPart::HTMLChatPart() {
+};
+
+
+QString HTMLChatPart::toString() const {
+//    QString ret = content;
+//    ret.replace("\\%", "%").replace("\\\\", "\\");
+    return ret;
 }
 
 
@@ -27,7 +33,7 @@ void HTMLChatPart::replaceMessageBody(QString value) {
 
 
 QString HTMLChatPart::escapeString(QString string) {
-    return string.replace('"', "\"");
+    return string; //replace('\\', "\\\\").replace('%', "\\%");
 }
 
 
@@ -39,12 +45,6 @@ void HTMLChatPart::replaceTimeKeyword(QString keyword, QDateTime time) {
         content.replace(pos, timePattern.cap(0).length(), timeString);
     }
 }
-
-
-
-// These colors are used for coloring nicknames. I tried to use
-// colors both visible on light and dark background.
-// [it's Kopete color list]
 
 
 void HTMLChatPart::replaceSenderColorKeyword(const QColor& userColor) {
@@ -78,7 +78,7 @@ QString HTMLChatPart::formatTime(QString format, const QDateTime& time) {
 
 
 QString HTMLChatPart::createShortTime(const QDateTime& time) {
-	return time.toString("hh:mm");
+    return time.toString("hh:mm");
 }
 
 

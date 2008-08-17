@@ -1,15 +1,21 @@
 #include "filetransferchatevent.h"
 
 
-FileTransferChatEvent::FileTransferChatEvent() 
-    :type(Initiated) {
-    
+FileTransferChatEvent::FileTransferChatEvent() : type(Initiated) {
+
 }
+
+
 QString FileTransferChatEvent::fileName() const {
-    return _fileName;
+    return fileName_;
 }
 
 
 void FileTransferChatEvent::setFileName(QString fileName) {
-    _fileName = fileName;
+    fileName_ = fileName;
+}
+
+
+QString FileTransferChatEvent::getRightTemplateAndFillItWithData(const ChatTheme& theme) const {
+    return theme.createFileTransferEventPart(this);
 }

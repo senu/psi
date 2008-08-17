@@ -9,7 +9,6 @@ QString DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& p
     
     //remove /me from first text node
     if(textNodeNumber_ == 0 && removeEmoteString_ && output.startsWith("/me ")) {         
-        qDebug() << "DOM transform: removed /me ";
         output = output.mid(4);
     }
 
@@ -23,16 +22,15 @@ QString DefaultHTMLTextFormatter::format(const QString& input, const QDomNode& p
         output = TextUtil::legacyFormat(output);
     }
 
-    //TODO ? 14 it would be nice to have html template that handles highlighting
+    //TODO ? 14 it would be nice to have customizable highlighting
     if (doHighlighting_) {
         output = "<strong>" + output + "</strong>";
     }
 
-//    qDebug() << "!!! tf messageText1.5 0" << output;
-
     if (!input.trimmed().isEmpty()) { //skip nodes that contains only whitespaces
         textNodeNumber_++;
     }
+    
     return output;
 }
 

@@ -9,34 +9,40 @@
 #include "htmlchattheme.h"
 
 
-/** Keeps HTML theme list, and caches loaded themes */
+/**
+ * Stores HTMLThemeList and caches loaded (from filesystem) themes.
+ */
 class HTMLThemeManager {
 
 public:
     /**
-     * Fils theme list with themes located in themesDir dir. 
+     * Fills the theme list with themes located in themesDir dir. 
      */
     HTMLThemeManager(const QString& themesDir);
     ~HTMLThemeManager();
 
-    /** Returns theme list. Used in PsiOptions */
+    /** 
+     * Returns theme list. 
+     * 
+     * It is used in PsiOptions 
+     */
     const HTMLChatThemeList* themeList() const;
 
     /** 
      * Returns theme and loads it from filesystem if needed.
-     * use theme.isValid() after this call
+     *
+     * Use theme.isValid() after this call.
      */
     HTMLChatTheme getTheme(const QString& themeName, const QString& variant);
+    
 private:
-    HTMLChatThemeList * _themeList;
+    HTMLChatThemeList * themeList_;
 
     /** Loaded themes [(path,variant) -> theme] */
-    QHash< QPair<QString, QString>, HTMLChatTheme> _themeCache;
+    QHash< QPair<QString, QString>, HTMLChatTheme> themeCache;
 
     /** A path to dir with themes */
     QString themesDir;
-
-
 };
 
 #endif

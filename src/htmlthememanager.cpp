@@ -2,43 +2,43 @@
 #include "applicationinfo.h"
 
 
-HTMLThemeManager::HTMLThemeManager(const QString& themesDir_) : themesDir(themesDir_){
+HTMLThemeManager::HTMLThemeManager(const QString& themesDir_) : themesDir(themesDir_) {
 
-    _themeList = new HTMLChatThemeList();
-    _themeList->readThemes(QDir(themesDir));
+    themeList_ = new HTMLChatThemeList();
+    themeList_->readThemes(QDir(themesDir));
 }
 
 
 HTMLThemeManager::~HTMLThemeManager() {
-    delete _themeList;
+    delete themeList_;
 }
 
 
 const HTMLChatThemeList* HTMLThemeManager::themeList() const {
-    return _themeList;
+    return themeList_;
 }
 
 
 HTMLChatTheme HTMLThemeManager::getTheme(const QString& themeName, const QString& variant) {
 
-    QString path = _themeList->themePath(themeName);
+    QString path = themeList_->themePath(themeName);
 
-    if (path.isEmpty()) { //theme not found, but filesystem could be changed since last check
-        _themeList->readThemes(QDir(themesDir));
-        path = _themeList->themePath(themeName);
+    if (path.isEmpty()) { //theme not found, but filesystem could have been changed since last check
+        themeList_->readThemes(QDir(themesDir));
+        path = themeList_->themePath(themeName);
     }
 
     if (!path.isEmpty()) { //theme found
         QPair<QString, QString> key(path, variant);
 
-        if (_themeCache.contains(key)) {
-            return _themeCache[key];
+        if (themeCache.contains(key)) {
+            return themeCache[key];
         }
 
         //cache miss
         HTMLChatTheme theme(path);
         theme.setCurrentVariant(variant);
-        _themeCache.insert(key, theme);
+        themeCache.insert(key, theme);
         return theme;
     }
 

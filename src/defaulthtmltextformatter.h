@@ -89,8 +89,16 @@ public:
 protected:
     bool doEmoticonify_;
     bool doLinkify_;
+
+    /** 'Legacy Formtting' changes *txt* to </b>*txt*</b> */
     bool doLegacyFormatting_;
     bool doHighlighting_;
+
+    /** 
+     * It should be true for HTMLChatView and false for PlainTextChatView.
+     * 
+     * We use \<icon\> in PlainText ChatView and \<img src="icon://"\> in Webkit-based one.
+     */
     bool useImgTagInEmoticonify_;
 
     /** This property holds whether '/me' substring should be deleted from the first text node*/
