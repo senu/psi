@@ -7,28 +7,42 @@
 #include <QStringList>
 #include "chattheme.h"
 
-/** Abstract List of theme names; eg for selecting theme */
+
+/** 
+ * Abstract List of theme names.
+ *
+ * It can read and validate themes from filesystem ant can be used for 
+ * selecting theme (in options).
+ */
 class ChatThemeList {
-public:	
-    
+
+public:
+
     /** Reads themes from themesDir/ */
-	virtual void readThemes(const QDir& themesDir) = 0;
-	QStringList themeNames();
-	QString themePath(QString themeName);
-	
+    virtual void readThemes(const QDir& themesDir) = 0;
+    QStringList themeNames();
+    QString themePath(QString themeName);
+
 protected:
-	/** 
+
+    /** 
      * Checks if themeFolder contains valid theme.  
+     *
      * Default implementation returns true.
      */
-	virtual bool validateTheme(QString themeFolder);
-	
-	/** Generates theme name for theme in themeFolder */
-	virtual QString generateThemeName(QString themePath);
+    virtual bool validateTheme(QString themeFolder);
 
-	/** Theme name -> theme path dictionary */
-	QHash<QString, QString> themeDict;
-	
+    /** 
+     * Generates theme name for theme in themeFolder 
+     * 
+     * For example, it translates:
+     *   Pro.AdiumMessageStyle/ -> Pro
+     *   Pro/ -> Pro2
+     */
+    virtual QString generateThemeName(QString themePath);
+
+    /** Theme name -> theme path dictionary */
+    QHash<QString, QString> themeDict;
 
 };
 

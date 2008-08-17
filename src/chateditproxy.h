@@ -28,9 +28,11 @@ class QTextEdit;
 class QLayout;
 class ChatEdit;
 
+/** Abstraction to change ChatEdit type in runtime */
 class ChatEditProxy : public QWidget
 {
 	Q_OBJECT
+        
 public:
 	ChatEditProxy(QWidget* parent);
 
@@ -54,7 +56,7 @@ private:
 	void moveData(QTextEdit* newTextEdit, QTextEdit* oldTextEdit) const;
 	void updateLayout();
 
-    /** True if auto-resizing (line) composer is enabled */
+    /** True if auto-resizing line-composer is enabled */
 	bool lineEditEnabled;
     
     /** True if xhtml-im composer is enabled */
@@ -62,9 +64,6 @@ private:
     
 	ChatEdit* textEdit_;
 	QLayout* layout_;
-    
-    /** XHTML-IM fromatting toolbar */
-    QToolBar* formatToolBar;
 };
 
 #endif

@@ -10,7 +10,14 @@
 
 class ChatEvent;
 
-/** Abstract ChatView widget */
+
+/** 
+ * Abstract ChatView widget 
+ *
+ * It displays ChatEvents. Main methods: appendEvent, appendMessage, clear().
+ *
+ * You must call init() before you can use it.
+ */
 class ChatView : public QWidget {
 
 
@@ -18,31 +25,32 @@ class ChatView : public QWidget {
 
 public:
     ChatView(QWidget* parent) : QWidget(parent) {
-    qDebug() << "@@@@ MEM WEBKIT: ++++" << "ChatView::ChatView()"; 
+        qDebug() << "@@@@ MEM WEBKIT: ++++" << "ChatView::ChatView()";
     }
 
 
     /** 
      * Destructor.
      * 
-     * NOTE: events in appendedEvents are not freed, because they can be used in
+     * NOTE: events in appendedEvents are not freed because they can be used in
      * NOTE: another chatView (restoreDataFrom()).
      * NOTE: you have to call deleteChatEvents() to free them.
      */
-    virtual ~ChatView() {
-    }
+    virtual ~ChatView();
 
     /** 
      * Appends event (filetransfer, mood, etc); adds it to the appendedEvents 
      * 
-     * It's ChatView responsibility to free event
+     * ChatView takes ownership of that event (i.e it is ChatView responsibility
+     * to delete it)
      */
     virtual void appendEvent(ChatEvent* event, bool alreadyAppended = false);
 
     /**
      * Appends message; adds it to the appendedEvents 
      * 
-     * It's ChatView responsibility to free event
+     * ChatView takes ownership of that event (i.e it is ChatView responsibility
+     * to delete it)
      */
     virtual void appendMessage(MessageChatEvent* event, bool alreadyAppended = false);
 
@@ -52,13 +60,15 @@ public:
      * NOTE: In Psi you should not call this method. Use clear() from ChatDialog, because
      * NOTE: ChatDialog is responsible for message 'successiveness' (making message consecutive)
      * NOTE: so if you call this->clear() ChatDialog could try to attach consecutive message to 
-     * NOTE: one that doesn't now exist. If you really need to call clear() here - create signal cleared()
+     * NOTE: one that doesn't exist. If you really need to call clear() here - create signal cleared()
      */
     virtual void clear();
 
     /** 
      * Initialize ChatView 
-     * \param chatInfo contains conversation info (to who, time stared, etc. )*/
+     *
+     * \param chatInfo contains conversation info (to whom, time stared, etc. )
+     */
     virtual void init(const ChatTheme::ChatInfo& chatInfo);
 
     /** 
@@ -77,14 +87,13 @@ public:
     /** 
      * Restore chat data (chatInfo, chatEvents) from the other ChatView.
      * (to switch between PlainText and HTML widgets)
-     * Explicit copy constructor
      */
     virtual void restoreDataFrom(const ChatView& other);
-    
-    /** Sets session info */
-    ChatTheme::ChatInfo chatInfo() const;
-    
+
     /** Returns session info */
+    ChatTheme::ChatInfo chatInfo() const;
+
+    /** Sets session info */
     void setChatInfo(ChatTheme::ChatInfo chatInfo);
 
     /** 
@@ -96,7 +105,7 @@ public:
 
     /** This property holds whether there is any text selected. */
     virtual bool hasSelectedText() const = 0;
-    
+
     /** Copies selected text to clipboard */
     virtual void copySelectedText() = 0;
 
@@ -110,11 +119,11 @@ signals:
 
     /** You cannot append messages until ChatView is ready (synchronization with Webkit) */
     void initDocumentFinished();
-    
+
     /** Emmited whenever the ChatView selection changes*/
     void selectionChanged();
-    public
 
+    public
 
 slots:
     /** Scrolls the vertical scroll bar to its maximum position i.e. to the bottom. */
@@ -125,13 +134,13 @@ slots:
 
     /** Scrolls chatView up */
     virtual void scrollUp() = 0;
-    
+
     /** Scrolls chatView down */
     virtual void scrollDown() = 0;
 
 protected:
     /** Session info */
-    ChatTheme::ChatInfo _chatInfo;
+    ChatTheme::ChatInfo chatInfo_;
 
     /** Appended events - we need to remember it in case of theme change */
     QList <AbstractChatEvent*> appendedEvents;
@@ -141,4 +150,3 @@ protected:
 
 };
 #endif
-

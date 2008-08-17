@@ -18,7 +18,6 @@
  *
  */
 
-#include "chateditproxy.h"
 
 #include <QVBoxLayout>
 
@@ -26,45 +25,47 @@
 #include "psioptions.h"
 #include "htmlchatedit.h"
 #include "lineedit.h"
+#include "chateditproxy.h"
+
 
 ChatEditProxy::ChatEditProxy(QWidget* parent)
-	: QWidget(parent)
-    , lineEditEnabled(false)
-    , htmlEditEnabled(false)
-	, textEdit_(0)
-	, layout_(0) 
-    , formatToolBar(0)
-{
-	layout_ = new QVBoxLayout(this);
-	layout_->setMargin(0);
-	layout_->setSpacing(0);
+: QWidget(parent)
+, lineEditEnabled(false)
+, htmlEditEnabled(false)
+, textEdit_(0)
+, layout_(0) {
 
-	connect(PsiOptions::instance(), SIGNAL(optionChanged(const QString&)), SLOT(optionsChanged()));
-	optionsChanged();
+    layout_ = new QVBoxLayout(this);
+    layout_->setMargin(0);
+    layout_->setSpacing(0);
+
+    connect(PsiOptions::instance(), SIGNAL(optionChanged(const QString&)), SLOT(optionsChanged()));
+    optionsChanged();
 
     if (!textEdit_) {
-		updateLayout();
+        updateLayout();
     }
 }
+
 
 /**
  * Creates new ChatEdit basing on ChatEditProxy's properties.
  */
-ChatEdit* ChatEditProxy::createTextEdit()
-{
+ChatEdit* ChatEditProxy::createTextEdit() {
     if (lineEditEnabled) {
         if (htmlEditEnabled) {
-    		return new HTMLLineEdit(this); 
+            return new HTMLLineEdit(this);
         }
-   		return new LineEdit(this); 
+        return new LineEdit(this);
     }
-    
+
     if (htmlEditEnabled) {
-        return new HTMLChatEdit(this); 
+        return new HTMLChatEdit(this);
     }
-    
+
     return new ChatEdit(this);
 }
+
 
 /**
  * Moves the QTextDocument and QTextCursor data from \a oldTextEdit
@@ -75,70 +76,70 @@ ChatEdit* ChatEditProxy::createTextEdit()
  * NB: Make sure that all QSyntaxHighlighters are detached prior to calling
  * this function.
  */
-void ChatEditProxy::moveData(QTextEdit* newTextEdit, QTextEdit* oldTextEdit) const
-{
-	QTextDocument* doc = oldTextEdit->document();
-	QTextCursor cursor = oldTextEdit->textCursor();
+void ChatEditProxy::moveData(QTextEdit* newTextEdit, QTextEdit* oldTextEdit) const {
+    QTextDocument* doc = oldTextEdit->document();
+    QTextCursor cursor = oldTextEdit->textCursor();
 
-	doc->setParent(newTextEdit);
-	oldTextEdit->setDocument(0);
+    doc->setParent(newTextEdit);
+    oldTextEdit->setDocument(0);
 
-	newTextEdit->setDocument(doc);
-	newTextEdit->setTextCursor(cursor);
+    newTextEdit->setDocument(doc);
+    newTextEdit->setTextCursor(cursor);
 
     if (!htmlEditEnabled) { //reset text formattings in plain mode
         cursor = newTextEdit->textCursor();
-        
+
         cursor.select(QTextCursor::Document);
         cursor.setCharFormat(QTextCharFormat());
         cursor.setBlockFormat(QTextBlockFormat());
     }
 }
 
+
 /**
  * Creates new QTextEdit and moves data to it from the old one.
  * Text, selection and cursor position are left intact.
  */
-void ChatEditProxy::updateLayout()
-{
-	ChatEdit* newEdit = createTextEdit();
+void ChatEditProxy::updateLayout() {
+    ChatEdit* newEdit = createTextEdit();
 
-	if (textEdit_) {
-		// all syntaxhighlighters should be removed while we move
-		// the documents around, and should be reattached afterwards
-		textEdit_->setCheckSpelling(false);
-		newEdit->setCheckSpelling(false);
+    if (textEdit_) {
+        // all syntaxhighlighters should be removed while we move
+        // the documents around, and should be reattached afterwards
+        textEdit_->setCheckSpelling(false);
+        newEdit->setCheckSpelling(false);
 
-		moveData(newEdit, textEdit_);
+        moveData(newEdit, textEdit_);
 
-		newEdit->setCheckSpelling(ChatEdit::checkSpellingGloballyEnabled());
-	}
+        newEdit->setCheckSpelling(ChatEdit::checkSpellingGloballyEnabled());
+    }
+
+    delete textEdit_;
+    textEdit_ = newEdit;
     
-	delete textEdit_;
-	textEdit_ = newEdit;
-    formatToolBar = newEdit->toolBar();
-    
-    if(formatToolBar) {
+    QToolBar* formatToolBar = newEdit->toolBar();
+
+    if (formatToolBar) {
         layout_->addWidget(formatToolBar);
     }
-	
+
     layout_->addWidget(textEdit_);
-	emit textEditCreated(textEdit_);
+    emit textEditCreated(textEdit_);
 }
+
 
 /**
  * Update ChatEdit widget according to current options.
  * FIXME: When PsiOptions::instance()->getOption("options.ui.chat.use-expanding-line-edit").toBool() finally makes it to PsiOptions, make this slot
  *        private.
  */
-void ChatEditProxy::optionsChanged()
-{
+void ChatEditProxy::optionsChanged() {
     bool wasLineEdit = lineEditEnabled,
         wasHTMLEdit = htmlEditEnabled;
-    
-	lineEditEnabled = PsiOptions::instance()->getOption("options.ui.chat.use-expanding-line-edit").toBool();
-	htmlEditEnabled = PsiOptions::instance()->getOption("options.ui.chat.use-xhtml-composer").toBool();
-    //TODO ? 8 I would like to have PsiOptions::transactionCommited(QStringList optionsChanged) - 
+
+    lineEditEnabled = PsiOptions::instance()->getOption("options.ui.chat.use-expanding-line-edit").toBool();
+    htmlEditEnabled = PsiOptions::instance()->getOption("options.ui.chat.use-xhtml-composer").toBool();
+    //TODO ? 8 I (senu) would like to have PsiOptions::transactionCommited(QStringList optionsChanged) - 
     //if user changes two options, it will create one redundant ChatEdit
 
     if (wasLineEdit == lineEditEnabled && wasHTMLEdit == htmlEditEnabled) { //unchanged

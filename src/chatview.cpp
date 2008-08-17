@@ -1,17 +1,20 @@
 #include "chatview.h"
 #include "messagechatevent.h"
 
-class MessageChatEvent;
-
 
 void ChatView::restoreDataFrom(const ChatView& other) {
-    _chatInfo = other._chatInfo;
+    chatInfo_ = other.chatInfo_;
     appendedEvents = other.appendedEvents;
 }
 
 
+ChatView::~ChatView() {
+
+}
+
+
 void ChatView::init(const ChatTheme::ChatInfo& chatInfo) {
-    _chatInfo = chatInfo;
+    chatInfo_ = chatInfo;
     init();
 }
 
@@ -47,12 +50,12 @@ void ChatView::reappendEvents() {
 
 
 void ChatView::setChatInfo(ChatTheme::ChatInfo chatInfo) {
-    _chatInfo = chatInfo;
+    chatInfo_ = chatInfo;
 }
 
 
 ChatTheme::ChatInfo ChatView::chatInfo() const {
-    return _chatInfo;
+    return chatInfo_;
 }
 
 
@@ -61,11 +64,9 @@ void ChatView::deleteChatEvents() {
 
 
     foreach(event, appendedEvents) {
-        qDebug() << "%%%%%" << "CV: delete" << (int)event;
         delete event;
     }
 
-    qDebug() << "%%%%%" << "CV: clear()";
     appendedEvents.clear();
 }
 
