@@ -100,14 +100,14 @@ void HTMLChatViewTest::noActionTemplate() {
 
     EmoteChatEvent * event = new EmoteChatEvent();
     event->setLocal(false);
-    event->setMessage("is working hard");
+    event->setBody("is working hard");
     event->setNick("Pawel Wiejacha");
     event->setService("Jabber");
     event->setJid("senu@jabber.pl");
     event->setUserIconPath("http://userserve-ak.last.fm/serve/50/4272669.jpg");
     event->setTimeStamp(time);
 
-    view->appendEvent(event);
+    view->appendMessage(event);
     waitUntil(&(helper.append));
 
     checkResultBody(
@@ -166,7 +166,7 @@ void HTMLChatViewTest::emoteEvent() {
 
     EmoteChatEvent * event = new EmoteChatEvent();
     event->setLocal(false);
-    event->setMessage("is working hard");
+    event->setBody("is working hard");
     event->setNick("Pawel Wiejacha");
     event->setService("Jabber");
     event->setJid("senu@jabber.pl");
@@ -175,7 +175,7 @@ void HTMLChatViewTest::emoteEvent() {
     event->setUserColor("#123456");
     event->setTimeStamp(time);
 
-    view->appendEvent(event);
+    view->appendMessage(event);
     waitUntil(&(helper.append));
 
     checkResultBody(
