@@ -64,8 +64,9 @@ protected:
      *
      * \param userInfo will be filled 
      * \param j is jid of user owner/sender
+     * \param forceLocal indicates whether message should be treated as outgoing (when user talks to himself)
      */
-    virtual void fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) = 0;
+    virtual void fillEventWithUserInfo(UserChatData* userInfo, const Jid& j, bool forceLocal = false) = 0;
 
     /** Status must be translated because we don't want Iris stuff in ChatView */
     StatusChatEvent::StatusEventType statusToChatViewStatus(int status) const;

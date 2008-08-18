@@ -16,9 +16,7 @@ HTMLChatPart::HTMLChatPart() {
 
 
 QString HTMLChatPart::toString() const {
-//    QString ret = content;
-//    ret.replace("\\%", "%").replace("\\\\", "\\");
-    return ret;
+    return content;
 }
 
 

@@ -67,7 +67,7 @@ private:
     QPixmap getAvatarForJid(const Jid& j);
 
     //implemented
-    void fillEventWithUserInfo(UserChatData* userInfo, const Jid& j);
+    void fillEventWithUserInfo(UserChatData* userInfo, const Jid& j, bool forceLocal = false);
 
     DefaultHTMLTextFormatter * textFormatter();
 

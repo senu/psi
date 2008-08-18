@@ -153,7 +153,7 @@ private:
     //void appendSystemMsg(const QString &, bool, const QDateTime &ts = QDateTime()); //TODO remove
     
     //reimplmented
-    void fillEventWithUserInfo(UserChatData* userInfo, const Jid& j);
+    void fillEventWithUserInfo(UserChatData* userInfo, const Jid& j, bool forceLocal = false);
     DefaultHTMLTextFormatter * textFormatter();
     
     void appendMessage(const Message &, bool alert);

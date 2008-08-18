@@ -1465,12 +1465,12 @@ DefaultHTMLTextFormatter* GCMainDlg::textFormatter() {
 }
 
 
-void GCMainDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
+void GCMainDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j, bool forceLocal) {
 
     bool local = j.resource() == d->self; //is it our message?
 	QString who = j.resource(); 
 
-    userInfo->setLocal(local);
+    userInfo->setLocal(local | forceLocal);
     userInfo->setNick(who);
     userInfo->setJid(j.full());
     userInfo->setService("Jabber");

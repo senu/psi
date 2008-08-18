@@ -264,7 +264,6 @@ void PsiChatDlg::capsChanged() {
 
     act_voice_->setEnabled(!account()->capsManager()->isEnabled() || (ul && ul->isAvailable() && account()->capsManager()->features(jid().withResource(resource)).canVoice()));
     sendXHTML = (account()->capsManager()->isEnabled() && account()->capsManager()->features(jid().withResource(resource)).canXHTML());
-    qDebug() << "psiChatDlg caps Changed, sendXHTML" << sendXHTML;
 }
 
 
@@ -344,7 +343,6 @@ void PsiChatDlg::updateAvatar(const Jid& j) {
         }
 
         //update avatar in IconServer (webkit chats)
-        qDebug() << "registered avatar for:" << j.bare() << jid().full() << account()->jid().full();
         iconServer->registerIcon("avatars/" + j.bare() + ".png", IconServer::pixmapToPng(p));
     }
 }
@@ -411,7 +409,7 @@ void PsiChatDlg::appendEmoteMessage(SpooledType spooled, const QDateTime& time, 
 
     EmoteChatEvent * event = new EmoteChatEvent(); //ev will be freed in ChatView
 
-    fillEventWithUserInfo(event, local ? account()->jid() : jid());
+    fillEventWithUserInfo(event, local ? account()->jid() : jid(), local);
     event->setTimeStamp(time);
     event->setSpooled(spooled);
     event->setMessage(txt); //TODO 82 escape
@@ -426,16 +424,14 @@ void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time,
     MessageChatEvent * msg = new MessageChatEvent();
 
     Jid owner(local ? account()->jid() : jid());
-    fillEventWithUserInfo(msg, owner);
+    fillEventWithUserInfo(msg, owner, local);
     msg->setTimeStamp(time);
     msg->setConsecutive(doConsecutiveMessage(time, owner));
     msg->setSpooled(spooled);
     msg->setBody(txt);
 
-    //for(int i=1; i<=3000; i++) {
-      //  msg->setBody("Senu tu byl i cos napisal:" + QString::number(i));
-        chatView()->appendMessage(msg);
-//    }
+    qDebug() << "fl" << local << msg->isLocal();
+    chatView()->appendMessage(msg);
 
     updateLastMsgTimeAndOwner(time, owner);
 }
@@ -463,16 +459,16 @@ void PsiChatDlg::appendMessageFields(const Message& m, QString& messageBody) {
 
     //URLs
     if (!m.urlList().isEmpty()) {
-        
+
         UrlList urls = m.urlList();
         appendedPart += QString("<ol>") + tr("-- Attached URL(s) --") + "";
-        
+
         for (QList<Url>::ConstIterator it = urls.begin(); it != urls.end(); ++it) {
             const Url &u = *it;
             appendedPart += QString("<li><strong>") + tr("URL:") + "</strong> " + QString("%1").arg(TextUtil::linkify(Qt::escape(u.url())));
             appendedPart += QString(" <strong>") + tr("Desc:") + "</strong> " + QString("%1</li>").arg(TextUtil::escape(u.desc()));
         }
-        
+
         appendedPart += "</ol>";
         containsField = true;
     }
@@ -528,21 +524,18 @@ QPixmap PsiChatDlg::getAvatarForJid(const Jid& j) {
 }
 
 
-void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
+void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j, bool forceLocal) {
 
     bool local;
 
-    qDebug() << account()->jid().full() << "[j,acc,jid]" << j.full() << account()->jid().full() << jid().full();
+    qDebug() << account()->jid().full() << "[j,acc,jid]" << j.full() << account()->jid().full() << jid().full() << forceLocal;
 
-    if (!(j.compare(account()->jid(), false))) {
-        //remote user
-        local = false;
-        userInfo->setNick(whoNick(false));
-        userInfo->setUserStatusIcon("icon://" + ui_.lb_status->psiIconName());
-    }
-    else {
+    if ((j.compare(account()->jid(), false))) {
         //local user
         local = true;
+        if (jid().compare(account()->jid(), false)) { //talking to oneself
+            local = false; //force local will be used
+        }
         userInfo->setNick(whoNick(true));
 
         //status icon
@@ -550,10 +543,15 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
         XMPP::Status::Type statusType = userStatusFor(jid(), ul, false).statusType;
         userInfo->setUserStatusIcon("icon://" + PsiIconset::instance()->statusPtr(j, statusType)->name());
     }
-
+    else {
+        //remote user
+        local = false;
+        userInfo->setNick(whoNick(false));
+        userInfo->setUserStatusIcon("icon://" + ui_.lb_status->psiIconName());
+    }
 
     userInfo->setJid(j.full());
-    userInfo->setLocal(local);
+    userInfo->setLocal(local | forceLocal);
 
     if (getAvatarForJid(j).isNull()) { //default avatar
         if (local) {
@@ -564,7 +562,6 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j) {
         }
     }
     else {
-        qDebug() << "fetching avatar for:" << j.bare();
         userInfo->setUserIconPath("icon://avatars/" + j.bare() + ".png");
     }
 
