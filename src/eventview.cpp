@@ -11,13 +11,17 @@ EventView::EventView(QWidget* parent, IconServer* iconServer) : WebView(parent, 
     connect(page(), SIGNAL(linkClicked(const QUrl&)), this, SLOT(onLinkClicked(const QUrl&)));
 
     connect(this, SIGNAL(loadFinished(bool)), this, SLOT(loadAndBindJS(bool)));
+    connect(&jsNotifier, SIGNAL(onInitFinished()), this, SLOT(onInitDocumentFinished()));
     connect(&jsNotifier, SIGNAL(onAddToWhiteListRequested(const QString&)), SLOT(onAddToWhiteListRequested(const QString&)));
 }
 
 
 void EventView::displayText(const QString& xhtmlText) {
-    QString xhtml("<html><body>%1</body></html>");
-    setHtml(xhtml.arg(xhtmlText));
+
+    eventBody = xhtmlText;
+
+    QString xhtml("<html><body></body></html>");
+    setHtml(xhtml);
 }
 
 
@@ -39,5 +43,11 @@ void EventView::loadAndBindJS(bool ok) {
 
     importJSChatFunctions();
     page()->mainFrame()->addToJavaScriptWindowObject("jsNotifier", &jsNotifier);
+    evaluateJS("psi_initDocument(\"\", \"\")");
+}
+
+
+void EventView::onInitDocumentFinished() {
+    evaluateJS("psi_appendNextMessage(\"%message%\", \"" + escapeStringCopy(eventBody) + "\"" + ")");
 
 }

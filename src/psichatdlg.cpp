@@ -90,7 +90,6 @@ void PsiChatDlg::initUi() {
 
     chatEditCreated();
     ui_.log->init(chatInfo, false, themeManager, iconServer);
-    //    chatEditCreated();//TODO 101 inv
 
     initToolButtons();
     initToolBar();
@@ -405,35 +404,33 @@ void PsiChatDlg::updateCounter() {
 }
 
 
-void PsiChatDlg::appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) {
+void PsiChatDlg::appendMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt, bool isEmote) {
 
-    EmoteChatEvent * event = new EmoteChatEvent(); //ev will be freed in ChatView
-
-    fillEventWithUserInfo(event, local ? account()->jid() : jid(), local);
-    event->setTimeStamp(time);
-    event->setSpooled(spooled);
-    event->setMessage(txt); //TODO 82 escape
-
-    chatView()->appendEvent(event);
-    updateLastMsgTimeAndOwner(time, Jid());
-}
-
-
-void PsiChatDlg::appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) {
-
-    MessageChatEvent * msg = new MessageChatEvent();
-
+    MessageChatEvent * message;
     Jid owner(local ? account()->jid() : jid());
-    fillEventWithUserInfo(msg, owner, local);
-    msg->setTimeStamp(time);
-    msg->setConsecutive(doConsecutiveMessage(time, owner));
-    msg->setSpooled(spooled);
-    msg->setBody(txt);
 
-    qDebug() << "fl" << local << msg->isLocal();
-    chatView()->appendMessage(msg);
+    if (isEmote) {
+        message = new EmoteChatEvent();
+    }
+    else {
+        message = new MessageChatEvent();
+        message->setConsecutive(doConsecutiveMessage(time, owner));
+    }
 
-    updateLastMsgTimeAndOwner(time, owner);
+    fillEventWithUserInfo(message, owner, local);
+    
+    message->setTimeStamp(time);
+    message->setSpooled(spooled);
+    message->setBody(txt);
+
+    chatView()->appendMessage(message);
+    
+    if (isEmote) {
+        updateLastMsgTimeAndOwner(time, Jid()); //reset
+    }
+    else {
+        updateLastMsgTimeAndOwner(time, owner);
+    }
 }
 
 
@@ -528,7 +525,7 @@ void PsiChatDlg::fillEventWithUserInfo(UserChatData* userInfo, const Jid& j, boo
 
     bool local;
 
-    qDebug() << account()->jid().full() << "[j,acc,jid]" << j.full() << account()->jid().full() << jid().full() << forceLocal;
+    //qDebug() << account()->jid().full() << "[j,acc,jid]" << j.full() << account()->jid().full() << jid().full() << forceLocal;
 
     if ((j.compare(account()->jid(), false))) {
         //local user

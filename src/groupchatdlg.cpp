@@ -1206,6 +1206,7 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
 {
    
     bool local = m.from().resource() == d->self; //is it our message?
+    bool isEmote = isEmoteMessage(m);
     
     if (!PsiOptions::instance()->getOption("options.ui.muc.use-highlighting").toBool()) {
 		alert=false;
@@ -1219,8 +1220,6 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
     if (d->trackBar && !local && !m.spooled()) {
 	 	d->doTrackBar();
     }
-  
-//	textcolor = ui_.log->palette().active().text().name();
    
     if (m.spooled()) {
 		nickColor = "#008000";
@@ -1232,33 +1231,30 @@ void GCMainDlg::appendMessage(const Message &m, bool alert)
     textFormatter()->setDoHighlighting(alert);
     QString txt = messageText(m);
 
-	if (isEmoteMessage(m)) {
-        EmoteChatEvent * event = new EmoteChatEvent();
+    MessageChatEvent * message; 
 
-        event->setTimeStamp(m.timeStamp());
-        event->setSpooled(m.spooled());
-        event->setMessage(txt); //TODO 35 escape 2x
-        event->setUserColor(nickColor);
-        
-        fillEventWithUserInfo(event, m.from());
-        
-        chatView()->appendEvent(event);
-        updateLastMsgTimeAndOwner(m.timeStamp(), Jid()); 
+	if (isEmote) {
+        message = new EmoteChatEvent();
 	}
 	else {
-        MessageChatEvent * msg = new MessageChatEvent(); //will be created in another place, of course
-
-        msg->setTimeStamp(m.timeStamp());
-        msg->setConsecutive(doConsecutiveMessage(m.timeStamp(), m.from()));
-        msg->setSpooled(m.spooled());
-        msg->setBody(txt); //TODO 35 escape
-        msg->setUserColor(nickColor);
-
-        fillEventWithUserInfo(msg, m.from());
-
-        chatView()->appendMessage(msg);
-        updateLastMsgTimeAndOwner(m.timeStamp(), m.from()); 
+        message = new MessageChatEvent(); 
+        message->setConsecutive(doConsecutiveMessage(m.timeStamp(), m.from()));
 	}
+    
+    message->setTimeStamp(m.timeStamp());
+    message->setSpooled(m.spooled());
+    message->setBody(txt);
+    message->setUserColor(nickColor);
+    fillEventWithUserInfo(message, m.from());
+    
+    chatView()->appendMessage(message);
+    
+    if(isEmote) {
+        updateLastMsgTimeAndOwner(m.timeStamp(), Jid()); 
+    }
+    else {
+        updateLastMsgTimeAndOwner(m.timeStamp(), m.from()); 
+    }
 
     //if scroll down if it's our message
     if(local) {

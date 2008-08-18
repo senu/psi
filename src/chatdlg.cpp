@@ -199,7 +199,7 @@ void ChatDlg::setShortcuts() {
     act_send_->setShortcuts(ShortcutManager::instance()->shortcuts("chat.send"));
     act_scrollup_->setShortcuts(ShortcutManager::instance()->shortcuts("common.scroll-up"));
     act_scrolldown_->setShortcuts(ShortcutManager::instance()->shortcuts("common.scroll-down"));
-    
+
     if (!isTabbed()) {
         act_close_->setShortcuts(ShortcutManager::instance()->shortcuts("common.close"));
     }
@@ -305,6 +305,7 @@ void ChatDlg::hideEvent(QHideEvent* e) {
 void ChatDlg::showEvent(QShowEvent *) {
     setSelfDestruct(0);
 }
+
 
 void ChatDlg::deactivated() {
     TabbableWidget::deactivated();
@@ -425,7 +426,7 @@ void ChatDlg::updateContact(const Jid &j, bool fromPresence) {
             updatePGP();
 
             if (fromPresence && statusChanged) {
-                StatusChatEvent * event = new StatusChatEvent(); 
+                StatusChatEvent * event = new StatusChatEvent();
                 fillEventWithUserInfo(event, userStatus.userListItem->jid().full());
                 event->setSpooled(false);
                 event->type = statusToChatViewStatus(status_);
@@ -629,20 +630,20 @@ void ChatDlg::doSend() {
     }
 
     Message m(jid());
-    
+
     m.setType("chat");
     m.setBody(chatEdit()->messageBody(false));
-    
+
     if (sendXHTML) {
-        
+
         QString richBody(chatEdit()->messageBody(true)); //xhtml-im
-        
-        if(!richBody.isNull()) {
+
+        if (!richBody.isNull()) {
             QDomDocument richDoc;
-            
+
             xmlSource.setData(richBody); //we cannot use setContent(QString), because <t> <t/> are converted to <t/>
             richDoc.setContent(&xmlSource, &xmlReader);
-            
+
             m.setHTML(HTMLElement(richDoc.firstChild().toElement()));
             qDebug() << "IMG 00 do send: rich content" << richBody << "m:"
                 << m.containsHTML() << m.html().toString("notb") << "?" << richDoc.toString(0); //TODO 0
@@ -650,13 +651,13 @@ void ChatDlg::doSend() {
     }
 
     qDebug() << "sending XHTML-IM ? " << sendXHTML;
-    
+
     m.setTimeStamp(QDateTime::currentDateTime());
-    
+
     if (isEncryptionEnabled()) {
         m.setWasEncrypted(true); //TODO 4 xhtml-im encryption ctso
     }
-    
+
     m_ = m;
 
     // Request events
@@ -702,21 +703,21 @@ void ChatDlg::doneSend() {
 
 
 void ChatDlg::encryptedMessageSent(int x, bool b, int e, const QString &dtext) {
-    
+
     if (transid_ == -1 || transid_ != x) {
         return;
     }
-    
+
     transid_ = -1;
-    
+
     if (b) {
         doneSend();
     }
-    
+
     else {
         PGPUtil::showDiagnosticText(static_cast<QCA::SecureMessage::Error> (e), dtext);
     }
-    
+
     chatEdit()->setEnabled(true);
     chatEdit()->setFocus();
 }
@@ -777,11 +778,11 @@ void ChatDlg::appendMessage(const Message &m, bool local) {
     // figure out the encryption state
     bool encChanged = false;
     bool encEnabled = false;
-    
+
     if (lastWasEncrypted_ != m.wasEncrypted()) {
         encChanged = true;
     }
-    
+
     lastWasEncrypted_ = m.wasEncrypted();
     encEnabled = lastWasEncrypted_;
 
@@ -813,12 +814,7 @@ void ChatDlg::appendMessage(const Message &m, bool local) {
         ChatDlg::Spooled_OfflineStorage :
         ChatDlg::Spooled_None;
 
-    if (isEmoteMessage(m)) {
-        appendEmoteMessage(spooledType, m.timeStamp(), local, txt);
-    }
-    else {
-        appendNormalMessage(spooledType, m.timeStamp(), local, txt);
-    }
+    appendMessage(spooledType, m.timeStamp(), local, txt, isEmoteMessage(m));
 
     if (local) {
         deferredScroll();

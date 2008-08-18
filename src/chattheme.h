@@ -20,12 +20,12 @@ class ChatTheme {
 public:
     virtual QString createOutgoingMessagePart(const MessageChatEvent*) const = 0;
     virtual QString createIncomingMessagePart(const MessageChatEvent*) const = 0;
+    virtual QString createEmoteEventPart(const EmoteChatEvent*) const = 0;
 
     /** Creates String using precomputed (precompiled) Contents/Resources/Incoming/FileTransfer.html template in HTMLChatTheme
         or handcoded (+ options) string creation in PlainChatTheme */
     virtual QString createFileTransferEventPart(const FileTransferChatEvent*) const = 0;
     virtual QString createStatusEventPart(const StatusChatEvent*) const = 0;
-    virtual QString createEmoteEventPart(const EmoteChatEvent*) const = 0;
     virtual QString createSystemEventPart(const SystemChatEvent*) const = 0;
     virtual QString createMoodEventPart(const MoodChatEvent* event) const = 0;
     virtual QString createTuneEventPart(const TuneChatEvent* event) const = 0;

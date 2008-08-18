@@ -1,16 +1,9 @@
 #include "emotechatevent.h"
 
-
-QString EmoteChatEvent::getRightTemplateAndFillItWithData(const ChatTheme& theme) const {
-    return theme.createEmoteEventPart(this);
+bool EmoteChatEvent::isConsecutive() const {
+    return false;
 }
 
-
-void EmoteChatEvent::setMessage(QString message) {
-    message_ = message;
-}
-
-
-QString EmoteChatEvent::message() const {
-    return message_;
+bool EmoteChatEvent::isEmote() const {
+    return true;
 }

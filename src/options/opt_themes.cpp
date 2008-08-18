@@ -1,5 +1,3 @@
-#include <QDebug>
-
 #include "opt_themes.h"
 #include "applicationinfo.h"
 #include "psioptions.h"
@@ -81,8 +79,9 @@ void OptionsTabThemes::onVariantLoaded(int variantIndex) {
 
 
 void OptionsTabThemes::applyOptions() {
-    if (!w)
+    if (!w) {
         return;
+    }
 
     OptThemeUI *d = (OptThemeUI *) w;
 
@@ -94,7 +93,6 @@ void OptionsTabThemes::applyOptions() {
                                           d->themeCB->currentText()); 
         PsiOptions::instance()->setOption("options.ui.themes.variantname",
                                           theme->currentVariant());
-
     }
 }
 

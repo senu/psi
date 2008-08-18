@@ -35,8 +35,6 @@ QString GenericChatDialog::messageText(const XMPP::Message& m) {
 
     QString txt;
 
-    qDebug() << "IMG messageText containsHTML" << m.containsHTML() << m.body() << m.html().toString("notb3") << "EOF";
-
     //reset textFormatter
     textFormatter()->setRemoveEmoteString(false);
     textFormatter()->setTextNodeNumber(0);
@@ -46,7 +44,6 @@ QString GenericChatDialog::messageText(const XMPP::Message& m) {
             textFormatter()->setRemoveEmoteString(true);
         }
         txt = m.html().toString("span");
-//    	qDebug() << "IMG messageText 1.3 containsHTML" << m.containsHTML() << txt << "EOF" << !m.html().text().isEmpty() << PsiOptions::instance()->getOption("options.html.chat.render").toBool();
     }
     else {
         if (emote) {
@@ -67,7 +64,7 @@ QString GenericChatDialog::messageText(const XMPP::Message& m) {
         txt = messageValidator_.validateMessage(TextUtil::plain2rich(m.body()), &illformed, textFormatter());
     }
 
-    qDebug() << "IMG messageText 2" << txt;
+    //qDebug() << "messageText 2" << txt;
     return txt;
 }
 

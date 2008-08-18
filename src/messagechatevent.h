@@ -11,7 +11,12 @@
 class AbstractChatEvent;
 
 
-/** Message ChatEvent - incoming/outgoing consecutive/next */
+/** 
+ * Message ChatEvent 
+ * 
+ * Can be incoming or outgoing and consecutive or next.
+ * It's base class of EmoteChatEvent.
+ */
 class MessageChatEvent : public AbstractChatEvent, public UserChatData {
 
 public:
@@ -22,25 +27,33 @@ public:
     QString body() const;
 
     bool wasEncrypted();
-    bool isConsecutive() const;
+    virtual bool isConsecutive() const;
+
+    /** 
+     * Returns true if it's Action/Emote message.
+     *
+     * Default implementation returns false; 
+     */
+    virtual bool isEmote() const;
 
     //setters
     void setSubject(QString);
     void setBody(QString);
-
-    bool setWasEncrypted();
-
+    
+    /** Currently unused */
+    void setWasEncrypted();
     void setConsecutive(bool);
 
     //reimplemented 
     bool isMessageChatEvent() const;
 
 private:
+    
+    /** Messag body*/
     QString _body;
 
+    /** Message successiveness */
     bool _isConsecutive;
-
-
 };
 
 #endif

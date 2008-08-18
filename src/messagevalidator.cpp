@@ -238,7 +238,6 @@ QString MessageValidator::validateMessage(QString message, bool* illformed, HTML
                 }
                 else {
                     stack.push(node.toElement());
-                    //dfs(node.toElement(), formatter, illformed); //TODO 105 ins
                 }
             }
             else if (node.isText() && !node.isCDATASection()) {
@@ -254,7 +253,7 @@ QString MessageValidator::validateMessage(QString message, bool* illformed, HTML
                     tmpDoc.setContent(&xmlSource, &xmlReader);
                    
                     QDomNode tmpElement = tmpDoc.firstChild();
-                    while (tmpElement.hasChildNodes()) { //append <tmp> children. They won't be validated
+                    while (tmpElement.hasChildNodes()) { //append <tmp>'s children. They won't be validated
                         cur.insertBefore(tmpElement.firstChild(), node);
                     }
                     

@@ -123,7 +123,6 @@ private:
      */
     bool useChatSaysStyle_;
 
-
 };
 
 #endif

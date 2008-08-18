@@ -59,11 +59,20 @@ public:
 
     QString createIncomingMessagePart(const MessageChatEvent *) const;
     QString createOutgoingMessagePart(const MessageChatEvent *) const;
+    QString createEmoteEventPart(const EmoteChatEvent * event) const;
+   
+    /** Overloaded version */
+    HTMLChatPart createIncomingMessageHTMLPart(const MessageChatEvent *) const;
+    
+    /** Overloaded version */
+    HTMLChatPart createOutgoingMessageHTMLPart(const MessageChatEvent *) const;
+    
+    /** Overloaded version */
+    HTMLChatPart createEmoteEventHTMLPart(const EmoteChatEvent * event) const;
 
     QString createFileTransferEventPart(const FileTransferChatEvent * event) const;
     QString createStatusEventPart(const StatusChatEvent * event) const;
 
-    QString createEmoteEventPart(const EmoteChatEvent * event) const;
     QString createMoodEventPart(const MoodChatEvent* event) const;
     QString createTuneEventPart(const TuneChatEvent* event) const;
     QString createSystemEventPart(const SystemChatEvent*) const;

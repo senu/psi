@@ -1,5 +1,4 @@
 #include "plaintextchattheme.h"
-#include <QDebug> 
 
 
 PlainTextChatTheme::PlainTextChatTheme() {
@@ -9,13 +8,12 @@ PlainTextChatTheme::PlainTextChatTheme() {
 
 QString PlainTextChatTheme::createEmoteEventPart(const EmoteChatEvent * event) const {
 
-    qDebug() << "&&&&" << event->isLocal();
     QString color = colorString(event->isLocal(), event->isSpooled());
 
     return QString("<span style=\"color: %1\">").arg(color)
         + QString("[%1]").arg(formatTimeStamp(event->timeStamp()))
         + QString(" *%1 ").arg(event->nick())
-        + event->message() + "</span>";
+        + event->body() + "</span>";
 }
 
 

@@ -38,7 +38,10 @@ void PlainTextChatView::appendMessage(MessageChatEvent* event, bool alreadyAppen
 
     QString part;
 
-    if (event->isLocal()) {
+    if (event->isEmote()) {
+        part = theme.createEmoteEventPart(dynamic_cast<EmoteChatEvent*>(event));
+    }
+    else if (event->isLocal()) {
         part = theme.createOutgoingMessagePart(event);
     }
     else {
@@ -187,13 +190,13 @@ void PlainTextChatView::updateTrackBar() {
 void PlainTextChatView::setTheme(const PlainTextChatTheme& newTheme) {
 
     qDebug() << "PlainTextChatView :: setTheme";
-    
+
     if (newTheme != theme) {
         theme = newTheme;
 
         textview.clear();
         textview.setFont(theme.chatFont());
-        
+
         reappendEvents();
     }
 }

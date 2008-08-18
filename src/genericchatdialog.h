@@ -51,6 +51,7 @@ protected:
 
     /** 
      * Returns true if next message should be consecutive
+     *
      * \param sender determines sender of the message 
      */
     bool doConsecutiveMessage(const QDateTime& time, const Jid& sender);
@@ -91,7 +92,7 @@ protected:
     bool handleCopyEvent(QEvent *event);
 
     /** 
-     * Returns formatted message body 
+     * Returns formatted and validated message body.
      *
      * Plain or XHTML-IM message body is formatted (linkify, emoticonify) and returned.
      */

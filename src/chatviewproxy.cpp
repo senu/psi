@@ -44,7 +44,6 @@ void ChatViewProxy::init(const ChatTheme::ChatInfo& chatInfo, bool inGroupChat_,
 
 
 void ChatViewProxy::optionsChanged(const QString& optionName) {
-    qDebug() << optionName;
 
     if (!(chatView_ &&
         (optionName.startsWith("options.ui.themes")

@@ -46,10 +46,19 @@ slots:
 
     /** Loads JavaScript Psi code from file and connects jsNotifier signals (image unbanning) */
     void loadAndBindJS(bool ok);
+    
+    /** 
+     * Validates and displays event.
+     */
+    void onInitDocumentFinished();
 
 private:
+    
     /** JavaScript - C++ bridge */
     JSNotifier jsNotifier;
+
+    /** Holds displayed text */
+    QString eventBody;
 };
 
 #endif

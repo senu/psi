@@ -28,7 +28,6 @@ HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* i
 
     connect(webView.page(), SIGNAL(linkClicked(const QUrl&)), this, SLOT(onLinkClicked(const QUrl&)));
     connect(webView.page(), SIGNAL(selectionChanged()), this, SIGNAL(selectionChanged()));
-
 }
 
 
@@ -93,7 +92,7 @@ void HTMLChatView::onInitDocumentFinished() {
     isReady = true;
 
     if (queuedTheme) {
-        qDebug() << "changing queued theme" << queuedTheme->baseHref();
+        //qDebug() << "changing queued theme" << queuedTheme->baseHref();
         setTheme(*queuedTheme);
         delete queuedTheme;
         queuedTheme = 0;
@@ -114,9 +113,9 @@ void HTMLChatView::onAppendFinished() {
     if (atBottom()) {
         QTimer::singleShot(0, this, SLOT(onDoScrolling()));
     }
-	else {
-    	emit appendFinished();	
-	}
+    else {
+        emit appendFinished();
+    }
 }
 
 
@@ -157,26 +156,32 @@ void HTMLChatView::appendMessage(MessageChatEvent *msg, bool alreadyAppended) {
     if (isReady) { // we dont want to append events before init was finished
         // events will be appended in reappendEvents (called from onInitDpcumentFinished)
 
-        QString part;
+        HTMLChatPart part;
 
-        if (msg->isLocal())
-            part = theme.createOutgoingMessagePart(msg);
-        else
-            part = theme.createIncomingMessagePart(msg);
-
-        webView.escapeString(part);
-
-        if (msg->isConsecutive()) {
-            webView.evaluateJS("psi_appendConsecutiveMessage(\"" + part + "\", \"" +
-                       webView.escapeStringCopy(msg->body()) + "\"" + ")");
+        if (msg->isEmote()) {
+            part = theme.createEmoteEventHTMLPart(dynamic_cast<EmoteChatEvent*>(msg));
+        }
+        else if (msg->isLocal()) {
+            part = theme.createOutgoingMessageHTMLPart(msg);
         }
         else {
-            webView.evaluateJS("psi_appendNextMessage(\"" + part + "\", \"" +
-                       webView.escapeStringCopy(msg->body()) + "\"" + ")");
+            part = theme.createIncomingMessageHTMLPart(msg);
+        }
+
+        QString partStr = part.toString();
+        webView.escapeString(partStr);
+
+        if (msg->isConsecutive()) {
+            webView.evaluateJS("psi_appendConsecutiveMessage(\"" + partStr + "\", \"" +
+                               webView.escapeStringCopy(part.messageBody()) + "\"" + ")");
+        }
+        else {
+            webView.evaluateJS("psi_appendNextMessage(\"" + partStr + "\", \"" +
+                               webView.escapeStringCopy(part.messageBody()) + "\"" + ")");
         }
     }
     else {
-        qDebug() << " -- appendMessage queued";
+        //qDebug() << " -- appendMessage queued";
     }
 }
 
@@ -193,13 +198,13 @@ void HTMLChatView::appendEvent(ChatEvent* event, bool alreadyAppended) {
         webView.evaluateJS("psi_appendEvent(\"" + part + "\")");
     }
     else {
-        qDebug() << " -- appendEvent queued";
+        //qDebug() << " -- appendEvent queued";
     }
 }
 
+
 HTMLChatView::~HTMLChatView() {
-    qDebug() << "@@@@ MEM WEBKIT: ----" << "HTMLChatView::~HTMLChatView()";
-    qDebug() << dumpContent();
+    //qDebug() << dumpContent();
     delete queuedTheme;
 }
 
@@ -217,12 +222,12 @@ void HTMLChatView::setVisible(bool visible) {
 
 void HTMLChatView::setTheme(const HTMLChatTheme& theme_) {
 
-    qDebug() << "set theme " << theme_.baseHref();
+    //qDebug() << "set theme " << theme_.baseHref();
 
     if (!isReady) {
         delete queuedTheme;
         queuedTheme = new HTMLChatTheme(theme_);
-        qDebug() << "queued theme change" << theme_.baseHref();
+        //qDebug() << "queued theme change" << theme_.baseHref();
         return;
     }
 

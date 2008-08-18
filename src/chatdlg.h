@@ -209,11 +209,19 @@ protected:
     virtual bool isEncryptionEnabled() const;
 
     /** 
-     * Appends chat event (not message nor emote event)
+     * Appends chat event (not message nor emote event).
      */
     virtual void appendChatEvent(ChatEvent* event) = 0;
-    virtual void appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) = 0;
-    virtual void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt) = 0;
+    
+    /** 
+     * Appends Message or Emote ChatEvent.
+     * 
+     * \param spooled indicates whether it's offline message 
+     * \param time indicates message time stamp
+     * \param local  whether message is outgoing
+     * \param spooled indicates whether it's emote message 
+     */
+    virtual void appendMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt, bool isEmote) = 0;
     
     /** Appends to message body message fields (subject and URL list) */
     virtual void appendMessageFields(const Message& m, QString& messageBody) = 0;

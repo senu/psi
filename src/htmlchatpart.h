@@ -58,7 +58,11 @@ private:
     /** Part body */
     QString content;
 
-    /** Message body (%message%) */
+    /** 
+     * Message body (%message%).
+     * 
+     * It's CSS-validated in Webkit and %message% keyword is replaced in JS code.
+     */
     QString _messageBody;
 
     /** Returns formated time, eg for %timeOpened{X}% */

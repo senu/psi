@@ -5,9 +5,10 @@
 
 #include "htmlchatpart.h"
 
-/** Message/Event template 
+/** 
+ * Message/Event template 
  * 
- *  It's QString + loading methods.
+ * It's QString + loading methods.
  */
 class HTMLChatTemplate {
 

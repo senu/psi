@@ -56,18 +56,16 @@ private:
 	void setLooks();
 	void setShortcuts();
     
-    void appendChatEvent(ChatEvent* event);
-	void appendEmoteMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
-	void appendNormalMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt);
-    
-    /** Appends to message body message fields (subject and URL list) */
-    void appendMessageFields(const Message& m, QString& messageBody);
-
-    /** Returns (null() if absent) avatar pixmap for \param j*/
+/** Returns (null() if absent) avatar pixmap for \param j*/
     QPixmap getAvatarForJid(const Jid& j);
 
     //implemented
     void fillEventWithUserInfo(UserChatData* userInfo, const Jid& j, bool forceLocal = false);
+    void appendChatEvent(ChatEvent* event);
+    void appendMessage(SpooledType spooled, const QDateTime& time, bool local, QString txt, bool isEmote);
+    
+    /** Appends to message body message fields (subject and URL list) */
+    void appendMessageFields(const Message& m, QString& messageBody);
 
     DefaultHTMLTextFormatter * textFormatter();
 

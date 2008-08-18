@@ -30,3 +30,8 @@ bool MessageChatEvent::isConsecutive() const {
 bool MessageChatEvent::isMessageChatEvent() const {
     return true;
 }
+
+
+bool MessageChatEvent::isEmote() const {
+    return false;
+}
