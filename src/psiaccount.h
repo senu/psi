@@ -361,8 +361,12 @@ private slots:
 	void pgp_verifyFinished();
 	void pgp_encryptFinished();
 	void pgp_decryptFinished();
-	
-	void optionsUpdate();
+
+    /** Deprecated. */
+	void optionsUpdate(); //TODO this should be connected to PsiOptions not to OptionsDialog's apply button.
+    
+    /** Listens to PsiOptions::optionChanged() and forwards filtered signals. */
+    void optionUpdate(QString optionName);
 
 	void processReadNext(const UserListItem &);
 	void processReadNext(const Jid &);
@@ -374,6 +378,14 @@ protected:
 	void publishTune(const Tune&);
 	void setSendChatState(bool);
 	void setRCEnabled(bool);
+    
+    /** 
+     * Adds or removes XHTML-IM extension from client's capabilities.
+     * 
+     * XHTML-IM will be supported if \param enable is set to true.
+     * If caps changes, presence with updated <c/> will be sent. 
+     */
+    void setXHTMLEnabled(bool enable);
 	void sessionStarted();
 
 private slots:

@@ -21,7 +21,7 @@
 		<enable-multicast comment="Enable multicasting messages to multiple recipients" type="bool">false</enable-multicast>
 		<html comment="Hypertext markup options">
 			<chat comment="HTML in chats">
-				<render comment="Display received HTML" type="bool">true</render>
+				<render comment="Display received XHTML-IM content. If this is set to false, XHTML-IM 'feature' wont't be returned in Dico Info Results and therefore other clients will not send you XHTML-IM messages." type="bool">true</render>
 			</chat>
 		</html>
 		<extended-presence comment="Extended presence options">

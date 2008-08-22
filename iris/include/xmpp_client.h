@@ -110,6 +110,12 @@ namespace XMPP
 		const Features& features() const;
 
 		void addExtension(const QString& ext, const Features& f);
+        
+        /** 
+         * Removes ext from client caps/features. 
+         *
+         * If ext is not set, nothing will happen.
+         */
 		void removeExtension(const QString& ext);
 		const Features& extension(const QString& ext) const;
 		QStringList extensions() const;

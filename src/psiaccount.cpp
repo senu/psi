@@ -23,9 +23,6 @@
  *
  */
 
-#include "chatdlg.h"
-
-
 #include <QFileDialog>
 #include <qinputdialog.h>
 #include <qtimer.h>
@@ -735,7 +732,7 @@ PsiAccount::PsiAccount(const UserAccount &acc, PsiContactList *parent,
 	connect(d->cp, SIGNAL(actionOpenWhiteboard(const Jid &)),SLOT(actionOpenWhiteboard(const Jid &)));
 	connect(d->cp, SIGNAL(actionOpenWhiteboardSpecific(const Jid &)),SLOT(actionOpenWhiteboardSpecific(const Jid &)));
 #endif
-	connect(d->cp, SIGNAL(actionAgentSetStatus(const Jid &, Status &)),SLOT(actionAgentSetStatus(const Jid &, Status &)));
+    connect(d->cp, SIGNAL(actionAgentSetStatus(const Jid &, Status &)),SLOT(actionAgentSetStatus(const Jid &, Status &)));
 	connect(d->cp, SIGNAL(actionInfo(const Jid &)),SLOT(actionInfo(const Jid &)));
 	connect(d->cp, SIGNAL(actionAuth(const Jid &)),SLOT(actionAuth(const Jid &)));
 	connect(d->cp, SIGNAL(actionAuthRequest(const Jid &)),SLOT(actionAuthRequest(const Jid &)));
@@ -809,8 +806,9 @@ PsiAccount::PsiAccount(const UserAccount &acc, PsiContactList *parent,
 #endif
 
 	// HTML
-	if(PsiOptions::instance()->getOption("options.html.chat.render").toBool())
+    if (PsiOptions::instance()->getOption("options.html.chat.render").toBool()) {
 		d->client->addExtension("html",Features("http://jabber.org/protocol/xhtml-im"));
+    }
 
 	// restore cached roster
     for(Roster::ConstIterator it = acc.roster.begin(); it != acc.roster.end(); ++it) {
@@ -832,6 +830,7 @@ PsiAccount::PsiAccount(const UserAccount &acc, PsiContactList *parent,
 
 	d->contactList->link(this);
 	connect(d->psi, SIGNAL(emitOptionsUpdate()), SLOT(optionsUpdate()));
+	connect(PsiOptions::instance(), SIGNAL(optionChanged(QString)), SLOT(optionUpdate(QString)));
 	//connect(d->psi, SIGNAL(pgpToggled(bool)), SLOT(pgpToggled(bool)));
 	connect(&PGPUtil::instance(), SIGNAL(pgpKeysUpdated()), SLOT(pgpKeysUpdated()));
 
@@ -2399,7 +2398,7 @@ void PsiAccount::setStatusActual(const Status &_s)
 		s.setCapsExt(d->client->capsExt());
 	}
 
-        // Add vcard photo hash if available
+    // Add vcard photo hash if available
 	if(!d->photoHash.isEmpty()) {
 		s.setPhotoHash(d->photoHash);
 	}
@@ -4770,6 +4769,14 @@ void PsiAccount::optionsUpdate()
 }
 
 
+void PsiAccount::optionUpdate(QString optionName) {
+
+    if (optionName == "options.html.chat.render") {
+        setXHTMLEnabled(PsiOptions::instance()->getOption("options.html.chat.render").toBool());
+    }
+}
+
+
 void PsiAccount::setRCEnabled(bool b)
 {
 	if (b && !d->rcSetStatusServer) {
@@ -4790,14 +4797,32 @@ void PsiAccount::setRCEnabled(bool b)
 void PsiAccount::setSendChatState(bool b)
 {
 	if (b && !d->client->extensions().contains("cs")) {
-		d->client->addExtension("cs",Features("http://jabber.org/protocol/chatstates"));
-		if (isConnected())
+		d->client->addExtension("cs", Features("http://jabber.org/protocol/chatstates"));
+        if (isConnected()) {
 			setStatusActual(d->loginStatus);
+        }
 	}
 	else if (!b && d->client->extensions().contains("cs")) {
 		d->client->removeExtension("cs");
-		if (isConnected())
+        if (isConnected()) {
+            setStatusActual(d->loginStatus);
+        }
+	}
+}
+
+void PsiAccount::setXHTMLEnabled(bool enabled) 
+{
+	if (enabled && !d->client->extensions().contains("html")) {
+		d->client->addExtension("html", Features("http://jabber.org/protocol/xhtml-im"));
+        if (isConnected()) {
 			setStatusActual(d->loginStatus);
+        }
+	}
+    else if (!enabled && d->client->extensions().contains("html")) {
+		d->client->removeExtension("html");
+        if (isConnected()) {
+			setStatusActual(d->loginStatus);
+        }
 	}
 }
 

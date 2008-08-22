@@ -5,6 +5,11 @@
 
 class QWidget;
 
+/** 
+ * It's 'Misc.' options tab. 
+ * 
+ * If you are looking for 'Advanced' options try opt_tree.h 
+ */
 class OptionsTabAdvanced : public OptionsTab
 {
 	Q_OBJECT
