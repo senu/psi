@@ -8,7 +8,7 @@
 
 
 HTMLChatTheme::HTMLChatTheme() {
-    _isValid = false;
+    isValid_ = false;
 }
 
 
@@ -28,9 +28,9 @@ QString HTMLChatTheme::readFileContents(QDir dir, QString relativePath) {
 void HTMLChatTheme::readTheme(QDir dir) {
     qDebug() << "reading theme from filesystem" << dir;
 
-    _isValid = false;
+    isValid_ = false;
 
-    if (!dir.cd("Contents/Resources/")) {
+    if (!dir.cd("Contents/Resources/")) { //invalid dir
         return; //isValid == false;
     }
 
@@ -60,7 +60,8 @@ void HTMLChatTheme::readTheme(QDir dir) {
         outgoingNextMessageTemplate.setContent(incomingNextMessageTemplate.content());
     }
 
-    noOutgoingDir = !dir.exists("Outgoing/buddy_icon.png");
+    noOutgoingDir = !dir.exists("Outgoing/buddy_icon.png"); //some themes have empty Outgoing dir
+    //we will be using Incoming avatar
 
     // status/event template
     fileTransferEventTemplate.setContent(readFileContents(dir, "Status.html"));
@@ -90,10 +91,10 @@ void HTMLChatTheme::readTheme(QDir dir) {
     headerTemplate_.setContent(readFileContents(dir, "Header.html"));
     footerTemplate_.setContent(readFileContents(dir, "Footer.html"));
 
-    _isValid = true;
+    isValid_ = true;
 
     //read Variants
-    _variants.clear();
+    variants_.clear();
 
     if (!dir.cd("Variants/")) {
         qDebug() << "no Variants dir";
@@ -108,7 +109,7 @@ void HTMLChatTheme::readTheme(QDir dir) {
 
 
     foreach(variant, variantFiles) {
-        _variants.append(variant.left(variant.size() - 4));
+        variants_.append(variant.left(variant.size() - 4));
     }
 
 }
@@ -421,32 +422,32 @@ void HTMLChatTheme::fillPartWithThemeKeywords(HTMLChatPart& part, ChatTheme::Cha
 
 
 QString HTMLChatTheme::baseHref() const {
-    return _baseHref;
+    return baseHref_;
 }
 
 
 void HTMLChatTheme::setBaseHref(QString baseHref) {
-    _baseHref = baseHref;
+    baseHref_ = baseHref;
 }
 
 
 QStringList HTMLChatTheme::variants() const {
-    return _variants;
+    return variants_;
 }
 
 
 QString HTMLChatTheme::currentVariant() const {
-    return _currentVariant;
+    return currentVariant_;
 }
 
 
 void HTMLChatTheme::setCurrentVariant(QString variant) {
-    _currentVariant = variant;
+    currentVariant_ = variant;
 }
 
 
 bool HTMLChatTheme::isValid() {
-    return _isValid;
+    return isValid_;
 }
 
 
@@ -482,4 +483,3 @@ QString HTMLChatTheme::defaultOutgoingAvatar() const {
 
     return "Outgoing/buddy_icon.png";
 }
-

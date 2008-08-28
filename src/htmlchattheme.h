@@ -26,29 +26,55 @@ class ChatEvent;
 /** ChatTheme used by HTMLChatView */
 class HTMLChatTheme : public ChatTheme {
 
-    //...	
 public:
 
     HTMLChatTheme();
-    /** Reads theme from filesystem */
+    
+    /** 
+     * Constructor that reads theme from filesystem 
+     *
+     * \param path points to theme dir (Contents/ should be a sudir of path)
+     */
     HTMLChatTheme(QString path);
 
-    /** Returns theme path sth/Contents/Resources/ ; there must be slash at the end! */
+    /** 
+     * Returns theme path base href.
+     * 
+     * For example. ..../themeName/Contents/Resources/ 
+     * 
+     * There must be slash at the end! 
+     */
     QString baseHref() const;
+    
+    /** Sets baseHref */
     void setBaseHref(QString);
 
-    /** Returns list of theme variants (without .css suffix!)*/
+    /** 
+     * Returns list of theme variants.
+     * 
+     * Variants dont have '.css' suffix!
+     */
     QStringList variants() const;
 
-    /** Returns current theme variant (withou .css suffix). Can be "" */
+    /** 
+     * Returns current theme variant.
+     * 
+     * It doesn't have '.css' suffix. 
+     * Can be "" if no variant is selected.
+     */
     QString currentVariant() const;
 
-    /** Sets current theme variant (withou .css suffix) */
+    /** Sets current theme variant (without .css suffix) */
     void setCurrentVariant(QString variant);
 
-    /** Reads theme from filesystem (path to Contents/Resources) */
+    /** 
+     * Reads theme from filesystem 
+     *
+     * \param path points to theme dir (Contents/ should be a sudir of path)
+     */
     void readTheme(QDir dir);
 
+    /** Theme is valid if it was successfully loaded from filesystem */
     bool isValid();
 
     /** Returns headerTemplate */
@@ -57,6 +83,7 @@ public:
     /** Returns footerTemplate */
     HTMLChatTemplate footerTemplate() const;
 
+    //reimplemented
     QString createIncomingMessagePart(const MessageChatEvent *) const;
     QString createOutgoingMessagePart(const MessageChatEvent *) const;
     QString createEmoteEventPart(const EmoteChatEvent * event) const;
@@ -103,8 +130,6 @@ private:
     /** Returns dir/relativePath (to Contents dir) */
     QString readFileContents(QDir dir, QString relativePath);
 
-    //TODO!!!
-    
     /** Default %userIconPath% for incoming messages*/
     QString defaultIncomingAvatar() const;
     
@@ -133,14 +158,14 @@ private:
     HTMLChatTemplate headerTemplate_;
     HTMLChatTemplate footerTemplate_;
 
-    QString _baseHref;
-    QStringList _variants;
-    QString _currentVariant;
-    bool _isValid;
+    QString baseHref_;
+    QStringList variants_;
+    QString currentVariant_;
+    bool isValid_;
     
     /** 
-     * True if theme doesn't have Ougoing/ directory (Incoming/ is used) 
-     * Well, it's true if Outoging/buddy_icon.png doesnt is not found.
+     * True if theme doesn't have Ougoing/ directory (Incoming/ is used instead) 
+     * Well, it's true if Outoging/buddy_icon.png wasn't found.
      */
     bool noOutgoingDir; 
     

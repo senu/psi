@@ -10,6 +10,8 @@
 /** 
  * Part (string) of HTMLChat document (eg. newly created message/event).
  *
+ * Maybe HTMLChatFragment or ChatEventRepresentation would be a better name? 
+ *
  * Main methods: replaceAndEscapeKeyword(key, value), toString().
  *
  *  Usage:
@@ -63,7 +65,7 @@ private:
      * 
      * It's CSS-validated in Webkit and %message% keyword is replaced in JS code.
      */
-    QString _messageBody;
+    QString messageBody_;
 
     /** Returns formated time, eg for %timeOpened{X}% */
     QString formatTime(QString format, const QDateTime& time);

@@ -14,7 +14,13 @@ class MoodChatEvent;
 class TuneChatEvent;
 
 
-/** Chat theme; Used by ChatEvents (create*Part) and ChatView */
+/** 
+ * Chat theme.
+ * 
+ * It's is used by ChatEvents (create*Part) and ChatView. 
+ * ChatView have a ChatTheme instance. When view::appendMessage() or appendChatEvent 
+ * is called it will create new event representation ("part") using ChatTheme.
+ */
 class ChatTheme {
 
 public:
@@ -34,10 +40,10 @@ public:
     virtual ~ChatTheme() {
     };
 
-    /** Returns true if theme is valid (eg succesfully loaded) */
+    /** Returns true if theme is valid. (i.e. succesfully loaded) */
     virtual bool isValid() = 0;
 
-    /** Contains Info related to ChatView session */
+    /** Contains information related to ChatView session */
     struct ChatInfo {
 
         QDateTime timeOpened;
@@ -47,9 +53,9 @@ public:
             destinationName,
             destinationDisplayName,
 
-            /** If empty default incoming icon/avatar will be used*/
+            /** If empty default incoming icon/avatar will be used */
             incomingIconPath,
-            /** If empty default outgoing icon/avatar will be used*/
+            /** If empty default outgoing icon/avatar will be used */
             outgoingIconPath;
     };
 };

@@ -294,24 +294,24 @@ void ELineEdit::resourceMenuActivated(int x)
 class AttachViewItem : public Q3ListViewItem
 {
 public:
-	AttachViewItem(const QString &_url, const QString &_desc, AttachView *par)
+	AttachViewItem(const QString &url_, const QString &desc_, AttachView *par)
 	:Q3ListViewItem(par)
 	{
 		type = 0;
-		url = _url;
-		desc = _desc;
+		url = url_;
+		desc = desc_;
 
 		setPixmap(0, IconsetFactory::icon("psi/www").impix());
 		setText(0, url + " (" + desc + ')');
 		setMultiLinesEnabled(true);
 	}
 
-	AttachViewItem(const QString &_gc, const QString& from, const QString& reason, const QString& _password, AttachView *par)
+	AttachViewItem(const QString &gc_, const QString& from, const QString& reason, const QString& password_, AttachView *par)
 	:Q3ListViewItem(par)
 	{
 		type = 1;
-		gc = _gc;
-		password = _password;
+		gc = gc_;
+		password = password_;
 
 		setPixmap(0, IconsetFactory::icon("psi/groupChat").impix());
 		QString text;
@@ -420,12 +420,12 @@ void AttachView::qlv_doubleClicked(Q3ListViewItem *lvi)
 		actionGCJoin(i->gc, i->password);
 }
 
-void AttachView::goURL(const QString &_url)
+void AttachView::goURL(const QString &url_)
 {
-	if(_url.isEmpty())
+	if(url_.isEmpty())
 		return;
 
-	QString url = _url;
+	QString url = url_;
 	if(url.find("://") == -1)
 		url.insert(0, "http://");
 

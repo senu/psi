@@ -6,8 +6,8 @@
 #include "htmlchatpart.h"
 
 
-HTMLChatPart::HTMLChatPart(const QString _content)
-: content(_content) {
+HTMLChatPart::HTMLChatPart(const QString content_)
+: content(content_) {
 }
 
 
@@ -26,7 +26,7 @@ void HTMLChatPart::replaceAndEscapeKeyword(QString keyword, QString value) {
 
 
 void HTMLChatPart::replaceMessageBody(QString value) {
-    _messageBody = escapeString(value);
+    messageBody_ = escapeString(value);
 }
 
 
@@ -81,5 +81,5 @@ QString HTMLChatPart::createShortTime(const QDateTime& time) {
 
 
 QString HTMLChatPart::messageBody() const {
-    return _messageBody;
+    return messageBody_;
 }

@@ -6,8 +6,8 @@
 #include "htmlchatview.h"
 
 
-HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme _theme, IconServer* iconServer)
-: ChatView(parent), theme(_theme), isReady(false), queuedTheme(0), queuedClear(false), webView(this, iconServer) {
+HTMLChatView::HTMLChatView(QWidget * parent, HTMLChatTheme theme_, IconServer* iconServer)
+: ChatView(parent), theme(theme_), isReady(false), queuedTheme(0), queuedClear(false), webView(this, iconServer) {
 
     //layout
     layout = new QVBoxLayout(this);
