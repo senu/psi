@@ -75,7 +75,8 @@ void WebView::contextMenuEvent(QContextMenuEvent* event) {
 
 void WebView::escapeString(QString& str) {
 
-    str.replace("\r\n", "\n"); //windows
+    str.replace("\r\n", "\n");  //windows
+    str.replace("\r", "\n");    //mac
     str.replace("\\", "\\\\");
     str.replace("\"", "\\\"");
     str.replace("\n", "\\\n");
@@ -104,3 +105,4 @@ void WebView::importJSChatFunctions() {
     QString jsCode = file.readAll();
     evaluateJS(jsCode);
 }
+

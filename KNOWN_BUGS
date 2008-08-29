@@ -1,0 +1,42 @@
+This is the official psi-webkit bug and TODO list. 
+If you have found bug or have a feature-request, send message to senu at psi@conference.psi-im.org/ MUC room.
+
+id: 1
+type: impr.
+desc: Animated emoticons
+status: ?
+
+id: 2
+type: bug : minor
+desc: scrollToBottom on theme change and after image was loaded. 
+status: ?
+
+id: 3
+type: bug : minor
+desc: %message% and % escaping
+status: depends on 4
+
+id: 4
+type: impr. / cleanup
+desc: C++ CSS validator instead webkit one
+status: ask Kev
+
+id: 5
+type: impr.
+desc: different HTMLTheme for MUC and conversations
+status: ?
+
+id: 6
+type: cleanup
+desc: submit iris patches to remko. use external iris
+status: in progress
+
+id: 7
+type: cleanup
+desc: merge with psi HEAD.
+status: depends on 6
+
+id: 8
+type: clean up
+desc: remove qDebugs()
+status: depends on 1..7
